@@ -45,10 +45,10 @@ namespace SE::Core
     template <typename _Ty>
     struct sXYPlot : public UIPlotData
     {
-        std::vector<_Ty> mX;
-        std::vector<_Ty> mY;
-        int32_t          mOffset = 0;
-        int32_t          mStride = 1;
+        vector_t<_Ty> mX;
+        vector_t<_Ty> mY;
+        int32_t       mOffset = 0;
+        int32_t       mStride = 1;
     };
 
     struct UIFloat64LinePlot : public sXYPlot<double>
@@ -63,11 +63,11 @@ namespace SE::Core
 
     struct UIVLinePlot : public UIPlotData
     {
-        std::vector<double> mX;
+        vector_t<double> mX;
 
         UIVLinePlot() = default;
 
-        UIVLinePlot( std::vector<double> const &x )
+        UIVLinePlot( vector_t<double> const &x )
             : mX{ x }
         {
         }
@@ -77,11 +77,11 @@ namespace SE::Core
 
     struct UIHLinePlot : public UIPlotData
     {
-        std::vector<double> mY;
+        vector_t<double> mY;
 
         UIHLinePlot() = default;
 
-        UIHLinePlot( std::vector<double> const &y )
+        UIHLinePlot( vector_t<double> const &y )
             : mY{ y }
         {
         }
@@ -155,7 +155,7 @@ namespace SE::Core
         std::array<UIPlotAxisConfiguration, 6> mAxisConfiguration;
 
       protected:
-        std::vector<UIPlotData *> mElements;
+        vector_t<UIPlotData *> mElements;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
 

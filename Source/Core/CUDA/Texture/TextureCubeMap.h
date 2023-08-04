@@ -63,7 +63,7 @@ namespace SE::Cuda
          * @param aSpec Texture specification
          * @param aData Texture data
          */
-        TextureCubeMap( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
+        TextureCubeMap( sTextureCreateInfo &aSpec, vector_t<uint8_t> aData );
 
         /** @brief Constructor
          *

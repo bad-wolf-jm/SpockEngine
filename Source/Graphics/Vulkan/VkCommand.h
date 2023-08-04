@@ -42,7 +42,7 @@ namespace SE::Graphics
         void Begin( VkCommandBufferUsageFlags aUsage );
 
         void BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
-                              std::vector<VkClearValue> aClearValues );
+                              vector_t<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
@@ -56,8 +56,8 @@ namespace SE::Graphics
         void Bind( VkBuffer aVertexBuffer, VkBuffer aIndexBuffer, uint32_t aBindPoint );
         void Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
                    Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
-        void Bind( void* aDescriptorSet, VkPipelineBindPoint aBindPoint,
-                   Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
+        void Bind( void *aDescriptorSet, VkPipelineBindPoint aBindPoint, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+                   uint32_t aSetIndex, int32_t aDynamicOffset );
 
         void ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
                                  uint32_t aLayerCount );
@@ -66,11 +66,11 @@ namespace SE::Graphics
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
 
         void CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion );
-        void CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
+        void CopyBuffer( VkBuffer aSource, VkImage aDestination, vector_t<sImageRegion> aBufferRegions,
                          sImageRegion const &aImageRegion );
 
         void CopyImage( VkImage aSource, sImageRegion const &aSourceRegion, VkImage aDestination, sImageRegion const &aDestRegion );
-        void CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset );
+        void CopyImage( VkImage aSource, VkBuffer aDestination, vector_t<sImageRegion> aImageRegions, uint32_t aBufferOffset );
 
         template <typename T>
         void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue,
@@ -79,7 +79,7 @@ namespace SE::Graphics
             vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void *)&aValue );
         }
 
-        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, void* aValue, uint32_t aSize,
+        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize,
                             Ref<sVkPipelineLayoutObject> aPipelineLayout )
         {
             vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, aSize, aValue );
@@ -94,9 +94,9 @@ namespace SE::Graphics
         void SubmitTo( VkQueue aQueue );
 
       private:
-        VkFence                           mSubmitFence              = nullptr;
-        std::vector<VkSemaphore>          mSubmitWaitSemaphores     = {};
-        std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
-        std::vector<VkSemaphore>          mSubmitSignalSemaphores   = {};
+        VkFence                        mSubmitFence              = nullptr;
+        vector_t<VkSemaphore>          mSubmitWaitSemaphores     = {};
+        vector_t<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
+        vector_t<VkSemaphore>          mSubmitSignalSemaphores   = {};
     };
 } // namespace SE::Graphics

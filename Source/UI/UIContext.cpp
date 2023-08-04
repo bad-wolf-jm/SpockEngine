@@ -85,7 +85,7 @@ namespace SE::Core
         lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
         lImageData.mWidth     = static_cast<uint32_t>( lWidth );
         lImageData.mHeight    = static_cast<uint32_t>( lHeight );
-        lImageData.mPixelData = std::vector<uint8_t>( lFontPixelData, lFontPixelData + lUploadSize );
+        lImageData.mPixelData = vector_t<uint8_t>( lFontPixelData, lFontPixelData + lUploadSize );
         TextureData2D lTextureImage( lTextureCreateInfo, lImageData );
 
         sTextureSamplingInfo lSamplingInfo{};
@@ -194,17 +194,23 @@ namespace SE::Core
         for( int i = 1; i < lPlatformIO.Viewports.Size; i++ )
         {
             ImGuiViewport *viewport = lPlatformIO.Viewports[i];
-            if( viewport->Flags & ImGuiViewportFlags_Minimized ) continue;
-            if( lPlatformIO.Platform_RenderWindow ) lPlatformIO.Platform_RenderWindow( viewport, this );
-            if( lPlatformIO.Renderer_RenderWindow ) lPlatformIO.Renderer_RenderWindow( viewport, this );
+            if( viewport->Flags & ImGuiViewportFlags_Minimized )
+                continue;
+            if( lPlatformIO.Platform_RenderWindow )
+                lPlatformIO.Platform_RenderWindow( viewport, this );
+            if( lPlatformIO.Renderer_RenderWindow )
+                lPlatformIO.Renderer_RenderWindow( viewport, this );
         }
 
         for( int i = 1; i < lPlatformIO.Viewports.Size; i++ )
         {
             ImGuiViewport *viewport = lPlatformIO.Viewports[i];
-            if( viewport->Flags & ImGuiViewportFlags_Minimized ) continue;
-            if( lPlatformIO.Platform_SwapBuffers ) lPlatformIO.Platform_SwapBuffers( viewport, this );
-            if( lPlatformIO.Renderer_SwapBuffers ) lPlatformIO.Renderer_SwapBuffers( viewport, this );
+            if( viewport->Flags & ImGuiViewportFlags_Minimized )
+                continue;
+            if( lPlatformIO.Platform_SwapBuffers )
+                lPlatformIO.Platform_SwapBuffers( viewport, this );
+            if( lPlatformIO.Renderer_SwapBuffers )
+                lPlatformIO.Renderer_SwapBuffers( viewport, this );
         }
     }
 
@@ -218,7 +224,10 @@ namespace SE::Core
         RenderPlatformWindows();
     }
 
-    ImageHandle UIContext::CreateTextureHandle( Ref<ISampler2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
+    ImageHandle UIContext::CreateTextureHandle( Ref<ISampler2D> aTexture )
+    {
+        return ImageHandle{ AddTexture( aTexture ) };
+    }
 
     ImGuiIO &UIContext::GetIO()
     {
@@ -226,9 +235,15 @@ namespace SE::Core
         return ImGui::GetIO();
     }
 
-    void UIContext::PushFontFamily( FontFamilyFlags aFamily ) { ImGui::PushFont( mFonts[aFamily] ); }
+    void UIContext::PushFontFamily( FontFamilyFlags aFamily )
+    {
+        ImGui::PushFont( mFonts[aFamily] );
+    }
 
-    void UIContext::PopFont() { ImGui::PopFont(); }
+    void UIContext::PopFont()
+    {
+        ImGui::PopFont();
+    }
 
     Ref<IDescriptorSet> UIContext::AddTexture( Ref<ISampler2D> aTexture )
     {

@@ -11,12 +11,13 @@ namespace SE::Graphics
     {
         GraphicContext<VkGraphicContext>()->DestroyFramebuffer( mVkFramebuffer );
 
-        for( auto &lImageView : mVkImageViews ) GraphicContext<VkGraphicContext>()->DestroyImageView( lImageView );
+        for( auto &lImageView : mVkImageViews )
+            GraphicContext<VkGraphicContext>()->DestroyImageView( lImageView );
     }
 
-    std::vector<VkClearValue> VkRenderTarget::GetClearValues()
+    vector_t<VkClearValue> VkRenderTarget::GetClearValues()
     {
-        std::vector<VkClearValue> lValues;
+        vector_t<VkClearValue> lValues;
         for( auto const &lInfo : mAttachmentInfo )
         {
             if( ( lInfo.mType == eAttachmentType::COLOR ) || ( lInfo.mType == eAttachmentType::MSAA_RESOLVE ) )
@@ -90,7 +91,7 @@ namespace SE::Graphics
 
     void VkRenderTarget::Finalize()
     {
-        std::vector<sAttachmentResource> lAttachments{};
+        vector_t<sAttachmentResource> lAttachments{};
         for( auto const &lAttachmentID : mAttachmentIDs )
         {
             auto lAttachment = mAttachments[lAttachmentID];
@@ -138,7 +139,8 @@ namespace SE::Graphics
                 mVkImageViews.push_back( lVkImageView );
             }
             break;
-            default: break;
+            default:
+                break;
             }
         }
 
@@ -153,10 +155,13 @@ namespace SE::Graphics
     {
         switch( aOp )
         {
-        case eAttachmentLoadOp::CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
-        case eAttachmentLoadOp::LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
+        case eAttachmentLoadOp::CLEAR:
+            return VK_ATTACHMENT_LOAD_OP_CLEAR;
+        case eAttachmentLoadOp::LOAD:
+            return VK_ATTACHMENT_LOAD_OP_LOAD;
         case eAttachmentLoadOp::UNSPECIFIED:
-        default: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        default:
+            return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         }
     }
 
@@ -164,19 +169,21 @@ namespace SE::Graphics
     {
         switch( aOp )
         {
-        case eAttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+        case eAttachmentStoreOp::STORE:
+            return VK_ATTACHMENT_STORE_OP_STORE;
         case eAttachmentStoreOp::UNSPECIFIED:
-        default: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        default:
+            return VK_ATTACHMENT_STORE_OP_DONT_CARE;
         }
     }
 
     Ref<VkRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
     {
-        Ref<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>(
-            GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
+        Ref<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>( GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED,
+                                                                          mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
-        std::vector<VkAttachmentDescription> lAttachmentDescriptions{};
-        std::vector<VkAttachmentReference>   lColorAttachmentReferences{};
+        vector_t<VkAttachmentDescription> lAttachmentDescriptions{};
+        vector_t<VkAttachmentReference>   lColorAttachmentReferences{};
 
         VkAttachmentReference  lDepthAttachment{};
         VkAttachmentReference *lDepthAttachmentPtr = nullptr;
@@ -225,7 +232,8 @@ namespace SE::Graphics
                 lDepthAttachmentPtr         = &lDepthAttachment;
                 break;
             }
-            default: break;
+            default:
+                break;
             }
         }
 
@@ -241,21 +249,43 @@ namespace SE::Graphics
         return std::static_pointer_cast<VkTexture2D>( mAttachments[aKey].mTexture );
     }
 
-    bool VkRenderTarget::BeginRender() { return true; }
+    bool VkRenderTarget::BeginRender()
+    {
+        return true;
+    }
 
-    void VkRenderTarget::EndRender() {}
+    void VkRenderTarget::EndRender()
+    {
+    }
 
-    void VkRenderTarget::Present() {}
+    void VkRenderTarget::Present()
+    {
+    }
 
-    uint32_t VkRenderTarget::GetCurrentImage() { return 0; };
+    uint32_t VkRenderTarget::GetCurrentImage()
+    {
+        return 0;
+    };
 
-    VkFramebuffer VkRenderTarget::GetFramebuffer() { return mVkFramebuffer; }
+    VkFramebuffer VkRenderTarget::GetFramebuffer()
+    {
+        return mVkFramebuffer;
+    }
 
-    VkSemaphore VkRenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkSemaphore VkRenderTarget::GetImageAvailableSemaphore( uint32_t i )
+    {
+        return VK_NULL_HANDLE;
+    }
 
-    VkSemaphore VkRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkSemaphore VkRenderTarget::GetRenderFinishedSemaphore( uint32_t i )
+    {
+        return VK_NULL_HANDLE;
+    }
 
-    VkFence VkRenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkFence VkRenderTarget::GetInFlightFence( uint32_t i )
+    {
+        return VK_NULL_HANDLE;
+    }
 
     void VkRenderTarget::InitializeCommandBuffers()
     {
@@ -273,10 +303,12 @@ namespace SE::Graphics
                 mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT );
 
             auto lRenderFinishedSemaphore = GetRenderFinishedSemaphore( i );
-            if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
+            if( lRenderFinishedSemaphore )
+                mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
 
             auto lSubmitFence = GetInFlightFence( i );
-            if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
+            if( lSubmitFence )
+                mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
     }
 

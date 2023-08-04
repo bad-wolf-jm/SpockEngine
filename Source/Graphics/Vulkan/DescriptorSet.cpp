@@ -28,9 +28,10 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lBufferBindInfo );
     }
 
-    void DescriptorSet::Write( std::vector<Ref<VkSampler2D>> aWriteOperations, uint32_t aBinding )
+    void DescriptorSet::Write( vector_t<Ref<VkSampler2D>> aWriteOperations, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 ) return;
+        if( aWriteOperations.size() == 0 )
+            return;
 
         sVkDescriptorSetObject::sImageBindInfo lImages{};
 
@@ -43,11 +44,15 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    void DescriptorSet::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
-
-    void DescriptorSet::Write( std::vector<Ref<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    void DescriptorSet::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 ) return;
+        Write( std::vector{ aBuffer }, aBinding );
+    }
+
+    void DescriptorSet::Write( vector_t<Ref<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    {
+        if( aWriteOperations.size() == 0 )
+            return;
 
         sVkDescriptorSetObject::sImageBindInfo lImages{};
 
@@ -60,8 +65,10 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    void DescriptorSet::Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
-
+    void DescriptorSet::Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding )
+    {
+        Write( std::vector{ aBuffer }, aBinding );
+    }
 
     DescriptorBindingInfo::operator VkDescriptorSetLayoutBinding() const
     {
@@ -71,13 +78,17 @@ namespace SE::Graphics
         lNewBinding.descriptorType               = (VkDescriptorType)Type;
         lNewBinding.pImmutableSamplers           = nullptr;
 
-        if( mShaderStages & eShaderStageTypeFlags::VERTEX ) lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::VERTEX )
+            lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
 
-        if( mShaderStages & eShaderStageTypeFlags::COMPUTE ) lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::COMPUTE )
+            lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
-        if( mShaderStages & eShaderStageTypeFlags::GEOMETRY ) lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::GEOMETRY )
+            lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 
-        if( mShaderStages & eShaderStageTypeFlags::FRAGMENT ) lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::FRAGMENT )
+            lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
 
         if( mShaderStages & eShaderStageTypeFlags::TESSELATION_CONTROL )
             lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
@@ -93,7 +104,7 @@ namespace SE::Graphics
         : mGraphicContext{ aGraphicContext }
         , Spec( aCreateInfo )
     {
-        std::vector<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
+        vector_t<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
 
         for( uint32_t i = 0; i < aCreateInfo.Bindings.size(); i++ )
         {

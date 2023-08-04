@@ -18,18 +18,42 @@ namespace SE::Graphics
         bool                            BeginRender();
         void                            EndRender();
         void                            Present();
-        sRenderTargetDescription const &Spec() { return mRenderTargets[0]->mSpec; }
+        sRenderTargetDescription const &Spec()
+        {
+            return mRenderTargets[0]->mSpec;
+        }
 
-        std::vector<VkClearValue> GetClearValues() { return mRenderTargets[mCurrentImage]->GetClearValues(); }
-        VkFramebuffer             GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
-        Ref<IRenderPass>          GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
-        Ref<ICommandBuffer>       GetCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
+        vector_t<VkClearValue> GetClearValues()
+        {
+            return mRenderTargets[mCurrentImage]->GetClearValues();
+        }
+        VkFramebuffer GetFramebuffer()
+        {
+            return mRenderTargets[mCurrentImage]->GetFramebuffer();
+        }
+        Ref<IRenderPass> GetRenderPass()
+        {
+            return mRenderTargets[0]->GetRenderPass();
+        }
+        Ref<ICommandBuffer> GetCommandBuffer()
+        {
+            return mCommandBufferObject[mCurrentImage];
+        }
 
         // Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
 
-        VkSemaphore GetImageAvailableSemaphore( uint32_t i ) { return mImageAvailableSemaphores[i]; }
-        VkSemaphore GetRenderFinishedSemaphore( uint32_t i ) { return mRenderFinishedSemaphores[i]; }
-        VkFence     GetInFlightFence( uint32_t i ) { return mInFlightFences[i]; }
+        VkSemaphore GetImageAvailableSemaphore( uint32_t i )
+        {
+            return mImageAvailableSemaphores[i];
+        }
+        VkSemaphore GetRenderFinishedSemaphore( uint32_t i )
+        {
+            return mRenderFinishedSemaphores[i];
+        }
+        VkFence GetInFlightFence( uint32_t i )
+        {
+            return mInFlightFences[i];
+        }
 
       private:
         void RecreateSwapChain();
@@ -37,13 +61,13 @@ namespace SE::Graphics
         Ref<IWindow> mViewportClient = nullptr;
 
       private:
-        VkSurfaceKHR                             mVkSurface                = VK_NULL_HANDLE;
-        VkSwapchainKHR                           mVkObject                 = VK_NULL_HANDLE;
-        std::vector<Ref<VkRenderTarget>>         mRenderTargets            = {};
-        std::vector<VkSemaphore>                 mImageAvailableSemaphores = {};
-        std::vector<VkSemaphore>                 mRenderFinishedSemaphores = {};
-        std::vector<VkFence>                     mInFlightFences           = {};
-        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject      = {};
+        VkSurfaceKHR                          mVkSurface                = VK_NULL_HANDLE;
+        VkSwapchainKHR                        mVkObject                 = VK_NULL_HANDLE;
+        vector_t<Ref<VkRenderTarget>>         mRenderTargets            = {};
+        vector_t<VkSemaphore>                 mImageAvailableSemaphores = {};
+        vector_t<VkSemaphore>                 mRenderFinishedSemaphores = {};
+        vector_t<VkFence>                     mInFlightFences           = {};
+        vector_t<Ref<sVkCommandBufferObject>> mCommandBufferObject      = {};
 
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;

@@ -90,31 +90,41 @@ namespace SE::Core
                 return invalid;
             }
 
-            bool operator==( const Coordinates &o ) const { return mLine == o.mLine && mColumn == o.mColumn; }
+            bool operator==( const Coordinates &o ) const
+            {
+                return mLine == o.mLine && mColumn == o.mColumn;
+            }
 
-            bool operator!=( const Coordinates &o ) const { return mLine != o.mLine || mColumn != o.mColumn; }
+            bool operator!=( const Coordinates &o ) const
+            {
+                return mLine != o.mLine || mColumn != o.mColumn;
+            }
 
             bool operator<( const Coordinates &o ) const
             {
-                if( mLine != o.mLine ) return mLine < o.mLine;
+                if( mLine != o.mLine )
+                    return mLine < o.mLine;
                 return mColumn < o.mColumn;
             }
 
             bool operator>( const Coordinates &o ) const
             {
-                if( mLine != o.mLine ) return mLine > o.mLine;
+                if( mLine != o.mLine )
+                    return mLine > o.mLine;
                 return mColumn > o.mColumn;
             }
 
             bool operator<=( const Coordinates &o ) const
             {
-                if( mLine != o.mLine ) return mLine < o.mLine;
+                if( mLine != o.mLine )
+                    return mLine < o.mLine;
                 return mColumn <= o.mColumn;
             }
 
             bool operator>=( const Coordinates &o ) const
             {
-                if( mLine != o.mLine ) return mLine > o.mLine;
+                if( mLine != o.mLine )
+                    return mLine > o.mLine;
                 return mColumn >= o.mColumn;
             }
         };
@@ -151,13 +161,13 @@ namespace SE::Core
             }
         };
 
-        typedef std::vector<Glyph> Line;
-        typedef std::vector<Line>  Lines;
+        typedef vector_t<Glyph> Line;
+        typedef vector_t<Line>  Lines;
 
         struct LanguageDefinition
         {
             typedef std::pair<string_t, PaletteIndex> TokenRegexString;
-            typedef std::vector<TokenRegexString>     TokenRegexStrings;
+            typedef vector_t<TokenRegexString>        TokenRegexStrings;
             typedef bool ( *TokenizeCallback )( const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end,
                                                 PaletteIndex &paletteIndex );
 
@@ -205,49 +215,103 @@ namespace SE::Core
 
       public:
         void                      SetLanguageDefinition( const LanguageDefinition &aLanguageDef );
-        const LanguageDefinition &GetLanguageDefinition() const { return mLanguageDefinition; }
+        const LanguageDefinition &GetLanguageDefinition() const
+        {
+            return mLanguageDefinition;
+        }
 
-        const Palette &GetPalette() const { return mPaletteBase; }
-        void           SetPalette( const Palette &aValue );
+        const Palette &GetPalette() const
+        {
+            return mPaletteBase;
+        }
+        void SetPalette( const Palette &aValue );
 
-        void SetErrorMarkers( const ErrorMarkers &aMarkers ) { mErrorMarkers = aMarkers; }
-        void SetBreakpoints( const Breakpoints &aMarkers ) { mBreakpoints = aMarkers; }
+        void SetErrorMarkers( const ErrorMarkers &aMarkers )
+        {
+            mErrorMarkers = aMarkers;
+        }
+        void SetBreakpoints( const Breakpoints &aMarkers )
+        {
+            mBreakpoints = aMarkers;
+        }
 
         void     Render( const char *aTitle, const ImVec2 &aSize = ImVec2(), bool aBorder = false );
         void     SetText( const string_t &aText );
         string_t GetText() const;
 
-        void                  SetTextLines( const std::vector<string_t> &aLines );
-        std::vector<string_t> GetTextLines() const;
+        void               SetTextLines( const vector_t<string_t> &aLines );
+        vector_t<string_t> GetTextLines() const;
 
         string_t GetSelectedText() const;
         string_t GetCurrentLineText() const;
 
-        int  GetTotalLines() const { return (int)mLines.size(); }
-        bool IsOverwrite() const { return mOverwrite; }
+        int GetTotalLines() const
+        {
+            return (int)mLines.size();
+        }
+        bool IsOverwrite() const
+        {
+            return mOverwrite;
+        }
 
         void SetReadOnly( bool aValue );
-        bool IsReadOnly() const { return mReadOnly; }
-        bool IsTextChanged() const { return mTextChanged; }
-        bool IsCursorPositionChanged() const { return mCursorPositionChanged; }
+        bool IsReadOnly() const
+        {
+            return mReadOnly;
+        }
+        bool IsTextChanged() const
+        {
+            return mTextChanged;
+        }
+        bool IsCursorPositionChanged() const
+        {
+            return mCursorPositionChanged;
+        }
 
-        bool IsColorizerEnabled() const { return mColorizerEnabled; }
+        bool IsColorizerEnabled() const
+        {
+            return mColorizerEnabled;
+        }
         void SetColorizerEnable( bool aValue );
 
-        Coordinates GetCursorPosition() const { return GetActualCursorCoordinates(); }
-        void        SetCursorPosition( const Coordinates &aPosition );
+        Coordinates GetCursorPosition() const
+        {
+            return GetActualCursorCoordinates();
+        }
+        void SetCursorPosition( const Coordinates &aPosition );
 
-        inline void SetHandleMouseInputs( bool aValue ) { mHandleMouseInputs = aValue; }
-        inline bool IsHandleMouseInputsEnabled() const { return mHandleKeyboardInputs; }
+        inline void SetHandleMouseInputs( bool aValue )
+        {
+            mHandleMouseInputs = aValue;
+        }
+        inline bool IsHandleMouseInputsEnabled() const
+        {
+            return mHandleKeyboardInputs;
+        }
 
-        inline void SetHandleKeyboardInputs( bool aValue ) { mHandleKeyboardInputs = aValue; }
-        inline bool IsHandleKeyboardInputsEnabled() const { return mHandleKeyboardInputs; }
+        inline void SetHandleKeyboardInputs( bool aValue )
+        {
+            mHandleKeyboardInputs = aValue;
+        }
+        inline bool IsHandleKeyboardInputsEnabled() const
+        {
+            return mHandleKeyboardInputs;
+        }
 
-        inline void SetShowWhitespaces( bool aValue ) { mShowWhitespaces = aValue; }
-        inline bool IsShowingWhitespaces() const { return mShowWhitespaces; }
+        inline void SetShowWhitespaces( bool aValue )
+        {
+            mShowWhitespaces = aValue;
+        }
+        inline bool IsShowingWhitespaces() const
+        {
+            return mShowWhitespaces;
+        }
 
         void       SetTabSize( int aValue );
-        inline int GetTabSize() const { return mTabSize; }
+        inline int GetTabSize() const
+        {
+            return mTabSize;
+        }
 
         void InsertText( const string_t &aValue );
         void InsertText( const char *aValue );
@@ -283,7 +347,7 @@ namespace SE::Core
         static const Palette &GetRetroBluePalette();
 
       private:
-        typedef std::vector<std::pair<std::regex, PaletteIndex>> RegexList;
+        typedef vector_t<std::pair<std::regex, PaletteIndex>> RegexList;
 
         struct EditorState
         {
@@ -295,8 +359,12 @@ namespace SE::Core
         class UndoRecord
         {
           public:
-            UndoRecord() {}
-            ~UndoRecord() {}
+            UndoRecord()
+            {
+            }
+            ~UndoRecord()
+            {
+            }
 
             UndoRecord( const string_t &aAdded, const UICodeEditor::Coordinates aAddedStart, const UICodeEditor::Coordinates aAddedEnd,
 
@@ -320,7 +388,7 @@ namespace SE::Core
             EditorState mAfter;
         };
 
-        typedef std::vector<UndoRecord> UndoBuffer;
+        typedef vector_t<UndoRecord> UndoBuffer;
 
         void        ProcessInputs();
         void        Colorize( int aFromLine = 0, int aCount = -1 );

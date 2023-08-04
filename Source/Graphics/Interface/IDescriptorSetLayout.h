@@ -1,17 +1,16 @@
 #pragma once
 
 #include "Core/Memory.h"
+#include "IDescriptorSet.h"
 #include "IGraphicBuffer.h"
 #include "IGraphicContext.h"
 #include "ISampler2D.h"
 #include "ISamplerCubeMap.h"
-#include "IDescriptorSet.h"
 
 #include "Enums.h"
 
 #include <vector>
 #include <vulkan/vulkan.h>
-
 
 namespace SE::Graphics
 {
@@ -39,7 +38,7 @@ namespace SE::Graphics
         bool     mIsUnbounded     = false;
         uint32_t mDescriptorCount = 1;
 
-        std::vector<sDescriptorBindingInfo> mDescriptors = {};
+        vector_t<sDescriptorBindingInfo> mDescriptors = {};
     };
 
 } // namespace SE::Graphics

@@ -16,7 +16,7 @@ namespace SE::Graphics
     {
         auto lDescriptorSet = mDescriptors;
 
-        std::vector<VkDescriptorSetLayoutBinding> lBindings{};
+        vector_t<VkDescriptorSetLayoutBinding> lBindings{};
 
         for( uint32_t j = 0; j < lDescriptorSet.size(); j++ )
         {
@@ -27,30 +27,47 @@ namespace SE::Graphics
 
             switch( lDescriptorSet[j].mType )
             {
-            case eDescriptorType::SAMPLER: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER; break;
+            case eDescriptorType::SAMPLER:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+                break;
             case eDescriptorType::COMBINED_IMAGE_SAMPLER:
                 lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
                 break;
-            case eDescriptorType::SAMPLED_IMAGE: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE; break;
-            case eDescriptorType::STORAGE_IMAGE: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE; break;
-            case eDescriptorType::UNIFORM_TEXEL_BUFFER: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER; break;
-            case eDescriptorType::STORAGE_TEXEL_BUFFER: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER; break;
-            case eDescriptorType::UNIFORM_BUFFER: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; break;
-            case eDescriptorType::STORAGE_BUFFER: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER; break;
+            case eDescriptorType::SAMPLED_IMAGE:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+                break;
+            case eDescriptorType::STORAGE_IMAGE:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+                break;
+            case eDescriptorType::UNIFORM_TEXEL_BUFFER:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+                break;
+            case eDescriptorType::STORAGE_TEXEL_BUFFER:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+                break;
+            case eDescriptorType::UNIFORM_BUFFER:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                break;
+            case eDescriptorType::STORAGE_BUFFER:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                break;
             case eDescriptorType::UNIFORM_BUFFER_DYNAMIC:
                 lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
                 break;
             case eDescriptorType::STORAGE_BUFFER_DYNAMIC:
                 lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
                 break;
-            case eDescriptorType::INPUT_ATTACHMENT: lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-            default: break;
+            case eDescriptorType::INPUT_ATTACHMENT:
+                lNewBinding.descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+            default:
+                break;
             }
 
             // lNewBinding.descriptorType     = (VkDescriptorType)lDescriptorSet[j].mType;
             lNewBinding.pImmutableSamplers = nullptr;
 
-            if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::VERTEX ) lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+            if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::VERTEX )
+                lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
 
             if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::COMPUTE )
                 lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
@@ -68,7 +85,8 @@ namespace SE::Graphics
                 lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
         }
 
-        if( mIsUnbounded ) lBindings[lBindings.size() - 1].descriptorCount = 1024;
+        if( mIsUnbounded )
+            lBindings[lBindings.size() - 1].descriptorCount = 1024;
 
         mLayout = New<sVkDescriptorSetLayoutObject>( Cast<VkGraphicContext>( mGraphicContext ), lBindings, mIsUnbounded );
     }

@@ -25,10 +25,10 @@ namespace SE::Core
     ///
     struct sProfilingEvent
     {
-        string_t mName = ""; //!< Name of the event
+        string_t mName = "";       //!< Name of the event
 
-        int64_t mStart       = 0; //!< Start time
-        int64_t mElapsedTime = 0; //!< Total event time
+        int64_t mStart       = 0;  //!< Start time
+        int64_t mElapsedTime = 0;  //!< Total event time
 
         std::thread::id mThreadID; //!< Thread ID for the event
     };
@@ -39,9 +39,9 @@ namespace SE::Core
     ///
     struct sProfilingSession
     {
-        string_t mName = ""; //!< Name of the session
+        string_t mName = "";                    //!< Name of the session
 
-        std::vector<sProfilingEvent> mEvents = {}; //!< List of events fired during the session
+        vector_t<sProfilingEvent> mEvents = {}; //!< List of events fired during the session
 
         sProfilingSession( string_t const &aName )
             : mName{ aName }
@@ -98,12 +98,18 @@ namespace SE::Core
         {
         }
 
-        ~Instrumentor() { EndSession(); }
+        ~Instrumentor()
+        {
+            EndSession();
+        }
 
-        void InternalEndSession() { mCurrentSession = nullptr; }
+        void InternalEndSession()
+        {
+            mCurrentSession = nullptr;
+        }
 
       private:
-        std::mutex mMutex{};
+        std::mutex             mMutex{};
         Ref<sProfilingSession> mCurrentSession = nullptr;
     };
 
@@ -132,7 +138,7 @@ namespace SE::Core
         }
 
       private:
-        string_t mName = "";
+        string_t                                                    mName = "";
         std::chrono::time_point<std::chrono::high_resolution_clock> mStartTimePoint;
     };
 
@@ -150,9 +156,9 @@ namespace SE::Core
 #        define SE_FUNC_SIG "SE_FUNC_SIG unknown!"
 #    endif
 #    define SE_PROFILE_SCOPE_LINE2( name, line ) BlockTimer timer##line( name )
-#    define SE_PROFILE_SCOPE_LINE( name, line ) SE_PROFILE_SCOPE_LINE2( name, line )
-#    define SE_PROFILE_SCOPE( name ) SE_PROFILE_SCOPE_LINE( name, __LINE__ )
-#    define SE_PROFILE_FUNCTION() SE_PROFILE_SCOPE( SE_FUNC_SIG )
+#    define SE_PROFILE_SCOPE_LINE( name, line )  SE_PROFILE_SCOPE_LINE2( name, line )
+#    define SE_PROFILE_SCOPE( name )             SE_PROFILE_SCOPE_LINE( name, __LINE__ )
+#    define SE_PROFILE_FUNCTION()                SE_PROFILE_SCOPE( SE_FUNC_SIG )
 #else
 #    define SE_PROFILE_SCOPE( name )
 #    define SE_PROFILE_FUNCTION()

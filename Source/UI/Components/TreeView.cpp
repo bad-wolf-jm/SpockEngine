@@ -403,7 +403,7 @@ namespace SE::Core
         }
     }
 
-    std::vector<UITreeViewNode *> const &UITreeViewNode::Children()
+    vector_t<UITreeViewNode *> const &UITreeViewNode::Children()
     {
         return mChildren;
     }

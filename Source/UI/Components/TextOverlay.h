@@ -59,10 +59,10 @@ namespace SE::Core
         float mTopMargin    = 10.0f;
         float mBottomMargin = 10.0f;
 
-        std::vector<sCharacter> mCharacters;
-        std::vector<sLine>      mLines;
-        std::mutex              mLinesMutex;
-        eTextEncoding           mEncoding = eTextEncoding::UTF16;
+        vector_t<sCharacter> mCharacters;
+        vector_t<sLine>      mLines;
+        std::mutex           mLinesMutex;
+        eTextEncoding        mEncoding = eTextEncoding::UTF16;
 
       protected:
         void PushStyles();

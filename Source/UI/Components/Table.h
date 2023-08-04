@@ -10,9 +10,9 @@ namespace SE::Core
         string_t mHeader;
         float    mInitialSize = 10.0f;
 
-        std::vector<uint32_t>      mBackgroundColor;
-        std::vector<uint32_t>      mForegroundColor;
-        std::vector<UIComponent *> mToolTip;
+        vector_t<uint32_t>      mBackgroundColor;
+        vector_t<uint32_t>      mForegroundColor;
+        vector_t<UIComponent *> mToolTip;
 
         void PushStyles()
         {
@@ -36,7 +36,7 @@ namespace SE::Core
     //     string_t mFormat;
     //     string_t mNaNFormat;
 
-    //     std::vector<double> mData;
+    //     vector_t<double> mData;
 
     //     UIFloat64Column() = default;
     //     UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
@@ -53,7 +53,7 @@ namespace SE::Core
 
     // struct UIUint32Column : public UITableColumn
     // {
-    //     std::vector<uint32_t> mData;
+    //     vector_t<uint32_t> mData;
 
     //     UIUint32Column() = default;
     //     UIUint32Column( string_t aHeader, float aInitialSize );
@@ -69,7 +69,7 @@ namespace SE::Core
 
     struct UIStringColumn : public UITableColumn
     {
-        std::vector<string_t> mData;
+        vector_t<string_t> mData;
 
         UIStringColumn() = default;
         UIStringColumn( string_t aHeader, float aInitialSize );
@@ -94,11 +94,11 @@ namespace SE::Core
 
         void OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked );
 
-        std::vector<uint32_t>           mRowBackgroundColor;
-        std::optional<std::vector<int>> mDisplayedRowIndices;
+        vector_t<uint32_t>           mRowBackgroundColor;
+        std::optional<vector_t<int>> mDisplayedRowIndices;
 
       protected:
-        std::vector<UITableColumn *>    mColumns;
+        vector_t<UITableColumn *>       mColumns;
         std::function<void( uint32_t )> mOnRowClicked;
 
       protected:

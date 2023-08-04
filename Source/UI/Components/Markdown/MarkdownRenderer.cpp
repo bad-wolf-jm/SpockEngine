@@ -296,7 +296,10 @@ namespace SE::Core
         }
     }
 
-    void UIMarkdownRendererInternal::ListItem::Render() { UIMarkdownRendererInternal::Block::Render(); }
+    void UIMarkdownRendererInternal::ListItem::Render()
+    {
+        UIMarkdownRendererInternal::Block::Render();
+    }
 
     // void UIMarkdownRendererInternal::BLOCK_P( bool e )
     // {
@@ -313,10 +316,16 @@ namespace SE::Core
         ImVec2 lContentPosition{};
         switch( aHAlignment )
         {
-        case eHorizontalAlignment::LEFT: lContentPosition.x = aPosition.x; break;
-        case eHorizontalAlignment::RIGHT: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ); break;
+        case eHorizontalAlignment::LEFT:
+            lContentPosition.x = aPosition.x;
+            break;
+        case eHorizontalAlignment::RIGHT:
+            lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x );
+            break;
         case eHorizontalAlignment::CENTER:
-        default: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) * 0.5f; break;
+        default:
+            lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) * 0.5f;
+            break;
         }
 
         lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ) * 0.5f;
@@ -382,8 +391,8 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::Table::ComputeColumnSizes()
     {
-        mCells    = std::vector<ImVec4>( ( mTableRows + 1 ) * mColumns );
-        mCellData = std::vector<const char *>( ( mTableRows + 1 ) * mColumns );
+        mCells    = vector_t<ImVec4>( ( mTableRows + 1 ) * mColumns );
+        mCellData = vector_t<const char *>( ( mTableRows + 1 ) * mColumns );
         mHeight   = 0.0f;
 
         int x = 0;
@@ -613,10 +622,18 @@ namespace SE::Core
             SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::BOLD
                                                                                       : FontFamilyFlags::NORMAL );
             break;
-        case 1: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 ); break;
-        case 2: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H2 ); break;
-        case 3: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H3 ); break;
-        default: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL ); break;
+        case 1:
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 );
+            break;
+        case 2:
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H2 );
+            break;
+        case 3:
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H3 );
+            break;
+        default:
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
+            break;
         }
     }
 
@@ -660,17 +677,21 @@ namespace SE::Core
 
             te = ImGui::GetFont()->CalcWordWrapPositionA( scale, str, str_end, ImGui::GetContentRegionAvail().x );
 
-            if( te == str ) ++te;
-            if( te > str && *( te - 1 ) == '\n' ) is_lf = true;
+            if( te == str )
+                ++te;
+            if( te > str && *( te - 1 ) == '\n' )
+                is_lf = true;
 
             ImGui::TextUnformatted( str, te );
 
             str = te;
 
-            while( str < str_end && *str == ' ' ) ++str;
+            while( str < str_end && *str == ' ' )
+                ++str;
         }
 
-        if( !is_lf ) ImGui::SameLine( 0.0f, 0.0f );
+        if( !is_lf )
+            ImGui::SameLine( 0.0f, 0.0f );
     }
 
     // void UIMarkdownRendererInternal::SPAN_A( const MD_SPAN_A_DETAIL *d, bool e )
@@ -810,7 +831,8 @@ namespace SE::Core
 
                 te = ImGui::GetFont()->CalcWordWrapPositionA( scale, str, str_end, wl );
 
-                if( te == str ) ++te;
+                if( te == str )
+                    ++te;
             }
 
             ImGui::TextUnformatted( str, te );
@@ -854,10 +876,12 @@ namespace SE::Core
 
             str = te;
 
-            while( str < str_end && *str == ' ' ) ++str;
+            while( str < str_end && *str == ' ' )
+                ++str;
         }
 
-        if( !is_lf ) ImGui::SameLine( 0.0f, 0.0f );
+        if( !is_lf )
+            ImGui::SameLine( 0.0f, 0.0f );
     }
 
     bool UIMarkdownRendererInternal::render_entity( const char *str, const char *str_end )
@@ -886,22 +910,28 @@ namespace SE::Core
 
     static std::string get_div_class( const char *str, const char *str_end )
     {
-        if( str_end <= str ) return "";
+        if( str_end <= str )
+            return "";
 
         std::string d( str, str_end - str );
-        if( d.back() == '>' ) d.pop_back();
+        if( d.back() == '>' )
+            d.pop_back();
 
         const char attr[] = "class";
         size_t     p      = d.find( attr );
-        if( p == std::string::npos ) return "";
+        if( p == std::string::npos )
+            return "";
         p += sizeof( attr ) - 1;
 
-        if( !skip_spaces( d, p ) ) return "";
+        if( !skip_spaces( d, p ) )
+            return "";
 
-        if( d[p] != '=' ) return "";
+        if( d[p] != '=' )
+            return "";
         ++p;
 
-        if( !skip_spaces( d, p ) ) return "";
+        if( !skip_spaces( d, p ) )
+            return "";
 
         bool has_q = false;
 
@@ -910,11 +940,13 @@ namespace SE::Core
             has_q = true;
             ++p;
         }
-        if( p == d.length() ) return "";
+        if( p == d.length() )
+            return "";
 
         if( !has_q )
         {
-            if( !skip_spaces( d, p ) ) return "";
+            if( !skip_spaces( d, p ) )
+                return "";
         }
 
         size_t pe;
@@ -976,7 +1008,8 @@ namespace SE::Core
         }
         if( strncmp( str, "</div>", sz ) == 0 )
         {
-            if( m_div_stack.empty() ) return false;
+            if( m_div_stack.empty() )
+                return false;
             html_div( m_div_stack.back(), false );
             m_div_stack.pop_back();
             return true;
@@ -984,7 +1017,9 @@ namespace SE::Core
         return false;
     }
 
-    void UIMarkdownRendererInternal::html_div( const std::string &dclass, bool e ) {}
+    void UIMarkdownRendererInternal::html_div( const std::string &dclass, bool e )
+    {
+    }
 
     int UIMarkdownRendererInternal::text( MD_TEXTTYPE type, const char *str, const char *str_end )
     {
@@ -1053,13 +1088,15 @@ namespace SE::Core
             render_text( str, str_end );
             break;
         }
-        default: break;
+        default:
+            break;
         }
 
         if( m_is_table_header )
         {
             const float x = ImGui::GetCursorPosX();
-            if( x > m_table_last_pos.x ) m_table_last_pos.x = x;
+            if( x > m_table_last_pos.x )
+                m_table_last_pos.x = x;
         }
 
         return 0;
@@ -1077,15 +1114,20 @@ namespace SE::Core
                 mCurrentTable = nullptr;
             }
 
-            if( ( type == MD_BLOCK_OL ) || ( type == MD_BLOCK_UL ) ) mListStack.pop_back();
+            if( ( type == MD_BLOCK_OL ) || ( type == MD_BLOCK_UL ) )
+                mListStack.pop_back();
 
             return 0;
         }
 
         switch( type )
         {
-        case MD_BLOCK_DOC: PushBlock<Document>(); break;
-        case MD_BLOCK_QUOTE: PushBlock<Quote>(); break;
+        case MD_BLOCK_DOC:
+            PushBlock<Document>();
+            break;
+        case MD_BLOCK_QUOTE:
+            PushBlock<Quote>();
+            break;
         case MD_BLOCK_UL:
             PushBlock<List>( (MD_BLOCK_UL_DETAIL *)d );
             mListStack.push_back( std::reinterpret_pointer_cast<List>( mCurrentBlock ) );
@@ -1094,18 +1136,30 @@ namespace SE::Core
             PushBlock<List>( (MD_BLOCK_OL_DETAIL *)d );
             mListStack.push_back( std::reinterpret_pointer_cast<List>( mCurrentBlock ) );
             break;
-        case MD_BLOCK_LI: PushBlock<ListItem>( (MD_BLOCK_LI_DETAIL *)d ); break;
-        case MD_BLOCK_HR: PushBlock<HRule>(); break;
-        case MD_BLOCK_H: PushBlock<Heading>( (MD_BLOCK_H_DETAIL *)d ); break;
-        case MD_BLOCK_CODE: PushBlock<Code>( (MD_BLOCK_CODE_DETAIL *)d ); break;
-        case MD_BLOCK_HTML: PushBlock<Html>(); break;
-        case MD_BLOCK_P: PushBlock<Paragraph>(); break;
+        case MD_BLOCK_LI:
+            PushBlock<ListItem>( (MD_BLOCK_LI_DETAIL *)d );
+            break;
+        case MD_BLOCK_HR:
+            PushBlock<HRule>();
+            break;
+        case MD_BLOCK_H:
+            PushBlock<Heading>( (MD_BLOCK_H_DETAIL *)d );
+            break;
+        case MD_BLOCK_CODE:
+            PushBlock<Code>( (MD_BLOCK_CODE_DETAIL *)d );
+            break;
+        case MD_BLOCK_HTML:
+            PushBlock<Html>();
+            break;
+        case MD_BLOCK_P:
+            PushBlock<Paragraph>();
+            break;
         case MD_BLOCK_TABLE:
             PushBlock<Table>( (MD_BLOCK_TABLE_DETAIL *)d );
             mCurrentTable = std::reinterpret_pointer_cast<Table>( mCurrentBlock );
             for( uint32_t j = 0; j < mCurrentTable->mColumns; j++ )
             {
-                mCurrentTable->mBody.push_back( std::vector<string_t>() );
+                mCurrentTable->mBody.push_back( vector_t<string_t>() );
 
                 for( uint32_t i = 0; i < mCurrentTable->mTableRows; i++ )
                 {
@@ -1145,18 +1199,26 @@ namespace SE::Core
             mCurrentTable->mCurrentColumn++;
             switch( ( (MD_BLOCK_TD_DETAIL *)d )->align )
             {
-            case MD_ALIGN::MD_ALIGN_LEFT: mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::LEFT ); break;
-            case MD_ALIGN::MD_ALIGN_RIGHT: mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::RIGHT ); break;
+            case MD_ALIGN::MD_ALIGN_LEFT:
+                mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::LEFT );
+                break;
+            case MD_ALIGN::MD_ALIGN_RIGHT:
+                mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::RIGHT );
+                break;
             case MD_ALIGN::MD_ALIGN_CENTER:
             case MD_ALIGN::MD_ALIGN_DEFAULT:
-            default: mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::CENTER ); break;
+            default:
+                mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::CENTER );
+                break;
             }
             break;
         case MD_BLOCK_TD:
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
             mCurrentTable->mCurrentColumn++;
             break;
-        default: assert( false ); break;
+        default:
+            assert( false );
+            break;
         }
 
         return 0;
@@ -1212,7 +1274,9 @@ namespace SE::Core
             PushBlock<Underline>();
             // SPAN_U( e );
             break;
-        default: assert( false ); break;
+        default:
+            assert( false );
+            break;
         }
 
         return 0;
@@ -1220,7 +1284,8 @@ namespace SE::Core
 
     int UIMarkdownRendererInternal::print( const char *str, const char *str_end )
     {
-        if( str >= str_end ) return 0;
+        if( str >= str_end )
+            return 0;
 
         if( mRootBlock )
         {

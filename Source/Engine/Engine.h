@@ -17,9 +17,9 @@
 
 // #include "Core/Optix/OptixContext.h"
 #include "Graphics/Interface/IWindow.h"
-#include "Graphics/Vulkan/VkSwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkRenderContext.h"
+#include "Graphics/Vulkan/VkSwapChain.h"
 #include "Graphics/Vulkan/VkSwapChainRenderContext.h"
 // #include "Core/Optix/OptixContext.h"
 /** @brief */
@@ -91,13 +91,22 @@ namespace SE::Core
         /** @brief Retrieved the underlying application window. */
         GLFWwindow *GetMainApplicationWindow();
 
-        math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
+        math::ivec2 GetViewportSize()
+        {
+            return mViewportClient->GetFramebufferSize();
+        }
 
-        Ref<IGraphicContext> &GetGraphicContext();// { return mGraphicContext; }
-        Ref<UIContext> &UIContext();// { return mImGUIOverlay; };
+        Ref<IGraphicContext> &GetGraphicContext(); // { return mGraphicContext; }
+        Ref<UIContext>       &UIContext();         // { return mImGUIOverlay; };
 
-        void        SetApplicationName( string_t a_Name ) { mApplicationName = a_Name; }
-        string_t GetApplicationName() { return mApplicationName; }
+        void SetApplicationName( string_t a_Name )
+        {
+            mApplicationName = a_Name;
+        }
+        string_t GetApplicationName()
+        {
+            return mApplicationName;
+        }
 
         void SetInitialWindowPosition( math::ivec2 a_Position );
         void SetInitialWindowSize( math::ivec2 a_Size );
@@ -105,7 +114,7 @@ namespace SE::Core
 
         math::ivec2 GetWindowPosition();
         math::ivec2 GetWindowSize();
-        string_t GetImGuiConfigurationFile();
+        string_t    GetImGuiConfigurationFile();
 
         static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, path_t aImGuiConfigPath,
                                 UIConfiguration const &aUIConfiguration );
@@ -122,15 +131,15 @@ namespace SE::Core
       private:
         // static std::unique_ptr<Engine> mUniqueInstance;
 
-        std::vector<std::function<void()>> mMainThreadQueue;
-        std::mutex                         mMainThreadQueueMutex;
+        vector_t<std::function<void()>> mMainThreadQueue;
+        std::mutex                      mMainThreadQueueMutex;
 
-        Ref<SE::Core::IWindow>              mViewportClient;
+        Ref<SE::Core::IWindow>             mViewportClient;
         Ref<SE::Graphics::IGraphicContext> mGraphicContext = nullptr;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 
-        Ref<SE::Graphics::ISwapChain>      mSwapChain;
+        Ref<SE::Graphics::ISwapChain>     mSwapChain;
         Ref<SE::Graphics::IRenderContext> mSwapChainRenderContext;
 
         double mEngineLoopStartTime;
@@ -138,7 +147,7 @@ namespace SE::Core
 
         math::ivec2     mInitialMainWindowSize     = { 1920, 1080 };
         math::ivec2     mInitialMainWindowPosition = { 100, 100 };
-        string_t     mImGuiConfigPath           = "imgui.ini";
+        string_t        mImGuiConfigPath           = "imgui.ini";
         UIConfiguration mUIConfiguration{};
 
         math::ivec2 mMainWindowSize;

@@ -16,7 +16,8 @@ namespace SE::Core
     {
         for( ; first1 != last1 && first2 != last2; ++first1, ++first2 )
         {
-            if( !p( *first1, *first2 ) ) return false;
+            if( !p( *first1, *first2 ) )
+                return false;
         }
         return first1 == last1 && first2 == last2;
     }
@@ -52,14 +53,26 @@ namespace SE::Core
         mLines.push_back( Line() );
     }
 
-    UICodeEditor::~UICodeEditor() {}
+    UICodeEditor::~UICodeEditor()
+    {
+    }
 
-    void UICodeEditor::PushStyles() {}
-    void UICodeEditor::PopStyles() {}
+    void UICodeEditor::PushStyles()
+    {
+    }
+    void UICodeEditor::PopStyles()
+    {
+    }
 
-    ImVec2 UICodeEditor::RequiredSize() { return ImVec2{}; }
+    ImVec2 UICodeEditor::RequiredSize()
+    {
+        return ImVec2{};
+    }
 
-    void UICodeEditor::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { Render( "FOO", aSize ); }
+    void UICodeEditor::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+        Render( "FOO", aSize );
+    }
 
     void UICodeEditor::SetLanguageDefinition( const LanguageDefinition &aLanguageDef )
     {
@@ -72,7 +85,10 @@ namespace SE::Core
         Colorize();
     }
 
-    void UICodeEditor::SetPalette( const Palette &aValue ) { mPaletteBase = aValue; }
+    void UICodeEditor::SetPalette( const Palette &aValue )
+    {
+        mPaletteBase = aValue;
+    }
 
     string_t UICodeEditor::GetText( const Coordinates &aStart, const Coordinates &aEnd ) const
     {
@@ -84,13 +100,15 @@ namespace SE::Core
         auto   iend   = GetCharacterIndex( aEnd );
         size_t s      = 0;
 
-        for( size_t i = lstart; i < lend; i++ ) s += mLines[i].size();
+        for( size_t i = lstart; i < lend; i++ )
+            s += mLines[i].size();
 
         result.reserve( s + s / 8 );
 
         while( istart < iend || lstart < lend )
         {
-            if( lstart >= (int)mLines.size() ) break;
+            if( lstart >= (int)mLines.size() )
+                break;
 
             auto &line = mLines[lstart];
             if( istart < (int)line.size() )
@@ -143,8 +161,10 @@ namespace SE::Core
     // We assume that the char is a standalone character (<128) or a leading byte of an UTF-8 code sequence (non-10xxxxxx code)
     static int UTF8CharLength( UICodeEditor::Char c )
     {
-        if( ( c & 0xFE ) == 0xFC ) return 6;
-        if( ( c & 0xFC ) == 0xF8 ) return 5;
+        if( ( c & 0xFE ) == 0xFC )
+            return 6;
+        if( ( c & 0xFC ) == 0xF8 )
+            return 5;
         if( ( c & 0xF8 ) == 0xF0 )
             return 4;
         else if( ( c & 0xF0 ) == 0xE0 )
@@ -164,7 +184,8 @@ namespace SE::Core
         }
         if( c < 0x800 )
         {
-            if( buf_size < 2 ) return 0;
+            if( buf_size < 2 )
+                return 0;
             buf[0] = (char)( 0xc0 + ( c >> 6 ) );
             buf[1] = (char)( 0x80 + ( c & 0x3f ) );
             return 2;
@@ -175,7 +196,8 @@ namespace SE::Core
         }
         if( c >= 0xd800 && c < 0xdc00 )
         {
-            if( buf_size < 4 ) return 0;
+            if( buf_size < 4 )
+                return 0;
             buf[0] = (char)( 0xf0 + ( c >> 18 ) );
             buf[1] = (char)( 0x80 + ( ( c >> 12 ) & 0x3f ) );
             buf[2] = (char)( 0x80 + ( ( c >> 6 ) & 0x3f ) );
@@ -184,7 +206,8 @@ namespace SE::Core
         }
         // else if (c < 0x10000)
         {
-            if( buf_size < 3 ) return 0;
+            if( buf_size < 3 )
+                return 0;
             buf[0] = (char)( 0xe0 + ( c >> 12 ) );
             buf[1] = (char)( 0x80 + ( ( c >> 6 ) & 0x3f ) );
             buf[2] = (char)( 0x80 + ( (c)&0x3f ) );
@@ -220,7 +243,8 @@ namespace SE::Core
 
         // printf("D(%d.%d)-(%d.%d)\n", aStart.mLine, aStart.mColumn, aEnd.mLine, aEnd.mColumn);
 
-        if( aEnd == aStart ) return;
+        if( aEnd == aStart )
+            return;
 
         auto start = GetCharacterIndex( aStart );
         auto end   = GetCharacterIndex( aEnd );
@@ -242,9 +266,11 @@ namespace SE::Core
             firstLine.erase( firstLine.begin() + start, firstLine.end() );
             lastLine.erase( lastLine.begin(), lastLine.begin() + end );
 
-            if( aStart.mLine < aEnd.mLine ) firstLine.insert( firstLine.end(), lastLine.begin(), lastLine.end() );
+            if( aStart.mLine < aEnd.mLine )
+                firstLine.insert( firstLine.end(), lastLine.begin(), lastLine.end() );
 
-            if( aStart.mLine < aEnd.mLine ) RemoveLine( aStart.mLine + 1, aEnd.mLine + 1 );
+            if( aStart.mLine < aEnd.mLine )
+                RemoveLine( aStart.mLine + 1, aEnd.mLine + 1 );
         }
 
         mTextChanged = true;
@@ -288,7 +314,8 @@ namespace SE::Core
             {
                 auto &line = mLines[aWhere.mLine];
                 auto  d    = UTF8CharLength( *aValue );
-                while( d-- > 0 && *aValue != '\0' ) line.insert( line.begin() + cindex++, Glyph( *aValue++, PaletteIndex::Default ) );
+                while( d-- > 0 && *aValue != '\0' )
+                    line.insert( line.begin() + cindex++, Glyph( *aValue++, PaletteIndex::Default ) );
                 ++aWhere.mColumn;
             }
 
@@ -341,7 +368,8 @@ namespace SE::Core
                     float newColumnX = ( 1.0f + std::floor( ( 1.0f + columnX ) / ( float( mTabSize ) * spaceSize ) ) ) *
                                        ( float( mTabSize ) * spaceSize );
                     columnWidth = newColumnX - oldX;
-                    if( mTextStart + columnX + columnWidth * 0.5f > local.x ) break;
+                    if( mTextStart + columnX + columnWidth * 0.5f > local.x )
+                        break;
                     columnX     = newColumnX;
                     columnCoord = ( columnCoord / mTabSize ) * mTabSize + mTabSize;
                     columnIndex++;
@@ -351,10 +379,12 @@ namespace SE::Core
                     char buf[7];
                     auto d = UTF8CharLength( line[columnIndex].mChar );
                     int  i = 0;
-                    while( i < 6 && d-- > 0 ) buf[i++] = line[columnIndex++].mChar;
+                    while( i < 6 && d-- > 0 )
+                        buf[i++] = line[columnIndex++].mChar;
                     buf[i]      = '\0';
                     columnWidth = ImGui::GetFont()->CalcTextSizeA( ImGui::GetFontSize(), FLT_MAX, -1.0f, buf ).x;
-                    if( mTextStart + columnX + columnWidth * 0.5f > local.x ) break;
+                    if( mTextStart + columnX + columnWidth * 0.5f > local.x )
+                        break;
                     columnX += columnWidth;
                     columnCoord++;
                 }
@@ -367,14 +397,17 @@ namespace SE::Core
     UICodeEditor::Coordinates UICodeEditor::FindWordStart( const Coordinates &aFrom ) const
     {
         Coordinates at = aFrom;
-        if( at.mLine >= (int)mLines.size() ) return at;
+        if( at.mLine >= (int)mLines.size() )
+            return at;
 
         auto &line   = mLines[at.mLine];
         auto  cindex = GetCharacterIndex( at );
 
-        if( cindex >= (int)line.size() ) return at;
+        if( cindex >= (int)line.size() )
+            return at;
 
-        while( cindex > 0 && isspace( line[cindex].mChar ) ) --cindex;
+        while( cindex > 0 && isspace( line[cindex].mChar ) )
+            --cindex;
 
         auto cstart = (PaletteIndex)line[cindex].mColorIndex;
         while( cindex > 0 )
@@ -387,7 +420,8 @@ namespace SE::Core
                     cindex++;
                     break;
                 }
-                if( cstart != (PaletteIndex)line[size_t( cindex - 1 )].mColorIndex ) break;
+                if( cstart != (PaletteIndex)line[size_t( cindex - 1 )].mColorIndex )
+                    break;
             }
             --cindex;
         }
@@ -397,12 +431,14 @@ namespace SE::Core
     UICodeEditor::Coordinates UICodeEditor::FindWordEnd( const Coordinates &aFrom ) const
     {
         Coordinates at = aFrom;
-        if( at.mLine >= (int)mLines.size() ) return at;
+        if( at.mLine >= (int)mLines.size() )
+            return at;
 
         auto &line   = mLines[at.mLine];
         auto  cindex = GetCharacterIndex( at );
 
-        if( cindex >= (int)line.size() ) return at;
+        if( cindex >= (int)line.size() )
+            return at;
 
         bool prevspace = (bool)isspace( line[cindex].mChar );
         auto cstart    = (PaletteIndex)line[cindex].mColorIndex;
@@ -410,12 +446,14 @@ namespace SE::Core
         {
             auto c = line[cindex].mChar;
             auto d = UTF8CharLength( c );
-            if( cstart != (PaletteIndex)line[cindex].mColorIndex ) break;
+            if( cstart != (PaletteIndex)line[cindex].mColorIndex )
+                break;
 
             if( prevspace != !!isspace( c ) )
             {
                 if( isspace( c ) )
-                    while( cindex < (int)line.size() && isspace( line[cindex].mChar ) ) ++cindex;
+                    while( cindex < (int)line.size() && isspace( line[cindex].mChar ) )
+                        ++cindex;
                 break;
             }
             cindex += d;
@@ -426,7 +464,8 @@ namespace SE::Core
     UICodeEditor::Coordinates UICodeEditor::FindNextWord( const Coordinates &aFrom ) const
     {
         Coordinates at = aFrom;
-        if( at.mLine >= (int)mLines.size() ) return at;
+        if( at.mLine >= (int)mLines.size() )
+            return at;
 
         // skip to the next non-word character
         auto cindex = GetCharacterIndex( aFrom );
@@ -452,9 +491,11 @@ namespace SE::Core
             {
                 isword = isalnum( line[cindex].mChar );
 
-                if( isword && !skip ) return Coordinates( at.mLine, GetCharacterColumn( at.mLine, cindex ) );
+                if( isword && !skip )
+                    return Coordinates( at.mLine, GetCharacterColumn( at.mLine, cindex ) );
 
-                if( !isword ) skip = false;
+                if( !isword )
+                    skip = false;
 
                 cindex++;
             }
@@ -472,7 +513,8 @@ namespace SE::Core
 
     int UICodeEditor::GetCharacterIndex( const Coordinates &aCoordinates ) const
     {
-        if( aCoordinates.mLine >= mLines.size() ) return -1;
+        if( aCoordinates.mLine >= mLines.size() )
+            return -1;
         auto &line = mLines[aCoordinates.mLine];
         int   c    = 0;
         int   i    = 0;
@@ -489,7 +531,8 @@ namespace SE::Core
 
     int UICodeEditor::GetCharacterColumn( int aLine, int aIndex ) const
     {
-        if( aLine >= mLines.size() ) return 0;
+        if( aLine >= mLines.size() )
+            return 0;
         auto &line = mLines[aLine];
         int   col  = 0;
         int   i    = 0;
@@ -507,16 +550,19 @@ namespace SE::Core
 
     int UICodeEditor::GetLineCharacterCount( int aLine ) const
     {
-        if( aLine >= mLines.size() ) return 0;
+        if( aLine >= mLines.size() )
+            return 0;
         auto &line = mLines[aLine];
         int   c    = 0;
-        for( unsigned i = 0; i < line.size(); c++ ) i += UTF8CharLength( line[i].mChar );
+        for( unsigned i = 0; i < line.size(); c++ )
+            i += UTF8CharLength( line[i].mChar );
         return c;
     }
 
     int UICodeEditor::GetLineMaxColumn( int aLine ) const
     {
-        if( aLine >= mLines.size() ) return 0;
+        if( aLine >= mLines.size() )
+            return 0;
         auto &line = mLines[aLine];
         int   col  = 0;
         for( unsigned i = 0; i < line.size(); )
@@ -533,13 +579,16 @@ namespace SE::Core
 
     bool UICodeEditor::IsOnWordBoundary( const Coordinates &aAt ) const
     {
-        if( aAt.mLine >= (int)mLines.size() || aAt.mColumn == 0 ) return true;
+        if( aAt.mLine >= (int)mLines.size() || aAt.mColumn == 0 )
+            return true;
 
         auto &line   = mLines[aAt.mLine];
         auto  cindex = GetCharacterIndex( aAt );
-        if( cindex >= (int)line.size() ) return true;
+        if( cindex >= (int)line.size() )
+            return true;
 
-        if( mColorizerEnabled ) return line[cindex].mColorIndex != line[size_t( cindex - 1 )].mColorIndex;
+        if( mColorizerEnabled )
+            return line[cindex].mColorIndex != line[size_t( cindex - 1 )].mColorIndex;
 
         return isspace( line[cindex].mChar ) != isspace( line[cindex - 1].mChar );
     }
@@ -554,7 +603,8 @@ namespace SE::Core
         for( auto &i : mErrorMarkers )
         {
             ErrorMarkers::value_type e( i.first >= aStart ? i.first - 1 : i.first, i.second );
-            if( e.first >= aStart && e.first <= aEnd ) continue;
+            if( e.first >= aStart && e.first <= aEnd )
+                continue;
             etmp.insert( e );
         }
         mErrorMarkers = std::move( etmp );
@@ -562,7 +612,8 @@ namespace SE::Core
         Breakpoints btmp;
         for( auto i : mBreakpoints )
         {
-            if( i >= aStart && i <= aEnd ) continue;
+            if( i >= aStart && i <= aEnd )
+                continue;
             btmp.insert( i >= aStart ? i - 1 : i );
         }
         mBreakpoints = std::move( btmp );
@@ -582,7 +633,8 @@ namespace SE::Core
         for( auto &i : mErrorMarkers )
         {
             ErrorMarkers::value_type e( i.first > aIndex ? i.first - 1 : i.first, i.second );
-            if( e.first - 1 == aIndex ) continue;
+            if( e.first - 1 == aIndex )
+                continue;
             etmp.insert( e );
         }
         mErrorMarkers = std::move( etmp );
@@ -590,7 +642,8 @@ namespace SE::Core
         Breakpoints btmp;
         for( auto i : mBreakpoints )
         {
-            if( i == aIndex ) continue;
+            if( i == aIndex )
+                continue;
             btmp.insert( i >= aIndex ? i - 1 : i );
         }
         mBreakpoints = std::move( btmp );
@@ -608,11 +661,13 @@ namespace SE::Core
         auto &result = *mLines.insert( mLines.begin() + aIndex, Line() );
 
         ErrorMarkers etmp;
-        for( auto &i : mErrorMarkers ) etmp.insert( ErrorMarkers::value_type( i.first >= aIndex ? i.first + 1 : i.first, i.second ) );
+        for( auto &i : mErrorMarkers )
+            etmp.insert( ErrorMarkers::value_type( i.first >= aIndex ? i.first + 1 : i.first, i.second ) );
         mErrorMarkers = std::move( etmp );
 
         Breakpoints btmp;
-        for( auto i : mBreakpoints ) btmp.insert( i >= aIndex ? i + 1 : i );
+        for( auto i : mBreakpoints )
+            btmp.insert( i >= aIndex ? i + 1 : i );
         mBreakpoints = std::move( btmp );
 
         return result;
@@ -634,16 +689,20 @@ namespace SE::Core
         auto istart = GetCharacterIndex( start );
         auto iend   = GetCharacterIndex( end );
 
-        for( auto it = istart; it < iend; ++it ) r.push_back( mLines[aCoords.mLine][it].mChar );
+        for( auto it = istart; it < iend; ++it )
+            r.push_back( mLines[aCoords.mLine][it].mChar );
 
         return r;
     }
 
     ImU32 UICodeEditor::GetGlyphColor( const Glyph &aGlyph ) const
     {
-        if( !mColorizerEnabled ) return mPalette[(int)PaletteIndex::Default];
-        if( aGlyph.mComment ) return mPalette[(int)PaletteIndex::Comment];
-        if( aGlyph.mMultiLineComment ) return mPalette[(int)PaletteIndex::MultiLineComment];
+        if( !mColorizerEnabled )
+            return mPalette[(int)PaletteIndex::Default];
+        if( aGlyph.mComment )
+            return mPalette[(int)PaletteIndex::Comment];
+        if( aGlyph.mMultiLineComment )
+            return mPalette[(int)PaletteIndex::MultiLineComment];
         auto const color = mPalette[(int)aGlyph.mColorIndex];
         if( aGlyph.mPreprocessor )
         {
@@ -666,7 +725,8 @@ namespace SE::Core
 
         if( ImGui::IsWindowFocused() )
         {
-            if( ImGui::IsWindowHovered() ) ImGui::SetMouseCursor( ImGuiMouseCursor_TextInput );
+            if( ImGui::IsWindowHovered() )
+                ImGui::SetMouseCursor( ImGuiMouseCursor_TextInput );
             // ImGui::CaptureKeyboardFromApp(true);
 
             io.WantCaptureKeyboard = true;
@@ -728,7 +788,8 @@ namespace SE::Core
                 for( int i = 0; i < io.InputQueueCharacters.Size; i++ )
                 {
                     auto c = io.InputQueueCharacters[i];
-                    if( c != 0 && ( c == '\n' || c >= 32 ) ) EnterCharacter( c, shift );
+                    if( c != 0 && ( c == '\n' || c >= 32 ) )
+                        EnterCharacter( c, shift );
                 }
                 io.InputQueueCharacters.resize( 0 );
             }
@@ -877,7 +938,8 @@ namespace SE::Core
                 if( mState.mSelectionEnd > lineStartCoord )
                     ssend = TextDistanceToLineStart( mState.mSelectionEnd < lineEndCoord ? mState.mSelectionEnd : lineEndCoord );
 
-                if( mState.mSelectionEnd.mLine > lineNo ) ssend += mCharAdvance.x;
+                if( mState.mSelectionEnd.mLine > lineNo )
+                    ssend += mCharAdvance.x;
 
                 if( sstart != -1 && ssend != -1 && sstart < ssend )
                 {
@@ -970,7 +1032,8 @@ namespace SE::Core
                             ImVec2 cstart( textScreenPos.x + cx, lineStartScreenPos.y );
                             ImVec2 cend( textScreenPos.x + cx + width, lineStartScreenPos.y + mCharAdvance.y );
                             drawList->AddRectFilled( cstart, cend, mPalette[(int)PaletteIndex::Cursor] );
-                            if( elapsed > 800 ) mStartTime = timeEnd;
+                            if( elapsed > 800 )
+                                mStartTime = timeEnd;
                         }
                     }
                 }
@@ -1032,7 +1095,8 @@ namespace SE::Core
                     else
                     {
                         auto l = UTF8CharLength( glyph.mChar );
-                        while( l-- > 0 ) mLineBuffer.push_back( line[i++].mChar );
+                        while( l-- > 0 )
+                            mLineBuffer.push_back( line[i++].mChar );
                     }
                     ++columnNo;
                 }
@@ -1102,12 +1166,14 @@ namespace SE::Core
             ImGui::PushAllowKeyboardFocus( true );
         }
 
-        if( mHandleMouseInputs ) HandleMouseInputs();
+        if( mHandleMouseInputs )
+            HandleMouseInputs();
 
         ColorizeInternal();
         Render();
 
-        if( mHandleKeyboardInputs ) ImGui::PopAllowKeyboardFocus();
+        if( mHandleKeyboardInputs )
+            ImGui::PopAllowKeyboardFocus();
 
         ImGui::EndChild();
 
@@ -1144,7 +1210,7 @@ namespace SE::Core
         Colorize();
     }
 
-    void UICodeEditor::SetTextLines( const std::vector<string_t> &aLines )
+    void UICodeEditor::SetTextLines( const vector_t<string_t> &aLines )
     {
         mLines.clear();
 
@@ -1161,7 +1227,8 @@ namespace SE::Core
                 const string_t &aLine = aLines[i];
 
                 mLines[i].reserve( aLine.size() );
-                for( size_t j = 0; j < aLine.size(); ++j ) mLines[i].emplace_back( Glyph( aLine[j], PaletteIndex::Default ) );
+                for( size_t j = 0; j < aLine.size(); ++j )
+                    mLines[i].emplace_back( Glyph( aLine[j], PaletteIndex::Default ) );
             }
         }
 
@@ -1191,11 +1258,14 @@ namespace SE::Core
                 auto end         = mState.mSelectionEnd;
                 auto originalEnd = end;
 
-                if( start > end ) std::swap( start, end );
+                if( start > end )
+                    std::swap( start, end );
                 start.mColumn = 0;
                 //			end.mColumn = end.mLine < mLines.size() ? mLines[end.mLine].size() : 0;
-                if( end.mColumn == 0 && end.mLine > 0 ) --end.mLine;
-                if( end.mLine >= (int)mLines.size() ) end.mLine = mLines.empty() ? 0 : (int)mLines.size() - 1;
+                if( end.mColumn == 0 && end.mLine > 0 )
+                    --end.mLine;
+                if( end.mLine >= (int)mLines.size() )
+                    end.mLine = mLines.empty() ? 0 : (int)mLines.size() - 1;
                 end.mColumn = GetLineMaxColumn( end.mLine );
 
                 // if (end.mColumn >= GetLineMaxColumn(end.mLine))
@@ -1344,9 +1414,15 @@ namespace SE::Core
         EnsureCursorVisible();
     }
 
-    void UICodeEditor::SetReadOnly( bool aValue ) { mReadOnly = aValue; }
+    void UICodeEditor::SetReadOnly( bool aValue )
+    {
+        mReadOnly = aValue;
+    }
 
-    void UICodeEditor::SetColorizerEnable( bool aValue ) { mColorizerEnabled = aValue; }
+    void UICodeEditor::SetColorizerEnable( bool aValue )
+    {
+        mColorizerEnabled = aValue;
+    }
 
     void UICodeEditor::SetCursorPosition( const Coordinates &aPosition )
     {
@@ -1361,13 +1437,15 @@ namespace SE::Core
     void UICodeEditor::SetSelectionStart( const Coordinates &aPosition )
     {
         mState.mSelectionStart = SanitizeCoordinates( aPosition );
-        if( mState.mSelectionStart > mState.mSelectionEnd ) std::swap( mState.mSelectionStart, mState.mSelectionEnd );
+        if( mState.mSelectionStart > mState.mSelectionEnd )
+            std::swap( mState.mSelectionStart, mState.mSelectionEnd );
     }
 
     void UICodeEditor::SetSelectionEnd( const Coordinates &aPosition )
     {
         mState.mSelectionEnd = SanitizeCoordinates( aPosition );
-        if( mState.mSelectionStart > mState.mSelectionEnd ) std::swap( mState.mSelectionStart, mState.mSelectionEnd );
+        if( mState.mSelectionStart > mState.mSelectionEnd )
+            std::swap( mState.mSelectionStart, mState.mSelectionEnd );
     }
 
     void UICodeEditor::SetSelection( const Coordinates &aStart, const Coordinates &aEnd, SelectionMode aMode )
@@ -1377,11 +1455,13 @@ namespace SE::Core
 
         mState.mSelectionStart = SanitizeCoordinates( aStart );
         mState.mSelectionEnd   = SanitizeCoordinates( aEnd );
-        if( mState.mSelectionStart > mState.mSelectionEnd ) std::swap( mState.mSelectionStart, mState.mSelectionEnd );
+        if( mState.mSelectionStart > mState.mSelectionEnd )
+            std::swap( mState.mSelectionStart, mState.mSelectionEnd );
 
         switch( aMode )
         {
-        case UICodeEditor::SelectionMode::Normal: break;
+        case UICodeEditor::SelectionMode::Normal:
+            break;
         case UICodeEditor::SelectionMode::Word:
         {
             mState.mSelectionStart = FindWordStart( mState.mSelectionStart );
@@ -1397,19 +1477,28 @@ namespace SE::Core
             mState.mSelectionEnd   = Coordinates( lineNo, GetLineMaxColumn( lineNo ) );
             break;
         }
-        default: break;
+        default:
+            break;
         }
 
-        if( mState.mSelectionStart != oldSelStart || mState.mSelectionEnd != oldSelEnd ) mCursorPositionChanged = true;
+        if( mState.mSelectionStart != oldSelStart || mState.mSelectionEnd != oldSelEnd )
+            mCursorPositionChanged = true;
     }
 
-    void UICodeEditor::SetTabSize( int aValue ) { mTabSize = std::max( 0, std::min( 32, aValue ) ); }
+    void UICodeEditor::SetTabSize( int aValue )
+    {
+        mTabSize = std::max( 0, std::min( 32, aValue ) );
+    }
 
-    void UICodeEditor::InsertText( const string_t &aValue ) { InsertText( aValue.c_str() ); }
+    void UICodeEditor::InsertText( const string_t &aValue )
+    {
+        InsertText( aValue.c_str() );
+    }
 
     void UICodeEditor::InsertText( const char *aValue )
     {
-        if( aValue == nullptr ) return;
+        if( aValue == nullptr )
+            return;
 
         auto pos        = GetActualCursorCoordinates();
         auto start      = std::min( pos, mState.mSelectionStart );
@@ -1426,7 +1515,8 @@ namespace SE::Core
     {
         assert( mState.mSelectionEnd >= mState.mSelectionStart );
 
-        if( mState.mSelectionEnd == mState.mSelectionStart ) return;
+        if( mState.mSelectionEnd == mState.mSelectionStart )
+            return;
 
         DeleteRange( mState.mSelectionStart, mState.mSelectionEnd );
 
@@ -1489,11 +1579,15 @@ namespace SE::Core
         }
     }
 
-    static bool IsUTFSequence( char c ) { return ( c & 0xC0 ) == 0x80; }
+    static bool IsUTFSequence( char c )
+    {
+        return ( c & 0xC0 ) == 0x80;
+    }
 
     void UICodeEditor::MoveLeft( int aAmount, bool aSelect, bool aWordMode )
     {
-        if( mLines.empty() ) return;
+        if( mLines.empty() )
+            return;
 
         auto oldPos            = mState.mCursorPosition;
         mState.mCursorPosition = GetActualCursorCoordinates();
@@ -1520,7 +1614,8 @@ namespace SE::Core
                 {
                     if( (int)mLines.size() > line )
                     {
-                        while( cindex > 0 && IsUTFSequence( mLines[line][cindex].mChar ) ) --cindex;
+                        while( cindex > 0 && IsUTFSequence( mLines[line][cindex].mChar ) )
+                            --cindex;
                     }
                 }
             }
@@ -1559,7 +1654,8 @@ namespace SE::Core
     {
         auto oldPos = mState.mCursorPosition;
 
-        if( mLines.empty() || oldPos.mLine >= mLines.size() ) return;
+        if( mLines.empty() || oldPos.mLine >= mLines.size() )
+            return;
 
         auto cindex = GetCharacterIndex( mState.mCursorPosition );
         while( aAmount-- > 0 )
@@ -1581,7 +1677,8 @@ namespace SE::Core
             {
                 cindex += UTF8CharLength( line[cindex].mChar );
                 mState.mCursorPosition = Coordinates( lindex, GetCharacterColumn( lindex, cindex ) );
-                if( aWordMode ) mState.mCursorPosition = FindNextWord( mState.mCursorPosition );
+                if( aWordMode )
+                    mState.mCursorPosition = FindNextWord( mState.mCursorPosition );
             }
         }
 
@@ -1691,7 +1788,8 @@ namespace SE::Core
     {
         assert( !mReadOnly );
 
-        if( mLines.empty() ) return;
+        if( mLines.empty() )
+            return;
 
         UndoRecord u;
         u.mBefore = mState;
@@ -1712,7 +1810,8 @@ namespace SE::Core
 
             if( pos.mColumn == GetLineMaxColumn( pos.mLine ) )
             {
-                if( pos.mLine == (int)mLines.size() - 1 ) return;
+                if( pos.mLine == (int)mLines.size() - 1 )
+                    return;
 
                 u.mRemoved      = '\n';
                 u.mRemovedStart = u.mRemovedEnd = GetActualCursorCoordinates();
@@ -1730,7 +1829,8 @@ namespace SE::Core
                 u.mRemoved = GetText( u.mRemovedStart, u.mRemovedEnd );
 
                 auto d = UTF8CharLength( line[cindex].mChar );
-                while( d-- > 0 && cindex < (int)line.size() ) line.erase( line.begin() + cindex );
+                while( d-- > 0 && cindex < (int)line.size() )
+                    line.erase( line.begin() + cindex );
             }
 
             mTextChanged = true;
@@ -1746,7 +1846,8 @@ namespace SE::Core
     {
         assert( !mReadOnly );
 
-        if( mLines.empty() ) return;
+        if( mLines.empty() )
+            return;
 
         UndoRecord u;
         u.mBefore = mState;
@@ -1766,7 +1867,8 @@ namespace SE::Core
 
             if( mState.mCursorPosition.mColumn == 0 )
             {
-                if( mState.mCursorPosition.mLine == 0 ) return;
+                if( mState.mCursorPosition.mLine == 0 )
+                    return;
 
                 u.mRemoved      = '\n';
                 u.mRemovedStart = u.mRemovedEnd = Coordinates( pos.mLine - 1, GetLineMaxColumn( pos.mLine - 1 ) );
@@ -1792,7 +1894,8 @@ namespace SE::Core
                 auto &line   = mLines[mState.mCursorPosition.mLine];
                 auto  cindex = GetCharacterIndex( pos ) - 1;
                 auto  cend   = cindex + 1;
-                while( cindex > 0 && IsUTFSequence( line[cindex].mChar ) ) --cindex;
+                while( cindex > 0 && IsUTFSequence( line[cindex].mChar ) )
+                    --cindex;
 
                 // if (cindex > 0 && UTF8CharLength(line[cindex].mChar) > 1)
                 //	--cindex;
@@ -1824,9 +1927,15 @@ namespace SE::Core
         SetSelection( FindWordStart( c ), FindWordEnd( c ) );
     }
 
-    void UICodeEditor::SelectAll() { SetSelection( Coordinates( 0, 0 ), Coordinates( (int)mLines.size(), 0 ) ); }
+    void UICodeEditor::SelectAll()
+    {
+        SetSelection( Coordinates( 0, 0 ), Coordinates( (int)mLines.size(), 0 ) );
+    }
 
-    bool UICodeEditor::HasSelection() const { return mState.mSelectionEnd > mState.mSelectionStart; }
+    bool UICodeEditor::HasSelection() const
+    {
+        return mState.mSelectionEnd > mState.mSelectionStart;
+    }
 
     void UICodeEditor::Copy()
     {
@@ -1840,7 +1949,8 @@ namespace SE::Core
             {
                 string_t str;
                 auto    &line = mLines[GetActualCursorCoordinates().mLine];
-                for( auto &g : line ) str.push_back( g.mChar );
+                for( auto &g : line )
+                    str.push_back( g.mChar );
                 ImGui::SetClipboardText( str.c_str() );
             }
         }
@@ -1873,7 +1983,8 @@ namespace SE::Core
 
     void UICodeEditor::Paste()
     {
-        if( IsReadOnly() ) return;
+        if( IsReadOnly() )
+            return;
 
         auto clipText = ImGui::GetClipboardText();
         if( clipText != nullptr && strlen( clipText ) > 0 )
@@ -1900,18 +2011,26 @@ namespace SE::Core
         }
     }
 
-    bool UICodeEditor::CanUndo() const { return !mReadOnly && mUndoIndex > 0; }
+    bool UICodeEditor::CanUndo() const
+    {
+        return !mReadOnly && mUndoIndex > 0;
+    }
 
-    bool UICodeEditor::CanRedo() const { return !mReadOnly && mUndoIndex < (int)mUndoBuffer.size(); }
+    bool UICodeEditor::CanRedo() const
+    {
+        return !mReadOnly && mUndoIndex < (int)mUndoBuffer.size();
+    }
 
     void UICodeEditor::Undo( int aSteps )
     {
-        while( CanUndo() && aSteps-- > 0 ) mUndoBuffer[--mUndoIndex].Undo( this );
+        while( CanUndo() && aSteps-- > 0 )
+            mUndoBuffer[--mUndoIndex].Undo( this );
     }
 
     void UICodeEditor::Redo( int aSteps )
     {
-        while( CanRedo() && aSteps-- > 0 ) mUndoBuffer[mUndoIndex++].Redo( this );
+        while( CanRedo() && aSteps-- > 0 )
+            mUndoBuffer[mUndoIndex++].Redo( this );
     }
 
 #define rgb( r, g, b ) IM_COL32( r, g, b, 255 )
@@ -2000,11 +2119,14 @@ namespace SE::Core
         return p;
     }
 
-    string_t UICodeEditor::GetText() const { return GetText( Coordinates(), Coordinates( (int)mLines.size(), 0 ) ); }
-
-    std::vector<string_t> UICodeEditor::GetTextLines() const
+    string_t UICodeEditor::GetText() const
     {
-        std::vector<string_t> result;
+        return GetText( Coordinates(), Coordinates( (int)mLines.size(), 0 ) );
+    }
+
+    vector_t<string_t> UICodeEditor::GetTextLines() const
+    {
+        vector_t<string_t> result;
 
         result.reserve( mLines.size() );
 
@@ -2014,7 +2136,8 @@ namespace SE::Core
 
             text.resize( line.size() );
 
-            for( size_t i = 0; i < line.size(); ++i ) text[i] = line[i].mChar;
+            for( size_t i = 0; i < line.size(); ++i )
+                text[i] = line[i].mChar;
 
             result.emplace_back( std::move( text ) );
         }
@@ -2022,7 +2145,10 @@ namespace SE::Core
         return result;
     }
 
-    string_t UICodeEditor::GetSelectedText() const { return GetText( mState.mSelectionStart, mState.mSelectionEnd ); }
+    string_t UICodeEditor::GetSelectedText() const
+    {
+        return GetText( mState.mSelectionStart, mState.mSelectionEnd );
+    }
 
     string_t UICodeEditor::GetCurrentLineText() const
     {
@@ -2030,7 +2156,9 @@ namespace SE::Core
         return GetText( Coordinates( mState.mCursorPosition.mLine, 0 ), Coordinates( mState.mCursorPosition.mLine, lineLength ) );
     }
 
-    void UICodeEditor::ProcessInputs() {}
+    void UICodeEditor::ProcessInputs()
+    {
+    }
 
     void UICodeEditor::Colorize( int aFromLine, int aLines )
     {
@@ -2044,7 +2172,8 @@ namespace SE::Core
 
     void UICodeEditor::ColorizeRange( int aFromLine, int aToLine )
     {
-        if( mLines.empty() || aFromLine >= aToLine ) return;
+        if( mLines.empty() || aFromLine >= aToLine )
+            return;
 
         string_t    buffer;
         std::cmatch results;
@@ -2055,7 +2184,8 @@ namespace SE::Core
         {
             auto &line = mLines[i];
 
-            if( line.empty() ) continue;
+            if( line.empty() )
+                continue;
 
             buffer.resize( line.size() );
             for( size_t j = 0; j < line.size(); ++j )
@@ -2080,7 +2210,8 @@ namespace SE::Core
 
                 if( mLanguageDefinition.mTokenize != nullptr )
                 {
-                    if( mLanguageDefinition.mTokenize( first, last, token_begin, token_end, token_color ) ) hasTokenizeResult = true;
+                    if( mLanguageDefinition.mTokenize( first, last, token_begin, token_end, token_color ) )
+                        hasTokenizeResult = true;
                 }
 
                 if( hasTokenizeResult == false )
@@ -2117,7 +2248,8 @@ namespace SE::Core
 
                         // todo : allmost all language definitions use lower case to specify keywords, so shouldn't this use ::tolower
                         // ?
-                        if( !mLanguageDefinition.mCaseSensitive ) std::transform( id.begin(), id.end(), id.begin(), ::toupper );
+                        if( !mLanguageDefinition.mCaseSensitive )
+                            std::transform( id.begin(), id.end(), id.begin(), ::toupper );
 
                         if( !line[first - bufferBegin].mPreprocessor )
                         {
@@ -2135,7 +2267,8 @@ namespace SE::Core
                         }
                     }
 
-                    for( size_t j = 0; j < token_length; ++j ) line[( token_begin - bufferBegin ) + j].mColorIndex = token_color;
+                    for( size_t j = 0; j < token_length; ++j )
+                        line[( token_begin - bufferBegin ) + j].mColorIndex = token_color;
 
                     first = token_end;
                 }
@@ -2145,7 +2278,8 @@ namespace SE::Core
 
     void UICodeEditor::ColorizeInternal()
     {
-        if( mLines.empty() || !mColorizerEnabled ) return;
+        if( mLines.empty() || !mColorizerEnabled )
+            return;
 
         if( mCheckComments )
         {
@@ -2178,9 +2312,11 @@ namespace SE::Core
                     auto &g = line[currentIndex];
                     auto  c = g.mChar;
 
-                    if( c != mLanguageDefinition.mPreprocChar && !isspace( c ) ) firstChar = false;
+                    if( c != mLanguageDefinition.mPreprocChar && !isspace( c ) )
+                        firstChar = false;
 
-                    if( currentIndex == (int)line.size() - 1 && line[line.size() - 1].mChar == '\\' ) concatenate = true;
+                    if( currentIndex == (int)line.size() - 1 && line[line.size() - 1].mChar == '\\' )
+                        concatenate = true;
 
                     bool inComment =
                         ( commentStartLine < currentLine || ( commentStartLine == currentLine && commentStartIndex <= currentIndex ) );
@@ -2194,7 +2330,8 @@ namespace SE::Core
                             if( currentIndex + 1 < (int)line.size() && line[currentIndex + 1].mChar == '\"' )
                             {
                                 currentIndex += 1;
-                                if( currentIndex < (int)line.size() ) line[currentIndex].mMultiLineComment = inComment;
+                                if( currentIndex < (int)line.size() )
+                                    line[currentIndex].mMultiLineComment = inComment;
                             }
                             else
                                 withinString = false;
@@ -2202,12 +2339,14 @@ namespace SE::Core
                         else if( c == '\\' )
                         {
                             currentIndex += 1;
-                            if( currentIndex < (int)line.size() ) line[currentIndex].mMultiLineComment = inComment;
+                            if( currentIndex < (int)line.size() )
+                                line[currentIndex].mMultiLineComment = inComment;
                         }
                     }
                     else
                     {
-                        if( firstChar && c == mLanguageDefinition.mPreprocChar ) withinPreproc = true;
+                        if( firstChar && c == mLanguageDefinition.mPreprocChar )
+                            withinPreproc = true;
 
                         if( c == '\"' )
                         {
@@ -2300,7 +2439,8 @@ namespace SE::Core
                 auto d = UTF8CharLength( line[it].mChar );
                 char tempCString[7];
                 int  i = 0;
-                for( ; i < 6 && d-- > 0 && it < (int)line.size(); i++, it++ ) tempCString[i] = line[it].mChar;
+                for( ; i < 6 && d-- > 0 && it < (int)line.size(); i++, it++ )
+                    tempCString[i] = line[it].mChar;
 
                 tempCString[i] = '\0';
                 distance += ImGui::GetFont()->CalcTextSizeA( ImGui::GetFontSize(), FLT_MAX, -1.0f, tempCString, nullptr, nullptr ).x;
@@ -2333,10 +2473,14 @@ namespace SE::Core
         auto pos = GetActualCursorCoordinates();
         auto len = TextDistanceToLineStart( pos );
 
-        if( pos.mLine < top ) ImGui::SetScrollY( std::max( 0.0f, ( pos.mLine - 1 ) * mCharAdvance.y ) );
-        if( pos.mLine > bottom - 4 ) ImGui::SetScrollY( std::max( 0.0f, ( pos.mLine + 4 ) * mCharAdvance.y - height ) );
-        if( len + mTextStart < left + 4 ) ImGui::SetScrollX( std::max( 0.0f, len + mTextStart - 4 ) );
-        if( len + mTextStart > right - 4 ) ImGui::SetScrollX( std::max( 0.0f, len + mTextStart + 4 - width ) );
+        if( pos.mLine < top )
+            ImGui::SetScrollY( std::max( 0.0f, ( pos.mLine - 1 ) * mCharAdvance.y ) );
+        if( pos.mLine > bottom - 4 )
+            ImGui::SetScrollY( std::max( 0.0f, ( pos.mLine + 4 ) * mCharAdvance.y - height ) );
+        if( len + mTextStart < left + 4 )
+            ImGui::SetScrollX( std::max( 0.0f, len + mTextStart - 4 ) );
+        if( len + mTextStart > right - 4 )
+            ImGui::SetScrollX( std::max( 0.0f, len + mTextStart + 4 - width ) );
     }
 
     int UICodeEditor::GetPageSize() const
@@ -2419,7 +2563,8 @@ namespace SE::Core
                 }
 
                 // handle escape character for "
-                if( *p == '\\' && p + 1 < in_end && p[1] == '"' ) p++;
+                if( *p == '\\' && p + 1 < in_end && p[1] == '"' )
+                    p++;
 
                 p++;
             }
@@ -2438,9 +2583,11 @@ namespace SE::Core
             p++;
 
             // handle escape characters
-            if( p < in_end && *p == '\\' ) p++;
+            if( p < in_end && *p == '\\' )
+                p++;
 
-            if( p < in_end ) p++;
+            if( p < in_end )
+                p++;
 
             // handle end of character literal
             if( p < in_end && *p == '\'' )
@@ -2480,7 +2627,8 @@ namespace SE::Core
 
         const bool startsWithNumber = *p >= '0' && *p <= '9';
 
-        if( *p != '+' && *p != '-' && !startsWithNumber ) return false;
+        if( *p != '+' && *p != '-' && !startsWithNumber )
+            return false;
 
         p++;
 
@@ -2493,7 +2641,8 @@ namespace SE::Core
             p++;
         }
 
-        if( hasNumber == false ) return false;
+        if( hasNumber == false )
+            return false;
 
         bool isFloat  = false;
         bool isHex    = false;
@@ -2507,7 +2656,8 @@ namespace SE::Core
 
                 p++;
 
-                while( p < in_end && ( *p >= '0' && *p <= '9' ) ) p++;
+                while( p < in_end && ( *p >= '0' && *p <= '9' ) )
+                    p++;
             }
             else if( *p == 'x' || *p == 'X' )
             {
@@ -2517,7 +2667,8 @@ namespace SE::Core
 
                 p++;
 
-                while( p < in_end && ( ( *p >= '0' && *p <= '9' ) || ( *p >= 'a' && *p <= 'f' ) || ( *p >= 'A' && *p <= 'F' ) ) ) p++;
+                while( p < in_end && ( ( *p >= '0' && *p <= '9' ) || ( *p >= 'a' && *p <= 'f' ) || ( *p >= 'A' && *p <= 'F' ) ) )
+                    p++;
             }
             else if( *p == 'b' || *p == 'B' )
             {
@@ -2527,7 +2678,8 @@ namespace SE::Core
 
                 p++;
 
-                while( p < in_end && ( *p >= '0' && *p <= '1' ) ) p++;
+                while( p < in_end && ( *p >= '0' && *p <= '1' ) )
+                    p++;
             }
         }
 
@@ -2540,7 +2692,8 @@ namespace SE::Core
 
                 p++;
 
-                if( p < in_end && ( *p == '+' || *p == '-' ) ) p++;
+                if( p < in_end && ( *p == '+' || *p == '-' ) )
+                    p++;
 
                 bool hasDigits = false;
 
@@ -2551,17 +2704,20 @@ namespace SE::Core
                     p++;
                 }
 
-                if( hasDigits == false ) return false;
+                if( hasDigits == false )
+                    return false;
             }
 
             // single precision floating point type
-            if( p < in_end && *p == 'f' ) p++;
+            if( p < in_end && *p == 'f' )
+                p++;
         }
 
         if( isFloat == false )
         {
             // integer size type
-            while( p < in_end && ( *p == 'u' || *p == 'U' || *p == 'l' || *p == 'L' ) ) p++;
+            while( p < in_end && ( *p == 'u' || *p == 'U' || *p == 'l' || *p == 'L' ) )
+                p++;
         }
 
         out_begin = in_begin;
@@ -2623,7 +2779,8 @@ namespace SE::Core
 		};
             // clang-format on
 
-            for( auto &k : cppKeywords ) langDef.mKeywords.insert( k );
+            for( auto &k : cppKeywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {
@@ -2644,7 +2801,8 @@ namespace SE::Core
             {
                 paletteIndex = PaletteIndex::Max;
 
-                while( in_begin < in_end && isascii( *in_begin ) && isblank( *in_begin ) ) in_begin++;
+                while( in_begin < in_end && isascii( *in_begin ) && isblank( *in_begin ) )
+                    in_begin++;
 
                 if( in_begin == in_end )
                 {
@@ -2705,7 +2863,8 @@ namespace SE::Core
 			"half1x3","half2x3","half3x3","half4x3","half1x4","half2x4","half3x4","half4x4",
 		};
             // clang-format on
-            for( auto &k : keywords ) langDef.mKeywords.insert( k );
+            for( auto &k : keywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {
@@ -2777,7 +2936,8 @@ namespace SE::Core
 			"_Noreturn", "_Static_assert", "_Thread_local"
 		};
             // clang-format on
-            for( auto &k : keywords ) langDef.mKeywords.insert( k );
+            for( auto &k : keywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {
@@ -2838,7 +2998,8 @@ namespace SE::Core
 			"_Noreturn", "_Static_assert", "_Thread_local"
 		};
             // clang-format on
-            for( auto &k : keywords ) langDef.mKeywords.insert( k );
+            for( auto &k : keywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {
@@ -2858,7 +3019,8 @@ namespace SE::Core
             {
                 paletteIndex = PaletteIndex::Max;
 
-                while( in_begin < in_end && isascii( *in_begin ) && isblank( *in_begin ) ) in_begin++;
+                while( in_begin < in_end && isascii( *in_begin ) && isblank( *in_begin ) )
+                    in_begin++;
 
                 if( in_begin == in_end )
                 {
@@ -2915,7 +3077,8 @@ namespace SE::Core
 		};
             // clang-format on
 
-            for( auto &k : keywords ) langDef.mKeywords.insert( k );
+            for( auto &k : keywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {
@@ -2983,7 +3146,8 @@ namespace SE::Core
 		};
             // clang-format on
 
-            for( auto &k : keywords ) langDef.mKeywords.insert( k );
+            for( auto &k : keywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {
@@ -3041,7 +3205,8 @@ namespace SE::Core
 		};
             // clang-format on
 
-            for( auto &k : keywords ) langDef.mKeywords.insert( k );
+            for( auto &k : keywords )
+                langDef.mKeywords.insert( k );
 
             // clang-format off
 		static const char* const identifiers[] = {

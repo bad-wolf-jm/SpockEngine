@@ -37,8 +37,8 @@ namespace SE::Core
         int32_t    lHeight               = 0;
         size_t     lChannelSize          = 0;
 
-        auto x =  aPath.string();
-        auto y =  x.c_str();
+        auto x = aPath.string();
+        auto y = x.c_str();
 
         if( stbi_is_hdr( aPath.string().c_str() ) )
         {
@@ -46,10 +46,12 @@ namespace SE::Core
 
             float *lData = stbi_loadf( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
-            if( !lData ) return sImageData{};
+            if( !lData )
+                return sImageData{};
 
-            lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
-            lImageData.mPixelData = std::vector<uint8_t>( (uint8_t*)lData, ((uint8_t*)lData )+ ( lWidth * lHeight * sizeof( float ) ) );
+            lImageData.mFormat = eColorFormat::RGBA32_FLOAT;
+            lImageData.mPixelData =
+                vector_t<uint8_t>( (uint8_t *)lData, ( (uint8_t *)lData ) + ( lWidth * lHeight * sizeof( float ) ) );
         }
         else
         {
@@ -57,10 +59,11 @@ namespace SE::Core
 
             stbi_uc *lData = stbi_load( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
-            if( !lData ) return sImageData{};
+            if( !lData )
+                return sImageData{};
 
             lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
-            lImageData.mPixelData = std::vector<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
+            lImageData.mPixelData = vector_t<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
         }
 
         lImageData.mWidth    = static_cast<size_t>( lWidth );
@@ -73,26 +76,46 @@ namespace SE::Core
     {
         switch( aFormat )
         {
-        case eColorFormat::R32_FLOAT: return gli::FORMAT_R32_SFLOAT_PACK32;
-        case eColorFormat::RG32_FLOAT: return gli::FORMAT_RG32_SFLOAT_PACK32;
-        case eColorFormat::RGB32_FLOAT: return gli::FORMAT_RGB32_SFLOAT_PACK32;
-        case eColorFormat::RGBA32_FLOAT: return gli::FORMAT_RGBA32_SFLOAT_PACK32;
-        case eColorFormat::R16_FLOAT: return gli::FORMAT_R16_SFLOAT_PACK16;
-        case eColorFormat::RG16_FLOAT: return gli::FORMAT_RG16_SFLOAT_PACK16;
-        case eColorFormat::RGB16_FLOAT: return gli::FORMAT_RGB16_SFLOAT_PACK16;
-        case eColorFormat::RGBA16_FLOAT: return gli::FORMAT_RGBA16_SFLOAT_PACK16;
-        case eColorFormat::R8_UNORM: return gli::FORMAT_R8_UNORM_PACK8;
-        case eColorFormat::RG8_UNORM: return gli::FORMAT_RG8_UNORM_PACK8;
-        case eColorFormat::RGB8_UNORM: return gli::FORMAT_RGB8_UNORM_PACK8;
-        case eColorFormat::RGBA8_UNORM: return gli::FORMAT_RGBA8_UNORM_PACK8;
-        case eColorFormat::D16_UNORM: return gli::FORMAT_D16_UNORM_PACK16;
-        case eColorFormat::X8_D24_UNORM_PACK32: return gli::FORMAT_D24_UNORM_PACK32;
-        case eColorFormat::D32_SFLOAT: return gli::FORMAT_D32_SFLOAT_PACK32;
-        case eColorFormat::S8_UINT: return gli::FORMAT_R8_SNORM_PACK8;
-        case eColorFormat::D16_UNORM_S8_UINT: return gli::FORMAT_D16_UNORM_S8_UINT_PACK32;
-        case eColorFormat::D24_UNORM_S8_UINT: return gli::FORMAT_D24_UNORM_S8_UINT_PACK32;
-        case eColorFormat::D32_UNORM_S8_UINT: return gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64;
-        default: return gli::FORMAT_UNDEFINED;
+        case eColorFormat::R32_FLOAT:
+            return gli::FORMAT_R32_SFLOAT_PACK32;
+        case eColorFormat::RG32_FLOAT:
+            return gli::FORMAT_RG32_SFLOAT_PACK32;
+        case eColorFormat::RGB32_FLOAT:
+            return gli::FORMAT_RGB32_SFLOAT_PACK32;
+        case eColorFormat::RGBA32_FLOAT:
+            return gli::FORMAT_RGBA32_SFLOAT_PACK32;
+        case eColorFormat::R16_FLOAT:
+            return gli::FORMAT_R16_SFLOAT_PACK16;
+        case eColorFormat::RG16_FLOAT:
+            return gli::FORMAT_RG16_SFLOAT_PACK16;
+        case eColorFormat::RGB16_FLOAT:
+            return gli::FORMAT_RGB16_SFLOAT_PACK16;
+        case eColorFormat::RGBA16_FLOAT:
+            return gli::FORMAT_RGBA16_SFLOAT_PACK16;
+        case eColorFormat::R8_UNORM:
+            return gli::FORMAT_R8_UNORM_PACK8;
+        case eColorFormat::RG8_UNORM:
+            return gli::FORMAT_RG8_UNORM_PACK8;
+        case eColorFormat::RGB8_UNORM:
+            return gli::FORMAT_RGB8_UNORM_PACK8;
+        case eColorFormat::RGBA8_UNORM:
+            return gli::FORMAT_RGBA8_UNORM_PACK8;
+        case eColorFormat::D16_UNORM:
+            return gli::FORMAT_D16_UNORM_PACK16;
+        case eColorFormat::X8_D24_UNORM_PACK32:
+            return gli::FORMAT_D24_UNORM_PACK32;
+        case eColorFormat::D32_SFLOAT:
+            return gli::FORMAT_D32_SFLOAT_PACK32;
+        case eColorFormat::S8_UINT:
+            return gli::FORMAT_R8_SNORM_PACK8;
+        case eColorFormat::D16_UNORM_S8_UINT:
+            return gli::FORMAT_D16_UNORM_S8_UINT_PACK32;
+        case eColorFormat::D24_UNORM_S8_UINT:
+            return gli::FORMAT_D24_UNORM_S8_UINT_PACK32;
+        case eColorFormat::D32_UNORM_S8_UINT:
+            return gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64;
+        default:
+            return gli::FORMAT_UNDEFINED;
         }
     }
 
@@ -100,26 +123,46 @@ namespace SE::Core
     {
         switch( aFormat )
         {
-        case gli::FORMAT_R32_SFLOAT_PACK32: return eColorFormat::R32_FLOAT;
-        case gli::FORMAT_RG32_SFLOAT_PACK32: return eColorFormat::RG32_FLOAT;
-        case gli::FORMAT_RGB32_SFLOAT_PACK32: return eColorFormat::RGB32_FLOAT;
-        case gli::FORMAT_RGBA32_SFLOAT_PACK32: return eColorFormat::RGBA32_FLOAT;
-        case gli::FORMAT_R16_SFLOAT_PACK16: return eColorFormat::R16_FLOAT;
-        case gli::FORMAT_RG16_SFLOAT_PACK16: return eColorFormat::RG16_FLOAT;
-        case gli::FORMAT_RGB16_SFLOAT_PACK16: return eColorFormat::RGB16_FLOAT;
-        case gli::FORMAT_RGBA16_SFLOAT_PACK16: return eColorFormat::RGBA16_FLOAT;
-        case gli::FORMAT_R8_UNORM_PACK8: return eColorFormat::R8_UNORM;
-        case gli::FORMAT_RG8_UNORM_PACK8: return eColorFormat::RG8_UNORM;
-        case gli::FORMAT_RGB8_UNORM_PACK8: return eColorFormat::RGB8_UNORM;
-        case gli::FORMAT_RGBA8_UNORM_PACK8: return eColorFormat::RGBA8_UNORM;
-        case gli::FORMAT_D16_UNORM_PACK16: return eColorFormat::D16_UNORM;
-        case gli::FORMAT_D24_UNORM_PACK32: return eColorFormat::X8_D24_UNORM_PACK32;
-        case gli::FORMAT_D32_SFLOAT_PACK32: return eColorFormat::D32_SFLOAT;
-        case gli::FORMAT_R8_SNORM_PACK8: return eColorFormat::S8_UINT;
-        case gli::FORMAT_D16_UNORM_S8_UINT_PACK32: return eColorFormat::D16_UNORM_S8_UINT;
-        case gli::FORMAT_D24_UNORM_S8_UINT_PACK32: return eColorFormat::D24_UNORM_S8_UINT;
-        case gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64: return eColorFormat::D32_UNORM_S8_UINT;
-        default: return eColorFormat::UNDEFINED;
+        case gli::FORMAT_R32_SFLOAT_PACK32:
+            return eColorFormat::R32_FLOAT;
+        case gli::FORMAT_RG32_SFLOAT_PACK32:
+            return eColorFormat::RG32_FLOAT;
+        case gli::FORMAT_RGB32_SFLOAT_PACK32:
+            return eColorFormat::RGB32_FLOAT;
+        case gli::FORMAT_RGBA32_SFLOAT_PACK32:
+            return eColorFormat::RGBA32_FLOAT;
+        case gli::FORMAT_R16_SFLOAT_PACK16:
+            return eColorFormat::R16_FLOAT;
+        case gli::FORMAT_RG16_SFLOAT_PACK16:
+            return eColorFormat::RG16_FLOAT;
+        case gli::FORMAT_RGB16_SFLOAT_PACK16:
+            return eColorFormat::RGB16_FLOAT;
+        case gli::FORMAT_RGBA16_SFLOAT_PACK16:
+            return eColorFormat::RGBA16_FLOAT;
+        case gli::FORMAT_R8_UNORM_PACK8:
+            return eColorFormat::R8_UNORM;
+        case gli::FORMAT_RG8_UNORM_PACK8:
+            return eColorFormat::RG8_UNORM;
+        case gli::FORMAT_RGB8_UNORM_PACK8:
+            return eColorFormat::RGB8_UNORM;
+        case gli::FORMAT_RGBA8_UNORM_PACK8:
+            return eColorFormat::RGBA8_UNORM;
+        case gli::FORMAT_D16_UNORM_PACK16:
+            return eColorFormat::D16_UNORM;
+        case gli::FORMAT_D24_UNORM_PACK32:
+            return eColorFormat::X8_D24_UNORM_PACK32;
+        case gli::FORMAT_D32_SFLOAT_PACK32:
+            return eColorFormat::D32_SFLOAT;
+        case gli::FORMAT_R8_SNORM_PACK8:
+            return eColorFormat::S8_UINT;
+        case gli::FORMAT_D16_UNORM_S8_UINT_PACK32:
+            return eColorFormat::D16_UNORM_S8_UINT;
+        case gli::FORMAT_D24_UNORM_S8_UINT_PACK32:
+            return eColorFormat::D24_UNORM_S8_UINT;
+        case gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64:
+            return eColorFormat::D32_UNORM_S8_UINT;
+        default:
+            return eColorFormat::UNDEFINED;
         }
     }
 
@@ -127,9 +170,11 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eTextureType::TEXTURE_3D: return gli::TARGET_3D;
+        case eTextureType::TEXTURE_3D:
+            return gli::TARGET_3D;
         case eTextureType::TEXTURE_2D:
-        default: return gli::TARGET_2D;
+        default:
+            return gli::TARGET_2D;
         }
     }
 
@@ -137,9 +182,11 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case gli::TARGET_3D: return eTextureType::TEXTURE_3D;
+        case gli::TARGET_3D:
+            return eTextureType::TEXTURE_3D;
         case gli::TARGET_2D:
-        default: return eTextureType::TEXTURE_2D;
+        default:
+            return eTextureType::TEXTURE_2D;
         }
     }
 
@@ -147,9 +194,11 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eSamplerFilter::NEAREST: return gli::FILTER_NEAREST;
+        case eSamplerFilter::NEAREST:
+            return gli::FILTER_NEAREST;
         case eSamplerFilter::LINEAR:
-        default: return gli::FILTER_LINEAR;
+        default:
+            return gli::FILTER_LINEAR;
         }
     }
 
@@ -157,9 +206,11 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eSamplerMipmap::NEAREST: return gli::FILTER_NEAREST;
+        case eSamplerMipmap::NEAREST:
+            return gli::FILTER_NEAREST;
         case eSamplerMipmap::LINEAR:
-        default: return gli::FILTER_LINEAR;
+        default:
+            return gli::FILTER_LINEAR;
         }
     }
 
@@ -167,12 +218,17 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eSamplerWrapping::REPEAT: return gli::WRAP_REPEAT;
-        case eSamplerWrapping::MIRRORED_REPEAT: return gli::WRAP_MIRROR_REPEAT;
-        case eSamplerWrapping::CLAMP_TO_EDGE: return gli::WRAP_CLAMP_TO_EDGE;
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return gli::WRAP_MIRROR_CLAMP_TO_BORDER;
+        case eSamplerWrapping::REPEAT:
+            return gli::WRAP_REPEAT;
+        case eSamplerWrapping::MIRRORED_REPEAT:
+            return gli::WRAP_MIRROR_REPEAT;
+        case eSamplerWrapping::CLAMP_TO_EDGE:
+            return gli::WRAP_CLAMP_TO_EDGE;
+        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
+            return gli::WRAP_MIRROR_CLAMP_TO_BORDER;
         case eSamplerWrapping::CLAMP_TO_BORDER:
-        default: return gli::WRAP_CLAMP_TO_BORDER;
+        default:
+            return gli::WRAP_CLAMP_TO_BORDER;
         }
     }
 
@@ -263,9 +319,9 @@ namespace SE::Core
         }
     }
 
-    std::vector<char> TextureData::Serialize() const
+    vector_t<char> TextureData::Serialize() const
     {
-        std::vector<char> lData;
+        vector_t<char> lData;
         gli::save_ktx( mInternalTexture, lData );
 
         return lData;
@@ -308,7 +364,8 @@ namespace SE::Core
 
     sImageData TextureData2D::GetImageData()
     {
-        std::vector<uint8_t> lImageData( (uint8_t*)mInternalTexture2d.data(), ((uint8_t*)mInternalTexture2d.data()) + mInternalTexture2d.size() );
+        vector_t<uint8_t> lImageData( (uint8_t *)mInternalTexture2d.data(),
+                                      ( (uint8_t *)mInternalTexture2d.data() ) + mInternalTexture2d.size() );
         return { mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), mInternalTexture2d.size(),
                  std::move( lImageData ) };
     }
@@ -346,8 +403,8 @@ namespace SE::Core
         mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( std::vector<uint8_t> aKTXData, uint32_t aSize )
-        : TextureData( (const char*)aKTXData.data(), aSize )
+    TextureDataCubeMap::TextureDataCubeMap( vector_t<uint8_t> aKTXData, uint32_t aSize )
+        : TextureData( (const char *)aKTXData.data(), aSize )
     {
         mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
     }
@@ -356,9 +413,7 @@ namespace SE::Core
     {
         sCubeMapImageData lImageData{};
 
-        return std::move(lImageData);
+        return std::move( lImageData );
     }
-
-
 
 } // namespace SE::Core

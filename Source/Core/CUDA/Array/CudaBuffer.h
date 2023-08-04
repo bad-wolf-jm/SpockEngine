@@ -42,7 +42,10 @@ namespace SE::Cuda
         {
         }
 
-        GPUMemoryView View( size_t a_Size, size_t a_Offset ) { return GPUMemoryView( a_Size, a_Offset, *this ); }
+        GPUMemoryView View( size_t a_Size, size_t a_Offset )
+        {
+            return GPUMemoryView( a_Size, a_Offset, *this );
+        }
     };
 
     class GPUMemory : public Internal::sGPUDevicePointer
@@ -62,16 +65,22 @@ namespace SE::Cuda
         }
 
         template <typename _Ty>
-        static GPUMemory Create( std::vector<_Ty> aVec )
+        static GPUMemory Create( vector_t<_Ty> aVec )
         {
             GPUMemory lOut = GPUMemory::Create<_Ty>( aVec.size() );
             lOut.Upload( aVec );
             return lOut;
         }
 
-        RawPointer RawDevicePtr() { return mDevicePointer; }
+        RawPointer RawDevicePtr()
+        {
+            return mDevicePointer;
+        }
 
-        RawPointer *RawDevicePtrP() { return &( mDevicePointer ); }
+        RawPointer *RawDevicePtrP()
+        {
+            return &( mDevicePointer );
+        }
     };
 
 } // namespace SE::Cuda

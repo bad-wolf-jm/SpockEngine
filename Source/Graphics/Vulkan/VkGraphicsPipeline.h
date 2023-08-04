@@ -21,11 +21,11 @@ namespace SE::Graphics
         void Build();
 
       private:
-        std::vector<Ref<sVkDescriptorSetLayoutObject>> mDescriptorSetLayouts{};
+        vector_t<Ref<sVkDescriptorSetLayoutObject>> mDescriptorSetLayouts{};
 
         Ref<sVkPipelineLayoutObject> mPipelineLayoutObject = nullptr;
         Ref<sVkPipelineObject>       mPipelineObject       = nullptr;
-        std::vector<sShader>         mShaders{};
+        vector_t<sShader>         mShaders{};
     };
 
 } // namespace SE::Graphics

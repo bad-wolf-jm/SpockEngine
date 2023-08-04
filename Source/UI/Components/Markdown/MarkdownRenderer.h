@@ -102,12 +102,12 @@ namespace SE::Core
 
         struct Block
         {
-            eBlockType              mType;
-            ImVec2                  mPosition;
-            ImVec2                  mSize;
-            Ref<Block>              mParent = nullptr;
-            std::vector<Ref<Block>> mChildren;
-            uint32_t                mDepth = 0;
+            eBlockType           mType;
+            ImVec2               mPosition;
+            ImVec2               mSize;
+            Ref<Block>           mParent = nullptr;
+            vector_t<Ref<Block>> mChildren;
+            uint32_t             mDepth = 0;
 
             Block() = default;
 
@@ -119,7 +119,8 @@ namespace SE::Core
 
             virtual void Render()
             {
-                for( auto const &c : mChildren ) c->Render();
+                for( auto const &c : mChildren )
+                    c->Render();
             }
         };
 
@@ -269,14 +270,14 @@ namespace SE::Core
             bool mFillHeader = false;
             bool mFillBody   = false;
 
-            std::vector<string_t>              mHeader;
-            std::vector<std::vector<string_t>> mBody;
-            std::vector<eHorizontalAlignment>  mColumnAlignments;
+            vector_t<string_t>             mHeader;
+            vector_t<vector_t<string_t>>   mBody;
+            vector_t<eHorizontalAlignment> mColumnAlignments;
 
-            float                     mWidth  = 0.0f;
-            float                     mHeight = 0.0f;
-            std::vector<ImVec4>       mCells;
-            std::vector<const char *> mCellData;
+            float                  mWidth  = 0.0f;
+            float                  mHeight = 0.0f;
+            vector_t<ImVec4>       mCells;
+            vector_t<const char *> mCellData;
 
             int32_t mCurrentRow    = -1;
             int32_t mCurrentColumn = -1;
@@ -299,7 +300,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct TableBody : public Block
@@ -309,7 +312,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct TableRow : public Block
@@ -319,7 +324,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct TableData : public Block
@@ -331,15 +338,23 @@ namespace SE::Core
             {
                 switch( d->align )
                 {
-                case MD_ALIGN_LEFT: mAlign = eHorizontalAlignment::LEFT; break;
-                case MD_ALIGN_RIGHT: mAlign = eHorizontalAlignment::RIGHT; break;
+                case MD_ALIGN_LEFT:
+                    mAlign = eHorizontalAlignment::LEFT;
+                    break;
+                case MD_ALIGN_RIGHT:
+                    mAlign = eHorizontalAlignment::RIGHT;
+                    break;
                 case MD_ALIGN_CENTER:
                 case MD_ALIGN_DEFAULT:
-                default: mAlign = eHorizontalAlignment::CENTER; break;
+                default:
+                    mAlign = eHorizontalAlignment::CENTER;
+                    break;
                 }
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct Text : public Block
@@ -385,7 +400,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct Link : public Block
@@ -395,7 +412,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct Image : public Block
@@ -405,7 +424,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct InlineCode : public Block
@@ -415,7 +436,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct StrikeThrough : public Block
@@ -425,7 +448,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct LaTeXMath : public Block
@@ -435,7 +460,9 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         struct WikiLink : public Block
@@ -445,14 +472,16 @@ namespace SE::Core
             {
             }
 
-            void Render() {}
+            void Render()
+            {
+            }
         };
 
         Ref<Block> mRootBlock;
         Ref<Block> mCurrentBlock;
         Ref<Table> mCurrentTable;
 
-        std::vector<Ref<List>> mListStack;
+        vector_t<Ref<List>> mListStack;
 
         template <typename _Ty, typename... _Args>
         void PushBlock( _Args... aArgs )
@@ -538,10 +567,10 @@ namespace SE::Core
         static void line( ImColor c, bool under );
 
         // table state
-        int                m_table_next_column = 0;
-        ImVec2             m_table_last_pos;
-        std::vector<float> m_table_col_pos;
-        std::vector<float> m_table_row_pos;
+        int             m_table_next_column = 0;
+        ImVec2          m_table_last_pos;
+        vector_t<float> m_table_col_pos;
+        vector_t<float> m_table_row_pos;
 
         // list state
         struct list_info
@@ -550,9 +579,9 @@ namespace SE::Core
             char     delim;
             bool     is_ol;
         };
-        std::vector<list_info> m_list_stack;
+        vector_t<list_info> m_list_stack;
 
-        std::vector<std::string> m_div_stack;
+        vector_t<std::string> m_div_stack;
 
         MD_PARSER m_md;
     };

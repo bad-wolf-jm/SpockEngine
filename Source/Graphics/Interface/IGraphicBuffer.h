@@ -46,7 +46,7 @@ namespace SE::Graphics
         }
 
         template <typename _Ty>
-        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType, bool aIsHostVisible,
+        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, vector_t<_Ty> aData, eBufferType aType, bool aIsHostVisible,
                         bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : IGraphicBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                               aIsTransferDestination )
@@ -64,13 +64,13 @@ namespace SE::Graphics
         ~IGraphicBuffer() = default;
 
         template <typename _MapType>
-        void Upload( std::vector<_MapType> aData )
+        void Upload( vector_t<_MapType> aData )
         {
             Upload( aData, 0 );
         }
 
         template <typename _Ty>
-        void Upload( std::vector<_Ty> aData, size_t aOffset )
+        void Upload( vector_t<_Ty> aData, size_t aOffset )
         {
             Upload( aData.data(), aData.size(), aOffset );
         }

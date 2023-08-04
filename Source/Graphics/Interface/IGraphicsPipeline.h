@@ -97,10 +97,10 @@ namespace SE::Graphics
         bool                   mDepthTestEnable  = false;
         eDepthCompareOperation mDepthComparison  = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sShaderData>               mShaderStages         = {};
-        std::vector<sBufferLayoutElement>      mInputLayout          = {};
-        std::vector<sBufferLayoutElement>      mInstancedInputLayout = {};
-        std::vector<sPushConstantRange>        mPushConstants        = {};
-        std::vector<Ref<IDescriptorSetLayout>> mDescriptorSets       = {};
+        vector_t<sShaderData>               mShaderStages         = {};
+        vector_t<sBufferLayoutElement>      mInputLayout          = {};
+        vector_t<sBufferLayoutElement>      mInstancedInputLayout = {};
+        vector_t<sPushConstantRange>        mPushConstants        = {};
+        vector_t<Ref<IDescriptorSetLayout>> mDescriptorSets       = {};
     };
 } // namespace SE::Graphics

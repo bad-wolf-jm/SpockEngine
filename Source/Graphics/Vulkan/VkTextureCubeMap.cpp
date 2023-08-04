@@ -102,8 +102,10 @@ namespace SE::Graphics
     VkImageUsageFlags VkTextureCubeMap::ImageUsage()
     {
         VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-        if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
         if( mSpec.mIsDepthTexture )
             lUsage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
@@ -116,7 +118,8 @@ namespace SE::Graphics
     void VkTextureCubeMap::ConfigureExternalMemoryHandle()
     {
 #ifdef CUDA_INTEROP
-        if( mIsGraphicsOnly ) return;
+        if( mIsGraphicsOnly )
+            return;
 
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
         lCudaExternalMemoryHandleDesc.type  = cudaExternalMemoryHandleTypeOpaqueWin32;
@@ -146,8 +149,8 @@ namespace SE::Graphics
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lOffset = 0;
+        vector_t<sImageRegion> lBufferCopyRegions;
+        uint32_t               lOffset = 0;
 
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
@@ -185,8 +188,8 @@ namespace SE::Graphics
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lOffset = 0;
+        vector_t<sImageRegion> lBufferCopyRegions;
+        uint32_t               lOffset = 0;
 
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
@@ -236,8 +239,8 @@ namespace SE::Graphics
         VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
                                     false, false, true, lByteSize );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lBufferByteOffset = 0;
+        vector_t<sImageRegion> lBufferCopyRegions;
+        uint32_t               lBufferByteOffset = 0;
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
             sImageRegion lBufferCopyRegion{};
@@ -272,7 +275,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
+        lImageDataStruct.mPixelData = vector_t<uint8_t>( lPixelData, lPixelData + lByteSize );
 
         mTextureData = TextureDataCubeMap( mSpec, lImageDataStruct );
     }
@@ -283,8 +286,8 @@ namespace SE::Graphics
         VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
                                     false, false, true, lByteSize );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lBufferByteOffset = 0;
+        vector_t<sImageRegion> lBufferCopyRegions;
+        uint32_t               lBufferByteOffset = 0;
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
             sImageRegion lBufferCopyRegion{};
@@ -319,7 +322,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
+        lImageDataStruct.mPixelData = vector_t<uint8_t>( lPixelData, lPixelData + lByteSize );
 
         mTextureData = TextureDataCubeMap( mSpec, lImageDataStruct );
     }

@@ -4,10 +4,10 @@
 
 #include "Graphics/Interface/IDescriptorSetLayout.h"
 
-#include "Graphics/Vulkan/VkSampler2D.h"
-#include "Graphics/Vulkan/VkSamplerCubeMap.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkPipeline.h"
+#include "Graphics/Vulkan/VkSampler2D.h"
+#include "Graphics/Vulkan/VkSamplerCubeMap.h"
 
 #include <vector>
 #include <vulkan/vulkan.h>
@@ -26,7 +26,7 @@ namespace SE::Graphics
 
     struct DescriptorSetLayoutCreateInfo
     {
-        std::vector<DescriptorBindingInfo> Bindings;
+        vector_t<DescriptorBindingInfo> Bindings;
     };
 
     class DescriptorSetLayout
@@ -38,11 +38,20 @@ namespace SE::Graphics
 
         DescriptorSetLayoutCreateInfo Spec;
 
-        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mDescriptorSetLayoutObject; }
+        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject()
+        {
+            return mDescriptorSetLayoutObject;
+        }
 
-        VkDescriptorSetLayout GetVkDescriptorSetLayout() { return mDescriptorSetLayoutObject->mVkObject; }
+        VkDescriptorSetLayout GetVkDescriptorSetLayout()
+        {
+            return mDescriptorSetLayoutObject->mVkObject;
+        }
 
-        operator VkDescriptorSetLayout() const { return mDescriptorSetLayoutObject->mVkObject; };
+        operator VkDescriptorSetLayout() const
+        {
+            return mDescriptorSetLayoutObject->mVkObject;
+        };
 
       private:
         Ref<VkGraphicContext>             mGraphicContext{};
@@ -68,14 +77,20 @@ namespace SE::Graphics
         void Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
 
         void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
-        void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
+        void Write( vector_t<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
 
         void Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding );
-        void Write( std::vector<Ref<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
+        void Write( vector_t<Ref<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
 
-        VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
+        VkDescriptorSet GetVkDescriptorSet()
+        {
+            return mDescriptorSetObject->mVkObject;
+        }
 
-        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
+        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject()
+        {
+            return mDescriptorSetObject;
+        }
 
       private:
         Ref<VkGraphicContext>       mGraphicContext{};

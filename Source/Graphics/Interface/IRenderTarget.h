@@ -2,11 +2,11 @@
 
 #include "Core/Memory.h"
 
+#include "ICommandBuffer.h"
 #include "IGraphicContext.h"
 #include "IRenderPass.h"
 #include "ITexture.h"
 #include "ITextureCubeMap.h"
-#include "ICommandBuffer.h"
 
 namespace SE::Graphics
 {
@@ -83,8 +83,8 @@ namespace SE::Graphics
         void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<ITexture> aFramebufferImage );
 
-        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<ITexture> aFramebufferImage, eCubeFace aFace );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo, Ref<ITexture> aFramebufferImage,
+                            eCubeFace aFace );
 
         void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
@@ -98,7 +98,10 @@ namespace SE::Graphics
         virtual void Present();
 
         Ref<ITexture> GetAttachment( string_t const &aKey );
-        uint32_t      GetColorAttachmentCount() { return mColorAttachmentCount; }
+        uint32_t      GetColorAttachmentCount()
+        {
+            return mColorAttachmentCount;
+        }
 
         template <typename _GCSubtype>
         Ref<_GCSubtype> GraphicContext()
@@ -106,8 +109,11 @@ namespace SE::Graphics
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
 
-        uint32_t GetImageCount() { return mImageCount; }
-        
+        uint32_t GetImageCount()
+        {
+            return mImageCount;
+        }
+
         virtual Ref<ICommandBuffer> GetCommandBuffer() = 0;
 
       protected:
@@ -116,8 +122,8 @@ namespace SE::Graphics
         uint32_t mSampleCount = 1;
         uint32_t mImageCount  = 1;
 
-        std::vector<sAttachmentDescription> mAttachmentInfo = {};
-        std::vector<string_t>            mAttachmentIDs  = {};
+        vector_t<sAttachmentDescription> mAttachmentInfo = {};
+        vector_t<string_t>               mAttachmentIDs  = {};
 
         std::unordered_map<string_t, sAttachmentResource> mAttachments = {};
 

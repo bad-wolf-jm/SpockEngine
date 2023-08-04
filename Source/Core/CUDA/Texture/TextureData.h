@@ -14,6 +14,8 @@
 
 #include <gli/gli.hpp>
 
+#include "Core/Vector.h"
+
 #include "ColorFormat.h"
 #include "TextureTypes.h"
 
@@ -81,7 +83,7 @@ namespace SE::Core
 
         void SaveTo( path_t const &aImagePath );
 
-        std::vector<char> Serialize() const;
+        vector_t<char> Serialize() const;
 
       private:
         // Common initialization for all constructor versions.
@@ -183,8 +185,8 @@ namespace SE::Core
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, path_t const &aKTXImagePath );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
-        TextureDataCubeMap( std::vector<uint8_t> aKTXData, uint32_t aSize );
-        TextureDataCubeMap( std::array<std::vector<uint8_t>, 6> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( vector_t<uint8_t> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( std::array<vector_t<uint8_t>, 6> aKTXData, uint32_t aSize );
 
         sCubeMapImageData GetImageData();
 

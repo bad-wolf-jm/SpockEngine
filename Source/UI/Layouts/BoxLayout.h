@@ -66,10 +66,10 @@ namespace SE::Core
         ImVec2 RequiredSize();
 
       protected:
-        std::vector<BoxLayoutItem> mChildren;
-        eBoxLayoutOrientation      mOrientation = eBoxLayoutOrientation::HORIZONTAL;
-        float                      mItemSpacing = 0.0f;
-        bool                       mSimple      = false;
+        vector_t<BoxLayoutItem> mChildren;
+        eBoxLayoutOrientation   mOrientation = eBoxLayoutOrientation::HORIZONTAL;
+        float                   mItemSpacing = 0.0f;
+        bool                    mSimple      = false;
 
       protected:
         void PushStyles();

@@ -43,18 +43,24 @@ namespace SE::Graphics
 
         void Finalize();
 
-        Ref<IRenderPass>    GetRenderPass() { return mRenderPassObject; }
-        Ref<ICommandBuffer> GetCommandBuffer() { return mCommandBufferObject[0]; }
+        Ref<IRenderPass> GetRenderPass()
+        {
+            return mRenderPassObject;
+        }
+        Ref<ICommandBuffer> GetCommandBuffer()
+        {
+            return mCommandBufferObject[0];
+        }
 
         virtual bool BeginRender();
         virtual void EndRender();
         virtual void Present();
 
-        virtual std::vector<VkClearValue> GetClearValues();
-        virtual VkFramebuffer             GetFramebuffer();
-        virtual VkSemaphore               GetImageAvailableSemaphore( uint32_t i );
-        virtual VkSemaphore               GetRenderFinishedSemaphore( uint32_t i );
-        virtual VkFence                   GetInFlightFence( uint32_t i );
+        virtual vector_t<VkClearValue> GetClearValues();
+        virtual VkFramebuffer          GetFramebuffer();
+        virtual VkSemaphore            GetImageAvailableSemaphore( uint32_t i );
+        virtual VkSemaphore            GetRenderFinishedSemaphore( uint32_t i );
+        virtual VkFence                GetInFlightFence( uint32_t i );
 
         virtual uint32_t GetCurrentImage();
 
@@ -67,12 +73,12 @@ namespace SE::Graphics
 
         void InitializeCommandBuffers();
 
-        std::vector<VkClearValue>        mClearValues      = {};
+        vector_t<VkClearValue>  mClearValues      = {};
         Ref<VkRenderPassObject> mRenderPassObject = nullptr;
 
-        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
+        vector_t<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
 
-        VkFramebuffer            mVkFramebuffer = VK_NULL_HANDLE;
-        std::vector<VkImageView> mVkImageViews  = {};
+        VkFramebuffer         mVkFramebuffer = VK_NULL_HANDLE;
+        vector_t<VkImageView> mVkImageViews  = {};
     };
 } // namespace SE::Graphics

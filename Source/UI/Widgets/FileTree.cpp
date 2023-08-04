@@ -36,7 +36,7 @@ namespace SE::Core
         return fs::is_regular_file( mPath / mName );
     }
 
-    std::vector<UITreeViewNode *> const &UIFileTreeNode::Children()
+    vector_t<UITreeViewNode *> const &UIFileTreeNode::Children()
     {
         auto const &lFullPath = mPath / mName;
         if( ( mChildren.size() == 0 ) && fs::is_directory( lFullPath ) )
@@ -44,7 +44,7 @@ namespace SE::Core
             fs::directory_iterator lIterator;
 
             lIterator = fs::directory_iterator( lFullPath );
-            std::vector<path_t> lFolders;
+            vector_t<path_t> lFolders;
             std::copy_if( fs::begin( lIterator ), fs::end( lIterator ), std::back_inserter( lFolders ),
                           [&]( auto const &aPath ) { return fs::is_directory( aPath ); } );
             std::sort( lFolders.begin(), lFolders.end(),
@@ -52,7 +52,7 @@ namespace SE::Core
                        { return s1.filename().string().compare( s2.filename().string() ) <= 0; } );
 
             lIterator = fs::directory_iterator( lFullPath );
-            std::vector<path_t> lFiles;
+            vector_t<path_t> lFiles;
             std::copy_if( fs::begin( lIterator ), fs::end( lIterator ), std::back_inserter( lFiles ),
                           [&]( auto const &aPath ) { return fs::is_regular_file( aPath ); } );
             std::sort( lFiles.begin(), lFiles.end(),
@@ -90,7 +90,7 @@ namespace SE::Core
             }
         }
 
-        std::vector<UITreeViewNode *> lRemainingChildren;
+        vector_t<UITreeViewNode *> lRemainingChildren;
         std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lRemainingChildren ),
                       [&]( auto *x ) { return x == lChild; } );
 

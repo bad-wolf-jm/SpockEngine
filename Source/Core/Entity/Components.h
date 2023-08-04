@@ -15,6 +15,7 @@
 
 #include "Core/Math/Types.h"
 #include "Core/String.h"
+#include "Core/Vector.h"
 
 #include "Entity.h"
 
@@ -63,8 +64,8 @@ namespace SE::Core
         template <typename ParentType>
         struct sRelationship
         {
-            Internal::Entity<ParentType>              mParent{ entt::null, nullptr };
-            std::vector<Internal::Entity<ParentType>> mChildren = {};
+            Internal::Entity<ParentType>           mParent{ entt::null, nullptr };
+            vector_t<Internal::Entity<ParentType>> mChildren = {};
 
             sRelationship()                        = default;
             sRelationship( const sRelationship & ) = default;
@@ -76,7 +77,10 @@ namespace SE::Core
             Internal::Entity<ParentType> mJoinEntity{}; //!< Handle to the joined entity
 
             /// @brief Retrieves a reference to the joined component
-            _Ty &JoinedComponent() { return mJoinEntity.Get<_Ty>(); }
+            _Ty &JoinedComponent()
+            {
+                return mJoinEntity.Get<_Ty>();
+            }
 
             sJoin()                = default;
             sJoin( const sJoin & ) = default;
@@ -99,13 +103,25 @@ namespace SE::Core
                 return mEntity.Has<T>();
             }
 
-            virtual void Initialize( Internal::Entity<ParentType> aEntity ) { mEntity = aEntity; }
+            virtual void Initialize( Internal::Entity<ParentType> aEntity )
+            {
+                mEntity = aEntity;
+            }
 
-            virtual void OnBeginScenario() {}
-            virtual void OnEndScenario() {}
-            virtual void OnTick( Timestep ts ) {}
+            virtual void OnBeginScenario()
+            {
+            }
+            virtual void OnEndScenario()
+            {
+            }
+            virtual void OnTick( Timestep ts )
+            {
+            }
 
-            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+            Internal::Entity<ParentType> GetControlledEntity() const
+            {
+                return mEntity;
+            };
 
           private:
             Internal::Entity<ParentType> mEntity;

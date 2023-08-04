@@ -25,7 +25,7 @@ namespace SE::Graphics
                                       bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
     template <typename _Ty>
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType,
+    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, vector_t<_Ty> aData, eBufferType aType,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
     {
         return CreateBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,

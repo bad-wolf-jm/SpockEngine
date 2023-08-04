@@ -12,7 +12,7 @@
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    TextureCubeMap::TextureCubeMap( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData )
+    TextureCubeMap::TextureCubeMap( sTextureCreateInfo &aSpec, vector_t<uint8_t> aData )
         : mSpec( aSpec )
     {
         MallocArray( &mInternalCudaArray, mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ) );

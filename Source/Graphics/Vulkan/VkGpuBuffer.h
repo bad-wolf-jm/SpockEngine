@@ -29,7 +29,7 @@ namespace SE::Graphics
                      bool aIsTransferDestination, size_t aSize );
 
         template <typename _Ty>
-        VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType, bool aIsHostVisible,
+        VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, vector_t<_Ty> aData, eBufferType aType, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : VkGpuBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            aIsTransferDestination )
@@ -53,7 +53,10 @@ namespace SE::Graphics
         {
             return mVkGraphicContext->MapMemory<_MapType>( mVkMemory, aSize, aOffset );
         }
-        void Unmap() { mVkGraphicContext->UnmapMemory( mVkMemory ); }
+        void Unmap()
+        {
+            mVkGraphicContext->UnmapMemory( mVkMemory );
+        }
 
         void Allocate( size_t aSizeInBytes );
         void Resize( size_t aNewSizeInBytes );

@@ -4,10 +4,11 @@
 #include <array>
 #include <memory>
 #include <optional>
-#include <string>
-#include <vector>
+// #include <string>
+// #include <vector>
 
 #include "String.h"
+#include "Vector.h"
 
 template <class T, typename std::underlying_type<T>::type fullValue>
 class EnumSet
@@ -35,7 +36,8 @@ class EnumSet
             return;
         }
         UnderlyingType l_Value{};
-        for( auto i : a_Init ) l_Value |= ( (UnderlyingType)i );
+        for( auto i : a_Init )
+            l_Value |= ( (UnderlyingType)i );
         value = l_Value;
     }
     constexpr EnumSet( T value )
@@ -47,20 +49,35 @@ class EnumSet
     {
     }
 
-    constexpr bool operator==( EnumSet<T, fullValue> other ) const { return value == other.value; }
+    constexpr bool operator==( EnumSet<T, fullValue> other ) const
+    {
+        return value == other.value;
+    }
 
-    constexpr bool operator!=( EnumSet<T, fullValue> other ) const { return !operator==( other ); }
+    constexpr bool operator!=( EnumSet<T, fullValue> other ) const
+    {
+        return !operator==( other );
+    }
 
-    constexpr bool operator>=( EnumSet<T, fullValue> other ) const { return ( *this & other ) == other; }
+    constexpr bool operator>=( EnumSet<T, fullValue> other ) const
+    {
+        return ( *this & other ) == other;
+    }
 
-    constexpr bool operator<=( EnumSet<T, fullValue> other ) const { return ( *this & other ) == *this; }
+    constexpr bool operator<=( EnumSet<T, fullValue> other ) const
+    {
+        return ( *this & other ) == *this;
+    }
 
     constexpr EnumSet<T, fullValue> operator|( EnumSet<T, fullValue> other ) const
     {
         return EnumSet<T, fullValue>( value | other.value );
     }
 
-    constexpr EnumSet<T, fullValue> operator|( T other ) const { return EnumSet<T, fullValue>( value | other ); }
+    constexpr EnumSet<T, fullValue> operator|( T other ) const
+    {
+        return EnumSet<T, fullValue>( value | other );
+    }
 
     EnumSet<T, fullValue> &operator|=( EnumSet<T, fullValue> other )
     {
@@ -90,11 +107,20 @@ class EnumSet
         return *this;
     }
 
-    constexpr EnumSet<T, fullValue> operator~() const { return EnumSet<T, fullValue>( fullValue & ~value ); }
+    constexpr EnumSet<T, fullValue> operator~() const
+    {
+        return EnumSet<T, fullValue>( fullValue & ~value );
+    }
 
-    constexpr explicit operator bool() const { return value != 0; }
+    constexpr explicit operator bool() const
+    {
+        return value != 0;
+    }
 
-    constexpr explicit operator UnderlyingType() const { return value; }
+    constexpr explicit operator UnderlyingType() const
+    {
+        return value;
+    }
 
     UnderlyingType value;
 };

@@ -168,7 +168,7 @@ namespace SE::Core
 
     void UIWorkspace::UpdateDocumentList()
     {
-        std::vector<UIWorkspaceDocument *> lOpenedDocuments;
+        vector_t<UIWorkspaceDocument *> lOpenedDocuments;
         std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( lOpenedDocuments ),
                       []( UIWorkspaceDocument *x ) { return x->mOpen; } );
 

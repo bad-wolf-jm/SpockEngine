@@ -2,7 +2,7 @@
 
 namespace SE::Core
 {
-    UIComboBox::UIComboBox( std::vector<string_t> const &aItems )
+    UIComboBox::UIComboBox( vector_t<string_t> const &aItems )
         : mItems{ aItems } {};
 
     ImVec2 UIComboBox::RequiredSize()
@@ -28,7 +28,7 @@ namespace SE::Core
         mOnChange = aOnChange;
     }
 
-    void UIComboBox::SetItemList( std::vector<string_t> aItems )
+    void UIComboBox::SetItemList( vector_t<string_t> aItems )
     {
         mItems = aItems;
     }

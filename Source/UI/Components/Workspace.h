@@ -63,14 +63,14 @@ namespace SE::Core
         void Add( UIWorkspaceDocument *aDocument );
         void Add( Ref<UIWorkspaceDocument> aDocument );
 
-        std::function<void( std::vector<UIWorkspaceDocument *> )> mOnCloseDocuments;
+        std::function<void( vector_t<UIWorkspaceDocument *> )> mOnCloseDocuments;
 
       protected:
-        std::vector<UIWorkspaceDocument *> mDocuments;
-        std::vector<UIWorkspaceDocument *> mCloseQueue;
+        vector_t<UIWorkspaceDocument *> mDocuments;
+        vector_t<UIWorkspaceDocument *> mCloseQueue;
 
-        std::vector<Ref<UIWorkspaceDocument>> mDocumentRefs;
-        std::vector<Ref<UIWorkspaceDocument>> mCloseQueueRefs;
+        vector_t<Ref<UIWorkspaceDocument>> mDocumentRefs;
+        vector_t<Ref<UIWorkspaceDocument>> mCloseQueueRefs;
 
       protected:
         void PushStyles();

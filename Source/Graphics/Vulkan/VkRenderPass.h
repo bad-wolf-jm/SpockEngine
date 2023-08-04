@@ -19,14 +19,13 @@ namespace SE::Graphics
         VkRenderPass mVkObject    = VK_NULL_HANDLE;
         uint32_t     mSampleCount = 1;
 
-        VkRenderPassObject()                                = default;
+        VkRenderPassObject()                       = default;
         VkRenderPassObject( VkRenderPassObject & ) = default;
-        VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
-                                     std::vector<VkSubpassDescription> aSubpasses,
-                                     std::vector<VkSubpassDependency>  aSubpassDependencies );
+        VkRenderPassObject( Ref<VkGraphicContext> aContext, vector_t<VkAttachmentDescription> aAttachments,
+                            vector_t<VkSubpassDescription> aSubpasses, vector_t<VkSubpassDependency> aSubpassDependencies );
 
         VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
-                                     bool aIsPresented, math::vec4 aClearColor );
+                            bool aIsPresented, math::vec4 aClearColor );
 
         ~VkRenderPassObject();
 
@@ -36,21 +35,24 @@ namespace SE::Graphics
         VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
                                                  VkAttachmentStoreOp aAttachmentStoreOp );
 
-        std::vector<VkClearValue> GetClearValues();
+        vector_t<VkClearValue> GetClearValues();
 
-        std::vector<VkSubpassDependency> DefaultSubpassDependencies();
+        vector_t<VkSubpassDependency> DefaultSubpassDependencies();
 
-        void CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
-                                         std::vector<VkAttachmentReference>   aAttachmentReferences,
-                                         VkAttachmentReference               *aDepthAttachmentReference,
-                                         VkAttachmentReference               *aResolveAttachmentReference );
+        void CreateUnderlyingRenderpass( vector_t<VkAttachmentDescription> aAttachments,
+                                         vector_t<VkAttachmentReference>   aAttachmentReferences,
+                                         VkAttachmentReference            *aDepthAttachmentReference,
+                                         VkAttachmentReference            *aResolveAttachmentReference );
 
-        uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
+        uint32_t GetColorAttachmentCount()
+        {
+            return mColorAttachmentCount;
+        }
 
       protected:
-        Ref<VkGraphicContext>     mContext              = nullptr;
-        std::vector<VkClearValue> mClearValues          = {};
-        uint32_t                  mColorAttachmentCount = 0;
+        Ref<VkGraphicContext>  mContext              = nullptr;
+        vector_t<VkClearValue> mClearValues          = {};
+        uint32_t               mColorAttachmentCount = 0;
     };
 
 } // namespace SE::Graphics

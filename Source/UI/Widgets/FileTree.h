@@ -21,8 +21,8 @@ namespace SE::Core
         UIFileTreeNode *Add( path_t const &aPath );
         void            Remove( path_t const &aPath );
 
-        std::vector<UITreeViewNode *> const &Children();
-        path_t const                        &GetPath()
+        vector_t<UITreeViewNode *> const &Children();
+        path_t const                     &GetPath()
         {
             return mFullPath;
         }

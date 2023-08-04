@@ -5,7 +5,10 @@ namespace SE::Logging
 {
     static std::ofstream gLogFile;
 
-    void LogToFile( string_t const &aFilePath ) { gLogFile.open( aFilePath ); }
+    void LogToFile( string_t const &aFilePath )
+    {
+        gLogFile.open( aFilePath );
+    }
 
     void LogLine( string_t const &aLine )
     {
@@ -13,7 +16,7 @@ namespace SE::Logging
             gLogFile << aLine;
     }
 
-    static std::vector<LogMessage> sLogMessages = {};
+    static vector_t<LogMessage> sLogMessages = {};
 
     void _Log( LogLevel a_Level, string_t a_Message )
     {
@@ -24,8 +27,13 @@ namespace SE::Logging
         // sLogMessages.push_back( l_NewMessage );
     }
 
-    std::vector<LogMessage> &GetLogMessages() { return sLogMessages; }
+    vector_t<LogMessage> &GetLogMessages()
+    {
+        return sLogMessages;
+    }
 
-    void SetLogOutputFile( path_t aFilePath ) {}
+    void SetLogOutputFile( path_t aFilePath )
+    {
+    }
 
 } // namespace SE::Logging

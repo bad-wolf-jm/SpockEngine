@@ -30,7 +30,10 @@ namespace SE::Graphics
         Cast<VkGraphicContext>( mGraphicContext )->DestroyFence( mSubmitFence );
     }
 
-    void sVkCommandBufferObject::Begin() { Begin( 0 ); }
+    void sVkCommandBufferObject::Begin()
+    {
+        Begin( 0 );
+    }
 
     void sVkCommandBufferObject::Begin( VkCommandBufferUsageFlags aUsage )
     {
@@ -44,7 +47,7 @@ namespace SE::Graphics
     }
 
     void sVkCommandBufferObject::BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
-                                                  std::vector<VkClearValue> aClearValues )
+                                                  vector_t<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -58,7 +61,10 @@ namespace SE::Graphics
         vkCmdBeginRenderPass( mVkObject, &lRenderPassInfo, VK_SUBPASS_CONTENTS_INLINE );
     }
 
-    void sVkCommandBufferObject::EndRenderPass() { vkCmdEndRenderPass( mVkObject ); }
+    void sVkCommandBufferObject::EndRenderPass()
+    {
+        vkCmdEndRenderPass( mVkObject );
+    }
 
     void sVkCommandBufferObject::SetViewport( math::ivec2 aOffset, math::uvec2 aSize )
     {
@@ -219,13 +225,13 @@ namespace SE::Graphics
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion,
                                              sImageRegion const &aImageRegion )
     {
-        CopyBuffer( aSource, aDestination, std::vector<sImageRegion>{ aBufferRegion }, aImageRegion );
+        CopyBuffer( aSource, aDestination, vector_t<sImageRegion>{ aBufferRegion }, aImageRegion );
     }
 
-    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
+    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, vector_t<sImageRegion> aBufferRegions,
                                              sImageRegion const &aImageRegion )
     {
-        std::vector<VkBufferImageCopy> lBufferCopyRegions;
+        vector_t<VkBufferImageCopy> lBufferCopyRegions;
 
         for( auto const &lRegion : aBufferRegions )
         {
@@ -284,10 +290,10 @@ namespace SE::Graphics
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1, 1 );
     }
 
-    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions,
+    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, vector_t<sImageRegion> aImageRegions,
                                             uint32_t aBufferOffset )
     {
-        std::vector<VkBufferImageCopy> lBufferCopyRegions;
+        vector_t<VkBufferImageCopy> lBufferCopyRegions;
 
         for( auto const &lRegion : aImageRegions )
         {
@@ -309,9 +315,15 @@ namespace SE::Graphics
                                 static_cast<uint32_t>( lBufferCopyRegions.size() ), lBufferCopyRegions.data() );
     }
 
-    void sVkCommandBufferObject::End() { VK_CHECK_RESULT( vkEndCommandBuffer( mVkObject ) ); }
+    void sVkCommandBufferObject::End()
+    {
+        VK_CHECK_RESULT( vkEndCommandBuffer( mVkObject ) );
+    }
 
-    void sVkCommandBufferObject::SetSubmitFence( VkFence aFence ) { mSubmitFence = aFence; }
+    void sVkCommandBufferObject::SetSubmitFence( VkFence aFence )
+    {
+        mSubmitFence = aFence;
+    }
 
     void sVkCommandBufferObject::AddWaitSemaphore( VkSemaphore aSemaphore, VkPipelineStageFlags aWaitStages )
     {
@@ -319,7 +331,10 @@ namespace SE::Graphics
         mSubmitWaitSemaphoreStage.push_back( aWaitStages );
     }
 
-    void sVkCommandBufferObject::AddSignalSemaphore( VkSemaphore aSemaphore ) { mSubmitSignalSemaphores.push_back( aSemaphore ); }
+    void sVkCommandBufferObject::AddSignalSemaphore( VkSemaphore aSemaphore )
+    {
+        mSubmitSignalSemaphores.push_back( aSemaphore );
+    }
 
     void sVkCommandBufferObject::SubmitTo( VkQueue aQueue )
     {

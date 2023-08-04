@@ -21,7 +21,8 @@ namespace SE::Graphics
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITexture2D( aGraphicContext, aTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -42,7 +43,8 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                       aIsTransferDestination )
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -55,7 +57,8 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
     }
 
     VkTexture2D::~VkTexture2D()
@@ -78,7 +81,10 @@ namespace SE::Graphics
         mVkMemory = GraphicContext<VkGraphicContext>()->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
     }
 
-    void VkTexture2D::BindMemory() { GraphicContext<VkGraphicContext>()->BindMemory( mVkImage, mVkMemory ); }
+    void VkTexture2D::BindMemory()
+    {
+        GraphicContext<VkGraphicContext>()->BindMemory( mVkImage, mVkMemory );
+    }
 
     VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
     {
@@ -94,8 +100,10 @@ namespace SE::Graphics
     VkImageUsageFlags VkTexture2D::ImageUsage()
     {
         VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-        if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
         if( mSpec.mIsDepthTexture )
             lUsage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
@@ -108,7 +116,8 @@ namespace SE::Graphics
     void VkTexture2D::ConfigureExternalMemoryHandle()
     {
 #ifdef CUDA_INTEROP
-        if( mIsGraphicsOnly ) return;
+        if( mIsGraphicsOnly )
+            return;
 
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
         lCudaExternalMemoryHandleDesc.type  = cudaExternalMemoryHandleTypeOpaqueWin32;
@@ -137,8 +146,8 @@ namespace SE::Graphics
         Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lOffset = 0;
+        vector_t<sImageRegion> lBufferCopyRegions;
+        uint32_t               lOffset = 0;
 
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
@@ -184,8 +193,8 @@ namespace SE::Graphics
         uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
         VkGpuBuffer lStagingBuffer( GraphicContext<VkGraphicContext>(), eBufferType::UNKNOWN, true, false, false, true, lByteSize );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lBufferByteOffset = 0;
+        vector_t<sImageRegion> lBufferCopyRegions;
+        uint32_t               lBufferByteOffset = 0;
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
             sImageRegion lBufferCopyRegion{};
@@ -218,7 +227,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
+        lImageDataStruct.mPixelData = vector_t<uint8_t>( lPixelData, lPixelData + lByteSize );
 
         aTextureData = TextureData2D( mSpec, lImageDataStruct );
     }

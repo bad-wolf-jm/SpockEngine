@@ -33,9 +33,10 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lBufferBindInfo );
     }
 
-    void VkDescriptorSetObject::Write( std::vector<Ref<ISampler2D>> aWriteOperations, uint32_t aBinding )
+    void VkDescriptorSetObject::Write( vector_t<Ref<ISampler2D>> aWriteOperations, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 ) return;
+        if( aWriteOperations.size() == 0 )
+            return;
 
         sVkDescriptorSetObject::sImageBindInfo lImages{};
 
@@ -48,18 +49,19 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    // void VkDescriptorSetObject::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+    // void VkDescriptorSetObject::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( vector_t{ aBuffer }, aBinding ); }
 
-    void VkDescriptorSetObject::Write( std::vector<Ref<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    void VkDescriptorSetObject::Write( vector_t<Ref<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 ) return;
+        if( aWriteOperations.size() == 0 )
+            return;
 
         sVkDescriptorSetObject::sImageBindInfo lImages{};
 
         for( auto &lBuffer : aWriteOperations )
         {
-            lImages.mSampler.push_back(  Cast<VkSamplerCubeMap>( lBuffer )->GetSampler() );
-            lImages.mImageView.push_back(  Cast<VkSamplerCubeMap>( lBuffer )->GetImageView() );
+            lImages.mSampler.push_back( Cast<VkSamplerCubeMap>( lBuffer )->GetSampler() );
+            lImages.mImageView.push_back( Cast<VkSamplerCubeMap>( lBuffer )->GetImageView() );
         }
         lImages.mBinding = aBinding;
 
@@ -67,7 +69,7 @@ namespace SE::Graphics
     }
     // void VkDescriptorSetObject::Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding )
     // {
-    //     Write( std::vector{ aBuffer }, aBinding );
+    //     Write( vector_t{ aBuffer }, aBinding );
     // }
 
     // DescriptorBindingInfo::operator VkDescriptorSetLayoutBinding() const
@@ -100,7 +102,7 @@ namespace SE::Graphics
     //     : mGraphicContext{ aGraphicContext }
     //     , Spec( aCreateInfo )
     // {
-    //     std::vector<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
+    //     vector_t<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
 
     //     for( uint32_t i = 0; i < aCreateInfo.Bindings.size(); i++ )
     //     {
@@ -119,7 +121,7 @@ namespace SE::Graphics
     // {
     //     auto lDescriptorSet = mDescriptorLayout[i].mDescriptors;
 
-    //     std::vector<VkDescriptorSetLayoutBinding> lBindings{};
+    //     vector_t<VkDescriptorSetLayoutBinding> lBindings{};
 
     //     for( uint32_t j = 0; j < lDescriptorSet.size(); j++ )
     //     {

@@ -13,23 +13,24 @@ namespace SE::Graphics
     {
         struct sSwapChainSupportDetails
         {
-            VkSurfaceCapabilitiesKHR        mCapabilities;
-            std::vector<VkSurfaceFormatKHR> mFormats;
-            std::vector<VkPresentModeKHR>   mPresentModes;
+            VkSurfaceCapabilitiesKHR     mCapabilities;
+            vector_t<VkSurfaceFormatKHR> mFormats;
+            vector_t<VkPresentModeKHR>   mPresentModes;
         };
 
-        std::vector<const char *> GetRequiredInstanceExtensions( bool aEnableValidationLayers )
+        vector_t<const char *> GetRequiredInstanceExtensions( bool aEnableValidationLayers )
         {
             uint32_t     lGlfwExtensionCount = 0;
             const char **lGlfwExtensions;
             lGlfwExtensions = glfwGetRequiredInstanceExtensions( &lGlfwExtensionCount );
 
-            std::vector<const char *> lRequiredExtensions( lGlfwExtensions, lGlfwExtensions + lGlfwExtensionCount );
+            vector_t<const char *> lRequiredExtensions( lGlfwExtensions, lGlfwExtensions + lGlfwExtensionCount );
             lRequiredExtensions.push_back( VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME );
             lRequiredExtensions.push_back( VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME );
             lRequiredExtensions.push_back( VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME );
 
-            if( aEnableValidationLayers ) lRequiredExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
+            if( aEnableValidationLayers )
+                lRequiredExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
 
             return lRequiredExtensions;
         }
@@ -46,50 +47,53 @@ namespace SE::Graphics
             return true;
         }
 
-        bool CheckValidationLayerSupport( const std::vector<const char *> aValidationLayers )
+        bool CheckValidationLayerSupport( const vector_t<const char *> aValidationLayers )
         {
             uint32_t lLayerCount;
             vkEnumerateInstanceLayerProperties( &lLayerCount, nullptr );
 
-            std::vector<VkLayerProperties> lAvailableLayers( lLayerCount );
+            vector_t<VkLayerProperties> lAvailableLayers( lLayerCount );
             vkEnumerateInstanceLayerProperties( &lLayerCount, lAvailableLayers.data() );
 
             std::set<string_t> lAvailableValidationLayers;
-            for( const auto &lLayer : lAvailableLayers ) lAvailableValidationLayers.emplace( lLayer.layerName );
+            for( const auto &lLayer : lAvailableLayers )
+                lAvailableValidationLayers.emplace( lLayer.layerName );
 
             std::set<string_t> lRequestedValidationLayers( aValidationLayers.begin(), aValidationLayers.end() );
 
             return IsSubset( lRequestedValidationLayers, lAvailableValidationLayers );
         }
 
-        bool CkeckRequiredInstanceExtensions( const std::vector<const char *> aRequiredExtensions )
+        bool CkeckRequiredInstanceExtensions( const vector_t<const char *> aRequiredExtensions )
         {
             uint32_t lExtensionCount = 0;
             vkEnumerateInstanceExtensionProperties( nullptr, &lExtensionCount, nullptr );
 
-            std::vector<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
+            vector_t<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
             vkEnumerateInstanceExtensionProperties( nullptr, &lExtensionCount, lAvailableExtensions.data() );
 
             std::set<const char *> lAvailableExtensionSet;
-            for( const auto &lExtension : lAvailableExtensions ) lAvailableExtensionSet.emplace( lExtension.extensionName );
+            for( const auto &lExtension : lAvailableExtensions )
+                lAvailableExtensionSet.emplace( lExtension.extensionName );
 
             std::set<const char *> lRequestedExtensionSet( aRequiredExtensions.begin(), aRequiredExtensions.end() );
 
             return IsSubset( lRequestedExtensionSet, lAvailableExtensionSet );
         }
 
-        bool CheckRequiredDeviceExtensions( VkPhysicalDevice aVkPhysicalDevice, std::vector<const char *> aRequestedExtensions )
+        bool CheckRequiredDeviceExtensions( VkPhysicalDevice aVkPhysicalDevice, vector_t<const char *> aRequestedExtensions )
         {
             uint32_t lExtensionCount;
             vkEnumerateDeviceExtensionProperties( aVkPhysicalDevice, nullptr, &lExtensionCount, nullptr );
 
-            std::vector<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
+            vector_t<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
             vkEnumerateDeviceExtensionProperties( aVkPhysicalDevice, nullptr, &lExtensionCount, lAvailableExtensions.data() );
 
             std::set<string_t> lRequestedExtensionsSet( aRequestedExtensions.begin(), aRequestedExtensions.end() );
 
             std::set<string_t> lAvailableExtensionSet;
-            for( const auto &lExtension : lAvailableExtensions ) lAvailableExtensionSet.emplace( lExtension.extensionName );
+            for( const auto &lExtension : lAvailableExtensions )
+                lAvailableExtensionSet.emplace( lExtension.extensionName );
 
             return IsSubset( lRequestedExtensionsSet, lAvailableExtensionSet );
         }
@@ -99,7 +103,7 @@ namespace SE::Graphics
             uint32_t lQueueFamilyCount = 0;
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, nullptr );
 
-            std::vector<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
+            vector_t<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, lAvailableQueueFamilies.data() );
 
             int lCurrentQueueIndex = 0;
@@ -116,7 +120,8 @@ namespace SE::Graphics
                     lGraphicsFamilyHasValue = true;
                 }
 
-                if( lGraphicsFamilyHasValue ) break;
+                if( lGraphicsFamilyHasValue )
+                    break;
 
                 lCurrentQueueIndex++;
             }
@@ -129,7 +134,7 @@ namespace SE::Graphics
             uint32_t lQueueFamilyCount = 0;
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, nullptr );
 
-            std::vector<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
+            vector_t<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, lAvailableQueueFamilies.data() );
 
             int lCurrentQueueIndex = 0;
@@ -146,7 +151,8 @@ namespace SE::Graphics
                     lGraphicsFamilyHasValue = true;
                 }
 
-                if( lGraphicsFamilyHasValue ) break;
+                if( lGraphicsFamilyHasValue )
+                    break;
 
                 lCurrentQueueIndex++;
             }
@@ -182,7 +188,7 @@ namespace SE::Graphics
             return lSwapChainSupportDetails;
         }
 
-        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, std::vector<const char *> aRequestedExtensions )
+        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, vector_t<const char *> aRequestedExtensions )
         {
             bool lRequiredExtensionsAreSupported = CheckRequiredDeviceExtensions( aVkPhysicalDevice, aRequestedExtensions );
 
@@ -202,21 +208,21 @@ namespace SE::Graphics
                    lSupportedPhysicalDeviceFeatures.samplerAnisotropy;
         }
 
-        std::vector<VkPhysicalDevice> EnumeratePhysicalDevices( VkInstance aVkInstance )
+        vector_t<VkPhysicalDevice> EnumeratePhysicalDevices( VkInstance aVkInstance )
         {
             uint32_t lPhysicalDeviceCount = 0;
             vkEnumeratePhysicalDevices( aVkInstance, &lPhysicalDeviceCount, nullptr );
 
-            std::vector<VkPhysicalDevice> lPhysicalDeviceObjects( lPhysicalDeviceCount );
+            vector_t<VkPhysicalDevice> lPhysicalDeviceObjects( lPhysicalDeviceCount );
             if( 0 != lPhysicalDeviceCount )
                 vkEnumeratePhysicalDevices( aVkInstance, &lPhysicalDeviceCount, lPhysicalDeviceObjects.data() );
 
             return lPhysicalDeviceObjects;
         }
 
-        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, std::vector<const char *> aRequestedExtensions )
+        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, vector_t<const char *> aRequestedExtensions )
         {
-            std::vector<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance );
+            vector_t<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance );
 
             for( const auto &lPhysicalDevice : lPhysicalDeviceList )
             {
@@ -229,7 +235,7 @@ namespace SE::Graphics
             throw std::runtime_error( "failed to find a suitable GPU!" );
         }
 
-        VkFormat FindSupportedFormat( VkPhysicalDevice aVkPhysicalDevice, const std::vector<VkFormat> &aCandidates,
+        VkFormat FindSupportedFormat( VkPhysicalDevice aVkPhysicalDevice, const vector_t<VkFormat> &aCandidates,
                                       VkImageTiling aImageTiling, VkFormatFeatureFlags aFeatures )
         {
             for( VkFormat lCurrentFormat : aCandidates )
@@ -300,7 +306,7 @@ namespace SE::Graphics
             return lNewMemory;
         }
 
-        VkSurfaceFormatKHR ChooseSwapSurfaceFormat( const std::vector<VkSurfaceFormatKHR> &aAvailableFormats )
+        VkSurfaceFormatKHR ChooseSwapSurfaceFormat( const vector_t<VkSurfaceFormatKHR> &aAvailableFormats )
         {
             for( const auto &lFormat : aAvailableFormats )
             {
@@ -311,7 +317,7 @@ namespace SE::Graphics
             return aAvailableFormats[0];
         }
 
-        VkPresentModeKHR ChooseSwapPresentMode( const std::vector<VkPresentModeKHR> &aAvailablePresentModes )
+        VkPresentModeKHR ChooseSwapPresentMode( const vector_t<VkPresentModeKHR> &aAvailablePresentModes )
         {
             for( const auto &lPresentMode : aAvailablePresentModes )
             {
@@ -372,7 +378,7 @@ namespace SE::Graphics
         lInstanceCreateInfo.enabledExtensionCount   = static_cast<uint32_t>( lRequiredExtensions.size() );
         lInstanceCreateInfo.ppEnabledExtensionNames = lRequiredExtensions.data();
 
-        const std::vector<const char *> lRequiredValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+        const vector_t<const char *> lRequiredValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 
         bool                               lShouldAttatchDebugCallback = false;
         VkDebugUtilsMessengerCreateInfoEXT lDebugOutputCreateInfo{};
@@ -411,22 +417,22 @@ namespace SE::Graphics
                 VK_CHECK_RESULT( VK_ERROR_EXTENSION_NOT_PRESENT );
         }
 
-        const std::vector<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
-                                                                     VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
+        const vector_t<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
+                                                                  VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
 
         mVkPhysicalDevice = PickPhysicalDevice( mVkInstance, lLogicalDeviceExtensions );
         mDepthFormat      = FindDepthFormat( mVkPhysicalDevice );
         vkGetPhysicalDeviceProperties( mVkPhysicalDevice, &mPhysicalDeviceProperties );
 
-        mGraphicFamily = GetGraphicsQueueFamilies( mVkPhysicalDevice );
+        mGraphicFamily  = GetGraphicsQueueFamilies( mVkPhysicalDevice );
         mTransferFamily = GetTransferQueueFamilies( mVkPhysicalDevice );
 
-        std::vector<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
-        std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily, mTransferFamily };
+        vector_t<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
+        std::set<uint32_t>                lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily, mTransferFamily };
 
         float lQueuePriority = 1.0f;
         for( uint32_t lQueueFamily : lUniqueQueueFamilies )
@@ -483,7 +489,7 @@ namespace SE::Graphics
         lGraphicsCommandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
         VK_CHECK_RESULT( vkCreateCommandPool( mVkLogicalDevice, &lGraphicsCommandPoolCreateInfo, nullptr, &mVkGraphicsCommandPool ) );
 
-        std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
+        vector_t<VkDescriptorPoolSize> lPoolSizes( 4 );
         lPoolSizes[0]     = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 10000 };
         lPoolSizes[1]     = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 10000 };
         lPoolSizes[2]     = { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 10000 };
@@ -495,40 +501,56 @@ namespace SE::Graphics
     {
         auto lVkDestroyDebugUtilsMessengerEXT =
             (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr( mVkInstance, "vkDestroyDebugUtilsMessengerEXT" );
-        if( lVkDestroyDebugUtilsMessengerEXT != nullptr ) lVkDestroyDebugUtilsMessengerEXT( mVkInstance, mDebugMessenger, nullptr );
+        if( lVkDestroyDebugUtilsMessengerEXT != nullptr )
+            lVkDestroyDebugUtilsMessengerEXT( mVkInstance, mDebugMessenger, nullptr );
 
-        for( auto &lSemaphore : mSemaphores ) vkDestroySemaphore( mVkLogicalDevice, lSemaphore, nullptr );
+        for( auto &lSemaphore : mSemaphores )
+            vkDestroySemaphore( mVkLogicalDevice, lSemaphore, nullptr );
 
-        for( auto &lFence : mFences ) vkDestroyFence( mVkLogicalDevice, lFence, nullptr );
+        for( auto &lFence : mFences )
+            vkDestroyFence( mVkLogicalDevice, lFence, nullptr );
 
-        for( auto &lSwapChain : mSwapChains ) vkDestroySwapchainKHR( mVkLogicalDevice, lSwapChain, nullptr );
+        for( auto &lSwapChain : mSwapChains )
+            vkDestroySwapchainKHR( mVkLogicalDevice, lSwapChain, nullptr );
 
-        for( auto &lDescriptorPool : mDescriptorPools ) vkDestroyDescriptorPool( mVkLogicalDevice, lDescriptorPool, nullptr );
+        for( auto &lDescriptorPool : mDescriptorPools )
+            vkDestroyDescriptorPool( mVkLogicalDevice, lDescriptorPool, nullptr );
 
-        for( auto &lPipeline : mPipelines ) vkDestroyPipeline( mVkLogicalDevice, lPipeline, nullptr );
+        for( auto &lPipeline : mPipelines )
+            vkDestroyPipeline( mVkLogicalDevice, lPipeline, nullptr );
 
         for( auto &lDescriptorSetLayout : mDescriptorSetLayouts )
             vkDestroyDescriptorSetLayout( mVkLogicalDevice, lDescriptorSetLayout, nullptr );
 
-        for( auto &lShaderModule : mShaderModules ) vkDestroyShaderModule( mVkLogicalDevice, lShaderModule, nullptr );
+        for( auto &lShaderModule : mShaderModules )
+            vkDestroyShaderModule( mVkLogicalDevice, lShaderModule, nullptr );
 
-        for( auto &lRenderPass : mRenderPasses ) vkDestroyRenderPass( mVkLogicalDevice, lRenderPass, nullptr );
+        for( auto &lRenderPass : mRenderPasses )
+            vkDestroyRenderPass( mVkLogicalDevice, lRenderPass, nullptr );
 
-        for( auto &lFramebuffer : mFramebuffers ) vkDestroyFramebuffer( mVkLogicalDevice, lFramebuffer, nullptr );
+        for( auto &lFramebuffer : mFramebuffers )
+            vkDestroyFramebuffer( mVkLogicalDevice, lFramebuffer, nullptr );
 
-        for( auto &lMemory : mMemoryPropertyLookup ) vkFreeMemory( mVkLogicalDevice, lMemory.first, nullptr );
+        for( auto &lMemory : mMemoryPropertyLookup )
+            vkFreeMemory( mVkLogicalDevice, lMemory.first, nullptr );
 
-        for( auto &lBuffer : mBufferPropertyLookup ) vkDestroyBuffer( mVkLogicalDevice, lBuffer.first, nullptr );
+        for( auto &lBuffer : mBufferPropertyLookup )
+            vkDestroyBuffer( mVkLogicalDevice, lBuffer.first, nullptr );
 
-        for( auto &lImageSampler : mImageSamplers ) vkDestroySampler( mVkLogicalDevice, lImageSampler, nullptr );
+        for( auto &lImageSampler : mImageSamplers )
+            vkDestroySampler( mVkLogicalDevice, lImageSampler, nullptr );
 
-        for( auto &lImage : mImages ) vkDestroyImage( mVkLogicalDevice, lImage, nullptr );
+        for( auto &lImage : mImages )
+            vkDestroyImage( mVkLogicalDevice, lImage, nullptr );
 
-        if( mVkGraphicsCommandPool != VK_NULL_HANDLE ) vkDestroyCommandPool( mVkLogicalDevice, mVkGraphicsCommandPool, nullptr );
+        if( mVkGraphicsCommandPool != VK_NULL_HANDLE )
+            vkDestroyCommandPool( mVkLogicalDevice, mVkGraphicsCommandPool, nullptr );
 
-        if( mVkLogicalDevice != VK_NULL_HANDLE ) vkDestroyDevice( mVkLogicalDevice, nullptr );
+        if( mVkLogicalDevice != VK_NULL_HANDLE )
+            vkDestroyDevice( mVkLogicalDevice, nullptr );
 
-        if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
+        if( mVkInstance != VK_NULL_HANDLE )
+            vkDestroyInstance( mVkInstance, nullptr );
     }
 
     VkSurfaceKHR VkGraphicContext::CreateVkSurface( Ref<IWindow> aWindow )
@@ -539,7 +561,10 @@ namespace SE::Graphics
         return lNewSurface;
     }
 
-    void VkGraphicContext::DestroyVkSurface( VkSurfaceKHR aSurface ) { vkDestroySurfaceKHR( mVkInstance, aSurface, nullptr ); }
+    void VkGraphicContext::DestroyVkSurface( VkSurfaceKHR aSurface )
+    {
+        vkDestroySurfaceKHR( mVkInstance, aSurface, nullptr );
+    }
 
     VkDeviceMemory VkGraphicContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
                                                      size_t *aAllocatedSize )
@@ -550,7 +575,8 @@ namespace SE::Graphics
         VkDeviceMemory lNewMemory         = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements,
                                                               lMemoryRequirements.size, aIsHostVisible, aIsCudaShareable, true );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
-        if( aAllocatedSize ) *aAllocatedSize = lMemoryRequirements.size;
+        if( aAllocatedSize )
+            *aAllocatedSize = lMemoryRequirements.size;
         return lNewMemory;
     }
 
@@ -563,7 +589,8 @@ namespace SE::Graphics
         VkDeviceMemory lNewMemory = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements, aSize, aIsHostVisible,
                                                       aIsCudaShareable, false );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
-        if( aAllocatedSize ) *aAllocatedSize = lMemoryRequirements.size;
+        if( aAllocatedSize )
+            *aAllocatedSize = lMemoryRequirements.size;
         return lNewMemory;
     }
 
@@ -573,7 +600,8 @@ namespace SE::Graphics
         {
             mMemoryPropertyLookup.erase( aMemory );
 
-            if( aMemory == VK_NULL_HANDLE ) return;
+            if( aMemory == VK_NULL_HANDLE )
+                return;
 
             vkFreeMemory( mVkLogicalDevice, aMemory, nullptr );
         }
@@ -581,11 +609,14 @@ namespace SE::Graphics
 
     void *VkGraphicContext::GetSharedMemoryHandle( VkDeviceMemory aVkMemory )
     {
-        if( aVkMemory == VK_NULL_HANDLE ) return nullptr;
+        if( aVkMemory == VK_NULL_HANDLE )
+            return nullptr;
 
-        if( mMemoryPropertyLookup.find( aVkMemory ) == mMemoryPropertyLookup.end() ) return nullptr;
+        if( mMemoryPropertyLookup.find( aVkMemory ) == mMemoryPropertyLookup.end() )
+            return nullptr;
 
-        if( !mMemoryPropertyLookup[aVkMemory].mCudaVisible ) return nullptr;
+        if( !mMemoryPropertyLookup[aVkMemory].mCudaVisible )
+            return nullptr;
 
         VkMemoryGetWin32HandleInfoKHR lVkMemoryGetWin32HandleInfoKHR{};
         lVkMemoryGetWin32HandleInfoKHR.sType      = VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR;
@@ -596,12 +627,14 @@ namespace SE::Graphics
         PFN_vkGetMemoryWin32HandleKHR lVkGetMemoryWin32HandleKHR;
         lVkGetMemoryWin32HandleKHR =
             (PFN_vkGetMemoryWin32HandleKHR)vkGetDeviceProcAddr( mVkLogicalDevice, "vkGetMemoryWin32HandleKHR" );
-        if( !lVkGetMemoryWin32HandleKHR ) return nullptr;
+        if( !lVkGetMemoryWin32HandleKHR )
+            return nullptr;
 
         void *lSharedMemoryHandle;
         auto lResult = lVkGetMemoryWin32HandleKHR( mVkLogicalDevice, &lVkMemoryGetWin32HandleInfoKHR, (HANDLE *)&lSharedMemoryHandle );
 
-        if( lResult != VK_SUCCESS ) return nullptr;
+        if( lResult != VK_SUCCESS )
+            return nullptr;
 
         return lSharedMemoryHandle;
     }
@@ -616,9 +649,9 @@ namespace SE::Graphics
         VK_CHECK_RESULT( vkBindImageMemory( mVkLogicalDevice, aVkImageObject, aMemory, 0 ) );
     }
 
-    std::vector<VkCommandBuffer> VkGraphicContext::AllocateCommandBuffer( uint32_t aCount )
+    vector_t<VkCommandBuffer> VkGraphicContext::AllocateCommandBuffer( uint32_t aCount )
     {
-        std::vector<VkCommandBuffer> lNewCommandBuffers( aCount );
+        vector_t<VkCommandBuffer> lNewCommandBuffers( aCount );
 
         VkCommandBufferAllocateInfo lCommandBufferAllocInfo{};
         lCommandBufferAllocInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -628,7 +661,8 @@ namespace SE::Graphics
 
         VK_CHECK_RESULT( vkAllocateCommandBuffers( mVkLogicalDevice, &lCommandBufferAllocInfo, lNewCommandBuffers.data() ) );
 
-        for( auto &lX : lNewCommandBuffers ) mCommandBuffers.emplace( lX );
+        for( auto &lX : lNewCommandBuffers )
+            mCommandBuffers.emplace( lX );
         return std::move( lNewCommandBuffers );
     }
 
@@ -794,7 +828,7 @@ namespace SE::Graphics
         }
     }
 
-    VkFramebuffer VkGraphicContext::CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight,
+    VkFramebuffer VkGraphicContext::CreateFramebuffer( vector_t<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight,
                                                        uint32_t aLayers, VkRenderPass aRenderPass )
     {
         VkFramebufferCreateInfo lFramebufferCreateInfo{};
@@ -824,9 +858,9 @@ namespace SE::Graphics
         }
     }
 
-    VkRenderPass VkGraphicContext::CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments,
-                                                     std::vector<VkSubpassDescription>    aSubpasses,
-                                                     std::vector<VkSubpassDependency>     aSubpassDependencies )
+    VkRenderPass VkGraphicContext::CreateRenderPass( vector_t<VkAttachmentDescription> aAttachments,
+                                                     vector_t<VkSubpassDescription>    aSubpasses,
+                                                     vector_t<VkSubpassDependency>     aSubpassDependencies )
     {
         VkRenderPassCreateInfo lRenderPassCreateInfo{};
         lRenderPassCreateInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -919,39 +953,52 @@ namespace SE::Graphics
         }
     }
 
-    void VkGraphicContext::ResetFences( std::vector<VkFence> aFences )
+    void VkGraphicContext::ResetFences( vector_t<VkFence> aFences )
     {
-        std::vector<VkFence> aNonNullFences;
+        vector_t<VkFence> aNonNullFences;
         for( auto &lFence : aFences )
         {
-            if( lFence != VK_NULL_HANDLE ) aNonNullFences.push_back( lFence );
+            if( lFence != VK_NULL_HANDLE )
+                aNonNullFences.push_back( lFence );
         }
 
-        if( aNonNullFences.size() != 0 ) vkResetFences( mVkLogicalDevice, aNonNullFences.size(), aNonNullFences.data() );
+        if( aNonNullFences.size() != 0 )
+            vkResetFences( mVkLogicalDevice, aNonNullFences.size(), aNonNullFences.data() );
     }
 
-    void VkGraphicContext::ResetFence( VkFence aFence ) { ResetFences( { aFence } ); }
-
-    void VkGraphicContext::WaitForFences( std::vector<VkFence> aFences, uint64_t aTimeout )
+    void VkGraphicContext::ResetFence( VkFence aFence )
     {
-        std::vector<VkFence> aNonNullFences;
+        ResetFences( { aFence } );
+    }
+
+    void VkGraphicContext::WaitForFences( vector_t<VkFence> aFences, uint64_t aTimeout )
+    {
+        vector_t<VkFence> aNonNullFences;
         for( auto &lFence : aFences )
         {
-            if( lFence != VK_NULL_HANDLE ) aNonNullFences.push_back( lFence );
+            if( lFence != VK_NULL_HANDLE )
+                aNonNullFences.push_back( lFence );
         }
 
         if( aNonNullFences.size() != 0 )
             vkWaitForFences( mVkLogicalDevice, aNonNullFences.size(), aNonNullFences.data(), VK_TRUE, aTimeout );
     }
 
-    void VkGraphicContext::WaitForFences( std::vector<VkFence> aFences )
+    void VkGraphicContext::WaitForFences( vector_t<VkFence> aFences )
     {
         WaitForFences( aFences, std::numeric_limits<uint64_t>::max() );
     }
-    void VkGraphicContext::WaitForFence( VkFence aFence, uint64_t aTimeout ) { WaitForFences( { aFence }, aTimeout ); }
-    void VkGraphicContext::WaitForFence( VkFence aFence ) { WaitForFences( { aFence } ); }
+    void VkGraphicContext::WaitForFence( VkFence aFence, uint64_t aTimeout )
+    {
+        WaitForFences( { aFence }, aTimeout );
+    }
+    void VkGraphicContext::WaitForFence( VkFence aFence )
+    {
+        WaitForFences( { aFence } );
+    }
 
-    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain(VkExtent2D aSize, VkSurfaceKHR aSurface)
+    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain( VkExtent2D   aSize,
+                                                                                                  VkSurfaceKHR aSurface )
     {
         sSwapChainSupportDetails lSwapChainSupport = QuerySwapChainSupport( mVkPhysicalDevice, aSurface );
 
@@ -967,22 +1014,22 @@ namespace SE::Graphics
             lSwapChainImageCount = lSwapChainSupport.mCapabilities.maxImageCount;
 
         VkSwapchainCreateInfoKHR lSwapChainCreateInfo{};
-        lSwapChainCreateInfo.sType            = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        lSwapChainCreateInfo.surface          = aSurface;
-        lSwapChainCreateInfo.minImageCount    = lSwapChainImageCount;
-        lSwapChainCreateInfo.imageFormat      = lSurfaceFormat.format;
-        lSwapChainCreateInfo.imageColorSpace  = lSurfaceFormat.colorSpace;
-        lSwapChainCreateInfo.imageExtent      = lSwapchainExtent;
-        lSwapChainCreateInfo.imageArrayLayers = 1;
-        lSwapChainCreateInfo.imageUsage       = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        lSwapChainCreateInfo.sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        lSwapChainCreateInfo.surface               = aSurface;
+        lSwapChainCreateInfo.minImageCount         = lSwapChainImageCount;
+        lSwapChainCreateInfo.imageFormat           = lSurfaceFormat.format;
+        lSwapChainCreateInfo.imageColorSpace       = lSurfaceFormat.colorSpace;
+        lSwapChainCreateInfo.imageExtent           = lSwapchainExtent;
+        lSwapChainCreateInfo.imageArrayLayers      = 1;
+        lSwapChainCreateInfo.imageUsage            = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
         lSwapChainCreateInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
         lSwapChainCreateInfo.queueFamilyIndexCount = 0;
         lSwapChainCreateInfo.pQueueFamilyIndices   = nullptr;
-        lSwapChainCreateInfo.preTransform   = lSwapChainSupport.mCapabilities.currentTransform;
-        lSwapChainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-        lSwapChainCreateInfo.presentMode    = lPresentMode;
-        lSwapChainCreateInfo.clipped        = VK_TRUE;
-        lSwapChainCreateInfo.oldSwapchain   = VK_NULL_HANDLE;
+        lSwapChainCreateInfo.preTransform          = lSwapChainSupport.mCapabilities.currentTransform;
+        lSwapChainCreateInfo.compositeAlpha        = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+        lSwapChainCreateInfo.presentMode           = lPresentMode;
+        lSwapChainCreateInfo.clipped               = VK_TRUE;
+        lSwapChainCreateInfo.oldSwapchain          = VK_NULL_HANDLE;
 
         VkSwapchainKHR lNewSwapchain;
         VK_CHECK_RESULT( vkCreateSwapchainKHR( mVkLogicalDevice, &lSwapChainCreateInfo, nullptr, &lNewSwapchain ) );
@@ -1002,18 +1049,18 @@ namespace SE::Graphics
         }
     }
 
-    std::vector<VkImage> VkGraphicContext::GetSwapChainImages( VkSwapchainKHR aSwapChain )
+    vector_t<VkImage> VkGraphicContext::GetSwapChainImages( VkSwapchainKHR aSwapChain )
     {
         uint32_t lImageCount;
         VK_CHECK_RESULT( vkGetSwapchainImagesKHR( mVkLogicalDevice, aSwapChain, &lImageCount, nullptr ) );
 
-        std::vector<VkImage> lImages( lImageCount );
+        vector_t<VkImage> lImages( lImageCount );
         VK_CHECK_RESULT( vkGetSwapchainImagesKHR( mVkLogicalDevice, aSwapChain, &lImageCount, lImages.data() ) );
 
         return lImages;
     }
 
-    VkShaderModule VkGraphicContext::CreateShaderModule( std::vector<uint32_t> aByteCode )
+    VkShaderModule VkGraphicContext::CreateShaderModule( vector_t<uint32_t> aByteCode )
     {
         VkShaderModuleCreateInfo lShaderModuleCreateInfo{};
         lShaderModuleCreateInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -1036,8 +1083,8 @@ namespace SE::Graphics
         }
     }
 
-    VkDescriptorSetLayout VkGraphicContext::CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings,
-                                                                       bool                                      aUnbounded )
+    VkDescriptorSetLayout VkGraphicContext::CreateDescriptorSetLayout( vector_t<VkDescriptorSetLayoutBinding> aBindings,
+                                                                       bool                                   aUnbounded )
     {
         VkDescriptorSetLayoutCreateInfo lDescriptorSetLayoutCreateInfo{};
         lDescriptorSetLayoutCreateInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -1046,12 +1093,13 @@ namespace SE::Graphics
         lDescriptorSetLayoutCreateInfo.flags        = 0;
         lDescriptorSetLayoutCreateInfo.pNext        = nullptr;
 
-        std::vector<VkDescriptorBindingFlagsEXT> bindFlag( aBindings.size() );
+        vector_t<VkDescriptorBindingFlagsEXT> bindFlag( aBindings.size() );
 
         VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo{};
         if( aUnbounded )
         {
-            for( uint32_t i = 0; i < aBindings.size(); i++ ) bindFlag[i] = 0;
+            for( uint32_t i = 0; i < aBindings.size(); i++ )
+                bindFlag[i] = 0;
 
             bindFlag[aBindings.size() - 1] =
                 VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
@@ -1081,8 +1129,7 @@ namespace SE::Graphics
         }
     }
 
-    VkDescriptorPool VkGraphicContext::CreateDescriptorPool( uint32_t                          aDescriptorSetCount,
-                                                             std::vector<VkDescriptorPoolSize> aPoolSizes )
+    VkDescriptorPool VkGraphicContext::CreateDescriptorPool( uint32_t aDescriptorSetCount, vector_t<VkDescriptorPoolSize> aPoolSizes )
     {
         VkDescriptorPoolCreateInfo lDescriptorPoolCreateInfo{};
         lDescriptorPoolCreateInfo.sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -1143,8 +1190,8 @@ namespace SE::Graphics
         }
     }
 
-    VkPipelineLayout VkGraphicContext::CreatePipelineLayout( std::vector<VkDescriptorSetLayout> aDescriptorSetLayout,
-                                                             std::vector<VkPushConstantRange>   aPushConstants )
+    VkPipelineLayout VkGraphicContext::CreatePipelineLayout( vector_t<VkDescriptorSetLayout> aDescriptorSetLayout,
+                                                             vector_t<VkPushConstantRange>   aPushConstants )
     {
         VkPipelineLayoutCreateInfo lPipelineLayoutCreateInfo{};
         lPipelineLayoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -1203,7 +1250,13 @@ namespace SE::Graphics
         vkUpdateDescriptorSets( mVkLogicalDevice, 1, &aWriteOps, 0, nullptr );
     }
 
-    void VkGraphicContext::WaitIdle() { vkDeviceWaitIdle( mVkLogicalDevice ); }
-    void VkGraphicContext::WaitIdle( VkQueue aQueue ) { vkQueueWaitIdle( aQueue ); };
+    void VkGraphicContext::WaitIdle()
+    {
+        vkDeviceWaitIdle( mVkLogicalDevice );
+    }
+    void VkGraphicContext::WaitIdle( VkQueue aQueue )
+    {
+        vkQueueWaitIdle( aQueue );
+    };
 
 } // namespace SE::Graphics

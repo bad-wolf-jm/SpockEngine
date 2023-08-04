@@ -11,22 +11,26 @@
 namespace SE::Graphics
 {
 
-    sVkShaderModuleObject::sVkShaderModuleObject( Ref<VkGraphicContext> aContext, std::vector<uint32_t> aByteCode )
+    sVkShaderModuleObject::sVkShaderModuleObject( Ref<VkGraphicContext> aContext, vector_t<uint32_t> aByteCode )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateShaderModule( aByteCode );
     }
 
-    sVkShaderModuleObject::~sVkShaderModuleObject() { mContext->DestroyShaderModule( mVkObject ); }
+    sVkShaderModuleObject::~sVkShaderModuleObject()
+    {
+        mContext->DestroyShaderModule( mVkObject );
+    }
 
-    static std::vector<char> ReadFile( const string_t &filename )
+    static vector_t<char> ReadFile( const string_t &filename )
     {
         std::ifstream lFileObject( filename, std::ios::ate | std::ios::binary );
 
-        if( !lFileObject.is_open() ) throw std::runtime_error( "failed to open file!" );
+        if( !lFileObject.is_open() )
+            throw std::runtime_error( "failed to open file!" );
 
-        size_t            lFileSize = (size_t)lFileObject.tellg();
-        std::vector<char> lBuffer( lFileSize );
+        size_t         lFileSize = (size_t)lFileObject.tellg();
+        vector_t<char> lBuffer( lFileSize );
 
         lFileObject.seekg( 0 );
         lFileObject.read( lBuffer.data(), lFileSize );
@@ -35,27 +39,31 @@ namespace SE::Graphics
         return lBuffer;
     }
 
-    static std::vector<uint32_t> LoadShaderModuleBytecode( string_t aFilePaths )
+    static vector_t<uint32_t> LoadShaderModuleBytecode( string_t aFilePaths )
     {
         auto lCode     = ReadFile( aFilePaths );
-        auto lBytecode = std::vector<uint32_t>( lCode.size() / 4 );
+        auto lBytecode = vector_t<uint32_t>( lCode.size() / 4 );
         std::memcpy( lBytecode.data(), lCode.data(), lCode.size() );
         return lBytecode;
     }
 
-    static bool IsSPIRV( string_t aFileName ) { return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" ); }
-
-    static std::vector<uint32_t> CompileShaderSources( string_t FilePaths, eShaderStageTypeFlags aShaderType )
+    static bool IsSPIRV( string_t aFileName )
     {
-        if( IsSPIRV( FilePaths ) ) return LoadShaderModuleBytecode( FilePaths );
-        return std::vector<uint32_t>( 0 );
+        return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" );
+    }
+
+    static vector_t<uint32_t> CompileShaderSources( string_t FilePaths, eShaderStageTypeFlags aShaderType )
+    {
+        if( IsSPIRV( FilePaths ) )
+            return LoadShaderModuleBytecode( FilePaths );
+        return vector_t<uint32_t>( 0 );
     }
 
     ShaderModule::ShaderModule( Ref<VkGraphicContext> mContext, string_t FilePaths, eShaderStageTypeFlags aShaderType )
         : Type{ aShaderType }
     {
-        std::vector<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );
-        mShaderModuleObject             = New<sVkShaderModuleObject>( mContext, lByteCode );
+        vector_t<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );
+        mShaderModuleObject          = New<sVkShaderModuleObject>( mContext, lByteCode );
     }
 
     VkPipelineShaderStageCreateInfo ShaderModule::GetShaderStage()
@@ -65,14 +73,27 @@ namespace SE::Graphics
 
         switch( Type )
         {
-        case eShaderStageTypeFlags::VERTEX: shaderStages.stage = VK_SHADER_STAGE_VERTEX_BIT; break;
-        case eShaderStageTypeFlags::GEOMETRY: shaderStages.stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
-        case eShaderStageTypeFlags::FRAGMENT: shaderStages.stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
-        case eShaderStageTypeFlags::TESSELATION_CONTROL: shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
-        case eShaderStageTypeFlags::TESSELATION_EVALUATION: shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT; break;
-        case eShaderStageTypeFlags::COMPUTE: shaderStages.stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
+        case eShaderStageTypeFlags::VERTEX:
+            shaderStages.stage = VK_SHADER_STAGE_VERTEX_BIT;
+            break;
+        case eShaderStageTypeFlags::GEOMETRY:
+            shaderStages.stage = VK_SHADER_STAGE_GEOMETRY_BIT;
+            break;
+        case eShaderStageTypeFlags::FRAGMENT:
+            shaderStages.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+            break;
+        case eShaderStageTypeFlags::TESSELATION_CONTROL:
+            shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+            break;
+        case eShaderStageTypeFlags::TESSELATION_EVALUATION:
+            shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+            break;
+        case eShaderStageTypeFlags::COMPUTE:
+            shaderStages.stage = VK_SHADER_STAGE_COMPUTE_BIT;
+            break;
         case eShaderStageTypeFlags::DEFAULT:
-        default: throw std::runtime_error( "Unknown shader type" );
+        default:
+            throw std::runtime_error( "Unknown shader type" );
         }
 
         shaderStages.module              = mShaderModuleObject->mVkObject;
@@ -83,14 +104,17 @@ namespace SE::Graphics
         return shaderStages;
     }
 
-    sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( Ref<VkGraphicContext>                     aContext,
-                                                                std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
+    sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( Ref<VkGraphicContext>                  aContext,
+                                                                vector_t<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateDescriptorSetLayout( aBindings, aUnbounded );
     }
 
-    sVkDescriptorSetLayoutObject::~sVkDescriptorSetLayoutObject() { mContext->DestroyDescriptorSetLayout( mVkObject ); }
+    sVkDescriptorSetLayoutObject::~sVkDescriptorSetLayoutObject()
+    {
+        mContext->DestroyDescriptorSetLayout( mVkObject );
+    }
 
     sVkDescriptorSetObject::sVkDescriptorSetObject( Ref<VkGraphicContext> aContext, VkDescriptorSet aDescriporSet )
         : mContext{ aContext }
@@ -99,7 +123,10 @@ namespace SE::Graphics
     {
     }
 
-    sVkDescriptorSetObject::~sVkDescriptorSetObject() { mContext->FreeDescriptorSet( &mVkObject ); }
+    sVkDescriptorSetObject::~sVkDescriptorSetObject()
+    {
+        mContext->FreeDescriptorSet( &mVkObject );
+    }
 
     void sVkDescriptorSetObject::Write( sBufferBindInfo aBuffers )
     {
@@ -137,8 +164,8 @@ namespace SE::Graphics
 
     void sVkDescriptorSetObject::Write( sImageBindInfo aImages )
     {
-        VkWriteDescriptorSet               lWriteDSOps;
-        std::vector<VkDescriptorImageInfo> lWriteBufferInfo;
+        VkWriteDescriptorSet            lWriteDSOps;
+        vector_t<VkDescriptorImageInfo> lWriteBufferInfo;
 
         for( uint32_t j = 0; j < aImages.mSampler.size(); j++ )
         {
@@ -163,12 +190,15 @@ namespace SE::Graphics
     }
 
     sVkDescriptorPoolObject::sVkDescriptorPoolObject( Ref<VkGraphicContext> aContext, uint32_t aDescriptorSetCount,
-                                                      std::vector<VkDescriptorPoolSize> aPoolSizes )
+                                                      vector_t<VkDescriptorPoolSize> aPoolSizes )
         : mContext{ aContext }
     {
     }
 
-    sVkDescriptorPoolObject::~sVkDescriptorPoolObject() { mContext->DestroyDescriptorPool( mVkObject ); }
+    sVkDescriptorPoolObject::~sVkDescriptorPoolObject()
+    {
+        mContext->DestroyDescriptorPool( mVkObject );
+    }
 
     Ref<sVkDescriptorSetObject> sVkDescriptorPoolObject::Allocate( Ref<sVkDescriptorSetLayoutObject> aLayout,
                                                                    uint32_t                          aDescriptorCount )
@@ -177,16 +207,17 @@ namespace SE::Graphics
                                                       mContext->AllocateDescriptorSet( aLayout->mVkObject, aDescriptorCount ) );
     }
 
-    sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkGraphicContext>                          aContext,
-                                                      std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
-                                                      std::vector<sPushConstantRange>                aPushConstantRanges )
+    sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkGraphicContext>                       aContext,
+                                                      vector_t<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
+                                                      vector_t<sPushConstantRange>                aPushConstantRanges )
         : mContext{ aContext }
     {
 
-        std::vector<VkDescriptorSetLayout> lDescriptorSetLayouts( aDescriptorSetLayout.size() );
-        for( uint32_t i = 0; i < aDescriptorSetLayout.size(); i++ ) lDescriptorSetLayouts[i] = aDescriptorSetLayout[i]->mVkObject;
+        vector_t<VkDescriptorSetLayout> lDescriptorSetLayouts( aDescriptorSetLayout.size() );
+        for( uint32_t i = 0; i < aDescriptorSetLayout.size(); i++ )
+            lDescriptorSetLayouts[i] = aDescriptorSetLayout[i]->mVkObject;
 
-        std::vector<VkPushConstantRange> lPushConstantRanges( aPushConstantRanges.size() );
+        vector_t<VkPushConstantRange> lPushConstantRanges( aPushConstantRanges.size() );
         for( uint32_t i = 0; i < aPushConstantRanges.size(); i++ )
         {
             VkPushConstantRange lPushConstant;
@@ -199,32 +230,54 @@ namespace SE::Graphics
         mVkObject = mContext->CreatePipelineLayout( lDescriptorSetLayouts, lPushConstantRanges );
     }
 
-    sVkPipelineLayoutObject::~sVkPipelineLayoutObject() { mContext->DestroyPipelineLayout( mVkObject ); }
+    sVkPipelineLayoutObject::~sVkPipelineLayoutObject()
+    {
+        mContext->DestroyPipelineLayout( mVkObject );
+    }
 
     static VkBlendFactor Convert( eBlendFactor x )
     {
         switch( x )
         {
-        case eBlendFactor::ZERO: return VK_BLEND_FACTOR_ZERO;
-        case eBlendFactor::ONE: return VK_BLEND_FACTOR_ONE;
-        case eBlendFactor::SRC_COLOR: return VK_BLEND_FACTOR_SRC_COLOR;
-        case eBlendFactor::ONE_MINUS_SRC_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
-        case eBlendFactor::DST_COLOR: return VK_BLEND_FACTOR_DST_COLOR;
-        case eBlendFactor::ONE_MINUS_DST_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
-        case eBlendFactor::SRC_ALPHA: return VK_BLEND_FACTOR_SRC_ALPHA;
-        case eBlendFactor::ONE_MINUS_SRC_ALPHA: return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-        case eBlendFactor::DST_ALPHA: return VK_BLEND_FACTOR_DST_ALPHA;
-        case eBlendFactor::ONE_MINUS_DST_ALPHA: return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
-        case eBlendFactor::CONSTANT_COLOR: return VK_BLEND_FACTOR_CONSTANT_COLOR;
-        case eBlendFactor::ONE_MINUS_CONSTANT_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
-        case eBlendFactor::CONSTANT_ALPHA: return VK_BLEND_FACTOR_CONSTANT_ALPHA;
-        case eBlendFactor::ONE_MINUS_CONSTANT_ALPHA: return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA;
-        case eBlendFactor::SRC_ALPHA_SATURATE: return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
-        case eBlendFactor::SRC1_COLOR: return VK_BLEND_FACTOR_SRC1_COLOR;
-        case eBlendFactor::ONE_MINUS_SRC1_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
-        case eBlendFactor::SRC1_ALPHA: return VK_BLEND_FACTOR_SRC1_ALPHA;
+        case eBlendFactor::ZERO:
+            return VK_BLEND_FACTOR_ZERO;
+        case eBlendFactor::ONE:
+            return VK_BLEND_FACTOR_ONE;
+        case eBlendFactor::SRC_COLOR:
+            return VK_BLEND_FACTOR_SRC_COLOR;
+        case eBlendFactor::ONE_MINUS_SRC_COLOR:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
+        case eBlendFactor::DST_COLOR:
+            return VK_BLEND_FACTOR_DST_COLOR;
+        case eBlendFactor::ONE_MINUS_DST_COLOR:
+            return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
+        case eBlendFactor::SRC_ALPHA:
+            return VK_BLEND_FACTOR_SRC_ALPHA;
+        case eBlendFactor::ONE_MINUS_SRC_ALPHA:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        case eBlendFactor::DST_ALPHA:
+            return VK_BLEND_FACTOR_DST_ALPHA;
+        case eBlendFactor::ONE_MINUS_DST_ALPHA:
+            return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
+        case eBlendFactor::CONSTANT_COLOR:
+            return VK_BLEND_FACTOR_CONSTANT_COLOR;
+        case eBlendFactor::ONE_MINUS_CONSTANT_COLOR:
+            return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
+        case eBlendFactor::CONSTANT_ALPHA:
+            return VK_BLEND_FACTOR_CONSTANT_ALPHA;
+        case eBlendFactor::ONE_MINUS_CONSTANT_ALPHA:
+            return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA;
+        case eBlendFactor::SRC_ALPHA_SATURATE:
+            return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
+        case eBlendFactor::SRC1_COLOR:
+            return VK_BLEND_FACTOR_SRC1_COLOR;
+        case eBlendFactor::ONE_MINUS_SRC1_COLOR:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+        case eBlendFactor::SRC1_ALPHA:
+            return VK_BLEND_FACTOR_SRC1_ALPHA;
         case eBlendFactor::ONE_MINUS_SRC1_ALPHA:
-        default: return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
+        default:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
         }
     }
 
@@ -232,16 +285,21 @@ namespace SE::Graphics
     {
         switch( x )
         {
-        case eBlendOperation::ADD: return VK_BLEND_OP_ADD;
-        case eBlendOperation::SUBTRACT: return VK_BLEND_OP_SUBTRACT;
-        case eBlendOperation::REVERSE_SUBTRACT: return VK_BLEND_OP_REVERSE_SUBTRACT;
-        case eBlendOperation::MIN: return VK_BLEND_OP_MIN;
+        case eBlendOperation::ADD:
+            return VK_BLEND_OP_ADD;
+        case eBlendOperation::SUBTRACT:
+            return VK_BLEND_OP_SUBTRACT;
+        case eBlendOperation::REVERSE_SUBTRACT:
+            return VK_BLEND_OP_REVERSE_SUBTRACT;
+        case eBlendOperation::MIN:
+            return VK_BLEND_OP_MIN;
         case eBlendOperation::MAX:
-        default: return VK_BLEND_OP_MAX;
+        default:
+            return VK_BLEND_OP_MAX;
         }
     }
 
-    uint32_t sVkPipelineObject::CalculateOffsetsAndStride( std::vector<sBufferLayoutElement> &aVertexBufferLayout )
+    uint32_t sVkPipelineObject::CalculateOffsetsAndStride( vector_t<sBufferLayoutElement> &aVertexBufferLayout )
     {
         uint32_t lStride = 0;
 
@@ -256,9 +314,9 @@ namespace SE::Graphics
         return lStride;
     }
 
-    void sVkPipelineObject::Compile( std::vector<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
-                                     VkVertexInputBindingDescription                &aBindingDesc,
-                                     std::vector<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
+    void sVkPipelineObject::Compile( vector_t<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
+                                     VkVertexInputBindingDescription             &aBindingDesc,
+                                     vector_t<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
     {
         aBindingDesc.binding   = aBinding;
         aBindingDesc.stride    = aStride;
@@ -274,24 +332,58 @@ namespace SE::Graphics
 
             switch( aVertexBufferLayout[i].mType )
             {
-            case eBufferDataType::UINT8: positionAttribute.format = VK_FORMAT_R8_UINT; break;
-            case eBufferDataType::UINT16: positionAttribute.format = VK_FORMAT_R16_UINT; break;
-            case eBufferDataType::UINT32: positionAttribute.format = VK_FORMAT_R32_UINT; break;
-            case eBufferDataType::INT8: positionAttribute.format = VK_FORMAT_R8_SINT; break;
-            case eBufferDataType::INT16: positionAttribute.format = VK_FORMAT_R16_SINT; break;
-            case eBufferDataType::INT32: positionAttribute.format = VK_FORMAT_R32_SINT; break;
-            case eBufferDataType::FLOAT: positionAttribute.format = VK_FORMAT_R32_SFLOAT; break;
-            case eBufferDataType::COLOR: positionAttribute.format = VK_FORMAT_R8G8B8A8_UNORM; break;
-            case eBufferDataType::VEC2: positionAttribute.format = VK_FORMAT_R32G32_SFLOAT; break;
-            case eBufferDataType::VEC4: positionAttribute.format = VK_FORMAT_R32G32B32A32_SFLOAT; break;
-            case eBufferDataType::IVEC2: positionAttribute.format = VK_FORMAT_R32G32_SINT; break;
-            case eBufferDataType::IVEC3: positionAttribute.format = VK_FORMAT_R32G32B32_SINT; break;
-            case eBufferDataType::IVEC4: positionAttribute.format = VK_FORMAT_R32G32B32A32_SINT; break;
-            case eBufferDataType::UVEC2: positionAttribute.format = VK_FORMAT_R32G32_UINT; break;
-            case eBufferDataType::UVEC3: positionAttribute.format = VK_FORMAT_R32G32B32_UINT; break;
-            case eBufferDataType::UVEC4: positionAttribute.format = VK_FORMAT_R32G32B32A32_UINT; break;
+            case eBufferDataType::UINT8:
+                positionAttribute.format = VK_FORMAT_R8_UINT;
+                break;
+            case eBufferDataType::UINT16:
+                positionAttribute.format = VK_FORMAT_R16_UINT;
+                break;
+            case eBufferDataType::UINT32:
+                positionAttribute.format = VK_FORMAT_R32_UINT;
+                break;
+            case eBufferDataType::INT8:
+                positionAttribute.format = VK_FORMAT_R8_SINT;
+                break;
+            case eBufferDataType::INT16:
+                positionAttribute.format = VK_FORMAT_R16_SINT;
+                break;
+            case eBufferDataType::INT32:
+                positionAttribute.format = VK_FORMAT_R32_SINT;
+                break;
+            case eBufferDataType::FLOAT:
+                positionAttribute.format = VK_FORMAT_R32_SFLOAT;
+                break;
+            case eBufferDataType::COLOR:
+                positionAttribute.format = VK_FORMAT_R8G8B8A8_UNORM;
+                break;
+            case eBufferDataType::VEC2:
+                positionAttribute.format = VK_FORMAT_R32G32_SFLOAT;
+                break;
+            case eBufferDataType::VEC4:
+                positionAttribute.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+                break;
+            case eBufferDataType::IVEC2:
+                positionAttribute.format = VK_FORMAT_R32G32_SINT;
+                break;
+            case eBufferDataType::IVEC3:
+                positionAttribute.format = VK_FORMAT_R32G32B32_SINT;
+                break;
+            case eBufferDataType::IVEC4:
+                positionAttribute.format = VK_FORMAT_R32G32B32A32_SINT;
+                break;
+            case eBufferDataType::UVEC2:
+                positionAttribute.format = VK_FORMAT_R32G32_UINT;
+                break;
+            case eBufferDataType::UVEC3:
+                positionAttribute.format = VK_FORMAT_R32G32B32_UINT;
+                break;
+            case eBufferDataType::UVEC4:
+                positionAttribute.format = VK_FORMAT_R32G32B32A32_UINT;
+                break;
             case eBufferDataType::VEC3:
-            default: positionAttribute.format = VK_FORMAT_R32G32B32_SFLOAT; break;
+            default:
+                positionAttribute.format = VK_FORMAT_R32G32B32_SFLOAT;
+                break;
             }
 
             positionAttribute.offset = aVertexBufferLayout[i].mOffset;
@@ -300,10 +392,10 @@ namespace SE::Graphics
     }
 
     sVkPipelineObject::sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount,
-                                          std::vector<sBufferLayoutElement> aVertexBufferLayout,
-                                          std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
+                                          vector_t<sBufferLayoutElement> aVertexBufferLayout,
+                                          vector_t<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
                                           eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
-                                          std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+                                          vector_t<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
                                           Ref<VkRenderPassObject> aRenderPass )
         : mContext{ aContext }
     {
@@ -322,14 +414,14 @@ namespace SE::Graphics
         VkPipelineVertexInputStateCreateInfo lVertexInputInfo{};
         lVertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
-        uint32_t                                       lStride0 = CalculateOffsetsAndStride( aVertexBufferLayout );
-        VkVertexInputBindingDescription                lBindings;
-        std::vector<VkVertexInputAttributeDescription> lAttributes;
+        uint32_t                                    lStride0 = CalculateOffsetsAndStride( aVertexBufferLayout );
+        VkVertexInputBindingDescription             lBindings;
+        vector_t<VkVertexInputAttributeDescription> lAttributes;
         Compile( aVertexBufferLayout, 0, lStride0, lBindings, lAttributes, false );
 
-        uint32_t                                       lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
-        VkVertexInputBindingDescription                lInstanceBindings;
-        std::vector<VkVertexInputAttributeDescription> lInstancedttributes;
+        uint32_t                                    lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
+        VkVertexInputBindingDescription             lInstanceBindings;
+        vector_t<VkVertexInputAttributeDescription> lInstancedttributes;
         Compile( aInstanceBufferLayout, 1, lStride1, lInstanceBindings, lInstancedttributes, true );
 
         if( lAttributes.size() != 0 )
@@ -375,8 +467,8 @@ namespace SE::Graphics
         lColorBlendAttachment.dstAlphaBlendFactor = Convert( aBlending.mDestAlphaFactor );
         lColorBlendAttachment.alphaBlendOp        = Convert( aBlending.mAlphaBlendOperation );
 
-        std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
-                                                                            lColorBlendAttachment );
+        vector_t<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
+                                                                         lColorBlendAttachment );
 
         VkPipelineColorBlendStateCreateInfo lColorBlendingInfo{};
         lColorBlendingInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -413,10 +505,16 @@ namespace SE::Graphics
         lInputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
         switch( aTopology )
         {
-        case ePrimitiveTopology::TRIANGLES: lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; break;
-        case ePrimitiveTopology::LINES: lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST; break;
+        case ePrimitiveTopology::TRIANGLES:
+            lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+            break;
+        case ePrimitiveTopology::LINES:
+            lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+            break;
         case ePrimitiveTopology::POINTS:
-        default: lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST; break;
+        default:
+            lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+            break;
         }
 
         lInputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
@@ -431,20 +529,34 @@ namespace SE::Graphics
 
         switch( aTopology )
         {
-        case ePrimitiveTopology::TRIANGLES: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_FILL; break;
-        case ePrimitiveTopology::LINES: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_LINE; break;
+        case ePrimitiveTopology::TRIANGLES:
+            lRasterizationConfig.polygonMode = VK_POLYGON_MODE_FILL;
+            break;
+        case ePrimitiveTopology::LINES:
+            lRasterizationConfig.polygonMode = VK_POLYGON_MODE_LINE;
+            break;
         case ePrimitiveTopology::POINTS:
-        default: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_POINT; break;
+        default:
+            lRasterizationConfig.polygonMode = VK_POLYGON_MODE_POINT;
+            break;
         }
 
         lRasterizationConfig.lineWidth = aLineWidth;
         switch( aCullMode )
         {
-        case eFaceCulling::NONE: lRasterizationConfig.cullMode = VK_CULL_MODE_NONE; break;
-        case eFaceCulling::FRONT: lRasterizationConfig.cullMode = VK_CULL_MODE_FRONT_BIT; break;
-        case eFaceCulling::BACK: lRasterizationConfig.cullMode = VK_CULL_MODE_BACK_BIT; break;
+        case eFaceCulling::NONE:
+            lRasterizationConfig.cullMode = VK_CULL_MODE_NONE;
+            break;
+        case eFaceCulling::FRONT:
+            lRasterizationConfig.cullMode = VK_CULL_MODE_FRONT_BIT;
+            break;
+        case eFaceCulling::BACK:
+            lRasterizationConfig.cullMode = VK_CULL_MODE_BACK_BIT;
+            break;
         case eFaceCulling::FRONT_AND_BACK:
-        default: lRasterizationConfig.cullMode = VK_CULL_MODE_FRONT_AND_BACK; break;
+        default:
+            lRasterizationConfig.cullMode = VK_CULL_MODE_FRONT_AND_BACK;
+            break;
         }
 
         lRasterizationConfig.frontFace               = VK_FRONT_FACE_COUNTER_CLOCKWISE;
@@ -461,15 +573,31 @@ namespace SE::Graphics
 
         switch( aDepthTest.mDepthComparison )
         {
-        case eDepthCompareOperation::NEVER: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_NEVER; break;
-        case eDepthCompareOperation::LESS: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS; break;
-        case eDepthCompareOperation::EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_EQUAL; break;
-        case eDepthCompareOperation::LESS_OR_EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL; break;
-        case eDepthCompareOperation::GREATER: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER; break;
-        case eDepthCompareOperation::NOT_EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_NOT_EQUAL; break;
-        case eDepthCompareOperation::GREATER_OR_EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER_OR_EQUAL; break;
+        case eDepthCompareOperation::NEVER:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_NEVER;
+            break;
+        case eDepthCompareOperation::LESS:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+            break;
+        case eDepthCompareOperation::EQUAL:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_EQUAL;
+            break;
+        case eDepthCompareOperation::LESS_OR_EQUAL:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+            break;
+        case eDepthCompareOperation::GREATER:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER;
+            break;
+        case eDepthCompareOperation::NOT_EQUAL:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_NOT_EQUAL;
+            break;
+        case eDepthCompareOperation::GREATER_OR_EQUAL:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER_OR_EQUAL;
+            break;
         case eDepthCompareOperation::ALWAYS:
-        default: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_ALWAYS; break;
+        default:
+            lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_ALWAYS;
+            break;
         }
 
         lDepthStencilInfo.depthBoundsTestEnable = VK_FALSE;
@@ -479,22 +607,34 @@ namespace SE::Graphics
         lDepthStencilInfo.pNext                 = nullptr;
         aCreateInfo.pDepthStencilState          = &lDepthStencilInfo;
 
-        std::vector<VkPipelineShaderStageCreateInfo> lShaderStages( aShaderStages.size() );
+        vector_t<VkPipelineShaderStageCreateInfo> lShaderStages( aShaderStages.size() );
         for( uint32_t i = 0; i < aShaderStages.size(); i++ )
         {
             lShaderStages[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 
             switch( aShaderStages[i].mShaderModule->Type )
             {
-            case eShaderStageTypeFlags::VERTEX: lShaderStages[i].stage = VK_SHADER_STAGE_VERTEX_BIT; break;
-            case eShaderStageTypeFlags::GEOMETRY: lShaderStages[i].stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
-            case eShaderStageTypeFlags::FRAGMENT: lShaderStages[i].stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
-            case eShaderStageTypeFlags::TESSELATION_CONTROL: lShaderStages[i].stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
+            case eShaderStageTypeFlags::VERTEX:
+                lShaderStages[i].stage = VK_SHADER_STAGE_VERTEX_BIT;
+                break;
+            case eShaderStageTypeFlags::GEOMETRY:
+                lShaderStages[i].stage = VK_SHADER_STAGE_GEOMETRY_BIT;
+                break;
+            case eShaderStageTypeFlags::FRAGMENT:
+                lShaderStages[i].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+                break;
+            case eShaderStageTypeFlags::TESSELATION_CONTROL:
+                lShaderStages[i].stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+                break;
             case eShaderStageTypeFlags::TESSELATION_EVALUATION:
                 lShaderStages[i].stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
                 break;
-            case eShaderStageTypeFlags::COMPUTE: lShaderStages[i].stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
-            case eShaderStageTypeFlags::DEFAULT: lShaderStages[i].stage = (VkShaderStageFlagBits)0xffffffff; break;
+            case eShaderStageTypeFlags::COMPUTE:
+                lShaderStages[i].stage = VK_SHADER_STAGE_COMPUTE_BIT;
+                break;
+            case eShaderStageTypeFlags::DEFAULT:
+                lShaderStages[i].stage = (VkShaderStageFlagBits)0xffffffff;
+                break;
             }
 
             lShaderStages[i].module = aShaderStages[i].mShaderModule->GetVkShaderModule();
@@ -511,5 +651,8 @@ namespace SE::Graphics
         mVkObject = mContext->CreatePipeline( aCreateInfo );
     }
 
-    sVkPipelineObject::~sVkPipelineObject() { mContext->DestroyPipeline( mVkObject ); }
+    sVkPipelineObject::~sVkPipelineObject()
+    {
+        mContext->DestroyPipeline( mVkObject );
+    }
 } // namespace SE::Graphics
