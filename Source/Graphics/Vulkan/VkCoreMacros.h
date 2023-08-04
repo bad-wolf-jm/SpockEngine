@@ -5,7 +5,6 @@
 #include <fmt/core.h>
 #include <stdexcept>
 
-
 #ifndef VK_CHECK_RESULT
 #    define VK_CHECK_RESULT( err ) __VK_ASSERT( (VkResult)err, __FILE__, __LINE__ )
 

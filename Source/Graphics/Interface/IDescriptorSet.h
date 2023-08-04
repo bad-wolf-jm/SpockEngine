@@ -17,7 +17,10 @@ namespace SE::Graphics
         IDescriptorSet( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 0 );
         ~IDescriptorSet() = default;
 
-        virtual void* GetID() { return 0; };
+        virtual void *GetID()
+        {
+            return 0;
+        };
 
         void         Write( Ref<ISampler2D> aBuffer, uint32_t aBinding );
         void         Write( Ref<ISamplerCubeMap> aBuffer, uint32_t aBinding );

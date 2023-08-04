@@ -103,13 +103,17 @@ namespace SE::Graphics
         template <typename _MapType>
         _MapType *MapMemory( VkDeviceMemory aMemory, size_t aSize, size_t aOffset )
         {
-            if( aMemory == VK_NULL_HANDLE ) return nullptr;
+            if( aMemory == VK_NULL_HANDLE )
+                return nullptr;
 
             void *lMappedData;
             vkMapMemory( mVkLogicalDevice, aMemory, aOffset * sizeof( _MapType ), aSize * sizeof( _MapType ), 0, &lMappedData );
             return reinterpret_cast<_MapType *>( lMappedData );
         }
-        void UnmapMemory( VkDeviceMemory aMemory ) { vkUnmapMemory( mVkLogicalDevice, aMemory ); }
+        void UnmapMemory( VkDeviceMemory aMemory )
+        {
+            vkUnmapMemory( mVkLogicalDevice, aMemory );
+        }
 
         std::vector<VkCommandBuffer> AllocateCommandBuffer( uint32_t aCount );
         void                         DestroyCommandBuffer( VkCommandBuffer aBuffer );
@@ -119,11 +123,23 @@ namespace SE::Graphics
 
         void *GetSharedMemoryHandle( VkDeviceMemory aVkMemory );
 
-        VkQueue GetGraphicsQueue() { return mVkGraphicsQueue; }
-        VkQueue GetTransferQueue() { return mVkTransferQueue; }
-        VkQueue GetPresentQueue() { return mVkPresentQueue; }
+        VkQueue GetGraphicsQueue()
+        {
+            return mVkGraphicsQueue;
+        }
+        VkQueue GetTransferQueue()
+        {
+            return mVkTransferQueue;
+        }
+        VkQueue GetPresentQueue()
+        {
+            return mVkPresentQueue;
+        }
 
-        eColorFormat GetDepthFormat() { return ToLtseFormat( mDepthFormat ); }
+        eColorFormat GetDepthFormat()
+        {
+            return ToLtseFormat( mDepthFormat );
+        }
 
         void UpdateDescriptorSets( VkWriteDescriptorSet aWriteOps );
 

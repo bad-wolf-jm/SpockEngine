@@ -5,8 +5,8 @@
 #include "Interface/IGraphicContext.h"
 #include "Interface/IGraphicsPipeline.h"
 #include "Interface/IRenderContext.h"
-#include "Interface/ISwapChain.h"
 #include "Interface/IShaderProgram.h"
+#include "Interface/ISwapChain.h"
 
 namespace SE::Graphics
 {

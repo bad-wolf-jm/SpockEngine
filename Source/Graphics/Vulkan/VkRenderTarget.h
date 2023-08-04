@@ -43,8 +43,14 @@ namespace SE::Graphics
 
         void Finalize();
 
-        Ref<IRenderPass>    GetRenderPass() { return mRenderPassObject; }
-        Ref<ICommandBuffer> GetCommandBuffer() { return mCommandBufferObject[0]; }
+        Ref<IRenderPass> GetRenderPass()
+        {
+            return mRenderPassObject;
+        }
+        Ref<ICommandBuffer> GetCommandBuffer()
+        {
+            return mCommandBufferObject[0];
+        }
 
         virtual bool BeginRender();
         virtual void EndRender();

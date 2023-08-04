@@ -27,7 +27,10 @@ namespace SE::Graphics
         /** @brief */
         ~ISampler2D() = default;
 
-        Ref<ITexture2D> GetTexture() { return mTextureData; }
+        Ref<ITexture2D> GetTexture()
+        {
+            return mTextureData;
+        }
 
         template <typename _GCSubtype>
         Ref<_GCSubtype> GraphicContext()

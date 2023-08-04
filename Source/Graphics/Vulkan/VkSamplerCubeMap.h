@@ -28,9 +28,18 @@ namespace SE::Graphics
         /** @brief */
         ~VkSamplerCubeMap();
 
-        Ref<ITexture2D> GetTexture() { return mTextureData; }
-        VkImageView     GetImageView() { return mVkImageView; }
-        VkSampler       GetSampler() { return mVkImageSampler; }
+        Ref<ITexture2D> GetTexture()
+        {
+            return mTextureData;
+        }
+        VkImageView GetImageView()
+        {
+            return mVkImageView;
+        }
+        VkSampler GetSampler()
+        {
+            return mVkImageSampler;
+        }
 
       private:
         VkImageView mVkImageView    = VK_NULL_HANDLE;

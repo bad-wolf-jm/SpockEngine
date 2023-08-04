@@ -19,7 +19,8 @@ namespace SE::Graphics
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITexture2D( aGraphicContext, aTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -40,7 +41,8 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                       aIsTransferDestination )
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -53,7 +55,8 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
     }
 
     VkTexture2D::~VkTexture2D()
@@ -66,7 +69,7 @@ namespace SE::Graphics
     {
         mVkImage = GraphicContext<VkGraphicContext>()->CreateImage(
             mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers, VK_SAMPLE_COUNT_VALUE( mSampleCount ),
-            !mIsGraphicsOnly, (mSpec.mLayers == 6),
+            !mIsGraphicsOnly, ( mSpec.mLayers == 6 ),
             mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ), MemoryProperties(),
             ImageUsage() );
     }
@@ -76,7 +79,10 @@ namespace SE::Graphics
         mVkMemory = GraphicContext<VkGraphicContext>()->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
     }
 
-    void VkTexture2D::BindMemory() { GraphicContext<VkGraphicContext>()->BindMemory( mVkImage, mVkMemory ); }
+    void VkTexture2D::BindMemory()
+    {
+        GraphicContext<VkGraphicContext>()->BindMemory( mVkImage, mVkMemory );
+    }
 
     VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
     {
@@ -92,8 +98,10 @@ namespace SE::Graphics
     VkImageUsageFlags VkTexture2D::ImageUsage()
     {
         VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-        if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
         if( mSpec.mIsDepthTexture )
             lUsage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
@@ -105,7 +113,8 @@ namespace SE::Graphics
 
     void VkTexture2D::ConfigureExternalMemoryHandle()
     {
-        if( mIsGraphicsOnly ) return;
+        if( mIsGraphicsOnly )
+            return;
 
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
         lCudaExternalMemoryHandleDesc.type  = cudaExternalMemoryHandleTypeOpaqueWin32;

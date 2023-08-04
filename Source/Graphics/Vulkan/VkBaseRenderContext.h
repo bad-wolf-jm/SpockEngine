@@ -16,11 +16,20 @@ namespace SE::Graphics
 
         ~VkBaseRenderContext() = default;
 
-        Ref<IGraphicContext> GetGraphicContext() { return mGraphicContext; };
+        Ref<IGraphicContext> GetGraphicContext()
+        {
+            return mGraphicContext;
+        };
 
         uint32_t           GetOutputImageCount();
-        Ref<IRenderTarget> GetRenderTarget() { return mRenderTarget; }
-        Ref<IRenderPass>   GetRenderPass() { return Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass(); }
+        Ref<IRenderTarget> GetRenderTarget()
+        {
+            return mRenderTarget;
+        }
+        Ref<IRenderPass> GetRenderPass()
+        {
+            return Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass();
+        }
 
         bool BeginRender();
         bool EndRender();

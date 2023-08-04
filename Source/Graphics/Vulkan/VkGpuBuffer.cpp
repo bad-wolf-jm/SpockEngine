@@ -23,12 +23,17 @@ namespace SE::Graphics
     {
         switch( aType )
         {
-        case eBufferType::VERTEX_BUFFER: return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        case eBufferType::INDEX_BUFFER: return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-        case eBufferType::STORAGE_BUFFER: return VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-        case eBufferType::UNIFORM_BUFFER: return VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+        case eBufferType::VERTEX_BUFFER:
+            return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        case eBufferType::INDEX_BUFFER:
+            return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+        case eBufferType::STORAGE_BUFFER:
+            return VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        case eBufferType::UNIFORM_BUFFER:
+            return VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         case eBufferType::UNKNOWN:
-        default: return VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        default:
+            return VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         };
     }
 
@@ -54,7 +59,8 @@ namespace SE::Graphics
         mVkGraphicContext->FreeMemory( mVkMemory );
 
         // GPUMemory::Dispose();
-        if( mExternalMemoryHandle ) CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
+        if( mExternalMemoryHandle )
+            CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
         mExternalMemoryHandle = 0;
     }
 
@@ -64,8 +70,10 @@ namespace SE::Graphics
 
         VkBufferUsageFlags lBufferFlags = GetVkBufferType( mType );
         ;
-        if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         mVkBuffer = mVkGraphicContext->CreateBuffer( lBufferFlags, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
         mVkMemory = mVkGraphicContext->AllocateMemory( mVkBuffer, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
@@ -109,7 +117,8 @@ namespace SE::Graphics
         else
         {
             uint8_t *lMappedMemory = Map<uint8_t>( aSize, aOffset );
-            if( !lMappedMemory ) throw std::runtime_error( "Could not map memory" );
+            if( !lMappedMemory )
+                throw std::runtime_error( "Could not map memory" );
 
             memcpy( reinterpret_cast<void *>( lMappedMemory ), aData, aSize );
             Unmap();
@@ -130,7 +139,8 @@ namespace SE::Graphics
 
     void VkGpuBuffer::Resize( size_t aNewSizeInBytes )
     {
-        if( aNewSizeInBytes <= mSize ) return;
+        if( aNewSizeInBytes <= mSize )
+            return;
 
         mVkGraphicContext->DestroyBuffer( mVkBuffer );
         mVkGraphicContext->FreeMemory( mVkMemory );
@@ -139,8 +149,10 @@ namespace SE::Graphics
         mSizeAligned = ( ( mSize - 1 ) / gBufferMemoryAlignment + 1 ) * gBufferMemoryAlignment;
 
         VkBufferUsageFlags lBufferFlags = GetVkBufferType( mType );
-        if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         mVkBuffer = mVkGraphicContext->CreateBuffer( lBufferFlags, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
         mVkMemory = mVkGraphicContext->AllocateMemory( mVkBuffer, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );

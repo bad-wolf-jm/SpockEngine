@@ -31,8 +31,14 @@ namespace SE::Graphics
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
 
-        int  Version() { return mVersion; }
-        void SetVersion( int aVersion ) { mVersion = aVersion; }
+        int Version()
+        {
+            return mVersion;
+        }
+        void SetVersion( int aVersion )
+        {
+            mVersion = aVersion;
+        }
 
         void AddCode( std::string const &aCode );
         void AddCode( std::vector<uint8_t> const &aCode );

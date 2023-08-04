@@ -31,7 +31,10 @@ namespace SE::Graphics
         VkDescriptorSetObject( Ref<IGraphicContext> aGraphicContext, IDescriptorSetLayout *aLayout, uint32_t aDescriptorCount = 0 );
         ~VkDescriptorSetObject() = default;
 
-        void *GetID() { return (void *)mDescriptorSetObject->mVkObject; }
+        void *GetID()
+        {
+            return (void *)mDescriptorSetObject->mVkObject;
+        }
 
         void Write( Ref<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
         void Write( std::vector<Ref<ISampler2D>> aBuffer, uint32_t aBinding );
@@ -39,9 +42,15 @@ namespace SE::Graphics
 
         void Build();
 
-        VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
+        VkDescriptorSet GetVkDescriptorSet()
+        {
+            return mDescriptorSetObject->mVkObject;
+        }
 
-        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
+        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject()
+        {
+            return mDescriptorSetObject;
+        }
 
       private:
         Ref<sVkDescriptorSetObject> mDescriptorSetObject = nullptr;

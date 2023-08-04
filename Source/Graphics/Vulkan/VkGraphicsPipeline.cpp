@@ -37,7 +37,7 @@ namespace SE::Graphics
 
         for( auto const &lShader : mShaderStages )
         {
-            auto lUIVertexShader = Cast<VkShaderProgram>(lShader.mProgram)->GetShaderModule();
+            auto lUIVertexShader = Cast<VkShaderProgram>( lShader.mProgram )->GetShaderModule();
 
             mShaders.push_back( sShader{ lUIVertexShader, lShader.mEntryPoint } );
         }

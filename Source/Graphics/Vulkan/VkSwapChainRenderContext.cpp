@@ -14,11 +14,13 @@ namespace SE::Graphics
 
     bool VkSwapChainRenderContext::BeginRender()
     {
-        if( mFrameIsStarted ) return true;
+        if( mFrameIsStarted )
+            return true;
 
         VkBaseRenderContext::BeginRender();
 
-        if( !mFrameIsStarted ) return false;
+        if( !mFrameIsStarted )
+            return false;
 
         float lWidth  = static_cast<float>( Cast<VkSwapChain>( mRenderTarget )->Spec().mWidth );
         float lHeight = static_cast<float>( Cast<VkSwapChain>( mRenderTarget )->Spec().mHeight );

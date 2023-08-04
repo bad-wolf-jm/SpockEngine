@@ -11,13 +11,16 @@
 namespace SE::Graphics
 {
     VkShaderProgram::VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                        std::string const &aName, fs::path const &aCacheRoot )
+                                      std::string const &aName, fs::path const &aCacheRoot )
         : IShaderProgram( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot )
     {
     }
 
-    void VkShaderProgram::DoCompile() { SE::Graphics::Compile( mShaderType, Program(), mCompiledByteCode ); }
-    
+    void VkShaderProgram::DoCompile()
+    {
+        SE::Graphics::Compile( mShaderType, Program(), mCompiledByteCode );
+    }
+
     void VkShaderProgram::BuildProgram()
     {
         auto const &lCachePath = ( mCacheRoot / mCacheFileName ).string();

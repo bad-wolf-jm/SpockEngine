@@ -18,18 +18,42 @@ namespace SE::Graphics
         bool                            BeginRender();
         void                            EndRender();
         void                            Present();
-        sRenderTargetDescription const &Spec() { return mRenderTargets[0]->mSpec; }
+        sRenderTargetDescription const &Spec()
+        {
+            return mRenderTargets[0]->mSpec;
+        }
 
-        std::vector<VkClearValue> GetClearValues() { return mRenderTargets[mCurrentImage]->GetClearValues(); }
-        VkFramebuffer             GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
-        Ref<IRenderPass>          GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
-        Ref<ICommandBuffer>       GetCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
+        std::vector<VkClearValue> GetClearValues()
+        {
+            return mRenderTargets[mCurrentImage]->GetClearValues();
+        }
+        VkFramebuffer GetFramebuffer()
+        {
+            return mRenderTargets[mCurrentImage]->GetFramebuffer();
+        }
+        Ref<IRenderPass> GetRenderPass()
+        {
+            return mRenderTargets[0]->GetRenderPass();
+        }
+        Ref<ICommandBuffer> GetCommandBuffer()
+        {
+            return mCommandBufferObject[mCurrentImage];
+        }
 
         // Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
 
-        VkSemaphore GetImageAvailableSemaphore( uint32_t i ) { return mImageAvailableSemaphores[i]; }
-        VkSemaphore GetRenderFinishedSemaphore( uint32_t i ) { return mRenderFinishedSemaphores[i]; }
-        VkFence     GetInFlightFence( uint32_t i ) { return mInFlightFences[i]; }
+        VkSemaphore GetImageAvailableSemaphore( uint32_t i )
+        {
+            return mImageAvailableSemaphores[i];
+        }
+        VkSemaphore GetRenderFinishedSemaphore( uint32_t i )
+        {
+            return mRenderFinishedSemaphores[i];
+        }
+        VkFence GetInFlightFence( uint32_t i )
+        {
+            return mInFlightFences[i];
+        }
 
       private:
         void RecreateSwapChain();

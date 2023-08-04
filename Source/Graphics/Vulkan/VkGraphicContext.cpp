@@ -29,7 +29,8 @@ namespace SE::Graphics
             lRequiredExtensions.push_back( VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME );
             lRequiredExtensions.push_back( VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME );
 
-            if( aEnableValidationLayers ) lRequiredExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
+            if( aEnableValidationLayers )
+                lRequiredExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
 
             return lRequiredExtensions;
         }
@@ -55,7 +56,8 @@ namespace SE::Graphics
             vkEnumerateInstanceLayerProperties( &lLayerCount, lAvailableLayers.data() );
 
             std::set<std::string> lAvailableValidationLayers;
-            for( const auto &lLayer : lAvailableLayers ) lAvailableValidationLayers.emplace( lLayer.layerName );
+            for( const auto &lLayer : lAvailableLayers )
+                lAvailableValidationLayers.emplace( lLayer.layerName );
 
             std::set<std::string> lRequestedValidationLayers( aValidationLayers.begin(), aValidationLayers.end() );
 
@@ -71,7 +73,8 @@ namespace SE::Graphics
             vkEnumerateInstanceExtensionProperties( nullptr, &lExtensionCount, lAvailableExtensions.data() );
 
             std::set<const char *> lAvailableExtensionSet;
-            for( const auto &lExtension : lAvailableExtensions ) lAvailableExtensionSet.emplace( lExtension.extensionName );
+            for( const auto &lExtension : lAvailableExtensions )
+                lAvailableExtensionSet.emplace( lExtension.extensionName );
 
             std::set<const char *> lRequestedExtensionSet( aRequiredExtensions.begin(), aRequiredExtensions.end() );
 
@@ -89,7 +92,8 @@ namespace SE::Graphics
             std::set<std::string> lRequestedExtensionsSet( aRequestedExtensions.begin(), aRequestedExtensions.end() );
 
             std::set<std::string> lAvailableExtensionSet;
-            for( const auto &lExtension : lAvailableExtensions ) lAvailableExtensionSet.emplace( lExtension.extensionName );
+            for( const auto &lExtension : lAvailableExtensions )
+                lAvailableExtensionSet.emplace( lExtension.extensionName );
 
             return IsSubset( lRequestedExtensionsSet, lAvailableExtensionSet );
         }
@@ -116,7 +120,8 @@ namespace SE::Graphics
                     lGraphicsFamilyHasValue = true;
                 }
 
-                if( lGraphicsFamilyHasValue ) break;
+                if( lGraphicsFamilyHasValue )
+                    break;
 
                 lCurrentQueueIndex++;
             }
@@ -146,7 +151,8 @@ namespace SE::Graphics
                     lGraphicsFamilyHasValue = true;
                 }
 
-                if( lGraphicsFamilyHasValue ) break;
+                if( lGraphicsFamilyHasValue )
+                    break;
 
                 lCurrentQueueIndex++;
             }
@@ -422,7 +428,7 @@ namespace SE::Graphics
         mDepthFormat      = FindDepthFormat( mVkPhysicalDevice );
         vkGetPhysicalDeviceProperties( mVkPhysicalDevice, &mPhysicalDeviceProperties );
 
-        mGraphicFamily = GetGraphicsQueueFamilies( mVkPhysicalDevice );
+        mGraphicFamily  = GetGraphicsQueueFamilies( mVkPhysicalDevice );
         mTransferFamily = GetTransferQueueFamilies( mVkPhysicalDevice );
 
         std::vector<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
@@ -495,40 +501,56 @@ namespace SE::Graphics
     {
         auto lVkDestroyDebugUtilsMessengerEXT =
             (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr( mVkInstance, "vkDestroyDebugUtilsMessengerEXT" );
-        if( lVkDestroyDebugUtilsMessengerEXT != nullptr ) lVkDestroyDebugUtilsMessengerEXT( mVkInstance, mDebugMessenger, nullptr );
+        if( lVkDestroyDebugUtilsMessengerEXT != nullptr )
+            lVkDestroyDebugUtilsMessengerEXT( mVkInstance, mDebugMessenger, nullptr );
 
-        for( auto &lSemaphore : mSemaphores ) vkDestroySemaphore( mVkLogicalDevice, lSemaphore, nullptr );
+        for( auto &lSemaphore : mSemaphores )
+            vkDestroySemaphore( mVkLogicalDevice, lSemaphore, nullptr );
 
-        for( auto &lFence : mFences ) vkDestroyFence( mVkLogicalDevice, lFence, nullptr );
+        for( auto &lFence : mFences )
+            vkDestroyFence( mVkLogicalDevice, lFence, nullptr );
 
-        for( auto &lSwapChain : mSwapChains ) vkDestroySwapchainKHR( mVkLogicalDevice, lSwapChain, nullptr );
+        for( auto &lSwapChain : mSwapChains )
+            vkDestroySwapchainKHR( mVkLogicalDevice, lSwapChain, nullptr );
 
-        for( auto &lDescriptorPool : mDescriptorPools ) vkDestroyDescriptorPool( mVkLogicalDevice, lDescriptorPool, nullptr );
+        for( auto &lDescriptorPool : mDescriptorPools )
+            vkDestroyDescriptorPool( mVkLogicalDevice, lDescriptorPool, nullptr );
 
-        for( auto &lPipeline : mPipelines ) vkDestroyPipeline( mVkLogicalDevice, lPipeline, nullptr );
+        for( auto &lPipeline : mPipelines )
+            vkDestroyPipeline( mVkLogicalDevice, lPipeline, nullptr );
 
         for( auto &lDescriptorSetLayout : mDescriptorSetLayouts )
             vkDestroyDescriptorSetLayout( mVkLogicalDevice, lDescriptorSetLayout, nullptr );
 
-        for( auto &lShaderModule : mShaderModules ) vkDestroyShaderModule( mVkLogicalDevice, lShaderModule, nullptr );
+        for( auto &lShaderModule : mShaderModules )
+            vkDestroyShaderModule( mVkLogicalDevice, lShaderModule, nullptr );
 
-        for( auto &lRenderPass : mRenderPasses ) vkDestroyRenderPass( mVkLogicalDevice, lRenderPass, nullptr );
+        for( auto &lRenderPass : mRenderPasses )
+            vkDestroyRenderPass( mVkLogicalDevice, lRenderPass, nullptr );
 
-        for( auto &lFramebuffer : mFramebuffers ) vkDestroyFramebuffer( mVkLogicalDevice, lFramebuffer, nullptr );
+        for( auto &lFramebuffer : mFramebuffers )
+            vkDestroyFramebuffer( mVkLogicalDevice, lFramebuffer, nullptr );
 
-        for( auto &lMemory : mMemoryPropertyLookup ) vkFreeMemory( mVkLogicalDevice, lMemory.first, nullptr );
+        for( auto &lMemory : mMemoryPropertyLookup )
+            vkFreeMemory( mVkLogicalDevice, lMemory.first, nullptr );
 
-        for( auto &lBuffer : mBufferPropertyLookup ) vkDestroyBuffer( mVkLogicalDevice, lBuffer.first, nullptr );
+        for( auto &lBuffer : mBufferPropertyLookup )
+            vkDestroyBuffer( mVkLogicalDevice, lBuffer.first, nullptr );
 
-        for( auto &lImageSampler : mImageSamplers ) vkDestroySampler( mVkLogicalDevice, lImageSampler, nullptr );
+        for( auto &lImageSampler : mImageSamplers )
+            vkDestroySampler( mVkLogicalDevice, lImageSampler, nullptr );
 
-        for( auto &lImage : mImages ) vkDestroyImage( mVkLogicalDevice, lImage, nullptr );
+        for( auto &lImage : mImages )
+            vkDestroyImage( mVkLogicalDevice, lImage, nullptr );
 
-        if( mVkGraphicsCommandPool != VK_NULL_HANDLE ) vkDestroyCommandPool( mVkLogicalDevice, mVkGraphicsCommandPool, nullptr );
+        if( mVkGraphicsCommandPool != VK_NULL_HANDLE )
+            vkDestroyCommandPool( mVkLogicalDevice, mVkGraphicsCommandPool, nullptr );
 
-        if( mVkLogicalDevice != VK_NULL_HANDLE ) vkDestroyDevice( mVkLogicalDevice, nullptr );
+        if( mVkLogicalDevice != VK_NULL_HANDLE )
+            vkDestroyDevice( mVkLogicalDevice, nullptr );
 
-        if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
+        if( mVkInstance != VK_NULL_HANDLE )
+            vkDestroyInstance( mVkInstance, nullptr );
     }
 
     VkSurfaceKHR VkGraphicContext::CreateVkSurface( Ref<IWindow> aWindow )
@@ -539,7 +561,10 @@ namespace SE::Graphics
         return lNewSurface;
     }
 
-    void VkGraphicContext::DestroyVkSurface( VkSurfaceKHR aSurface ) { vkDestroySurfaceKHR( mVkInstance, aSurface, nullptr ); }
+    void VkGraphicContext::DestroyVkSurface( VkSurfaceKHR aSurface )
+    {
+        vkDestroySurfaceKHR( mVkInstance, aSurface, nullptr );
+    }
 
     VkDeviceMemory VkGraphicContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
                                                      size_t *aAllocatedSize )
@@ -550,7 +575,8 @@ namespace SE::Graphics
         VkDeviceMemory lNewMemory         = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements,
                                                               lMemoryRequirements.size, aIsHostVisible, aIsCudaShareable, true );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
-        if( aAllocatedSize ) *aAllocatedSize = lMemoryRequirements.size;
+        if( aAllocatedSize )
+            *aAllocatedSize = lMemoryRequirements.size;
         return lNewMemory;
     }
 
@@ -563,7 +589,8 @@ namespace SE::Graphics
         VkDeviceMemory lNewMemory = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements, aSize, aIsHostVisible,
                                                       aIsCudaShareable, false );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
-        if( aAllocatedSize ) *aAllocatedSize = lMemoryRequirements.size;
+        if( aAllocatedSize )
+            *aAllocatedSize = lMemoryRequirements.size;
         return lNewMemory;
     }
 
@@ -573,7 +600,8 @@ namespace SE::Graphics
         {
             mMemoryPropertyLookup.erase( aMemory );
 
-            if( aMemory == VK_NULL_HANDLE ) return;
+            if( aMemory == VK_NULL_HANDLE )
+                return;
 
             vkFreeMemory( mVkLogicalDevice, aMemory, nullptr );
         }
@@ -581,11 +609,14 @@ namespace SE::Graphics
 
     void *VkGraphicContext::GetSharedMemoryHandle( VkDeviceMemory aVkMemory )
     {
-        if( aVkMemory == VK_NULL_HANDLE ) return nullptr;
+        if( aVkMemory == VK_NULL_HANDLE )
+            return nullptr;
 
-        if( mMemoryPropertyLookup.find( aVkMemory ) == mMemoryPropertyLookup.end() ) return nullptr;
+        if( mMemoryPropertyLookup.find( aVkMemory ) == mMemoryPropertyLookup.end() )
+            return nullptr;
 
-        if( !mMemoryPropertyLookup[aVkMemory].mCudaVisible ) return nullptr;
+        if( !mMemoryPropertyLookup[aVkMemory].mCudaVisible )
+            return nullptr;
 
         VkMemoryGetWin32HandleInfoKHR lVkMemoryGetWin32HandleInfoKHR{};
         lVkMemoryGetWin32HandleInfoKHR.sType      = VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR;
@@ -596,12 +627,14 @@ namespace SE::Graphics
         PFN_vkGetMemoryWin32HandleKHR lVkGetMemoryWin32HandleKHR;
         lVkGetMemoryWin32HandleKHR =
             (PFN_vkGetMemoryWin32HandleKHR)vkGetDeviceProcAddr( mVkLogicalDevice, "vkGetMemoryWin32HandleKHR" );
-        if( !lVkGetMemoryWin32HandleKHR ) return nullptr;
+        if( !lVkGetMemoryWin32HandleKHR )
+            return nullptr;
 
         void *lSharedMemoryHandle;
         auto lResult = lVkGetMemoryWin32HandleKHR( mVkLogicalDevice, &lVkMemoryGetWin32HandleInfoKHR, (HANDLE *)&lSharedMemoryHandle );
 
-        if( lResult != VK_SUCCESS ) return nullptr;
+        if( lResult != VK_SUCCESS )
+            return nullptr;
 
         return lSharedMemoryHandle;
     }
@@ -628,7 +661,8 @@ namespace SE::Graphics
 
         VK_CHECK_RESULT( vkAllocateCommandBuffers( mVkLogicalDevice, &lCommandBufferAllocInfo, lNewCommandBuffers.data() ) );
 
-        for( auto &lX : lNewCommandBuffers ) mCommandBuffers.emplace( lX );
+        for( auto &lX : lNewCommandBuffers )
+            mCommandBuffers.emplace( lX );
         return std::move( lNewCommandBuffers );
     }
 
@@ -924,20 +958,26 @@ namespace SE::Graphics
         std::vector<VkFence> aNonNullFences;
         for( auto &lFence : aFences )
         {
-            if( lFence != VK_NULL_HANDLE ) aNonNullFences.push_back( lFence );
+            if( lFence != VK_NULL_HANDLE )
+                aNonNullFences.push_back( lFence );
         }
 
-        if( aNonNullFences.size() != 0 ) vkResetFences( mVkLogicalDevice, aNonNullFences.size(), aNonNullFences.data() );
+        if( aNonNullFences.size() != 0 )
+            vkResetFences( mVkLogicalDevice, aNonNullFences.size(), aNonNullFences.data() );
     }
 
-    void VkGraphicContext::ResetFence( VkFence aFence ) { ResetFences( { aFence } ); }
+    void VkGraphicContext::ResetFence( VkFence aFence )
+    {
+        ResetFences( { aFence } );
+    }
 
     void VkGraphicContext::WaitForFences( std::vector<VkFence> aFences, uint64_t aTimeout )
     {
         std::vector<VkFence> aNonNullFences;
         for( auto &lFence : aFences )
         {
-            if( lFence != VK_NULL_HANDLE ) aNonNullFences.push_back( lFence );
+            if( lFence != VK_NULL_HANDLE )
+                aNonNullFences.push_back( lFence );
         }
 
         if( aNonNullFences.size() != 0 )
@@ -948,10 +988,17 @@ namespace SE::Graphics
     {
         WaitForFences( aFences, std::numeric_limits<uint64_t>::max() );
     }
-    void VkGraphicContext::WaitForFence( VkFence aFence, uint64_t aTimeout ) { WaitForFences( { aFence }, aTimeout ); }
-    void VkGraphicContext::WaitForFence( VkFence aFence ) { WaitForFences( { aFence } ); }
+    void VkGraphicContext::WaitForFence( VkFence aFence, uint64_t aTimeout )
+    {
+        WaitForFences( { aFence }, aTimeout );
+    }
+    void VkGraphicContext::WaitForFence( VkFence aFence )
+    {
+        WaitForFences( { aFence } );
+    }
 
-    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain(VkExtent2D aSize, VkSurfaceKHR aSurface)
+    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain( VkExtent2D   aSize,
+                                                                                                  VkSurfaceKHR aSurface )
     {
         sSwapChainSupportDetails lSwapChainSupport = QuerySwapChainSupport( mVkPhysicalDevice, aSurface );
 
@@ -967,22 +1014,22 @@ namespace SE::Graphics
             lSwapChainImageCount = lSwapChainSupport.mCapabilities.maxImageCount;
 
         VkSwapchainCreateInfoKHR lSwapChainCreateInfo{};
-        lSwapChainCreateInfo.sType            = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        lSwapChainCreateInfo.surface          = aSurface;
-        lSwapChainCreateInfo.minImageCount    = lSwapChainImageCount;
-        lSwapChainCreateInfo.imageFormat      = lSurfaceFormat.format;
-        lSwapChainCreateInfo.imageColorSpace  = lSurfaceFormat.colorSpace;
-        lSwapChainCreateInfo.imageExtent      = lSwapchainExtent;
-        lSwapChainCreateInfo.imageArrayLayers = 1;
-        lSwapChainCreateInfo.imageUsage       = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        lSwapChainCreateInfo.sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        lSwapChainCreateInfo.surface               = aSurface;
+        lSwapChainCreateInfo.minImageCount         = lSwapChainImageCount;
+        lSwapChainCreateInfo.imageFormat           = lSurfaceFormat.format;
+        lSwapChainCreateInfo.imageColorSpace       = lSurfaceFormat.colorSpace;
+        lSwapChainCreateInfo.imageExtent           = lSwapchainExtent;
+        lSwapChainCreateInfo.imageArrayLayers      = 1;
+        lSwapChainCreateInfo.imageUsage            = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
         lSwapChainCreateInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
         lSwapChainCreateInfo.queueFamilyIndexCount = 0;
         lSwapChainCreateInfo.pQueueFamilyIndices   = nullptr;
-        lSwapChainCreateInfo.preTransform   = lSwapChainSupport.mCapabilities.currentTransform;
-        lSwapChainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-        lSwapChainCreateInfo.presentMode    = lPresentMode;
-        lSwapChainCreateInfo.clipped        = VK_TRUE;
-        lSwapChainCreateInfo.oldSwapchain   = VK_NULL_HANDLE;
+        lSwapChainCreateInfo.preTransform          = lSwapChainSupport.mCapabilities.currentTransform;
+        lSwapChainCreateInfo.compositeAlpha        = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+        lSwapChainCreateInfo.presentMode           = lPresentMode;
+        lSwapChainCreateInfo.clipped               = VK_TRUE;
+        lSwapChainCreateInfo.oldSwapchain          = VK_NULL_HANDLE;
 
         VkSwapchainKHR lNewSwapchain;
         VK_CHECK_RESULT( vkCreateSwapchainKHR( mVkLogicalDevice, &lSwapChainCreateInfo, nullptr, &lNewSwapchain ) );
@@ -1051,7 +1098,8 @@ namespace SE::Graphics
         VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo{};
         if( aUnbounded )
         {
-            for( uint32_t i = 0; i < aBindings.size(); i++ ) bindFlag[i] = 0;
+            for( uint32_t i = 0; i < aBindings.size(); i++ )
+                bindFlag[i] = 0;
 
             bindFlag[aBindings.size() - 1] =
                 VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
@@ -1203,7 +1251,13 @@ namespace SE::Graphics
         vkUpdateDescriptorSets( mVkLogicalDevice, 1, &aWriteOps, 0, nullptr );
     }
 
-    void VkGraphicContext::WaitIdle() { vkDeviceWaitIdle( mVkLogicalDevice ); }
-    void VkGraphicContext::WaitIdle( VkQueue aQueue ) { vkQueueWaitIdle( aQueue ); };
+    void VkGraphicContext::WaitIdle()
+    {
+        vkDeviceWaitIdle( mVkLogicalDevice );
+    }
+    void VkGraphicContext::WaitIdle( VkQueue aQueue )
+    {
+        vkQueueWaitIdle( aQueue );
+    };
 
 } // namespace SE::Graphics

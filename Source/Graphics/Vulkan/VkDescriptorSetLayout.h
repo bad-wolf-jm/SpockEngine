@@ -2,9 +2,9 @@
 
 #include "Core/Memory.h"
 
-#include "Graphics/Interface/IGraphicContext.h"
 #include "Graphics/Interface/IDescriptorSet.h"
 #include "Graphics/Interface/IDescriptorSetLayout.h"
+#include "Graphics/Interface/IGraphicContext.h"
 
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkPipeline.h"
@@ -22,10 +22,16 @@ namespace SE::Graphics
 
         void Build();
 
-        Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount=1 );
+        Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount = 1 );
 
-        VkDescriptorSetLayout             GetVkDescriptorSetLayout() { return mLayout->mVkObject; }
-        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mLayout; }
+        VkDescriptorSetLayout GetVkDescriptorSetLayout()
+        {
+            return mLayout->mVkObject;
+        }
+        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject()
+        {
+            return mLayout;
+        }
 
       private:
         Ref<sVkDescriptorSetLayoutObject> mLayout = nullptr;

@@ -56,8 +56,8 @@ namespace SE::Graphics
         void Bind( VkBuffer aVertexBuffer, VkBuffer aIndexBuffer, uint32_t aBindPoint );
         void Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
                    Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
-        void Bind( void* aDescriptorSet, VkPipelineBindPoint aBindPoint,
-                   Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
+        void Bind( void *aDescriptorSet, VkPipelineBindPoint aBindPoint, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+                   uint32_t aSetIndex, int32_t aDynamicOffset );
 
         void ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
                                  uint32_t aLayerCount );
@@ -79,7 +79,7 @@ namespace SE::Graphics
             vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void *)&aValue );
         }
 
-        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, void* aValue, uint32_t aSize,
+        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize,
                             Ref<sVkPipelineLayoutObject> aPipelineLayout )
         {
             vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, aSize, aValue );

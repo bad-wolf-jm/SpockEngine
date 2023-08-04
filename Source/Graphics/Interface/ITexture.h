@@ -31,7 +31,10 @@ namespace SE::Graphics
         /** @brief */
         ~ITexture() = default;
 
-        eTextureType GetTextureType() { return mType; }
+        eTextureType GetTextureType()
+        {
+            return mType;
+        }
 
       protected:
         uint8_t      mSampleCount = 1;

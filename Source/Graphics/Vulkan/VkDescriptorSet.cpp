@@ -35,7 +35,8 @@ namespace SE::Graphics
 
     void VkDescriptorSetObject::Write( std::vector<Ref<ISampler2D>> aWriteOperations, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 ) return;
+        if( aWriteOperations.size() == 0 )
+            return;
 
         sVkDescriptorSetObject::sImageBindInfo lImages{};
 
@@ -52,14 +53,15 @@ namespace SE::Graphics
 
     void VkDescriptorSetObject::Write( std::vector<Ref<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 ) return;
+        if( aWriteOperations.size() == 0 )
+            return;
 
         sVkDescriptorSetObject::sImageBindInfo lImages{};
 
         for( auto &lBuffer : aWriteOperations )
         {
-            lImages.mSampler.push_back(  Cast<VkSamplerCubeMap>( lBuffer )->GetSampler() );
-            lImages.mImageView.push_back(  Cast<VkSamplerCubeMap>( lBuffer )->GetImageView() );
+            lImages.mSampler.push_back( Cast<VkSamplerCubeMap>( lBuffer )->GetSampler() );
+            lImages.mImageView.push_back( Cast<VkSamplerCubeMap>( lBuffer )->GetImageView() );
         }
         lImages.mBinding = aBinding;
 

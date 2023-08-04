@@ -2,12 +2,12 @@
 
 #include "Core/Memory.h"
 
+#include "Graphics/Interface/IDescriptorSetLayout.h"
 #include "Graphics/Interface/IGraphicBuffer.h"
 #include "Graphics/Interface/IGraphicsPipeline.h"
-#include "Graphics/Interface/IDescriptorSetLayout.h"
 
-#include "Graphics/Vulkan/VkRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -74,7 +74,10 @@ namespace SE::Graphics
          */
         VkPipelineShaderStageCreateInfo GetShaderStage();
 
-        VkShaderModule GetVkShaderModule() { return mShaderModuleObject->mVkObject; }
+        VkShaderModule GetVkShaderModule()
+        {
+            return mShaderModuleObject->mVkObject;
+        }
 
         eShaderStageTypeFlags Type;
 

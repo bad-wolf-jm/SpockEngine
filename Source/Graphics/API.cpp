@@ -4,9 +4,9 @@
 #include "Vulkan/VkGpuBuffer.h"
 #include "Vulkan/VkGraphicsPipeline.h"
 #include "Vulkan/VkRenderContext.h"
+#include "Vulkan/VkShaderProgram.h"
 #include "Vulkan/VkSwapChain.h"
 #include "Vulkan/VkSwapChainRenderContext.h"
-#include "Vulkan/VkShaderProgram.h"
 
 namespace SE::Graphics
 {
@@ -16,10 +16,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkGraphicContext>( aSampleCount, true );
+        case eGraphicsAPI::VULKAN:
+            return New<VkGraphicContext>( aSampleCount, true );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -33,7 +35,8 @@ namespace SE::Graphics
                                      aIsTransferSource, aIsTransferDestination, aSize );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -66,7 +69,8 @@ namespace SE::Graphics
                                      aIsTransferSource, aIsTransferDestination );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -74,10 +78,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkTexture2D>( aGraphicContext, aTextureData );
+        case eGraphicsAPI::VULKAN:
+            return New<VkTexture2D>( aGraphicContext, aTextureData );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -90,7 +96,8 @@ namespace SE::Graphics
             return New<VkTexture2D>( aGraphicContext, aTextureData, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -103,7 +110,8 @@ namespace SE::Graphics
             return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aLayer, aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -112,10 +120,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aSamplingSpec );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -134,7 +144,8 @@ namespace SE::Graphics
                                           aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -153,7 +164,8 @@ namespace SE::Graphics
                                             aTopology );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -161,10 +173,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSwapChain>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSwapChain>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -172,10 +186,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkRenderTarget>( Cast<VkGraphicContext>( aGraphicContext ), aSpec );
+        case eGraphicsAPI::VULKAN:
+            return New<VkRenderTarget>( Cast<VkGraphicContext>( aGraphicContext ), aSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -183,10 +199,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSwapChainRenderContext>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSwapChainRenderContext>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -194,10 +212,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkRenderContext>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN:
+            return New<VkRenderContext>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -205,10 +225,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkDescriptorSetLayoutObject>( aGraphicContext, aUnbounded, aCount );
+        case eGraphicsAPI::VULKAN:
+            return New<VkDescriptorSetLayoutObject>( aGraphicContext, aUnbounded, aCount );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -217,10 +239,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, "" );
+        case eGraphicsAPI::VULKAN:
+            return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, "" );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
@@ -229,10 +253,12 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot );
+        case eGraphicsAPI::VULKAN:
+            return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 

@@ -9,25 +9,24 @@
 namespace SE::Graphics
 {
 
-    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext>                aContext,
-                                                              std::vector<VkAttachmentDescription> aAttachments,
-                                                              std::vector<VkSubpassDescription>    aSubpasses,
-                                                              std::vector<VkSubpassDependency>     aSubpassDependencies )
+    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
+                                            std::vector<VkSubpassDescription> aSubpasses,
+                                            std::vector<VkSubpassDependency>  aSubpassDependencies )
         : IRenderPass{ aContext, 1 }
     {
         mVkObject = Cast<VkGraphicContext>( mGraphicContext )->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
-                                                              bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
+    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+                                            bool aIsPresented, math::vec4 aClearColor )
         : IRenderPass{ aContext, aSampleCount }
     {
     }
 
     void VkRenderPassObject::CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
-                                                                  std::vector<VkAttachmentReference>   aColorAttachmentReferences,
-                                                                  VkAttachmentReference               *aDepthAttachmentReference,
-                                                                  VkAttachmentReference               *aResolveAttachmentReference )
+                                                         std::vector<VkAttachmentReference>   aColorAttachmentReferences,
+                                                         VkAttachmentReference               *aDepthAttachmentReference,
+                                                         VkAttachmentReference               *aResolveAttachmentReference )
     {
         VkSubpassDescription lSubpass{};
 
@@ -66,14 +65,20 @@ namespace SE::Graphics
         return lSubpassDependencies;
     }
 
-    VkRenderPassObject::~VkRenderPassObject() { Cast<VkGraphicContext>( mGraphicContext )->DestroyRenderPass( mVkObject ); }
+    VkRenderPassObject::~VkRenderPassObject()
+    {
+        Cast<VkGraphicContext>( mGraphicContext )->DestroyRenderPass( mVkObject );
+    }
 
-    std::vector<VkClearValue> VkRenderPassObject::GetClearValues() { return mClearValues; }
+    std::vector<VkClearValue> VkRenderPassObject::GetClearValues()
+    {
+        return mClearValues;
+    }
 
     VkAttachmentDescription VkRenderPassObject::ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
-                                                                          bool aIsPresented, bool aIsDefined,
-                                                                          VkAttachmentLoadOp  aAttachmentLoadOp,
-                                                                          VkAttachmentStoreOp aAttachmentStoreOp )
+                                                                 bool aIsPresented, bool aIsDefined,
+                                                                 VkAttachmentLoadOp  aAttachmentLoadOp,
+                                                                 VkAttachmentStoreOp aAttachmentStoreOp )
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );
@@ -101,8 +106,8 @@ namespace SE::Graphics
     }
 
     VkAttachmentDescription VkRenderPassObject::DepthAttachment( bool aIsDefined, uint32_t aSampleCount,
-                                                                          VkAttachmentLoadOp  aAttachmentLoadOp,
-                                                                          VkAttachmentStoreOp aAttachmentStoreOp )
+                                                                 VkAttachmentLoadOp  aAttachmentLoadOp,
+                                                                 VkAttachmentStoreOp aAttachmentStoreOp )
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );
