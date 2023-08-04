@@ -12,9 +12,6 @@
 #include "UI/UI.h"
 #include "UIContext.h"
 
-#include "Shaders/gUIFragmentShader.h"
-#include "Shaders/gUIVertexShader.h"
-
 namespace SE::Core
 {
     UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport )

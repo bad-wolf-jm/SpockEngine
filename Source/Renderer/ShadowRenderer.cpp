@@ -7,10 +7,6 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
-#include "Shaders/gDirectionalShadowVertexShader.h"
-#include "Shaders/gOmniDirectionalShadowFragmentShader.h"
-#include "Shaders/gOmniDirectionalShadowVertexShader.h"
-#include "Shaders/gVertexLayout.h"
 namespace SE::Core
 {
     using namespace math;

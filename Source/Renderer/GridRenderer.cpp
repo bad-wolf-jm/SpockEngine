@@ -2,9 +2,6 @@
 #include "Core/Math/Types.h"
 #include "Core/Resource.h"
 
-#include "Shaders/gCoordinateGridFragmentShader.h"
-#include "Shaders/gCoordinateGridVertexShader.h"
-
 namespace SE::Core
 {
     using namespace SE::Graphics;
