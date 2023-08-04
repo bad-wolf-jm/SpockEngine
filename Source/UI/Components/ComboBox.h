@@ -14,8 +14,14 @@ namespace SE::Core
         void SetItemList( std::vector<std::string> aItems );
 
         void OnChange( std::function<void( int aIndex )> aOnChange );
-        int  Current() { return mCurrentItem; }
-        void SetCurrent(int aCurrent) { mCurrentItem = aCurrent; }
+        int  Current()
+        {
+            return mCurrentItem;
+        }
+        void SetCurrent( int aCurrent )
+        {
+            mCurrentItem = aCurrent;
+        }
 
       private:
         std::function<void( int aIndex )> mOnChange;

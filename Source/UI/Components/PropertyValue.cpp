@@ -26,9 +26,18 @@ namespace SE::Core
         }
     }
 
-    void UIPropertyValue::SetValue( std::string aValue ) { mValue->SetText( aValue ); }
-    void UIPropertyValue::SetValueFont( FontFamilyFlags aFont ) { mValue->mFont = aFont; }
-    void UIPropertyValue::SetNameFont( FontFamilyFlags aFont ) { mName->mFont = aFont; }
+    void UIPropertyValue::SetValue( std::string aValue )
+    {
+        mValue->SetText( aValue );
+    }
+    void UIPropertyValue::SetValueFont( FontFamilyFlags aFont )
+    {
+        mValue->mFont = aFont;
+    }
+    void UIPropertyValue::SetNameFont( FontFamilyFlags aFont )
+    {
+        mName->mFont = aFont;
+    }
 
     void *UIPropertyValue::UIPropertyValue_Create()
     {
@@ -53,7 +62,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIPropertyValue::UIPropertyValue_Destroy( void *aInstance ) { delete static_cast<UIPropertyValue *>( aInstance ); }
+    void UIPropertyValue::UIPropertyValue_Destroy( void *aInstance )
+    {
+        delete static_cast<UIPropertyValue *>( aInstance );
+    }
 
     void UIPropertyValue::UIPropertyValue_SetValue( void *aInstance, void *aText )
     {

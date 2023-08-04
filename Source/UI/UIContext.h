@@ -69,7 +69,10 @@ namespace SE::Core
         ImageHandle         CreateTextureHandle( Ref<ISampler2D> aTexture );
         Ref<IDescriptorSet> AddTexture( Ref<ISampler2D> aTexture );
 
-        Ref<IGraphicContext> GraphicContext() { return mGraphicContext; }
+        Ref<IGraphicContext> GraphicContext()
+        {
+            return mGraphicContext;
+        }
 
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;

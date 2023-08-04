@@ -7,15 +7,15 @@
 #include "imgui_internal.h"
 #include "implot.h"
 
-#include "FontAwesome.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
+#include "FontAwesome.h"
 #include "Graphics/Interface/IDescriptorSet.h"
 
 namespace SE::Core::UI
 {
     using namespace SE::Graphics;
-    
+
     class UIStyle
     {
       public:
@@ -34,8 +34,7 @@ namespace SE::Core::UI
         ImageHandle( const ImageHandle & ) = default;
     };
 
-    void GetStyleColor(ImGuiCol aColor, math::vec4 *aOut );
-
+    void GetStyleColor( ImGuiCol aColor, math::vec4 *aOut );
 
     void Text( const char *a_Text );
     void Text( std::string a_Text );
@@ -62,7 +61,5 @@ namespace SE::Core::UI
 
     void SetNextWindowPosition( math::vec2 a_Position );
     void SetNextWindowSize( math::vec2 a_Size );
-
-
 
 } // namespace SE::Core::UI

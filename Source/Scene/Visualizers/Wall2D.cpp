@@ -5,11 +5,11 @@
 
 void Wall2D::UpdatePositions()
 {
-    uint32_t _positionCount = 0;
-    uint32_t _indexCount    = 0;
-    math::vec4 _l           = { 0.0f, Depth, 0.0f, 1.0f };
-    float _Left = float( -Width / 2 ), _Right = float( Width / 2 ), _Top = float( Height / 2 ), _Bottom = float( -Height / 2 );
-    float _SegmentStep = float( Width / (float)Segments );
+    uint32_t   _positionCount = 0;
+    uint32_t   _indexCount    = 0;
+    math::vec4 _l             = { 0.0f, Depth, 0.0f, 1.0f };
+    float      _Left = float( -Width / 2 ), _Right = float( Width / 2 ), _Top = float( Height / 2 ), _Bottom = float( -Height / 2 );
+    float      _SegmentStep = float( Width / (float)Segments );
 
     float _HorizontalSubdivisionsStep = float( Width / (float)HorizontalSubdivisions );
     float _VerticalSubdivisionsStep   = float( Height / ( (float)VerticalSubdivisions ) );
@@ -19,8 +19,10 @@ void Wall2D::UpdatePositions()
     math::vec4 _BottomLeft  = math::Rotation( _Bottom, math::x_axis() ) * math::Rotation( _Left, math::z_axis() ) * _l;
     math::vec4 _BottomRight = math::Rotation( _Bottom, math::x_axis() ) * math::Rotation( _Right, math::z_axis() ) * _l;
 
-    _positionCount = ( VerticalSubdivisions + 1 ) * ( Segments * 2 + 1 ) + ( HorizontalSubdivisions + 1 ) * ( ( VerticalSubdivisions + 1 ) * 2 + 1 );
-    _indexCount    = ( VerticalSubdivisions + 1 ) * ( Segments * 2 ) + ( HorizontalSubdivisions + 1 ) * ( ( VerticalSubdivisions + 1 ) * 2 + 1 );
+    _positionCount = ( VerticalSubdivisions + 1 ) * ( Segments * 2 + 1 ) +
+                     ( HorizontalSubdivisions + 1 ) * ( ( VerticalSubdivisions + 1 ) * 2 + 1 );
+    _indexCount =
+        ( VerticalSubdivisions + 1 ) * ( Segments * 2 ) + ( HorizontalSubdivisions + 1 ) * ( ( VerticalSubdivisions + 1 ) * 2 + 1 );
 
     m_WireframeGrid.Vertices.resize( _positionCount );
     for( auto &e : m_WireframeGrid.Vertices )

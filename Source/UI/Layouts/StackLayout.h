@@ -36,7 +36,7 @@ namespace SE::Core
         void SetCurrent( std::string const &aKey );
 
         ImVec2 RequiredSize();
-        
+
       protected:
         std::string mCurrent;
 
@@ -46,7 +46,7 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
         static void *UIStackLayout_Create();

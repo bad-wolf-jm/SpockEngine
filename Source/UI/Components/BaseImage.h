@@ -40,8 +40,8 @@ namespace SE::Core
         ImageHandle     mHandle;
 
         ImVec2 mSize{};
-        ImVec2 mTopLeft{0.0f, 0.0f};
-        ImVec2 mBottomRight{1.0f, 1.0f};
+        ImVec2 mTopLeft{ 0.0f, 0.0f };
+        ImVec2 mBottomRight{ 1.0f, 1.0f };
         ImVec4 mTintColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 
       private:

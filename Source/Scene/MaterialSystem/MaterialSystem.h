@@ -21,25 +21,21 @@ namespace SE::Core
 
     struct sShaderMaterial
     {
-        vec4 mBaseColorFactor    = { 1.0f, 1.0f, 1.0f, 1.0f };
-        int  mBaseColorTextureID = 0;
-        int  mBaseColorUVChannel = 0;
-
-        float mMetallicFactor     = 0.0f;
-        float mRoughnessFactor    = 1.0f;
-        int   mMetalnessUVChannel = 0;
-        int   mMetalnessTextureID = 0;
-
-        float mOcclusionStrength  = 0.0f;
-        int   mOcclusionUVChannel = 0;
-        int   mOcclusionTextureID = 0;
-
+        vec4  mBaseColorFactor             = { 1.0f, 1.0f, 1.0f, 1.0f };
+        int   mBaseColorTextureID          = 0;
+        int   mBaseColorUVChannel          = 0;
+        float mMetallicFactor              = 0.0f;
+        float mRoughnessFactor             = 1.0f;
+        int   mMetalnessUVChannel          = 0;
+        int   mMetalnessTextureID          = 0;
+        float mOcclusionStrength           = 0.0f;
+        int   mOcclusionUVChannel          = 0;
+        int   mOcclusionTextureID          = 0;
         alignas( 16 ) vec4 mEmissiveFactor = { 0.0f, 0.0f, 0.0f, 0.0f };
         int mEmissiveTextureID             = 0;
         int mEmissiveUVChannel             = 0;
-
-        int mNormalTextureID = 0;
-        int mNormalUVChannel = 0;
+        int mNormalTextureID               = 0;
+        int mNormalUVChannel               = 0;
 
         float mAlphaThreshold = 0.0f;
     };

@@ -17,19 +17,35 @@ namespace SE::Core
         mImage->mIsVisible = false;
     }
 
-    void UIDropdownButton::PushStyles() {}
-    void UIDropdownButton::PopStyles() {}
+    void UIDropdownButton::PushStyles()
+    {
+    }
+    void UIDropdownButton::PopStyles()
+    {
+    }
 
-    ImVec2 UIDropdownButton::RequiredSize() { return mLayout->RequiredSize(); }
+    ImVec2 UIDropdownButton::RequiredSize()
+    {
+        return mLayout->RequiredSize();
+    }
 
-    void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
-    void UIDropdownButton::SetContentSize( math::vec2 aSize ) { mContentSize = ImVec2{ aSize.x, aSize.y }; }
+    void UIDropdownButton::SetContent( UIComponent *aContent )
+    {
+        mContent = aContent;
+    }
+    void UIDropdownButton::SetContentSize( math::vec2 aSize )
+    {
+        mContentSize = ImVec2{ aSize.x, aSize.y };
+    }
     void UIDropdownButton::SetText( std::string aText )
     {
         mText->SetText( aText );
         mText->mIsVisible = !( aText.empty() );
     }
-    void UIDropdownButton::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
+    void UIDropdownButton::SetTextColor( math::vec4 aColor )
+    {
+        mText->SetTextColor( aColor );
+    }
     void UIDropdownButton::SetImage( UIBaseImage *aValue )
     {
         mImage->Add( aValue, "IMAGE" );
@@ -38,7 +54,8 @@ namespace SE::Core
 
     void UIDropdownButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        if( !mIsVisible ) return;
+        if( !mIsVisible )
+            return;
 
         ImGuiWindow *window = ImGui::GetCurrentWindow();
 
@@ -52,7 +69,8 @@ namespace SE::Core
         bool hovered, held;
         bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
 
-        if( lPressed ) ImGui::OpenPopup( "##add_component" );
+        if( lPressed )
+            ImGui::OpenPopup( "##add_component" );
 
         if( mContent != nullptr )
         {
@@ -75,7 +93,10 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance ) { delete static_cast<UIDropdownButton *>( aInstance ); }
+    void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance )
+    {
+        delete static_cast<UIDropdownButton *>( aInstance );
+    }
 
     void UIDropdownButton::UIDropdownButton_SetContent( void *aInstance, void *aContent )
     {

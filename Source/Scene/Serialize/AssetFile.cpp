@@ -14,13 +14,15 @@ namespace SE::Core
         mFileExists = mFileStream.good();
         mFileSize   = 0;
 
-        if( !mFileExists ) throw std::runtime_error( "Specified file does not exist" );
+        if( !mFileExists )
+            throw std::runtime_error( "Specified file does not exist" );
 
         mFileStream.seekg( 0, mFileStream.end );
         mFileSize = mFileStream.tellg();
         mFileStream.seekg( 0, mFileStream.beg );
 
-        if( mFileSize < sizeof( sFileMagic ) ) throw std::runtime_error( "Wrong file type!!!" );
+        if( mFileSize < sizeof( sFileMagic ) )
+            throw std::runtime_error( "Wrong file type!!!" );
 
         std::vector<uint8_t> lMagic = Read<uint8_t>( sizeof( sFileMagic ) );
         if( memcmp( lMagic.data(), sFileMagic, sizeof( sFileMagic ) != 0 ) )
@@ -30,18 +32,39 @@ namespace SE::Core
         mAssetIndex = Read<sAssetIndex>( mAssetCount );
     }
 
-    BinaryAsset::~BinaryAsset() { mFileStream.close(); }
+    BinaryAsset::~BinaryAsset()
+    {
+        mFileStream.close();
+    }
 
-    const uint8_t *BinaryAsset::GetMagic() { return sFileMagic; }
-    const uint32_t BinaryAsset::GetMagicLength() { return static_cast<uint32_t>( sizeof( sFileMagic ) ); }
+    const uint8_t *BinaryAsset::GetMagic()
+    {
+        return sFileMagic;
+    }
+    const uint32_t BinaryAsset::GetMagicLength()
+    {
+        return static_cast<uint32_t>( sizeof( sFileMagic ) );
+    }
 
-    size_t BinaryAsset::CurrentPosition() { return mFileStream.tellg(); }
+    size_t BinaryAsset::CurrentPosition()
+    {
+        return mFileStream.tellg();
+    }
 
-    void BinaryAsset::Seek( size_t aPosition ) { mFileStream.seekg( aPosition, mFileStream.beg ); }
+    void BinaryAsset::Seek( size_t aPosition )
+    {
+        mFileStream.seekg( aPosition, mFileStream.beg );
+    }
 
-    bool BinaryAsset::Eof() { return mFileStream.eof(); }
+    bool BinaryAsset::Eof()
+    {
+        return mFileStream.eof();
+    }
 
-    sAssetIndex const &BinaryAsset::GetIndex( uint32_t aIndex ) const { return mAssetIndex[aIndex]; }
+    sAssetIndex const &BinaryAsset::GetIndex( uint32_t aIndex ) const
+    {
+        return mAssetIndex[aIndex];
+    }
 
     void BinaryAsset::WriteTo( fs::path aPath )
     {
@@ -53,8 +76,8 @@ namespace SE::Core
             mAssetIndex[i].mByteEnd += lDataStartOffset;
         }
 
-        auto  lOutFile     = std::ofstream( aPath.string(), std::ofstream::binary );
-        
+        auto lOutFile = std::ofstream( aPath.string(), std::ofstream::binary );
+
         auto *lMagic       = BinaryAsset::GetMagic();
         auto  lMagicLength = BinaryAsset::GetMagicLength();
         lOutFile.write( (const char *)lMagic, lMagicLength );
@@ -63,7 +86,8 @@ namespace SE::Core
         lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
 
         lOutFile.write( (const char *)mAssetIndex.data(), mAssetIndex.size() * sizeof( sAssetIndex ) );
-        for( auto &lPacket : mPackets ) lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
+        for( auto &lPacket : mPackets )
+            lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
     }
 
     void BinaryAsset::Package( TextureData2D const &aData, sTextureSamplingInfo const &aSampler )
@@ -130,12 +154,16 @@ namespace SE::Core
         }
     }
 
-    void BinaryAsset::Package( sImportedTexture const &aData ) { return Package( aData.mTexture, aData.mSampler ); }
+    void BinaryAsset::Package( sImportedTexture const &aData )
+    {
+        return Package( aData.mTexture, aData.mSampler );
+    }
 
     std::tuple<TextureData2D, TextureSampler2D> BinaryAsset::Retrieve( uint32_t aIndex )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
-        if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D ) throw std::runtime_error( "Binary data type mismatch" );
+        if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D )
+            throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
 
@@ -194,7 +222,8 @@ namespace SE::Core
     void BinaryAsset::Retrieve( uint32_t aIndex, std::vector<VertexData> &aVertexData, std::vector<uint32_t> &aIndexData )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
-        if( lAssetIndex.mType != eAssetType::MESH_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+        if( lAssetIndex.mType != eAssetType::MESH_DATA )
+            throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
 
@@ -277,7 +306,8 @@ namespace SE::Core
     void BinaryAsset::Retrieve( uint32_t aIndex, sMaterial &aMaterialData )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
-        if( lAssetIndex.mType != eAssetType::MATERIAL_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+        if( lAssetIndex.mType != eAssetType::MATERIAL_DATA )
+            throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
 
@@ -338,7 +368,8 @@ namespace SE::Core
     void BinaryAsset::Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
-        if( lAssetIndex.mType != eAssetType::ANIMATION_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+        if( lAssetIndex.mType != eAssetType::ANIMATION_DATA )
+            throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
 

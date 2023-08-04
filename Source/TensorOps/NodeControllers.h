@@ -410,8 +410,12 @@ namespace SE::TensorOps
     ///
     struct sMixOperationController : public sGraphOperationController
     {
-        void OnCreate() {}
-        void OnDestroy() {}
+        void OnCreate()
+        {
+        }
+        void OnDestroy()
+        {
+        }
         void Run();
     };
 

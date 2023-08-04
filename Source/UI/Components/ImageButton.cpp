@@ -25,12 +25,22 @@ namespace SE::Core
     {
     }
 
-    void UIImageButton::PushStyles() {}
-    void UIImageButton::PopStyles() {}
+    void UIImageButton::PushStyles()
+    {
+    }
+    void UIImageButton::PopStyles()
+    {
+    }
 
-    void UIImageButton::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
+    void UIImageButton::OnClick( std::function<void()> aOnClick )
+    {
+        mOnClick = aOnClick;
+    }
 
-    ImVec2 UIImageButton::RequiredSize() { return mSize; }
+    ImVec2 UIImageButton::RequiredSize()
+    {
+        return mSize;
+    }
 
     void UIImageButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -40,7 +50,8 @@ namespace SE::Core
 
         bool lClicked = ImGui::ImageButton( TextureID(), mSize, mTopLeft, mBottomRight, 0, mBackgroundColor, mTintColor );
 
-        if( lClicked && mOnClick && lEnabled ) mOnClick();
+        if( lClicked && mOnClick && lEnabled )
+            mOnClick();
     }
 
     void *UIImageButton::UIImageButton_Create()
@@ -58,18 +69,21 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void UIImageButton::UIImageButton_Destroy( void *aInstance ) { delete static_cast<UIImageButton *>( aInstance ); }
+    void UIImageButton::UIImageButton_Destroy( void *aInstance )
+    {
+        delete static_cast<UIImageButton *>( aInstance );
+    }
 
     void UIImageButton::UIImageButton_OnClick( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnClickDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnClickDelegateHandle);
+        if( lInstance->mOnClickDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
-        lInstance->mOnClickDelegate = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+        lInstance->mOnClickDelegate       = aDelegate;
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]()
@@ -80,7 +94,5 @@ namespace SE::Core
                 mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
             } );
     }
-
-
 
 } // namespace SE::Core

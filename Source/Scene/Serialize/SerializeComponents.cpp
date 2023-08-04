@@ -32,7 +32,8 @@ namespace SE::Core
 
     std::string const &GetTypeTag( std::string const &aTypeName )
     {
-        if( gTypeTags.find( aTypeName ) != gTypeTags.end() ) return gTypeTags[aTypeName];
+        if( gTypeTags.find( aTypeName ) != gTypeTags.end() )
+            return gTypeTags[aTypeName];
 
         return std::move( std::string{ "VOID" } );
     }
@@ -42,21 +43,24 @@ namespace SE::Core
     {
         for( auto &lKey : aKeys )
         {
-            if( !( aNode[lKey] ) ) return false;
+            if( !( aNode[lKey] ) )
+                return false;
         }
         return true;
     }
 
     math::vec2 Get( YAML::Node const &aNode, std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault )
     {
-        if( !HasAll( aNode, aKeys ) ) return aDefault;
+        if( !HasAll( aNode, aKeys ) )
+            return aDefault;
 
         return math::vec2{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ) };
     }
 
     math::vec3 Get( YAML::Node const &aNode, std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault )
     {
-        if( !HasAll( aNode, aKeys ) ) return aDefault;
+        if( !HasAll( aNode, aKeys ) )
+            return aDefault;
 
         return math::vec3{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ),
                            Get( aNode[aKeys[2]], aDefault.z ) };
@@ -64,7 +68,8 @@ namespace SE::Core
 
     math::vec4 Get( YAML::Node const &aNode, std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault )
     {
-        if( !HasAll( aNode, aKeys ) ) return aDefault;
+        if( !HasAll( aNode, aKeys ) )
+            return aDefault;
 
         return math::vec4{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ), Get( aNode[aKeys[2]], aDefault.z ),
                            Get( aNode[aKeys[3]], aDefault.w ) };
@@ -142,12 +147,14 @@ namespace SE::Core
     math::mat4 ReadMatrix( YAML::Node const &aNode )
     {
         std::vector<float> lMatrixEntries{};
-        for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it ) lMatrixEntries.push_back( Get( *it, 0.0f ) );
+        for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it )
+            lMatrixEntries.push_back( Get( *it, 0.0f ) );
         // aNode.ForEach( [&]( YAML::Node &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
 
         math::mat4 lMatrix;
         for( uint32_t c = 0; c < 4; c++ )
-            for( uint32_t r = 0; r < 4; r++ ) lMatrix[c][r] = lMatrixEntries[4 * c + r];
+            for( uint32_t r = 0; r < 4; r++ )
+                lMatrix[c][r] = lMatrixEntries[4 * c + r];
 
         return lMatrix;
     }
@@ -174,12 +181,12 @@ namespace SE::Core
 
     // void ReadComponent( sParticleSystemComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     // {
-        
+
     // }
 
     // void ReadComponent( sParticleShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     // {
-        // 
+    //
     // }
 
     void ReadComponent( sWireframeComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
@@ -203,7 +210,8 @@ namespace SE::Core
         for( YAML::const_iterator it = lBonesNode.begin(); it != lBonesNode.end(); ++it )
         {
             auto lUUID = Get( *it, std::string{ "" } );
-            if( lUUID.empty() ) return;
+            if( lUUID.empty() )
+                return;
 
             aComponent.Bones.push_back( aReadConext.mEntities[lUUID] );
         }
@@ -285,7 +293,8 @@ namespace SE::Core
     void WriteTypeTag( ConfigurationWriter &aOut )
     {
         auto lInternalTypeName = std::string( typeid( _Ty ).name() );
-        if( gTypeTags.find( lInternalTypeName ) != gTypeTags.end() ) aOut.WriteKey( gTypeTags[lInternalTypeName] );
+        if( gTypeTags.find( lInternalTypeName ) != gTypeTags.end() )
+            aOut.WriteKey( gTypeTags[lInternalTypeName] );
     }
 
     void WriteComponent( ConfigurationWriter &aOut, sTag const &aComponent )
@@ -341,7 +350,8 @@ namespace SE::Core
         {
             for( auto &lAnimationEntity : aComponent.Animations )
             {
-                if( lAnimationEntity ) aOut.Write( lAnimationEntity.Get<sUUID>().mValue.str() );
+                if( lAnimationEntity )
+                    aOut.Write( lAnimationEntity.Get<sUUID>().mValue.str() );
             }
         }
         aOut.EndSequence();
@@ -416,19 +426,22 @@ namespace SE::Core
             aOut.WriteKey( "Bones" );
             aOut.BeginSequence( true );
             {
-                for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
+                for( auto &x : aComponent.Bones )
+                    aOut.Write( x.Get<sUUID>().mValue.str() );
             }
             aOut.EndSequence();
             aOut.WriteKey( "InverseBindMatrices" );
             aOut.BeginSequence( true );
             {
-                for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
+                for( auto &x : aComponent.InverseBindMatrices )
+                    aOut.Write( x );
             }
             aOut.EndSequence();
             aOut.WriteKey( "JointMatrices" );
             aOut.BeginSequence( true );
             {
-                for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
+                for( auto &x : aComponent.JointMatrices )
+                    aOut.Write( x );
             }
             aOut.EndSequence();
         }

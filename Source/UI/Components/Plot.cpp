@@ -19,12 +19,25 @@ namespace SE::Core
         mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mInUse = true;
     }
 
-    void UIPlot::PushStyles() {}
-    void UIPlot::PopStyles() {}
+    void UIPlot::PushStyles()
+    {
+    }
+    void UIPlot::PopStyles()
+    {
+    }
 
-    void UIPlot::Add( Ref<sPlotData> aPlot ) { mElements.push_back( aPlot.get() ); };
-    void UIPlot::Add( sPlotData *aPlot ) { mElements.push_back( aPlot ); };
-    void UIPlot::Clear() { mElements.clear(); };
+    void UIPlot::Add( Ref<sPlotData> aPlot )
+    {
+        mElements.push_back( aPlot.get() );
+    };
+    void UIPlot::Add( sPlotData *aPlot )
+    {
+        mElements.push_back( aPlot );
+    };
+    void UIPlot::Clear()
+    {
+        mElements.clear();
+    };
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
         mLegendPadding      = ImVec2{ aLegendPadding.x, aLegendPadding.y };
@@ -32,7 +45,10 @@ namespace SE::Core
         mLegendSpacing      = ImVec2{ aLegendSpacing.x, aLegendSpacing.y };
     }
 
-    ImVec2 UIPlot::RequiredSize() { return ImVec2{ 150.0f, 150.0f }; }
+    ImVec2 UIPlot::RequiredSize()
+    {
+        return ImVec2{ 150.0f, 150.0f };
+    }
 
     void UIPlot::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -44,7 +60,8 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
         ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
 
-        for( auto &lAxisConfig : mAxisConfiguration ) lAxisConfig.mInUse = false;
+        for( auto &lAxisConfig : mAxisConfiguration )
+            lAxisConfig.mInUse = false;
         mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mInUse = true;
         mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mInUse = true;
 
@@ -77,7 +94,8 @@ namespace SE::Core
             uint32_t lIndex = 0;
             for( auto const &lPlotElement : mElements )
             {
-                if( lPlotElement != nullptr ) lPlotElement->Render( this );
+                if( lPlotElement != nullptr )
+                    lPlotElement->Render( this );
             }
             ImPlot::EndPlot();
         }
@@ -91,7 +109,10 @@ namespace SE::Core
         return static_cast<void *>( lNewPlot );
     }
 
-    void UIPlot::UIPlot_Destroy( void *aInstance ) { delete static_cast<UIPlot *>( aInstance ); }
+    void UIPlot::UIPlot_Destroy( void *aInstance )
+    {
+        delete static_cast<UIPlot *>( aInstance );
+    }
 
     void UIPlot::UIPlot_Clear( void *aInstance )
     {
@@ -186,11 +207,13 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotLine( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
         ImPlot::PopStyleColor();
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void *sFloat64LinePlot::UIFloat64LinePlot_Create()
@@ -200,7 +223,10 @@ namespace SE::Core
         return static_cast<sFloat64LinePlot *>( lSelf );
     }
 
-    void sFloat64LinePlot::UIFloat64LinePlot_Destroy( void *aSelf ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
+    void sFloat64LinePlot::UIFloat64LinePlot_Destroy( void *aSelf )
+    {
+        delete static_cast<sFloat64LinePlot *>( aSelf );
+    }
 
     void sFloat64LinePlot::UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
     {
@@ -226,11 +252,13 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotScatter( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
         ImPlot::PopStyleColor();
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void *sFloat64ScatterPlot::UIFloat64ScatterPlot_Create()
@@ -240,7 +268,10 @@ namespace SE::Core
         return static_cast<sFloat64ScatterPlot *>( lSelf );
     }
 
-    void sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy( void *aSelf ) { delete static_cast<sFloat64ScatterPlot *>( aSelf ); }
+    void sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy( void *aSelf )
+    {
+        delete static_cast<sFloat64ScatterPlot *>( aSelf );
+    }
 
     void sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue )
     {
@@ -262,11 +293,13 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
         ImPlot::PopStyleColor();
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void *sVLine::UIVLinePlot_Create()
@@ -276,7 +309,10 @@ namespace SE::Core
         return static_cast<sVLine *>( lSelf );
     }
 
-    void sVLine::UIVLinePlot_Destroy( void *aSelf ) { delete static_cast<sVLine *>( aSelf ); }
+    void sVLine::UIVLinePlot_Destroy( void *aSelf )
+    {
+        delete static_cast<sVLine *>( aSelf );
+    }
 
     void sVLine::UIVLinePlot_SetX( void *aSelf, void *aValue )
     {
@@ -291,13 +327,15 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
 
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotHLines( lPlotName.c_str(), mY.data(), mY.size(), 0 );
         ImPlot::PopStyleColor();
 
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void *sHLine::UIHLinePlot_Create()
@@ -307,7 +345,10 @@ namespace SE::Core
         return static_cast<sHLine *>( lSelf );
     }
 
-    void sHLine::UIHLinePlot_Destroy( void *aSelf ) { delete static_cast<sHLine *>( aSelf ); }
+    void sHLine::UIHLinePlot_Destroy( void *aSelf )
+    {
+        delete static_cast<sHLine *>( aSelf );
+    }
 
     void sHLine::UIHLinePlot_SetY( void *aSelf, void *aValue )
     {
@@ -325,11 +366,15 @@ namespace SE::Core
         {
         case UIPlotAxis::X1:
         case UIPlotAxis::X2:
-        case UIPlotAxis::X3: ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true ); break;
+        case UIPlotAxis::X3:
+            ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true );
+            break;
 
         case UIPlotAxis::Y1:
         case UIPlotAxis::Y2:
-        case UIPlotAxis::Y3: ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true ); break;
+        case UIPlotAxis::Y3:
+            ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true );
+            break;
         }
     }
 
@@ -349,7 +394,10 @@ namespace SE::Core
         return static_cast<sAxisTag *>( lSelf );
     }
 
-    void sAxisTag::UIAxisTag_Destroy( void *aSelf ) { delete static_cast<sAxisTag *>( aSelf ); }
+    void sAxisTag::UIAxisTag_Destroy( void *aSelf )
+    {
+        delete static_cast<sAxisTag *>( aSelf );
+    }
 
     void sAxisTag::UIAxisTag_SetX( void *aSelf, double aValue )
     {
@@ -402,7 +450,7 @@ namespace SE::Core
 
         auto  M   = plot->Axes[static_cast<ImAxis>( mXAxis )].LinM;
         auto  P0  = plot->Axes[static_cast<ImAxis>( mXAxis )].PixelMin;
-        auto  D  = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
+        auto  D   = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
         float lX0 = P0 + M * ( mX0 - D );
         float lX1 = P0 + M * ( mX1 - D );
 
@@ -424,7 +472,10 @@ namespace SE::Core
         return static_cast<sVRange *>( lSelf );
     }
 
-    void sVRange::UIVRangePlot_Destroy( void *aSelf ) { delete static_cast<sVRange *>( aSelf ); }
+    void sVRange::UIVRangePlot_Destroy( void *aSelf )
+    {
+        delete static_cast<sVRange *>( aSelf );
+    }
 
     void sVRange::UIVRangePlot_SetMin( void *aSelf, double aValue )
     {
@@ -454,8 +505,6 @@ namespace SE::Core
         return (double)lSelf->mX1;
     }
 
-
-
     void sHRange::Render( UIPlot *aParentPlot )
     {
         ImPlotPlot  *plot     = ImPlot::GetCurrentPlot();
@@ -464,7 +513,7 @@ namespace SE::Core
 
         auto  M   = plot->Axes[static_cast<ImAxis>( mXAxis )].LinM;
         auto  P0  = plot->Axes[static_cast<ImAxis>( mXAxis )].PixelMin;
-        auto  D  = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
+        auto  D   = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
         float lX0 = P0 + M * ( mY0 - D );
         float lX1 = P0 + M * ( mY1 - D );
 
@@ -486,7 +535,10 @@ namespace SE::Core
         return static_cast<sHRange *>( lSelf );
     }
 
-    void sHRange::UIHRangePlot_Destroy( void *aSelf ) { delete static_cast<sHRange *>( aSelf ); }
+    void sHRange::UIHRangePlot_Destroy( void *aSelf )
+    {
+        delete static_cast<sHRange *>( aSelf );
+    }
 
     void sHRange::UIHRangePlot_SetMin( void *aSelf, double aValue )
     {

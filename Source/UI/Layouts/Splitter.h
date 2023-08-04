@@ -35,7 +35,7 @@ namespace SE::Core
 
         void Add1( UIComponent *aChild );
         void Add2( UIComponent *aChild );
-        
+
         ImVec2 RequiredSize();
 
       protected:
@@ -55,7 +55,7 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
         static void *UISplitter_Create();

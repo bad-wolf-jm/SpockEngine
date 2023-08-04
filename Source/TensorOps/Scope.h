@@ -16,9 +16,9 @@
 
 #include "Core/Entity/Collection.h"
 
-#include "Core/CUDA/CudaAssert.h"
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/CUDA/CudaAssert.h"
 
 #include "NodeComponents.h"
 #include "NodeControllers.h"
@@ -77,10 +77,13 @@ namespace SE::TensorOps
         void Run( std::vector<OpNode> const &aNode );
 
         /// @brief Access the underlying nodes registry
-        SE::Core::EntityCollection &GetNodesRegistry() { return mNodesRegistry; };
+        SE::Core::EntityCollection &GetNodesRegistry()
+        {
+            return mNodesRegistry;
+        };
 
       private:
-        SE::Core::EntityCollection   mNodesRegistry{};     //!< Underlying node database
+        SE::Core::EntityCollection mNodesRegistry{};     //!< Underlying node database
         std::optional<std::string> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<std::string, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };

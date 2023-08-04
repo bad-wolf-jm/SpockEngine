@@ -2,8 +2,12 @@
 
 namespace SE::Core
 {
-    void UIZLayout::PushStyles() {}
-    void UIZLayout::PopStyles() {}
+    void UIZLayout::PushStyles()
+    {
+    }
+    void UIZLayout::PopStyles()
+    {
+    }
 
     ImVec2 UIZLayout::RequiredSize()
     {
@@ -20,7 +24,8 @@ namespace SE::Core
             else
             {
                 ImVec2 lRequiredSize{};
-                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem )
+                    lRequiredSize = lItem.mItem->RequiredSize();
                 lWidth  = math::max( lWidth, lRequiredSize.x );
                 lHeight = math::max( lHeight, lRequiredSize.y );
             }
@@ -118,7 +123,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLayout );
     }
 
-    void UIZLayout::UIZLayout_Destroy( void *aInstance ) { delete static_cast<UIZLayout *>( aInstance ); }
+    void UIZLayout::UIZLayout_Destroy( void *aInstance )
+    {
+        delete static_cast<UIZLayout *>( aInstance );
+    }
 
     void UIZLayout::UIZLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
                                                   eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )

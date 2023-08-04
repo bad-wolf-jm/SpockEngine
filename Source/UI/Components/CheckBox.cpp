@@ -7,14 +7,21 @@ namespace SE::Core
     {
     }
 
-    void UICheckBox::PushStyles() {}
-    void UICheckBox::PopStyles() {}
+    void UICheckBox::PushStyles()
+    {
+    }
+    void UICheckBox::PopStyles()
+    {
+    }
 
-    void UICheckBox::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
+    void UICheckBox::OnClick( std::function<void()> aOnClick )
+    {
+        mOnClick = aOnClick;
+    }
 
     void UICheckBox::PushStyles( bool aEnabled )
     {
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{0.0f, 0.0f});
+        ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
         if( !aEnabled )
         {
             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.3f, 0.3f, 0.3f, .2f } );
@@ -26,7 +33,8 @@ namespace SE::Core
 
     void UICheckBox::PopStyles( bool aEnabled )
     {
-        if( !aEnabled ) ImGui::PopStyleColor( 4 );
+        if( !aEnabled )
+            ImGui::PopStyleColor( 4 );
         ImGui::PopStyleVar();
     }
 
@@ -59,14 +67,18 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UICheckBox::UICheckBox_Destroy( void *aInstance ) { delete static_cast<UICheckBox *>( aInstance ); }
+    void UICheckBox::UICheckBox_Destroy( void *aInstance )
+    {
+        delete static_cast<UICheckBox *>( aInstance );
+    }
 
     void UICheckBox::UICheckBox_OnClick( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UICheckBox *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+        if( lInstance->mOnChangeDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
         lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );

@@ -18,9 +18,9 @@
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 
-#include "Core/CUDA/CudaAssert.h"
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/CUDA/CudaAssert.h"
 #include "Core/CUDA/Texture/Texture2D.h"
 
 #include "HelperMacros.h"
@@ -117,7 +117,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] + lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -197,7 +198,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] * lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -303,7 +305,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] - lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -412,7 +415,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] / lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -504,7 +508,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = ( lLeft[i] && lRight[0] );
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -580,7 +585,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = ( lLeft[i] || lRight[0] );
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -658,7 +664,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] & lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -754,7 +761,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] | lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -1037,7 +1045,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] == lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -1118,7 +1127,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] < lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -1229,7 +1239,8 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[i] <= lRight[0];
         }
         break;
-        default: break;
+        default:
+            break;
         }
     }
 
@@ -1820,7 +1831,8 @@ namespace SE::TensorOps::Kernels
         uint32_t lCount = 0;
         for( uint32_t k = 0; k < lElementCount; k++ )
         {
-            if( lX[k] == static_cast<_Ty>( 0 ) ) lCount++;
+            if( lX[k] == static_cast<_Ty>( 0 ) )
+                lCount++;
         }
 
         *lOut = lCount;
@@ -1842,7 +1854,8 @@ namespace SE::TensorOps::Kernels
         uint32_t lCount = 0;
         for( uint32_t k = 0; k < lElementCount; k++ )
         {
-            if( lX[k] != static_cast<_Ty>( 0 ) ) lCount++;
+            if( lX[k] != static_cast<_Ty>( 0 ) )
+                lCount++;
         }
 
         *lOut = lCount;
@@ -1867,7 +1880,8 @@ namespace SE::TensorOps::Kernels
         auto *lOut = aOut.DeviceBufferAt<_Ty>( lLayer ) + i;
 
         _Ty lAccumulator = 0;
-        for( uint32_t k = lBegin; k <= lEnd; k++ ) lAccumulator += lX[k];
+        for( uint32_t k = lBegin; k <= lEnd; k++ )
+            lAccumulator += lX[k];
 
         *lOut = lAccumulator;
     }
@@ -1890,7 +1904,8 @@ namespace SE::TensorOps::Kernels
         auto *lX   = aX.DeviceBufferAt<_Ty>( lLayer ) + i * lElementCount;
         auto *lOut = aOut.DeviceBufferAt<_Ty>( lLayer ) + i * ( lEnd - lBegin + 1 );
 
-        for( uint32_t k = lBegin; k <= lEnd; k++ ) lOut[k - lBegin] = lX[k];
+        for( uint32_t k = lBegin; k <= lEnd; k++ )
+            lOut[k - lBegin] = lX[k];
     }
 
     template <typename _Ty>
@@ -1944,9 +1959,11 @@ namespace SE::TensorOps::Kernels
         auto *lX   = aX.DeviceBufferAt<_Ty>( lLayer ) + i * lElementCount;
         auto *lOut = aOut.DeviceBufferAt<_Ty>( lLayer ) + i * lElementCount;
 
-        for( uint32_t k = 0; k < lElementCount - aCount; k++ ) lOut[k] = lX[k + aCount];
+        for( uint32_t k = 0; k < lElementCount - aCount; k++ )
+            lOut[k] = lX[k + aCount];
 
-        for( uint32_t k = lElementCount - aCount; k < lElementCount; k++ ) lOut[k] = aFillValue;
+        for( uint32_t k = lElementCount - aCount; k < lElementCount; k++ )
+            lOut[k] = aFillValue;
     }
 
     template <typename _Ty>
@@ -1965,9 +1982,11 @@ namespace SE::TensorOps::Kernels
         auto *lX   = aX.DeviceBufferAt<_Ty>( lLayer ) + i * lElementCount;
         auto *lOut = aOut.DeviceBufferAt<_Ty>( lLayer ) + i * lElementCount;
 
-        for( uint32_t k = aCount; k < lElementCount; k++ ) lOut[k] = lX[k - aCount];
+        for( uint32_t k = aCount; k < lElementCount; k++ )
+            lOut[k] = lX[k - aCount];
 
-        for( uint32_t k = 0; k < aCount; k++ ) lOut[k] = aFillValue;
+        for( uint32_t k = 0; k < aCount; k++ )
+            lOut[k] = aFillValue;
     }
 
     template <typename _Ty>
@@ -1991,7 +2010,8 @@ namespace SE::TensorOps::Kernels
         _Ty lConvolutionValue = static_cast<_Ty>( 0 );
         for( uint32_t j = 0; j < lElementCount1; j++ )
         {
-            if( i >= j ) lConvolutionValue += ( lX[i - j] * lK[j] );
+            if( i >= j )
+                lConvolutionValue += ( lX[i - j] * lK[j] );
         }
 
         lOut[i] = lConvolutionValue;
@@ -2014,8 +2034,10 @@ namespace SE::TensorOps::Kernels
         auto *lOut = aOut.DeviceBufferAt<_Ty>( lLayer ) + i * ( lElementCountX + lElementCountY );
 
         uint32_t k = 0;
-        for( uint32_t j = 0; j < lElementCountX; j++ ) lOut[k++] = lX[j];
-        for( uint32_t j = 0; j < lElementCountY; j++ ) lOut[k++] = lY[j];
+        for( uint32_t j = 0; j < lElementCountX; j++ )
+            lOut[k++] = lX[j];
+        for( uint32_t j = 0; j < lElementCountY; j++ )
+            lOut[k++] = lY[j];
     }
 
 } // namespace SE::TensorOps::Kernels

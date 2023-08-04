@@ -12,9 +12,9 @@
 #include <cassert>
 #include <cmath>
 
-#include "Core/Math/Types.h"
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/Math/Types.h"
 
 #include "../ScalarTypes.h"
 

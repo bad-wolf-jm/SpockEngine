@@ -36,7 +36,7 @@ namespace SE::Core
 
       public:
         static void *UIImageButton_Create();
-        static void *UIImageButton_CreateWithPath( void* aText, math::vec2 *aSize );
+        static void *UIImageButton_CreateWithPath( void *aText, math::vec2 *aSize );
         static void  UIImageButton_Destroy( void *aInstance );
         static void  UIImageButton_OnClick( void *aInstance, void *aDelegate );
     };

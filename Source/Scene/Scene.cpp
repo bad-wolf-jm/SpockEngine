@@ -473,9 +473,9 @@ namespace SE::Core
 
             // if( HasTypeTag<sMaterialShaderComponent>( lEntityConfiguration ) )
             // {
-                // auto &lComponent = lEntity.Add<sMaterialShaderComponent>();
+            // auto &lComponent = lEntity.Add<sMaterialShaderComponent>();
 
-                // ReadComponent( lComponent, lEntityConfiguration[TypeTag<sMaterialShaderComponent>()], lReadContext );
+            // ReadComponent( lComponent, lEntityConfiguration[TypeTag<sMaterialShaderComponent>()], lReadContext );
             // }
 
             if( HasTypeTag<sBackgroundComponent>( lEntityConfiguration ) )
@@ -1262,10 +1262,10 @@ namespace SE::Core
                 WriteComponent( lOut, aEntity.Get<sStaticMeshComponent>(), aMeshDataMap[aUUID.mValue.str()] );
 
             // if( aEntity.Has<sParticleSystemComponent>() )
-                // WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
+            // WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
 
             // if( aEntity.Has<sParticleShaderComponent>() )
-                // WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
+            // WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
 
             if( aEntity.Has<sSkeletonComponent>() )
                 WriteComponent( lOut, aEntity.Get<sSkeletonComponent>() );
@@ -1286,7 +1286,7 @@ namespace SE::Core
                 WriteComponent( lOut, aEntity.Get<sMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
 
             // if( aEntity.Has<sMaterialShaderComponent>() )
-                // WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
+            // WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
 
             if( aEntity.Has<sBackgroundComponent>() )
                 WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );

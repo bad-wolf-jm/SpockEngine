@@ -85,13 +85,18 @@ namespace SE::Core::UI
         ComboBox( std::string a_ID )
             : ID{ a_ID } {};
 
-        _Ty GetValue() { return Values[CurrentItem]; }
+        _Ty GetValue()
+        {
+            return Values[CurrentItem];
+        }
 
         void Display()
         {
-            if( Labels.size() != Values.size() ) return;
+            if( Labels.size() != Values.size() )
+                return;
 
-            if( CurrentItem >= Values.size() ) CurrentItem = Values.size() - 1;
+            if( CurrentItem >= Values.size() )
+                CurrentItem = Values.size() - 1;
 
             if( ImGui::BeginCombo( ID.c_str(), Labels[CurrentItem].c_str() ) )
             {
@@ -104,7 +109,8 @@ namespace SE::Core::UI
                         CurrentItem = n;
                         Changed |= !l_ItemIsSelected;
                     }
-                    if( l_ItemIsSelected ) ImGui::SetItemDefaultFocus();
+                    if( l_ItemIsSelected )
+                        ImGui::SetItemDefaultFocus();
                 }
                 ImGui::EndCombo();
             }

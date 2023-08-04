@@ -43,17 +43,36 @@ namespace SE::Core
         mBackgroundColor.clear();
     }
 
-    void UITable::PushStyles() {}
-    void UITable::PopStyles() {}
+    void UITable::PushStyles()
+    {
+    }
+    void UITable::PopStyles()
+    {
+    }
 
-    void UITable::SetRowHeight( float aRowHeight ) { mRowHeight = aRowHeight; }
+    void UITable::SetRowHeight( float aRowHeight )
+    {
+        mRowHeight = aRowHeight;
+    }
 
-    void UITable::AddColumn( Ref<sTableColumn> aColumn ) { mColumns.push_back( aColumn.get() ); }
-    void UITable::AddColumn( sTableColumn *aColumn ) { mColumns.push_back( aColumn ); }
+    void UITable::AddColumn( Ref<sTableColumn> aColumn )
+    {
+        mColumns.push_back( aColumn.get() );
+    }
+    void UITable::AddColumn( sTableColumn *aColumn )
+    {
+        mColumns.push_back( aColumn );
+    }
 
-    ImVec2 UITable::RequiredSize() { return ImVec2{}; }
+    ImVec2 UITable::RequiredSize()
+    {
+        return ImVec2{};
+    }
 
-    void UITable::OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked ) { mOnRowClicked = aOnRowClicked; }
+    void UITable::OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked )
+    {
+        mOnRowClicked = aOnRowClicked;
+    }
 
     void UITable::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -74,10 +93,12 @@ namespace SE::Core
             ImGui::TableHeadersRow();
 
             auto lRowCount = std::numeric_limits<uint32_t>::max();
-            for( const auto &lColumn : mColumns ) lRowCount = std::min( lRowCount, lColumn->Size() );
+            for( const auto &lColumn : mColumns )
+                lRowCount = std::min( lRowCount, lColumn->Size() );
 
             int lDisplayedRowCount = lRowCount;
-            if( mDisplayedRowIndices.has_value() ) lDisplayedRowCount = mDisplayedRowIndices.value().size();
+            if( mDisplayedRowIndices.has_value() )
+                lDisplayedRowCount = mDisplayedRowIndices.value().size();
 
             ImGuiListClipper lRowClipping;
             lRowClipping.Begin( lDisplayedRowCount );
@@ -86,9 +107,11 @@ namespace SE::Core
                 for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
                 {
                     int lRow = lRowID;
-                    if( mDisplayedRowIndices.has_value() ) lRow = mDisplayedRowIndices.value()[lRowID];
+                    if( mDisplayedRowIndices.has_value() )
+                        lRow = mDisplayedRowIndices.value()[lRowID];
 
-                    if( lRow > lRowCount ) continue;
+                    if( lRow > lRowCount )
+                        continue;
 
                     ImGui::TableNextRow();
                     if( mSelectedRow == lRow )
@@ -124,12 +147,15 @@ namespace SE::Core
                                 ImGui::EndTooltip();
                             }
                         }
-                        if( ImGui::IsItemClicked() ) mSelectedRow = lRow;
+                        if( ImGui::IsItemClicked() )
+                            mSelectedRow = lRow;
                         ImGui::SetCursorPos( lPos );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
 
-                        if( mOnRowClicked && ImGui::IsItemClicked() ) mOnRowClicked( lRow );
-                        if( lColumnData->mBackgroundColor.size() > 0 ) ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
+                        if( mOnRowClicked && ImGui::IsItemClicked() )
+                            mOnRowClicked( lRow );
+                        if( lColumnData->mBackgroundColor.size() > 0 )
+                            ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
 
                         lColumn++;
                     }
@@ -146,14 +172,18 @@ namespace SE::Core
         return static_cast<void *>( lNewTable );
     }
 
-    void UITable::UITable_Destroy( void *aSelf ) { delete static_cast<UITable *>( aSelf ); }
+    void UITable::UITable_Destroy( void *aSelf )
+    {
+        delete static_cast<UITable *>( aSelf );
+    }
 
     void UITable::UITable_OnRowClicked( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UITable *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnRowClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnRowClickDelegateHandle );
+        if( lInstance->mOnRowClickDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnRowClickDelegateHandle );
 
         lInstance->mOnRowClickDelegate       = aDelegate;
         lInstance->mOnRowClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
@@ -216,7 +246,10 @@ namespace SE::Core
     {
     }
 
-    uint32_t sFloat64Column::Size() { return mData.size(); }
+    uint32_t sFloat64Column::Size()
+    {
+        return mData.size();
+    }
 
     void sFloat64Column::Render( int aRow, ImVec2 aSize )
     {
@@ -235,7 +268,8 @@ namespace SE::Core
         if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
             ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
         ImGui::Text( lText.c_str() );
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PopStyleColor();
 
         ImVec2 lNewPos = ImGui::GetCursorPos();
         lNewPos.y      = lPrevPos.y + aSize.y;
@@ -265,7 +299,10 @@ namespace SE::Core
         return static_cast<void *>( lNewColumn );
     }
 
-    void sFloat64Column::UIFloat64Column_Destroy( void *aSelf ) { delete static_cast<sFloat64Column *>( aSelf ); }
+    void sFloat64Column::UIFloat64Column_Destroy( void *aSelf )
+    {
+        delete static_cast<sFloat64Column *>( aSelf );
+    }
 
     void sFloat64Column::UIFloat64Column_Clear( void *aSelf )
     {
@@ -286,7 +323,10 @@ namespace SE::Core
     {
     }
 
-    uint32_t sUint32Column::Size() { return mData.size(); }
+    uint32_t sUint32Column::Size()
+    {
+        return mData.size();
+    }
 
     void sUint32Column::Render( int aRow, ImVec2 aSize )
     {
@@ -300,7 +340,8 @@ namespace SE::Core
         if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
             ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
         ImGui::Text( lText.c_str() );
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PopStyleColor();
 
         ImVec2 lNewPos = ImGui::GetCursorPos();
         lNewPos.y      = lPrevPos.y + aSize.y;
@@ -328,7 +369,10 @@ namespace SE::Core
         return static_cast<void *>( lNewColumn );
     }
 
-    void sUint32Column::UIUint32Column_Destroy( void *aSelf ) { delete static_cast<sUint32Column *>( aSelf ); }
+    void sUint32Column::UIUint32Column_Destroy( void *aSelf )
+    {
+        delete static_cast<sUint32Column *>( aSelf );
+    }
 
     void sUint32Column::UIUint32Column_Clear( void *aSelf )
     {
@@ -349,7 +393,10 @@ namespace SE::Core
     {
     }
 
-    uint32_t sStringColumn::Size() { return mData.size(); }
+    uint32_t sStringColumn::Size()
+    {
+        return mData.size();
+    }
 
     void sStringColumn::Render( int aRow, ImVec2 aSize )
     {
@@ -362,7 +409,8 @@ namespace SE::Core
         if( ( mForegroundColor.size() > 0 ) && ( mForegroundColor[aRow] != 0u ) )
             ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
         ImGui::Text( mData[aRow].c_str() );
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PopStyleColor();
 
         ImVec2 lNewPos = ImGui::GetCursorPos();
         lNewPos.y      = lPrevPos.y + aSize.y;
@@ -390,7 +438,10 @@ namespace SE::Core
         return static_cast<void *>( lNewColumn );
     }
 
-    void sStringColumn::UIStringColumn_Destroy( void *aSelf ) { delete static_cast<sStringColumn *>( aSelf ); }
+    void sStringColumn::UIStringColumn_Destroy( void *aSelf )
+    {
+        delete static_cast<sStringColumn *>( aSelf );
+    }
 
     void sStringColumn::UIStringColumn_Clear( void *aSelf )
     {

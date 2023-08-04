@@ -6,8 +6,12 @@
 
 namespace SE::Core
 {
-    void UITextOverlay::PushStyles() {}
-    void UITextOverlay::PopStyles() {}
+    void UITextOverlay::PushStyles()
+    {
+    }
+    void UITextOverlay::PopStyles()
+    {
+    }
 
     void UITextOverlay::AddText( std::string const &aText )
     {
@@ -27,7 +31,8 @@ namespace SE::Core
             else
             {
                 auto &lLastLine = mLines.back();
-                if( lLastLine.mIsPartial ) lLastLine.mLine += lText;
+                if( lLastLine.mIsPartial )
+                    lLastLine.mLine += lText;
             }
         }
         else
@@ -74,7 +79,10 @@ namespace SE::Core
         }
     }
 
-    void UITextOverlay::Clear() { mLines.clear(); }
+    void UITextOverlay::Clear()
+    {
+        mLines.clear();
+    }
 
     ImVec2 UITextOverlay::RequiredSize()
     {
@@ -90,7 +98,8 @@ namespace SE::Core
 
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        if( !mIsVisible ) return;
+        if( !mIsVisible )
+            return;
 
         auto lDrawList = ImGui::GetWindowDrawList();
 
@@ -144,7 +153,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UITextOverlay::UITextOverlay_Destroy( void *aInstance ) { delete static_cast<UITextOverlay *>( aInstance ); }
+    void UITextOverlay::UITextOverlay_Destroy( void *aInstance )
+    {
+        delete static_cast<UITextOverlay *>( aInstance );
+    }
 
     void UITextOverlay::UITextOverlay_AddText( void *aInstance, void *aText )
     {

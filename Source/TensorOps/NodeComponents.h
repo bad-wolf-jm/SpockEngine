@@ -12,9 +12,9 @@
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 
-#include "Core/Entity/Collection.h"
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/Entity/Collection.h"
 
 #include "ScalarTypes.h"
 
@@ -49,11 +49,19 @@ namespace SE::TensorOps
             return mEntity.Has<T>();
         }
 
-        OpNode GetControlledEntity() { return mEntity; };
+        OpNode GetControlledEntity()
+        {
+            return mEntity;
+        };
 
       public:
-        virtual void Initialize( OpNode aEntity ) { mEntity = aEntity; }
-        virtual void Run() {}
+        virtual void Initialize( OpNode aEntity )
+        {
+            mEntity = aEntity;
+        }
+        virtual void Run()
+        {
+        }
 
       private:
         OpNode mEntity;
@@ -115,7 +123,10 @@ namespace SE::TensorOps
         sVectorValueComponent()                                = default;
         sVectorValueComponent( const sVectorValueComponent & ) = default;
 
-        size_t Size() { return mValue.size(); }
+        size_t Size()
+        {
+            return mValue.size();
+        }
     };
 
     struct sVectorBufferComponent
@@ -155,7 +166,10 @@ namespace SE::TensorOps
         std::vector<OpNode> mOperands = {}; //!< List of entities that have to be run before the current entity.
 
         sOperandComponent() = default;
-        sOperandComponent( std::vector<OpNode> const &aOpNodes ) { mOperands = aOpNodes; };
+        sOperandComponent( std::vector<OpNode> const &aOpNodes )
+        {
+            mOperands = aOpNodes;
+        };
         sOperandComponent( const sOperandComponent & ) = default;
     };
 
@@ -193,10 +207,10 @@ namespace SE::TensorOps
     {
         eBroadcastHint mBroadcastHint = eBroadcastHint::NONE; //!< How to broadcast the operation.
 
-        OpNode   mBlockSizes;                //!< Block sizes
-        uint32_t mMaxBlockSize = 0;          //!< Maximum value of the `mBlockSizes` parameter
-        OpNode   mBroadcastDimension;        //!< Size of the broadcast dimension
-        uint32_t mMaxBroadcastDimension = 0; //!< Maximum size of the broadcast dimension
+        OpNode   mBlockSizes;                                 //!< Block sizes
+        uint32_t mMaxBlockSize = 0;                           //!< Maximum value of the `mBlockSizes` parameter
+        OpNode   mBroadcastDimension;                         //!< Size of the broadcast dimension
+        uint32_t mMaxBroadcastDimension = 0;                  //!< Maximum size of the broadcast dimension
 
         sBroadcastInfoComponent()                                  = default;
         sBroadcastInfoComponent( const sBroadcastInfoComponent & ) = default;
@@ -436,7 +450,10 @@ namespace SE::TensorOps
         }
         sMultiTensorComponent( const sMultiTensorComponent & ) = default;
 
-        sTensorShape &Shape() { return mShape; }
+        sTensorShape &Shape()
+        {
+            return mShape;
+        }
     };
 
     /// @brief sSample2DComponent
@@ -485,12 +502,12 @@ namespace SE::TensorOps
     /// @brief sArraySliceNodeComponent
     struct sArraySliceNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
-        OpNode mBegin; //!< Lower index value for each layer
-        OpNode mEnd;   //!< Upper index value for each layer
+        OpNode mArray;              //!< Tensor to transform
+        OpNode mBegin;              //!< Lower index value for each layer
+        OpNode mEnd;                //!< Upper index value for each layer
 
-        OpNode mElementCount; //!< Length of the last dimension of `mArray`
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -501,12 +518,12 @@ namespace SE::TensorOps
     /// @brief sArraySummationNodeComponent
     struct sArraySummationNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
-        OpNode mBegin; //!< Lower index value for each layer
-        OpNode mEnd;   //!< Upper index value for each layer
+        OpNode mArray;              //!< Tensor to transform
+        OpNode mBegin;              //!< Lower index value for each layer
+        OpNode mEnd;                //!< Upper index value for each layer
 
-        OpNode mElementCount; // Length of the last dimension of `mArray`
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       // Length of the last dimension of `mArray`
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -523,10 +540,10 @@ namespace SE::TensorOps
         uint32_t mMaxElementCount0 = 0; //!< Maximum value of the `mElementCount0` parameter
         uint32_t mMaxBlockSize0    = 0; //!< Maximum value of the `aBlockSizes0` parameter
 
-        OpNode   mArray1;            //!< Convolution kernel
-        OpNode   mElementCount1;     //!< Length of the last dimension of `mArray1`
-        OpNode   mBlockSizes1;       //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
-        uint32_t mMaxBlockSize1 = 0; //!< Maximum value of the `aBlockSizes1` parameter
+        OpNode   mArray1;               //!< Convolution kernel
+        OpNode   mElementCount1;        //!< Length of the last dimension of `mArray1`
+        OpNode   mBlockSizes1;          //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
+        uint32_t mMaxBlockSize1 = 0;    //!< Maximum value of the `aBlockSizes1` parameter
 
         sConv1DNodeComponent()                               = default;
         sConv1DNodeComponent( const sConv1DNodeComponent & ) = default;
@@ -535,9 +552,9 @@ namespace SE::TensorOps
     /// @brief sCountTrueNodeComponent
     struct sCountTrueNodeComponent
     {
-        OpNode mArray;        //!< Tensor to transform
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount; //!< Length of the last dimension of `mArray`
+        OpNode mArray;              //!< Tensor to transform
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -548,9 +565,9 @@ namespace SE::TensorOps
     /// @brief sCountNonZeroNodeComponent
     struct sCountNonZeroNodeComponent
     {
-        OpNode mArray;        //!< Tensor to transform
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount; //!< Length of the last dimension of `mArray`
+        OpNode mArray;              //!< Tensor to transform
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -561,9 +578,9 @@ namespace SE::TensorOps
     /// @brief sCountZeroNodeComponent
     struct sCountZeroNodeComponent
     {
-        OpNode mArray;        //!< Tensor to transform
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount; //!< Length of the last dimension of `mArray`
+        OpNode mArray;              //!< Tensor to transform
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -622,8 +639,8 @@ namespace SE::TensorOps
         OpNode   mArray; //!< Tensor to transform
         uint32_t mCount = 0;
 
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount; //!< Length of the last dimension of `mArray`
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -638,8 +655,8 @@ namespace SE::TensorOps
         int32_t mCount = 0;
         OpNode  mFillValue;
 
-        OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount; //!< Length of the last dimension of `mArray`
+        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -650,14 +667,14 @@ namespace SE::TensorOps
     /// @brief sHCatNodeComponent
     struct sHCatNodeComponent
     {
-        OpNode mArray0; //!< First tensor to concatenate
-        OpNode mArray1; //!< Second tensor to concatenate
+        OpNode mArray0;             //!< First tensor to concatenate
+        OpNode mArray1;             //!< Second tensor to concatenate
 
         OpNode   mBlockSizes;       //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `mBlockSizes` parameter
 
-        OpNode mElementCount0; //!< Length of the last dimension of `mArray0`
-        OpNode mElementCount1; //!< Length of the last dimension of `mArray1`
+        OpNode mElementCount0;      //!< Length of the last dimension of `mArray0`
+        OpNode mElementCount1;      //!< Length of the last dimension of `mArray1`
 
         sHCatNodeComponent()                             = default;
         sHCatNodeComponent( const sHCatNodeComponent & ) = default;

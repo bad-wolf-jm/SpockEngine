@@ -10,18 +10,29 @@ namespace SE::Core
     {
         float lTextWidth = 0.0f;
 
-        for( auto const &lItem : mItems ) lTextWidth = math::max( ImGui::CalcTextSize( lItem.c_str() ).x, lTextWidth );
+        for( auto const &lItem : mItems )
+            lTextWidth = math::max( ImGui::CalcTextSize( lItem.c_str() ).x, lTextWidth );
 
         const float lArrowSize = ImGui::GetFrameHeight();
         return ImVec2{ lTextWidth + lArrowSize, ImGui::GetFrameHeight() };
     }
 
-    void UIComboBox::PushStyles() {}
-    void UIComboBox::PopStyles() {}
+    void UIComboBox::PushStyles()
+    {
+    }
+    void UIComboBox::PopStyles()
+    {
+    }
 
-    void UIComboBox::OnChange( std::function<void( int aIndex )> aOnChange ) { mOnChange = aOnChange; }
+    void UIComboBox::OnChange( std::function<void( int aIndex )> aOnChange )
+    {
+        mOnChange = aOnChange;
+    }
 
-    void UIComboBox::SetItemList( std::vector<std::string> aItems ) { mItems = aItems; }
+    void UIComboBox::SetItemList( std::vector<std::string> aItems )
+    {
+        mItems = aItems;
+    }
 
     void UIComboBox::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -32,14 +43,16 @@ namespace SE::Core
         ImGui::SetCursorPos(
             GetContentAlignedposition( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER, aPosition, lItemSize, aSize ) );
 
-        if( mCurrentItem >= mItems.size() ) mCurrentItem = mItems.size() - 1;
+        if( mCurrentItem >= mItems.size() )
+            mCurrentItem = mItems.size() - 1;
 
         bool lBeginCombo = false;
 
         ImGui::SetNextItemWidth( aSize.x );
         if( ( mItems.size() == 0 ) )
         {
-            if( ImGui::BeginCombo( "##", "No Items" ) ) ImGui::EndCombo();
+            if( ImGui::BeginCombo( "##", "No Items" ) )
+                ImGui::EndCombo();
         }
         else if( ImGui::BeginCombo( "##", mItems[mCurrentItem].c_str() ) )
         {
@@ -53,10 +66,12 @@ namespace SE::Core
                     mCurrentItem = n;
                     lChanged |= !lIsSelected;
                 }
-                if( lIsSelected ) ImGui::SetItemDefaultFocus();
+                if( lIsSelected )
+                    ImGui::SetItemDefaultFocus();
             }
 
-            if( lChanged && mOnChange && lEnabled ) mOnChange( mCurrentItem );
+            if( lChanged && mOnChange && lEnabled )
+                mOnChange( mCurrentItem );
 
             ImGui::EndCombo();
         }
@@ -80,7 +95,10 @@ namespace SE::Core
         return static_cast<void *>( lNewComboBox );
     }
 
-    void UIComboBox::UIComboBox_Destroy( void *aInstance ) { delete static_cast<UIComboBox *>( aInstance ); }
+    void UIComboBox::UIComboBox_Destroy( void *aInstance )
+    {
+        delete static_cast<UIComboBox *>( aInstance );
+    }
 
     int UIComboBox::UIComboBox_GetCurrent( void *aInstance )
     {
@@ -112,11 +130,11 @@ namespace SE::Core
         auto lInstance = static_cast<UIComboBox *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnChangeDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
+        if( lInstance->mOnChangeDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
-        lInstance->mOnChangeDelegate = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+        lInstance->mOnChangeDelegate       = aDelegate;
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnChange(
             [lInstance, lDelegate]( int aValue )
@@ -124,10 +142,9 @@ namespace SE::Core
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                void *lParams[] = { (void*)&aValue };
+                void *lParams[] = { (void *)&aValue };
                 mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
             } );
     }
-
 
 } // namespace SE::Core

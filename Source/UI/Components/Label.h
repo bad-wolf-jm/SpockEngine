@@ -15,7 +15,7 @@ namespace SE::Core
         void SetTextColor( math::vec4 aColor );
 
         ImVec2 RequiredSize();
-        
+
       protected:
         std::string mText;
         ImVec4      mTextColor;
@@ -24,7 +24,7 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
         static void *UILabel_Create();

@@ -14,14 +14,30 @@ namespace SE::Core
     {
     }
 
-    void UITextToggleButton::PushStyles() {}
-    void UITextToggleButton::PopStyles() {}
+    void UITextToggleButton::PushStyles()
+    {
+    }
+    void UITextToggleButton::PopStyles()
+    {
+    }
 
-    void UITextToggleButton::OnClick( std::function<bool( bool )> aOnChange ) { mOnClicked = aOnChange; }
-    void UITextToggleButton::OnChanged( std::function<void()> aOnChanged ) { mOnChanged = aOnChanged; }
+    void UITextToggleButton::OnClick( std::function<bool( bool )> aOnChange )
+    {
+        mOnClicked = aOnChange;
+    }
+    void UITextToggleButton::OnChanged( std::function<void()> aOnChanged )
+    {
+        mOnChanged = aOnChanged;
+    }
 
-    bool UITextToggleButton::IsActive() { return mActivated; }
-    void UITextToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
+    bool UITextToggleButton::IsActive()
+    {
+        return mActivated;
+    }
+    void UITextToggleButton::SetActive( bool aValue )
+    {
+        mActivated = aValue;
+    }
 
     // void UITextToggleButton::SetText( std::string const &aText ) { UILabel::SetText( aText ); }
 
@@ -81,7 +97,8 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
 
         ImGui::PushStyleColor( ImGuiCol_Text, mActivated ? mActiveColor : mInactiveColor );
-        if( ImGui::Button( mText.c_str(), aSize ) && mOnClicked && lEnabled ) mActivated = mOnClicked( mActivated );
+        if( ImGui::Button( mText.c_str(), aSize ) && mOnClicked && lEnabled )
+            mActivated = mOnClicked( mActivated );
         ImGui::PopStyleColor();
 
         PopStyles( lEnabled );
@@ -102,7 +119,10 @@ namespace SE::Core
         return static_cast<void *>( lNewButton );
     }
 
-    void UITextToggleButton::UITextToggleButton_Destroy( void *aInstance ) { delete static_cast<UITextToggleButton *>( aInstance ); }
+    void UITextToggleButton::UITextToggleButton_Destroy( void *aInstance )
+    {
+        delete static_cast<UITextToggleButton *>( aInstance );
+    }
 
     bool UITextToggleButton::UITextToggleButton_IsActive( void *aInstance )
     {
@@ -132,17 +152,16 @@ namespace SE::Core
         lInstance->SetInactiveColor( *aColor );
     }
 
-
     void UITextToggleButton::UITextToggleButton_OnClicked( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UITextToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnClickDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnClickDelegateHandle);
+        if( lInstance->mOnClickDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
-        lInstance->mOnClickDelegate = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+        lInstance->mOnClickDelegate       = aDelegate;
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]( bool aValue )
@@ -150,10 +169,10 @@ namespace SE::Core
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                void *lParams[] = { (void*)&aValue };
-                auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+                void *lParams[] = { (void *)&aValue };
+                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
 
-                return *((bool*) mono_object_unbox(lValue));
+                return *( (bool *)mono_object_unbox( lValue ) );
             } );
     }
 
@@ -162,7 +181,8 @@ namespace SE::Core
         auto lInstance = static_cast<UITextToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+        if( lInstance->mOnChangeDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
         lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );

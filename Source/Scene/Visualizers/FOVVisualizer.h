@@ -20,7 +20,10 @@ struct FOVVisualizer
     uint32_t Segments = 32;
 
     FOVVisualizer() = default;
-    FOVVisualizer( const FOVVisualizer& other ) { *this = other; };
+    FOVVisualizer( const FOVVisualizer &other )
+    {
+        *this = other;
+    };
 
     FOVVisualizer( float width, float height, float depth, uint32_t segments )
         : Width( width )
@@ -31,9 +34,12 @@ struct FOVVisualizer
         UpdatePositions();
     }
 
-    uint32_t IndexCount() { return m_Indices.size(); }
+    uint32_t IndexCount()
+    {
+        return m_Indices.size();
+    }
 
-    FOVVisualizer& operator=( const FOVVisualizer& other )
+    FOVVisualizer &operator=( const FOVVisualizer &other )
     {
         Width    = other.Width;
         Height   = other.Height;
@@ -48,12 +54,18 @@ struct FOVVisualizer
         return *this;
     }
 
-    std::vector<SE::Scene::VertexData>& GetVertexData() { return m_VertexData; }
-    std::vector<uint32_t>&                GetIndices() { return m_Indices; }
-    void                                  UpdatePositions();
+    std::vector<SE::Scene::VertexData> &GetVertexData()
+    {
+        return m_VertexData;
+    }
+    std::vector<uint32_t> &GetIndices()
+    {
+        return m_Indices;
+    }
+    void UpdatePositions();
 
   private:
     std::vector<SE::Scene::VertexData> m_VertexData;
-    std::vector<uint32_t>                m_Indices;
-    std::vector<math::vec3>              m_Positions;
+    std::vector<uint32_t>              m_Indices;
+    std::vector<math::vec3>            m_Positions;
 };

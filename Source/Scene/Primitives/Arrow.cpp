@@ -7,18 +7,20 @@ namespace SE::Core::Primitives
 
     VertexBufferData CreateArrow()
     {
-        VertexBufferData l_Shaft    = CreateCylinder( 3, 32 );
-        math::mat4 l_ShaftTransform = math::Translation( math::vec3{ 0.0f, 0.46f, 0.0f } ) * math::Scale( math::mat4( 1.0f ), math::vec3{ .0075f, 0.5 * 0.95f, .0075f } );
+        VertexBufferData l_Shaft          = CreateCylinder( 3, 32 );
+        math::mat4       l_ShaftTransform = math::Translation( math::vec3{ 0.0f, 0.46f, 0.0f } ) *
+                                      math::Scale( math::mat4( 1.0f ), math::vec3{ .0075f, 0.5 * 0.95f, .0075f } );
         for( uint32_t i = 0; i < l_Shaft.Vertices.size(); i++ )
         {
-            l_Shaft.Vertices[i].Position = math::vec3(l_ShaftTransform * math::vec4(l_Shaft.Vertices[i].Position, 1.0f));
+            l_Shaft.Vertices[i].Position = math::vec3( l_ShaftTransform * math::vec4( l_Shaft.Vertices[i].Position, 1.0f ) );
         }
 
-        VertexBufferData l_Tip    = CreateCone( 32 );
-        math::mat4 l_TipTransform = math::Translation( math::vec3{ .0f, .90f, 0.0f } ) * math::Scale( math::mat4( 1.0f ), math::vec3{ .025f, .1f, .025f } );
+        VertexBufferData l_Tip = CreateCone( 32 );
+        math::mat4       l_TipTransform =
+            math::Translation( math::vec3{ .0f, .90f, 0.0f } ) * math::Scale( math::mat4( 1.0f ), math::vec3{ .025f, .1f, .025f } );
         for( uint32_t i = 0; i < l_Tip.Vertices.size(); i++ )
         {
-            l_Tip.Vertices[i].Position = math::vec3(l_TipTransform * math::vec4(l_Tip.Vertices[i].Position, 1.0f));
+            l_Tip.Vertices[i].Position = math::vec3( l_TipTransform * math::vec4( l_Tip.Vertices[i].Position, 1.0f ) );
         }
 
         uint32_t l_ShaftOffset = l_Shaft.Vertices.size();

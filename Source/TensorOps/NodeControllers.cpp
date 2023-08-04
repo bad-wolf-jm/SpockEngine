@@ -33,7 +33,8 @@ namespace SE::TensorOps
         auto lElementType = Get<sTypeComponent>().mValue;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lValue.Shape().mShape ) lMaxSubdivisions = std::max( lMaxSubdivisions, lSub[0] );
+        for( const auto &lSub : lValue.Shape().mShape )
+            lMaxSubdivisions = std::max( lMaxSubdivisions, lSub[0] );
 
         ARangeOp( lElementType, lValue, lLeft, lRight, lDelta, lMaxSubdivisions );
     }
@@ -50,7 +51,8 @@ namespace SE::TensorOps
             auto    &lArray          = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
             auto    &lRepetitions    = lOperandData.mRepetitions.Get<sU32VectorComponent>();
             uint32_t lMaxRepetitions = 0;
-            for( const auto &lSub : lRepetitions.mValue ) lMaxRepetitions = std::max( lMaxRepetitions, lSub );
+            for( const auto &lSub : lRepetitions.mValue )
+                lMaxRepetitions = std::max( lMaxRepetitions, lSub );
             RepeatOp( lElementType, lValue, lArray, lOperandData.mRepetitions.Get<sVectorBufferComponent>().mValue, lMaxRepetitions );
             return;
         }
@@ -61,7 +63,8 @@ namespace SE::TensorOps
             auto    &lArray          = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
             auto    &lRepetitions    = lOperandData.mRepetitions.Get<sU32VectorComponent>();
             uint32_t lMaxRepetitions = 0;
-            for( const auto &lSub : lRepetitions.mValue ) lMaxRepetitions = std::max( lMaxRepetitions, lSub );
+            for( const auto &lSub : lRepetitions.mValue )
+                lMaxRepetitions = std::max( lMaxRepetitions, lSub );
             TileOp( lElementType, lValue, lArray, lOperandData.mRepetitions.Get<sVectorBufferComponent>().mValue, lMaxRepetitions );
             return;
         }
@@ -762,7 +765,8 @@ namespace SE::TensorOps
         auto lElementType = Get<sTypeComponent>().mValue;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lSubdivisions.mValue ) lMaxSubdivisions = std::max( lMaxSubdivisions, lSub );
+        for( const auto &lSub : lSubdivisions.mValue )
+            lMaxSubdivisions = std::max( lMaxSubdivisions, lSub );
 
         LinearSpaceOp( lElementType, lValue, lLeft, lRight, lOperandData.mSubdivisions.Get<sVectorBufferComponent>().mValue,
                        lMaxSubdivisions );

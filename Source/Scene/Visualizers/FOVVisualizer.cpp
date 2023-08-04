@@ -14,15 +14,11 @@ void FOVVisualizer::UpdatePositions()
     float      _Bottom        = ( -Height / 2 );
     float      _SegmentStep   = ( Width / (float)Segments );
 
-    math::vec3 _Origin = { 0.0f, 0.0f, 0.0f };
-    math::vec3 _TopLeft =
-        math::vec3( math::Rotation( _Top, math::x_axis() ) * math::Rotation( _Left, math::z_axis() ) * _l );
-    math::vec3 _TopRight =
-        math::vec3( math::Rotation( _Top, math::x_axis() ) * math::Rotation( _Right, math::z_axis() ) * _l );
-    math::vec3 _BottomLeft =
-        math::vec3( math::Rotation( _Bottom, math::x_axis() ) * math::Rotation( _Left, math::z_axis() ) * _l );
-    math::vec3 _BottomRight =
-        math::vec3( math::Rotation( _Bottom, math::x_axis() ) * math::Rotation( _Right, math::z_axis() ) * _l );
+    math::vec3 _Origin      = { 0.0f, 0.0f, 0.0f };
+    math::vec3 _TopLeft     = math::vec3( math::Rotation( _Top, math::x_axis() ) * math::Rotation( _Left, math::z_axis() ) * _l );
+    math::vec3 _TopRight    = math::vec3( math::Rotation( _Top, math::x_axis() ) * math::Rotation( _Right, math::z_axis() ) * _l );
+    math::vec3 _BottomLeft  = math::vec3( math::Rotation( _Bottom, math::x_axis() ) * math::Rotation( _Left, math::z_axis() ) * _l );
+    math::vec3 _BottomRight = math::vec3( math::Rotation( _Bottom, math::x_axis() ) * math::Rotation( _Right, math::z_axis() ) * _l );
 
     _positionCount = 1 + 2 * ( Segments * 2 + 1 );
     _indexCount    = 12 + 2 * ( Segments * 2 );
@@ -38,12 +34,14 @@ void FOVVisualizer::UpdatePositions()
     m_Positions[3] = _BottomLeft;
     m_Positions[4] = _BottomRight;
     uint32_t a[]   = { 0, 1, 0, 2, 0, 3, 0, 4, 1, 3, 2, 4 };
-    for( int i = 0; i < 12; i++ ) m_Indices[i] = a[i];
+    for( int i = 0; i < 12; i++ )
+        m_Indices[i] = a[i];
 
     if( Segments == 1 )
     {
         uint32_t a[] = { 1, 2, 3, 4 };
-        for( int i = 12; i < 16; i++ ) m_Indices[i] = a[i - 12];
+        for( int i = 12; i < 16; i++ )
+            m_Indices[i] = a[i - 12];
         return;
     }
 
@@ -94,7 +92,7 @@ void FOVVisualizer::UpdatePositions()
     m_VertexData.resize( m_Positions.size() );
     for( uint32_t i = 0; i < m_Positions.size(); i++ )
     {
-        SE::Scene::VertexData& l_Vertex = m_VertexData[i];
-        l_Vertex.Position                 = m_Positions[i];
+        SE::Scene::VertexData &l_Vertex = m_VertexData[i];
+        l_Vertex.Position               = m_Positions[i];
     }
 }

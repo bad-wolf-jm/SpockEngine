@@ -38,23 +38,23 @@ namespace SE::SensorModel::Dev
 
     struct TriangleMeshSBTData
     {
-        vec3  mColor;
-        vec3 *mVertex;
-        uint32_t   *mIndex;
-        uint32_t    mVertexOffset;
-        uint32_t    mIndexOffset;
+        vec3      mColor;
+        vec3     *mVertex;
+        uint32_t *mIndex;
+        uint32_t  mVertexOffset;
+        uint32_t  mIndexOffset;
     };
 
     struct LaunchParams
     {
         OptixTraversableHandle mTraversable;
-        vec3             mSensorPosition;
-        mat3             mSensorRotation;
+        vec3                   mSensorPosition;
+        mat3                   mSensorRotation;
         float                 *mAzimuths;
         float                 *mElevations;
         float                 *mIntensities;
         VertexData            *mVertexBuffer;
-        uvec3           *mIndexBuffer;
+        uvec3                 *mIndexBuffer;
         sHitRecord            *mSamplePoints;
     };
 

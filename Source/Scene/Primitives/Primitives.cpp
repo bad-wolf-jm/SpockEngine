@@ -5,7 +5,8 @@ namespace SE::Core::Primitives
 
     uint32_t VertexBufferData::PushVertex( const math::vec3 &position, const math::vec3 &normal, const math::vec2 texCoords )
     {
-        SE::Core::VertexData l_NewVertex = { math::vec4( position, 1.0f ), normal, texCoords, { -1.0f, -1.0f, -1.0f, -1.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
+        SE::Core::VertexData l_NewVertex = {
+            math::vec4( position, 1.0f ), normal, texCoords, { -1.0f, -1.0f, -1.0f, -1.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
         Vertices.emplace_back( l_NewVertex );
         return ( Vertices.size() - 1 );
     }
@@ -124,9 +125,11 @@ namespace SE::Core::Primitives
         {
             for( int32_t x = 0; x != vertexCount.x; ++x )
             {
-                l_VertexData.Vertices[i].Position    = math::vec3( ( x * 2.0f ) / faceCount.x - 1.0f, ( y * 2.0f ) / faceCount.y - 1.0f, 0.0 ) * 0.5f,
+                l_VertexData.Vertices[i].Position =
+                    math::vec3( ( x * 2.0f ) / faceCount.x - 1.0f, ( y * 2.0f ) / faceCount.y - 1.0f, 0.0 ) * 0.5f,
                 l_VertexData.Vertices[i].Normal      = math::z_axis(),
-                l_VertexData.Vertices[i].TexCoords_0 = { l_VertexData.Vertices[i].Position.x + 0.5f, l_VertexData.Vertices[i].Position.y + 0.5f };
+                l_VertexData.Vertices[i].TexCoords_0 = { l_VertexData.Vertices[i].Position.x + 0.5f,
+                                                         l_VertexData.Vertices[i].Position.y + 0.5f };
                 i++;
             }
         }
@@ -141,12 +144,14 @@ namespace SE::Core::Primitives
 
         WireframeVertexBufferData l_VertexData;
         l_VertexData.Vertices = std::vector<math::vec3>( vertexCount.x * vertexCount.y );
-        l_VertexData.Indices  = std::vector<uint32_t>( ( vertexCount.y * ( vertexCount.x - 1 ) * 2 + vertexCount.x * ( vertexCount.y - 1 ) * 2 ) );
+        l_VertexData.Indices =
+            std::vector<uint32_t>( ( vertexCount.y * ( vertexCount.x - 1 ) * 2 + vertexCount.x * ( vertexCount.y - 1 ) * 2 ) );
 
         std::size_t i = 0;
         for( int32_t y = 0; y != vertexCount.y; ++y )
             for( int32_t x = 0; x != vertexCount.x; ++x )
-                l_VertexData.Vertices[i++] = math::vec4( ( x * 2.0f ) / faceCount.x - 1.0f, ( y * 2.0f ) / faceCount.y - 1.0f, 0.0, 1.0f );
+                l_VertexData.Vertices[i++] =
+                    math::vec4( ( x * 2.0f ) / faceCount.x - 1.0f, ( y * 2.0f ) / faceCount.y - 1.0f, 0.0, 1.0f );
 
         i = 0;
         for( int32_t y = 0; y != vertexCount.y; ++y )
@@ -189,8 +194,8 @@ namespace SE::Core::Primitives
     VertexBufferData CreateSphere( const uint32_t rings, const uint32_t segments )
     {
         VertexBufferData l_VertexData;
-        float l_DeltaElevation = PI / ( (float)rings );
-        float l_DeltaAzimuth   = ( 2 * PI ) / ( (float)segments );
+        float            l_DeltaElevation = PI / ( (float)rings );
+        float            l_DeltaAzimuth   = ( 2 * PI ) / ( (float)segments );
 
         {
             // North pole vertex
@@ -204,8 +209,10 @@ namespace SE::Core::Primitives
             float l_RingHeight       = math::cos( l_CurrentElevation );
 
             math::vec2 l_TexCoords = { 0.0f, ( (float)1.0f ) / ( (float)rings ) };
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
-                                     { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_TexCoords );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                l_TexCoords );
             uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 1; l_SegmentIdx <= segments; l_SegmentIdx++ )
@@ -213,8 +220,10 @@ namespace SE::Core::Primitives
                 l_CurrentAzimuth += l_DeltaAzimuth;
                 math::vec2 l_TexCoords = { ( (float)l_SegmentIdx ) / ( (float)segments ), ( (float)1.0f ) / ( (float)rings ) };
 
-                l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
-                                         { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_TexCoords );
+                l_VertexData.PushVertex(
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    l_TexCoords );
 
                 uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
                 l_VertexData.PushFace( { l_PolarVertexIdx, l_LastVertexIdx - 0, l_LastVertexIdx - 1 } );
@@ -224,14 +233,16 @@ namespace SE::Core::Primitives
         // Intermediate rings
         for( uint32_t l_RingIdx = 2; l_RingIdx < rings; l_RingIdx++ )
         {
-            float l_CurrentElevation = l_RingIdx * l_DeltaElevation;
-            float l_CurrentAzimuth   = 0.0f;
-            float l_RingRadius       = math::sin( l_CurrentElevation );
-            float l_RingHeight       = math::cos( l_CurrentElevation );
-            math::vec2 l_TexCoords   = { 0.0f, ( (float)l_RingIdx ) / ( (float)rings ) };
+            float      l_CurrentElevation = l_RingIdx * l_DeltaElevation;
+            float      l_CurrentAzimuth   = 0.0f;
+            float      l_RingRadius       = math::sin( l_CurrentElevation );
+            float      l_RingHeight       = math::cos( l_CurrentElevation );
+            math::vec2 l_TexCoords        = { 0.0f, ( (float)l_RingIdx ) / ( (float)rings ) };
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
-                                     { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_TexCoords );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                l_TexCoords );
             uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 1; l_SegmentIdx < segments; l_SegmentIdx++ )
@@ -239,8 +250,10 @@ namespace SE::Core::Primitives
                 l_CurrentAzimuth += l_DeltaAzimuth;
                 math::vec2 l_TexCoords = { ( (float)l_SegmentIdx ) / ( (float)segments ), ( (float)l_RingIdx ) / ( (float)rings ) };
 
-                l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
-                                         { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_TexCoords );
+                l_VertexData.PushVertex(
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    l_TexCoords );
 
                 uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
 
@@ -248,21 +261,25 @@ namespace SE::Core::Primitives
                 l_VertexData.PushFace( { l_LastVertexIdx - 0, l_LastVertexIdx - 1 - segments, l_LastVertexIdx - segments } );
             }
 
-            l_VertexData.PushFace( { l_FirstVertexIdx, (uint32_t)l_VertexData.Vertices.size() - 1, (uint32_t)l_VertexData.Vertices.size() - 1 - segments } );
-            l_VertexData.PushFace( { l_FirstVertexIdx, (uint32_t)l_VertexData.Vertices.size() - 1 - segments, l_FirstVertexIdx - segments } );
+            l_VertexData.PushFace( { l_FirstVertexIdx, (uint32_t)l_VertexData.Vertices.size() - 1,
+                                     (uint32_t)l_VertexData.Vertices.size() - 1 - segments } );
+            l_VertexData.PushFace(
+                { l_FirstVertexIdx, (uint32_t)l_VertexData.Vertices.size() - 1 - segments, l_FirstVertexIdx - segments } );
         }
 
         // Last ring: everything connects to the polar vertex
         {
             // South pole vertex
-            uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
+            uint32_t   l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
             math::vec3 l_Normal, l_Tangent, l_Bitangent;
             l_VertexData.PushVertex( { 0.0f, -1.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }, { 0.5f, 1.0f } );
             uint32_t l_PolarVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 0; l_SegmentIdx < segments; l_SegmentIdx++ )
                 l_VertexData.PushFace(
-                    { l_PolarVertexIdx, ( l_SegmentIdx != segments - 1 ) ? ( l_PolarVertexIdx - l_SegmentIdx - 2 ) : l_PolarVertexIdx - 1, l_PolarVertexIdx - l_SegmentIdx - 1 } );
+                    { l_PolarVertexIdx,
+                      ( l_SegmentIdx != segments - 1 ) ? ( l_PolarVertexIdx - l_SegmentIdx - 2 ) : l_PolarVertexIdx - 1,
+                      l_PolarVertexIdx - l_SegmentIdx - 1 } );
         }
 
         return l_VertexData;
@@ -278,8 +295,8 @@ namespace SE::Core::Primitives
     VertexBufferData CreateCylinder( const uint32_t rings, const uint32_t segments )
     {
         VertexBufferData l_VertexData;
-        float l_DeltaElevation = 2.0f / ( (float)rings );
-        float l_DeltaAzimuth   = ( 2 * PI ) / ( (float)segments );
+        float            l_DeltaElevation = 2.0f / ( (float)rings );
+        float            l_DeltaAzimuth   = ( 2 * PI ) / ( (float)segments );
 
         {
             // North pole vertex
@@ -296,7 +313,9 @@ namespace SE::Core::Primitives
             math::vec2 l_TexCoords = { 0.0f, ( (float)1.0f ) / ( (float)rings ) };
             NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal,
+                l_TexCoords );
             uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 1; l_SegmentIdx <= segments; l_SegmentIdx++ )
@@ -306,7 +325,9 @@ namespace SE::Core::Primitives
                 math::vec2 l_TexCoords = { ( (float)l_SegmentIdx ) / ( (float)segments ), ( (float)1.0f ) / ( (float)rings ) };
                 NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-                l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+                l_VertexData.PushVertex(
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    l_Normal, l_TexCoords );
 
                 uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
                 l_VertexData.PushFace( { l_PolarVertexIdx, l_LastVertexIdx - 0, l_LastVertexIdx - 1 } );
@@ -325,7 +346,9 @@ namespace SE::Core::Primitives
             math::vec2 l_TexCoords = { 0.0f, ( (float)l_RingIdx ) / ( (float)rings ) };
             NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal,
+                l_TexCoords );
             uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 1; l_SegmentIdx < segments; l_SegmentIdx++ )
@@ -335,7 +358,9 @@ namespace SE::Core::Primitives
                 math::vec3 l_Normal, l_Tangent, l_Bitangent;
                 NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-                l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+                l_VertexData.PushVertex(
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    l_Normal, l_TexCoords );
 
                 uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
 
@@ -344,20 +369,23 @@ namespace SE::Core::Primitives
             }
 
             l_VertexData.PushFace( { (uint32_t)l_VertexData.Vertices.size() - 1, l_FirstVertexIdx - segments, l_FirstVertexIdx } );
-            l_VertexData.PushFace( { (uint32_t)l_VertexData.Vertices.size() - 1, (uint32_t)l_VertexData.Vertices.size() - 1 - segments, l_FirstVertexIdx - segments } );
+            l_VertexData.PushFace( { (uint32_t)l_VertexData.Vertices.size() - 1, (uint32_t)l_VertexData.Vertices.size() - 1 - segments,
+                                     l_FirstVertexIdx - segments } );
         }
 
         // Last ring: everything connects to the polar vertex
         {
             // South pole vertex
-            uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
+            uint32_t   l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
             math::vec3 l_Normal, l_Tangent, l_Bitangent;
             l_VertexData.PushVertex( { 0.0f, -1.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }, { 0.5f, 1.0f } );
             uint32_t l_PolarVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 0; l_SegmentIdx < segments; l_SegmentIdx++ )
                 l_VertexData.PushFace(
-                    { l_PolarVertexIdx, ( l_SegmentIdx != segments - 1 ) ? ( l_PolarVertexIdx - l_SegmentIdx - 2 ) : l_PolarVertexIdx - 1, l_PolarVertexIdx - l_SegmentIdx - 1 } );
+                    { l_PolarVertexIdx,
+                      ( l_SegmentIdx != segments - 1 ) ? ( l_PolarVertexIdx - l_SegmentIdx - 2 ) : l_PolarVertexIdx - 1,
+                      l_PolarVertexIdx - l_SegmentIdx - 1 } );
         }
 
         return l_VertexData;
@@ -373,7 +401,7 @@ namespace SE::Core::Primitives
     VertexBufferData CreateCone( const uint32_t segments )
     {
         VertexBufferData l_VertexData;
-        float l_DeltaAzimuth = ( 2 * PI ) / ( (float)segments );
+        float            l_DeltaAzimuth = ( 2 * PI ) / ( (float)segments );
 
         {
             // North pole vertex
@@ -390,7 +418,9 @@ namespace SE::Core::Primitives
             math::vec2 l_TexCoords = { 0.0f, ( (float)1.0f ) / ( (float)1.0f ) };
             NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal,
+                l_TexCoords );
             uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 1; l_SegmentIdx <= segments; l_SegmentIdx++ )
@@ -400,7 +430,9 @@ namespace SE::Core::Primitives
                 math::vec2 l_TexCoords = { ( (float)l_SegmentIdx ) / ( (float)segments ), ( (float)1.0f ) / ( (float)1.0f ) };
                 NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-                l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+                l_VertexData.PushVertex(
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    l_Normal, l_TexCoords );
 
                 uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
                 l_VertexData.PushFace( { l_PolarVertexIdx, l_LastVertexIdx - 0, l_LastVertexIdx - 1 } );
@@ -410,14 +442,16 @@ namespace SE::Core::Primitives
         // Last ring: everything connects to the polar vertex
         {
             // South pole vertex
-            uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
+            uint32_t   l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
             math::vec3 l_Normal, l_Tangent, l_Bitangent;
             l_VertexData.PushVertex( { 0.0f, 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }, { 0.5f, 1.0f } );
             uint32_t l_PolarVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 0; l_SegmentIdx < segments; l_SegmentIdx++ )
                 l_VertexData.PushFace(
-                    { l_PolarVertexIdx, ( l_SegmentIdx != segments - 1 ) ? ( l_PolarVertexIdx - l_SegmentIdx - 2 ) : l_PolarVertexIdx - 1, l_PolarVertexIdx - l_SegmentIdx - 1 } );
+                    { l_PolarVertexIdx,
+                      ( l_SegmentIdx != segments - 1 ) ? ( l_PolarVertexIdx - l_SegmentIdx - 2 ) : l_PolarVertexIdx - 1,
+                      l_PolarVertexIdx - l_SegmentIdx - 1 } );
         }
 
         return l_VertexData;
@@ -426,7 +460,7 @@ namespace SE::Core::Primitives
     WireframeVertexBufferData CreateWireframeCone( const uint32_t links, const uint32_t segments )
     {
         WireframeVertexBufferData l_VertexData;
-        float l_DeltaAzimuth = ( 2 * PI ) / ( (float)segments );
+        float                     l_DeltaAzimuth = ( 2 * PI ) / ( (float)segments );
 
         // North pole vertex
         l_VertexData.PushVertex( { 0.0f, 0.0f, 1.0f } );
@@ -436,14 +470,16 @@ namespace SE::Core::Primitives
         float l_CurrentAzimuth = 0.0f;
         float l_RingRadius     = 1.0;
 
-        l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), 0.0f, l_RingRadius * math::sin( l_CurrentAzimuth ) } );
+        l_VertexData.PushVertex(
+            { l_RingRadius * math::cos( l_CurrentAzimuth ), 0.0f, l_RingRadius * math::sin( l_CurrentAzimuth ) } );
         uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
         for( uint32_t l_SegmentIdx = 1; l_SegmentIdx <= segments; l_SegmentIdx++ )
         {
             l_CurrentAzimuth += l_DeltaAzimuth;
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), 0.0f, l_RingRadius * math::sin( l_CurrentAzimuth ) } );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), 0.0f, l_RingRadius * math::sin( l_CurrentAzimuth ) } );
 
             uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
             l_VertexData.PushEdge( { l_LastVertexIdx, l_LastVertexIdx - 1 } );
@@ -458,7 +494,8 @@ namespace SE::Core::Primitives
         {
             l_CurrentAzimuth += l_DeltaAzimuth;
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), 0.0f, l_RingRadius * math::sin( l_CurrentAzimuth ) } );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), 0.0f, l_RingRadius * math::sin( l_CurrentAzimuth ) } );
 
             uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
             l_VertexData.PushEdge( { l_LastVertexIdx, l_PeakIdx } );
@@ -470,7 +507,7 @@ namespace SE::Core::Primitives
     VertexBufferData CreateDisk( const uint32_t segments )
     {
         VertexBufferData l_VertexData;
-        float l_DeltaAzimuth = ( 2 * PI ) / ( (float)segments );
+        float            l_DeltaAzimuth = ( 2 * PI ) / ( (float)segments );
 
         {
             // North pole vertex
@@ -487,7 +524,9 @@ namespace SE::Core::Primitives
             math::vec2 l_TexCoords = { 0.0f, 1.0f };
             NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal,
+                l_TexCoords );
             uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
             for( uint32_t l_SegmentIdx = 1; l_SegmentIdx <= segments; l_SegmentIdx++ )
@@ -497,7 +536,9 @@ namespace SE::Core::Primitives
                 math::vec2 l_TexCoords = { ( (float)l_SegmentIdx ) / ( (float)segments ), 1.0f };
                 NormalSpace( l_CurrentAzimuth, l_CurrentElevation, l_Normal );
 
-                l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) }, l_Normal, l_TexCoords );
+                l_VertexData.PushVertex(
+                    { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingHeight, l_RingRadius * math::sin( l_CurrentAzimuth ) },
+                    l_Normal, l_TexCoords );
 
                 uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
                 l_VertexData.PushFace( { l_PolarVertexIdx, l_LastVertexIdx - 0, l_LastVertexIdx - 1 } );
@@ -521,14 +562,16 @@ namespace SE::Core::Primitives
         float l_CurrentAzimuth = 0.0f;
         float l_RingRadius     = 1.0;
 
-        l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingRadius * math::sin( l_CurrentAzimuth ), 0.0f } );
+        l_VertexData.PushVertex(
+            { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingRadius * math::sin( l_CurrentAzimuth ), 0.0f } );
         uint32_t l_FirstVertexIdx = l_VertexData.Vertices.size() - 1;
 
         for( uint32_t l_SegmentIdx = 1; l_SegmentIdx <= segments; l_SegmentIdx++ )
         {
             l_CurrentAzimuth += l_DeltaAzimuth;
 
-            l_VertexData.PushVertex( { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingRadius * math::sin( l_CurrentAzimuth ), 0.0f } );
+            l_VertexData.PushVertex(
+                { l_RingRadius * math::cos( l_CurrentAzimuth ), l_RingRadius * math::sin( l_CurrentAzimuth ), 0.0f } );
 
             uint32_t l_LastVertexIdx = l_VertexData.Vertices.size() - 1;
             l_VertexData.PushEdge( { l_LastVertexIdx, l_LastVertexIdx - 1 } );

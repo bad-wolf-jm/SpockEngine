@@ -40,7 +40,7 @@ namespace SE::Core
                   eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment );
 
         ImVec2 RequiredSize();
-        
+
       protected:
         std::vector<ZLayoutItem> mChildren;
 
@@ -48,7 +48,7 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
         static void *UIZLayout_Create();
@@ -59,7 +59,7 @@ namespace SE::Core
         static void UIZLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill );
         static void UIZLayout_AddAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand,
                                                bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
-        static void UIZLayout_AddNonAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition,
-                                                  bool aExpand, bool aFill );
+        static void UIZLayout_AddNonAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand,
+                                                  bool aFill );
     };
 } // namespace SE::Core

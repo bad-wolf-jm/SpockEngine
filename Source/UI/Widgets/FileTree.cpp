@@ -24,12 +24,14 @@ namespace SE::Core
         if( !aName.substr( 0, 1 ).compare( "." ) || !aName.substr( 0, 2 ).compare( "__" ) )
             SetTextColor( math::vec4{ 0.15, 0.15, 0.15, 1.0 } );
 
-        if( IsLeaf() ) SetIcon( mDefaultFile.get() );
+        if( IsLeaf() )
+            SetIcon( mDefaultFile.get() );
     }
 
     bool UIFileTreeNode::IsLeaf()
     {
-        if( mParent == nullptr ) return false;
+        if( mParent == nullptr )
+            return false;
 
         return fs::is_regular_file( mPath / mName );
     }
@@ -57,9 +59,11 @@ namespace SE::Core
                        [&]( auto const &s1, auto const &s2 )
                        { return s1.filename().string().compare( s2.filename().string() ) <= 0; } );
 
-            for( auto const &F : lFolders ) Add( F );
+            for( auto const &F : lFolders )
+                Add( F );
 
-            for( auto const &F : lFiles ) Add( F );
+            for( auto const &F : lFiles )
+                Add( F );
         }
 
         return UITreeViewNode::Children();
@@ -83,7 +87,10 @@ namespace SE::Core
             mDefaultFile = New<UIImage>( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
     }
 
-    UIFileTreeNode *UIFileTree::Add( fs::path const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }
+    UIFileTreeNode *UIFileTree::Add( fs::path const &aPath )
+    {
+        return ( (UIFileTreeNode *)mRoot )->Add( aPath );
+    }
 
     void *UIFileTree::UIFileTree_Create()
     {
@@ -92,7 +99,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIFileTree::UIFileTree_Destroy( void *aInstance ) { delete static_cast<UIFileTree *>( aInstance ); }
+    void UIFileTree::UIFileTree_Destroy( void *aInstance )
+    {
+        delete static_cast<UIFileTree *>( aInstance );
+    }
 
     void *UIFileTree::UIFileTree_Add( void *aInstance, void *aPath )
     {

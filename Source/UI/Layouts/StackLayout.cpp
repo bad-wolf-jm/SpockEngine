@@ -3,8 +3,12 @@
 
 namespace SE::Core
 {
-    void UIStackLayout::PushStyles() {}
-    void UIStackLayout::PopStyles() {}
+    void UIStackLayout::PushStyles()
+    {
+    }
+    void UIStackLayout::PopStyles()
+    {
+    }
 
     ImVec2 UIStackLayout::RequiredSize()
     {
@@ -14,7 +18,8 @@ namespace SE::Core
         for( auto const &[lKey, lValue] : mChildren )
         {
             ImVec2 lRequiredSize{};
-            if( lValue ) lRequiredSize = lValue->RequiredSize();
+            if( lValue )
+                lRequiredSize = lValue->RequiredSize();
             lWidth  = math::max( lWidth, lRequiredSize.x );
             lHeight = math::max( lHeight, lRequiredSize.y );
         }
@@ -25,7 +30,8 @@ namespace SE::Core
     void UIStackLayout::Add( UIComponent *aChild, std::string const &aKey )
     {
         mChildren[aKey] = aChild;
-        if( mCurrent.empty() ) mCurrent = aKey;
+        if( mCurrent.empty() )
+            mCurrent = aKey;
     }
 
     void UIStackLayout::SetCurrent( std::string const &aKey )
@@ -38,8 +44,10 @@ namespace SE::Core
 
     void UIStackLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        if( mCurrent.empty() ) return;
-        if( mChildren[mCurrent] == nullptr ) return;
+        if( mCurrent.empty() )
+            return;
+        if( mChildren[mCurrent] == nullptr )
+            return;
 
         ImGui::SetCursorPos( aPosition );
         ImGui::PushID( (void *)mChildren[mCurrent] );
@@ -56,7 +64,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLayout );
     }
 
-    void UIStackLayout::UIStackLayout_Destroy( void *aInstance ) { delete static_cast<UIStackLayout *>( aInstance ); }
+    void UIStackLayout::UIStackLayout_Destroy( void *aInstance )
+    {
+        delete static_cast<UIStackLayout *>( aInstance );
+    }
 
     void UIStackLayout::UIStackLayout_Add( void *aInstance, void *aChild, void *aKey )
     {

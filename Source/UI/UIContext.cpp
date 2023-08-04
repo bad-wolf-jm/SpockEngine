@@ -2,9 +2,9 @@
 
 #include "Engine/Engine.h"
 
-#include "Core/Profiling/BlockTimer.h"
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/Logging.h"
+#include "Core/Profiling/BlockTimer.h"
 
 #include "Graphics/Interface/IWindow.h"
 
@@ -67,7 +67,8 @@ namespace SE::Core
         mUIStyle = UIStyle{ true };
 
         mUIDescriptorSetLayout = CreateDescriptorSetLayout( mGraphicContext, false, 1 );
-        mUIDescriptorSetLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } );
+        mUIDescriptorSetLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER,
+                                            { Graphics::eShaderStageTypeFlags::FRAGMENT } );
         mUIDescriptorSetLayout->Build();
 
         unsigned char *lFontPixelData;
@@ -192,17 +193,23 @@ namespace SE::Core
         for( int i = 1; i < lPlatformIO.Viewports.Size; i++ )
         {
             ImGuiViewport *viewport = lPlatformIO.Viewports[i];
-            if( viewport->Flags & ImGuiViewportFlags_Minimized ) continue;
-            if( lPlatformIO.Platform_RenderWindow ) lPlatformIO.Platform_RenderWindow( viewport, this );
-            if( lPlatformIO.Renderer_RenderWindow ) lPlatformIO.Renderer_RenderWindow( viewport, this );
+            if( viewport->Flags & ImGuiViewportFlags_Minimized )
+                continue;
+            if( lPlatformIO.Platform_RenderWindow )
+                lPlatformIO.Platform_RenderWindow( viewport, this );
+            if( lPlatformIO.Renderer_RenderWindow )
+                lPlatformIO.Renderer_RenderWindow( viewport, this );
         }
 
         for( int i = 1; i < lPlatformIO.Viewports.Size; i++ )
         {
             ImGuiViewport *viewport = lPlatformIO.Viewports[i];
-            if( viewport->Flags & ImGuiViewportFlags_Minimized ) continue;
-            if( lPlatformIO.Platform_SwapBuffers ) lPlatformIO.Platform_SwapBuffers( viewport, this );
-            if( lPlatformIO.Renderer_SwapBuffers ) lPlatformIO.Renderer_SwapBuffers( viewport, this );
+            if( viewport->Flags & ImGuiViewportFlags_Minimized )
+                continue;
+            if( lPlatformIO.Platform_SwapBuffers )
+                lPlatformIO.Platform_SwapBuffers( viewport, this );
+            if( lPlatformIO.Renderer_SwapBuffers )
+                lPlatformIO.Renderer_SwapBuffers( viewport, this );
         }
     }
 
@@ -216,7 +223,10 @@ namespace SE::Core
         RenderPlatformWindows();
     }
 
-    ImageHandle UIContext::CreateTextureHandle( Ref<ISampler2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
+    ImageHandle UIContext::CreateTextureHandle( Ref<ISampler2D> aTexture )
+    {
+        return ImageHandle{ AddTexture( aTexture ) };
+    }
 
     ImGuiIO &UIContext::GetIO()
     {
@@ -224,13 +234,19 @@ namespace SE::Core
         return ImGui::GetIO();
     }
 
-    void UIContext::PushFontFamily( FontFamilyFlags aFamily ) { ImGui::PushFont( mFonts[aFamily] ); }
+    void UIContext::PushFontFamily( FontFamilyFlags aFamily )
+    {
+        ImGui::PushFont( mFonts[aFamily] );
+    }
 
-    void UIContext::PopFont() { ImGui::PopFont(); }
+    void UIContext::PopFont()
+    {
+        ImGui::PopFont();
+    }
 
     Ref<IDescriptorSet> UIContext::AddTexture( Ref<ISampler2D> aTexture )
     {
-        Ref<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate(1);
+        Ref<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate( 1 );
         lDescriptorSet->Write( aTexture, 0 );
 
         return lDescriptorSet;

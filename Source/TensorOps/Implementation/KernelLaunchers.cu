@@ -37,7 +37,10 @@ namespace SE::TensorOps
             CURAND_ASSERT( curandSetPseudoRandomGeneratorSeed( Generator, lValue.count() ) );
         }
 
-        ~RandomNumberGenerator() { curandDestroyGenerator( Generator ); }
+        ~RandomNumberGenerator()
+        {
+            curandDestroyGenerator( Generator );
+        }
     };
 
     template <typename _Ty>
@@ -88,7 +91,8 @@ namespace SE::TensorOps
             CURAND_ASSERT( curandGenerateUniformDouble( lGenerator.Generator, aArray.DataAs<double>(), aArray.SizeAs<double>() ) );
         }
         break;
-        default: std::runtime_error( "Random number type can only be float or double" );
+        default:
+            std::runtime_error( "Random number type can only be float or double" );
         }
     }
 
@@ -100,7 +104,8 @@ namespace SE::TensorOps
         {
             float lMean = std::get<float>( aMu );
             float lStd  = std::get<float>( aSigma );
-            if( lStd <= 0.0f ) std::runtime_error( "Variance parameter should be strictly positive" );
+            if( lStd <= 0.0f )
+                std::runtime_error( "Variance parameter should be strictly positive" );
             RandomNumberGenerator lGenerator{};
             CURAND_ASSERT( curandGenerateNormal( lGenerator.Generator, aArray.DataAs<float>(), aArray.SizeAs<float>(), lMean, lStd ) );
         }
@@ -109,13 +114,15 @@ namespace SE::TensorOps
         {
             double lMean = std::get<double>( aMu );
             double lStd  = std::get<double>( aSigma );
-            if( lStd <= 0.0f ) std::runtime_error( "Variance parameter should be strictly positive" );
+            if( lStd <= 0.0f )
+                std::runtime_error( "Variance parameter should be strictly positive" );
             RandomNumberGenerator lGenerator{};
             CURAND_ASSERT(
                 curandGenerateNormalDouble( lGenerator.Generator, aArray.DataAs<double>(), aArray.SizeAs<double>(), lMean, lStd ) );
         }
         break;
-        default: std::runtime_error( "Random number type can only be float or double" );
+        default:
+            std::runtime_error( "Random number type can only be float or double" );
         }
     }
 
@@ -146,7 +153,8 @@ namespace SE::TensorOps
             ARangeOpImpl<double>( aOut, aLeft, aRight, aDelta, aMaxSubdivisions );
             break;
         }
-        default: throw std::runtime_error( "Linear space only supports float and double values" );
+        default:
+            throw std::runtime_error( "Linear space only supports float and double values" );
         }
     }
 
@@ -1478,7 +1486,8 @@ namespace SE::TensorOps
             LinearSpaceOpImpl<double>( aOut, aLeft, aRight, aSubdivisions, aMaxSubdivisions );
             break;
         }
-        default: throw std::runtime_error( "Linear space only supports float and double values" );
+        default:
+            throw std::runtime_error( "Linear space only supports float and double values" );
         }
     }
 
@@ -1598,7 +1607,8 @@ namespace SE::TensorOps
             Kernels::ToFixedPoint<_Ty, int64_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
             break;
         }
-        default: throw std::runtime_error( "Linear space only supports float and double values" );
+        default:
+            throw std::runtime_error( "Linear space only supports float and double values" );
         }
     }
 
@@ -1617,7 +1627,8 @@ namespace SE::TensorOps
             ToFixedPointOpImpl<double>( aOut, aOutputElementType, aArray, std::get<double>( aScaling ) );
             break;
         }
-        default: throw std::runtime_error( "Linear space only supports float and double values" );
+        default:
+            throw std::runtime_error( "Linear space only supports float and double values" );
         }
     }
 

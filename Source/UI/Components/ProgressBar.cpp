@@ -5,15 +5,34 @@
 
 namespace SE::Core
 {
-    void UIProgressBar::PushStyles() {}
-    void UIProgressBar::PopStyles() {}
+    void UIProgressBar::PushStyles()
+    {
+    }
+    void UIProgressBar::PopStyles()
+    {
+    }
 
-    void UIProgressBar::SetText( std::string const &aText ) { mText = aText; }
-    void UIProgressBar::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    void UIProgressBar::SetText( std::string const &aText )
+    {
+        mText = aText;
+    }
+    void UIProgressBar::SetTextColor( math::vec4 aColor )
+    {
+        mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    }
 
-    void UIProgressBar::SetProgressValue( float aValue ) { mValue = aValue; }
-    void UIProgressBar::SetProgressColor( math::vec4 aColor ) { mProgressColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
-    void UIProgressBar::SetThickness( float aValue ) { mThickness = aValue; }
+    void UIProgressBar::SetProgressValue( float aValue )
+    {
+        mValue = aValue;
+    }
+    void UIProgressBar::SetProgressColor( math::vec4 aColor )
+    {
+        mProgressColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    }
+    void UIProgressBar::SetThickness( float aValue )
+    {
+        mThickness = aValue;
+    }
 
     ImVec2 UIProgressBar::RequiredSize()
     {
@@ -27,7 +46,8 @@ namespace SE::Core
     {
         bool lTextColorSet =
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
+        if( lTextColorSet )
+            ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
         auto lTextSize     = ImGui::CalcTextSize( mText.c_str() );
         auto lTextPosition = GetContentAlignedposition( mHAlign, mVAlign, aPosition, lTextSize, aSize );
@@ -37,7 +57,8 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
         ImGui::Dummy( aSize );
 
-        if( lTextColorSet ) ImGui::PopStyleColor();
+        if( lTextColorSet )
+            ImGui::PopStyleColor();
     }
 
     void *UIProgressBar::UIProgressBar_Create()
@@ -47,7 +68,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIProgressBar::UIProgressBar_Destroy( void *aInstance ) { delete static_cast<UIProgressBar *>( aInstance ); }
+    void UIProgressBar::UIProgressBar_Destroy( void *aInstance )
+    {
+        delete static_cast<UIProgressBar *>( aInstance );
+    }
 
     void UIProgressBar::UIProgressBar_SetProgressValue( void *aInstance, float aValue )
     {

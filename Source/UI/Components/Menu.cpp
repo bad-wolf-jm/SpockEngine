@@ -14,14 +14,30 @@ namespace SE::Core
     {
     }
 
-    void UIMenuItem::PushStyles() {}
-    void UIMenuItem::PopStyles() {}
+    void UIMenuItem::PushStyles()
+    {
+    }
+    void UIMenuItem::PopStyles()
+    {
+    }
 
-    void UIMenuItem::SetText( std::string const &aText ) { mText = aText; }
-    void UIMenuItem::SetShortcut( std::string const &aShortcut ) { mShortcut = aShortcut; }
-    void UIMenuItem::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    void UIMenuItem::SetText( std::string const &aText )
+    {
+        mText = aText;
+    }
+    void UIMenuItem::SetShortcut( std::string const &aShortcut )
+    {
+        mShortcut = aShortcut;
+    }
+    void UIMenuItem::SetTextColor( math::vec4 aColor )
+    {
+        mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    }
 
-    void UIMenuItem::OnTrigger( std::function<void()> aOnTrigger ) { mOnTrigger = aOnTrigger; }
+    void UIMenuItem::OnTrigger( std::function<void()> aOnTrigger )
+    {
+        mOnTrigger = aOnTrigger;
+    }
 
     ImVec2 UIMenuItem::RequiredSize()
     {
@@ -34,7 +50,8 @@ namespace SE::Core
     {
         bool lTextColorSet =
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
+        if( lTextColorSet )
+            ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
         const char *lShortcut = mShortcut.empty() ? nullptr : mShortcut.c_str();
 
@@ -42,10 +59,12 @@ namespace SE::Core
 
         bool lSelected = false;
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 30.0f, 10.0f ) );
-        if( ImGui::MenuItem( mText.c_str(), lShortcut, &lSelected ) && mOnTrigger && lEnabled ) mOnTrigger();
+        if( ImGui::MenuItem( mText.c_str(), lShortcut, &lSelected ) && mOnTrigger && lEnabled )
+            mOnTrigger();
         ImGui::PopStyleVar();
 
-        if( lTextColorSet ) ImGui::PopStyleColor();
+        if( lTextColorSet )
+            ImGui::PopStyleColor();
     }
 
     void *UIMenuItem::UIMenuItem_Create()
@@ -72,7 +91,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIMenuItem::UIMenuItem_Destroy( void *aInstance ) { delete static_cast<UIMenuItem *>( aInstance ); }
+    void UIMenuItem::UIMenuItem_Destroy( void *aInstance )
+    {
+        delete static_cast<UIMenuItem *>( aInstance );
+    }
 
     void UIMenuItem::UIMenuItem_SetText( void *aInstance, void *aText )
     {
@@ -102,7 +124,8 @@ namespace SE::Core
         auto lInstance = static_cast<UIMenuItem *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnTriggerDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTriggerDelegateHandle );
+        if( lInstance->mOnTriggerDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnTriggerDelegateHandle );
 
         lInstance->mOnTriggerDelegate       = aDelegate;
         lInstance->mOnTriggerDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
@@ -117,8 +140,12 @@ namespace SE::Core
             } );
     }
 
-    void UIMenuSeparator::PushStyles() {}
-    void UIMenuSeparator::PopStyles() {}
+    void UIMenuSeparator::PushStyles()
+    {
+    }
+    void UIMenuSeparator::PopStyles()
+    {
+    }
 
     ImVec2 UIMenuSeparator::RequiredSize()
     {
@@ -127,7 +154,10 @@ namespace SE::Core
         return lTextSize;
     }
 
-    void UIMenuSeparator::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { ImGui::Separator(); }
+    void UIMenuSeparator::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+        ImGui::Separator();
+    }
 
     void *UIMenuSeparator::UIMenuSeparator_Create()
     {
@@ -136,15 +166,22 @@ namespace SE::Core
         return static_cast<void *>( lNewSeparator );
     }
 
-    void UIMenuSeparator::UIMenuSeparator_Destroy( void *aInstance ) { delete static_cast<UIMenuSeparator *>( aInstance ); }
+    void UIMenuSeparator::UIMenuSeparator_Destroy( void *aInstance )
+    {
+        delete static_cast<UIMenuSeparator *>( aInstance );
+    }
 
     UIMenu::UIMenu( std::string const &aText )
         : UIMenuItem( aText )
     {
     }
 
-    void UIMenu::PushStyles() {}
-    void UIMenu::PopStyles() {}
+    void UIMenu::PushStyles()
+    {
+    }
+    void UIMenu::PopStyles()
+    {
+    }
 
     ImVec2 UIMenu::RequiredSize()
     {
@@ -157,16 +194,19 @@ namespace SE::Core
     {
         bool lTextColorSet =
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
+        if( lTextColorSet )
+            ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
         if( ImGui::BeginMenu( mText.c_str(), &mIsEnabled ) )
         {
-            for( auto &lItem : mActions ) lItem->Update( ImGui::GetCursorPos(), ImVec2{} );
+            for( auto &lItem : mActions )
+                lItem->Update( ImGui::GetCursorPos(), ImVec2{} );
 
             ImGui::EndMenu();
         }
 
-        if( lTextColorSet ) ImGui::PopStyleColor();
+        if( lTextColorSet )
+            ImGui::PopStyleColor();
     }
 
     UIMenuItem *UIMenu::AddActionRaw( std::string const &aText, std::string const &aShortcut )
@@ -214,7 +254,10 @@ namespace SE::Core
         return lNewItem;
     }
 
-    void UIMenu::Update() { UIComponent::Update( ImGui::GetCursorPos(), ImVec2{} ); }
+    void UIMenu::Update()
+    {
+        UIComponent::Update( ImGui::GetCursorPos(), ImVec2{} );
+    }
 
     void *UIMenu::UIMenu_Create()
     {
@@ -231,7 +274,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIMenu::UIMenu_Destroy( void *aInstance ) { delete static_cast<UIMenu *>( aInstance ); }
+    void UIMenu::UIMenu_Destroy( void *aInstance )
+    {
+        delete static_cast<UIMenu *>( aInstance );
+    }
 
     void *UIMenu::UIMenu_AddAction( void *aInstance, void *aText, void *aShortcut )
     {

@@ -16,7 +16,10 @@ namespace SE::TensorOps
 {
     using namespace SE::Cuda;
 
-    Scope::Scope( uint32_t aMemorySize ) { mPool = MemoryPool( aMemorySize ); }
+    Scope::Scope( uint32_t aMemorySize )
+    {
+        mPool = MemoryPool( aMemorySize );
+    }
 
     Scope &Scope::WithOpName( const std::string &aName )
     {
@@ -43,7 +46,8 @@ namespace SE::TensorOps
 
     OpNode Scope::operator[]( const std::string &aNodeName )
     {
-        if( mNamedNodes.find( aNodeName ) != mNamedNodes.end() ) return mNamedNodes[aNodeName];
+        if( mNamedNodes.find( aNodeName ) != mNamedNodes.end() )
+            return mNamedNodes[aNodeName];
         return OpNode{};
     }
 
@@ -55,7 +59,10 @@ namespace SE::TensorOps
         mName.reset();
     }
 
-    void Scope::Run( OpNode const &aNode ) { Run( std::vector<OpNode>{ aNode } ); }
+    void Scope::Run( OpNode const &aNode )
+    {
+        Run( std::vector<OpNode>{ aNode } );
+    }
 
     void Scope::Run( std::vector<OpNode> const &aNode )
     {
@@ -67,7 +74,8 @@ namespace SE::TensorOps
             OpNode lCurrent = lStack.top();
             lStack.pop();
 
-            if( lCurrent.Has<sDoNotExpand>() ) continue;
+            if( lCurrent.Has<sDoNotExpand>() )
+                continue;
 
             std::deque<OpNode>::iterator lPos = std::find( lExecutionQueue.begin(), lExecutionQueue.end(), lCurrent );
             if( lPos != lExecutionQueue.end() )
@@ -87,7 +95,8 @@ namespace SE::TensorOps
         // Allocate memory for tensors which are on the stack
         for( auto lElement = lExecutionQueue.rbegin(); lElement < lExecutionQueue.rend(); lElement++ )
         {
-            if( ( *lElement ).Has<sAllocatedTag>() ) continue;
+            if( ( *lElement ).Has<sAllocatedTag>() )
+                continue;
 
             if( ( *lElement ).Has<sMultiTensorComponent>() )
             {
@@ -106,7 +115,8 @@ namespace SE::TensorOps
 
         for( auto lElement = lExecutionQueue.rbegin(); lElement < lExecutionQueue.rend(); lElement++ )
         {
-            if( !( *lElement ).Has<sGraphOperationComponent>() ) continue;
+            if( !( *lElement ).Has<sGraphOperationComponent>() )
+                continue;
 
             auto &lComponent = ( *lElement ).Get<sGraphOperationComponent>();
             if( !lComponent.mControllerInstance )
@@ -207,7 +217,8 @@ namespace SE::TensorOps
                     if( lLeftShape.mRank == lRightShape.mRank - 1 )
                     {
                         lRightShape.Trim( -1 );
-                        if( lRightShape != lLeftShape ) throw std::runtime_error( "Can only add tensors of the same shape" );
+                        if( lRightShape != lLeftShape )
+                            throw std::runtime_error( "Can only add tensors of the same shape" );
 
                         auto &lBroadcastInfo = lNewEntity.Add<sBroadcastInfoComponent>();
                         lRightShape.Flatten( 0 );
@@ -224,7 +235,8 @@ namespace SE::TensorOps
                     else if( lRightShape.mRank == lLeftShape.mRank - 1 )
                     {
                         lLeftShape.Trim( -1 );
-                        if( lRightShape != lLeftShape ) throw std::runtime_error( "Can only add tensors of the same shape" );
+                        if( lRightShape != lLeftShape )
+                            throw std::runtime_error( "Can only add tensors of the same shape" );
 
                         auto &lBroadcastInfo = lNewEntity.Add<sBroadcastInfoComponent>();
                         lRightShape.Flatten( 0 );
@@ -457,9 +469,15 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode GreaterThan( Scope &aScope, OpNode const &aX, OpNode const &aY ) { return LessThan( aScope, aY, aX ); }
+    OpNode GreaterThan( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    {
+        return LessThan( aScope, aY, aX );
+    }
 
-    OpNode GreaterThanOrEqual( Scope &aScope, OpNode const &aX, OpNode const &aY ) { return LessThanOrEqual( aScope, aY, aX ); }
+    OpNode GreaterThanOrEqual( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    {
+        return LessThanOrEqual( aScope, aY, aX );
+    }
 
     OpNode Where( Scope &aScope, OpNode const &aCondition, OpNode const &aValueIfTrue, OpNode const &aValueIfFalse )
     {
@@ -666,7 +684,8 @@ namespace SE::TensorOps
         assert( aX.Has<sMultiTensorComponent>() || aY.Has<sMultiTensorComponent>() );
         assert( aTextures.Has<sVectorValueComponent<Cuda::TextureSampler2D::DeviceData>>() );
 
-        if( aX.Has<sMultiTensorComponent>() && aY.Has<sMultiTensorComponent>() ) assert( SameShape( aX, aY ) );
+        if( aX.Has<sMultiTensorComponent>() && aY.Has<sMultiTensorComponent>() )
+            assert( SameShape( aX, aY ) );
 
         if( aX.Has<sMultiTensorComponent>() )
             assert( aX.Get<sMultiTensorComponent>().Shape().CountLayers() ==
@@ -722,7 +741,8 @@ namespace SE::TensorOps
         auto &lInputShape = aArray.Get<sMultiTensorComponent>().Shape();
         for( uint32_t i = 0; i < lInputShape.mShape.size(); i++ )
         {
-            if( lInputShape.mShape[i] != lInputShape.mShape[0] ) throw std::runtime_error( "All dimensions should be equal" );
+            if( lInputShape.mShape[i] != lInputShape.mShape[0] )
+                throw std::runtime_error( "All dimensions should be equal" );
         }
 
         std::vector<uint32_t> lOutputDimension( lInputShape.mRank + 1 );
@@ -780,7 +800,8 @@ namespace SE::TensorOps
             uint32_t lSize1 =
                 std::accumulate( aNewShape.mShape[i].begin(), aNewShape.mShape[i].end(), 1, std::multiplies<uint32_t>() );
 
-            if( lSize0 != lSize1 ) throw std::runtime_error( "Incompatible dimensions" );
+            if( lSize0 != lSize1 )
+                throw std::runtime_error( "Incompatible dimensions" );
         }
 
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
@@ -808,9 +829,11 @@ namespace SE::TensorOps
         for( uint32_t i = 0; i < aNewLayout.CountLayers(); i++ )
             lOutputSize += std::accumulate( aNewLayout.mShape[i].begin(), aNewLayout.mShape[i].end(), 1, std::multiplies<uint32_t>() );
 
-        if( lInputSize != lOutputSize ) throw std::runtime_error( "Incompatible dimensions" );
+        if( lInputSize != lOutputSize )
+            throw std::runtime_error( "Incompatible dimensions" );
 
-        if( aArray.Has<sTypeComponent>() ) lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
+        if( aArray.Has<sTypeComponent>() )
+            lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
 
         lNewEntity.Add<sOperandComponent>( std::vector{ aArray } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, aArray.Get<sMultiTensorComponent>().mValue.GetMemoryBuffer(),
@@ -1254,7 +1277,8 @@ namespace SE::TensorOps
         auto                  lLastDim0 = lInputShape0.GetDimension( -1 );
         auto                  lLastDim1 = lInputShape1.GetDimension( -1 );
         std::vector<uint32_t> lConcatenated{};
-        for( uint32_t i = 0; i < lLastDim0.size(); i++ ) lConcatenated.push_back( lLastDim0[i] + lLastDim1[i] );
+        for( uint32_t i = 0; i < lLastDim0.size(); i++ )
+            lConcatenated.push_back( lLastDim0[i] + lLastDim1[i] );
 
         auto lOutputShape = aArray0.Get<sMultiTensorComponent>().Shape();
         lOutputShape.Trim( -1 );

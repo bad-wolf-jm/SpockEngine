@@ -25,8 +25,12 @@ namespace SE::Core
         mHandle = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mImage );
     }
 
-    void UIBaseImage::PushStyles() {}
-    void UIBaseImage::PopStyles() {}
+    void UIBaseImage::PushStyles()
+    {
+    }
+    void UIBaseImage::PopStyles()
+    {
+    }
 
     void UIBaseImage::SetImage( fs::path const &aImagePath )
     {
@@ -41,30 +45,62 @@ namespace SE::Core
         mImagePath    = aImagePath;
     }
 
-    ImVec2 UIBaseImage::Size() { return mSize; }
-    void   UIBaseImage::SetSize( math::vec2 aSize ) { mSize = ImVec2{ aSize.x, aSize.y }; }
-    void   UIBaseImage::SetSize( float aWidth, float aHeight ) { SetSize( math::vec2{ aWidth, aHeight } ); }
+    ImVec2 UIBaseImage::Size()
+    {
+        return mSize;
+    }
+    void UIBaseImage::SetSize( math::vec2 aSize )
+    {
+        mSize = ImVec2{ aSize.x, aSize.y };
+    }
+    void UIBaseImage::SetSize( float aWidth, float aHeight )
+    {
+        SetSize( math::vec2{ aWidth, aHeight } );
+    }
 
-    ImVec2 UIBaseImage::TopLeft() { return mTopLeft; }
-    void   UIBaseImage::SetTopLeft( math::vec2 aTopLeft ) { mTopLeft = ImVec2{ aTopLeft.x, aTopLeft.y }; }
+    ImVec2 UIBaseImage::TopLeft()
+    {
+        return mTopLeft;
+    }
+    void UIBaseImage::SetTopLeft( math::vec2 aTopLeft )
+    {
+        mTopLeft = ImVec2{ aTopLeft.x, aTopLeft.y };
+    }
 
-    ImVec2 UIBaseImage::BottomRight() { return mBottomRight; }
-    void   UIBaseImage::SetBottomRight( math::vec2 aBottomRight ) { mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y }; }
+    ImVec2 UIBaseImage::BottomRight()
+    {
+        return mBottomRight;
+    }
+    void UIBaseImage::SetBottomRight( math::vec2 aBottomRight )
+    {
+        mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y };
+    }
 
-    ImVec4 UIBaseImage::TintColor() { return mTintColor; }
-    void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    ImVec4 UIBaseImage::TintColor()
+    {
+        return mTintColor;
+    }
+    void UIBaseImage::SetTintColor( math::vec4 aColor )
+    {
+        mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    }
 
-    ImTextureID UIBaseImage::TextureID() 
-    { 
-        if (mHandle.Handle)
-            return static_cast<ImTextureID>( mHandle.Handle->GetID() ); 
+    ImTextureID UIBaseImage::TextureID()
+    {
+        if( mHandle.Handle )
+            return static_cast<ImTextureID>( mHandle.Handle->GetID() );
 
         return 0;
     }
 
-    ImVec2 UIBaseImage::RequiredSize() { return mSize; }
+    ImVec2 UIBaseImage::RequiredSize()
+    {
+        return mSize;
+    }
 
-    void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+    }
 
     void *UIBaseImage::UIBaseImage_Create()
     {
@@ -81,7 +117,10 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void UIBaseImage::UIBaseImage_Destroy( void *aInstance ) { delete static_cast<UIBaseImage *>( aInstance ); }
+    void UIBaseImage::UIBaseImage_Destroy( void *aInstance )
+    {
+        delete static_cast<UIBaseImage *>( aInstance );
+    }
 
     void UIBaseImage::UIBaseImage_SetImage( void *aInstance, void *aPath )
     {

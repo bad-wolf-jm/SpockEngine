@@ -8,8 +8,12 @@ namespace SE::Core
     {
     }
 
-    void UIBoxLayout::PushStyles() {}
-    void UIBoxLayout::PopStyles() {}
+    void UIBoxLayout::PushStyles()
+    {
+    }
+    void UIBoxLayout::PopStyles()
+    {
+    }
 
     ImVec2 UIBoxLayout::RequiredSize()
     {
@@ -18,7 +22,8 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
-            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) )
+                continue;
 
             if( lItem.mIsSeparator )
             {
@@ -38,7 +43,8 @@ namespace SE::Core
             ImVec2 lRequiredSize{};
             if( lItem.mFixedSize > 0.0f )
             {
-                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem )
+                    lRequiredSize = lItem.mItem->RequiredSize();
 
                 if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
                 {
@@ -54,7 +60,8 @@ namespace SE::Core
             else
             {
 
-                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem )
+                    lRequiredSize = lItem.mItem->RequiredSize();
 
                 if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
                 {
@@ -72,7 +79,10 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight } + UIComponent::RequiredSize();
     }
 
-    void UIBoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
+    void UIBoxLayout::SetItemSpacing( float aItemSpacing )
+    {
+        mItemSpacing = aItemSpacing;
+    }
 
     void UIBoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
     {
@@ -102,7 +112,10 @@ namespace SE::Core
                                             eVerticalAlignment::CENTER, ImVec4{ 1.0f, 0.0f, 0.0f, 1.0f } } );
     }
 
-    void UIBoxLayout::Clear() { mChildren.clear(); }
+    void UIBoxLayout::Clear()
+    {
+        mChildren.clear();
+    }
 
     void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -117,7 +130,8 @@ namespace SE::Core
 
         for( auto const &lItem : lVisibleChildren )
         {
-            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) )
+                continue;
 
             if( lItem.mIsSeparator )
             {
@@ -153,7 +167,8 @@ namespace SE::Core
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
 
-            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) )
+                continue;
 
             if( lItem.mExpand && !( lItem.mFixedSize > 0.0f ) )
             {
@@ -221,7 +236,7 @@ namespace SE::Core
             {
                 ImGuiContext &g      = *GImGui;
                 ImGuiWindow  *window = g.CurrentWindow;
-                const ImU32 col = ImGui::GetColorU32(ImGuiCol_Separator);
+                const ImU32   col    = ImGui::GetColorU32( ImGuiCol_Separator );
 
                 if( mOrientation == eBoxLayoutOrientation::VERTICAL )
                 {
@@ -255,7 +270,10 @@ namespace SE::Core
         return static_cast<void *>( lNewLayout );
     }
 
-    void UIBoxLayout::UIBoxLayout_Destroy( void *aInstance ) { delete static_cast<UIBoxLayout *>( aInstance ); }
+    void UIBoxLayout::UIBoxLayout_Destroy( void *aInstance )
+    {
+        delete static_cast<UIBoxLayout *>( aInstance );
+    }
 
     void UIBoxLayout::UIBoxLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
                                                       eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
@@ -295,7 +313,7 @@ namespace SE::Core
     {
         auto lInstance = static_cast<UIBoxLayout *>( aInstance );
 
-        lInstance->AddSeparator( );
+        lInstance->AddSeparator();
     }
 
     void UIBoxLayout::UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing )

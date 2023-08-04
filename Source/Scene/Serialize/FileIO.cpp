@@ -32,28 +32,48 @@ namespace SE::Core
         }
     }
 
-    std::string ConfigurationWriter::GetString() { return std::string( mOut.c_str() ); }
+    std::string ConfigurationWriter::GetString()
+    {
+        return std::string( mOut.c_str() );
+    }
 
-    void ConfigurationWriter::InlineRepresentation() { mOut << YAML::Flow; }
+    void ConfigurationWriter::InlineRepresentation()
+    {
+        mOut << YAML::Flow;
+    }
 
     void ConfigurationWriter::BeginMap( bool aInline )
     {
-        if( aInline ) InlineRepresentation();
+        if( aInline )
+            InlineRepresentation();
         mOut << YAML::BeginMap;
     }
 
-    void ConfigurationWriter::BeginMap() { BeginMap( false ); }
+    void ConfigurationWriter::BeginMap()
+    {
+        BeginMap( false );
+    }
 
-    void ConfigurationWriter::EndMap() { mOut << YAML::EndMap; }
+    void ConfigurationWriter::EndMap()
+    {
+        mOut << YAML::EndMap;
+    }
 
     void ConfigurationWriter::BeginSequence( bool aInline )
     {
-        if( aInline ) InlineRepresentation();
+        if( aInline )
+            InlineRepresentation();
         mOut << YAML::BeginSeq;
     }
-    void ConfigurationWriter::BeginSequence() { BeginSequence( false ); }
+    void ConfigurationWriter::BeginSequence()
+    {
+        BeginSequence( false );
+    }
 
-    void ConfigurationWriter::EndSequence() { mOut << YAML::EndSeq; }
+    void ConfigurationWriter::EndSequence()
+    {
+        mOut << YAML::EndSeq;
+    }
 
     void ConfigurationWriter::Write( math::vec2 const &aVector, std::array<std::string, 2> const &aKeys )
     {
@@ -92,6 +112,9 @@ namespace SE::Core
         EndMap();
     }
 
-    void ConfigurationWriter::WriteNull() { mOut << YAML::Null; }
+    void ConfigurationWriter::WriteNull()
+    {
+        mOut << YAML::Null;
+    }
 
 } // namespace SE::Core

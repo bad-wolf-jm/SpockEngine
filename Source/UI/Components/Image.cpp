@@ -13,7 +13,10 @@ namespace SE::Core
     {
     }
 
-    ImVec2 UIImage::RequiredSize() { return mSize; }
+    ImVec2 UIImage::RequiredSize()
+    {
+        return mSize;
+    }
 
     void UIImage::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -21,7 +24,7 @@ namespace SE::Core
 
         auto uv1 = mBottomRight;
         uv1.y *= -1.0f;
-        
+
         ImGui::Image( TextureID(), mSize, mTopLeft, mBottomRight, mTintColor, ImVec4{} );
     }
 
@@ -40,6 +43,9 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void UIImage::UIImage_Destroy( void *aInstance ) { delete static_cast<UIImage *>( aInstance ); }
+    void UIImage::UIImage_Destroy( void *aInstance )
+    {
+        delete static_cast<UIImage *>( aInstance );
+    }
 
 } // namespace SE::Core

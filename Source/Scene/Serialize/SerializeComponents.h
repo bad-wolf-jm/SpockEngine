@@ -5,8 +5,8 @@
 #include "Core/Entity/Collection.h"
 
 #include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicsPipeline.h"
 
 #include "FileIO.h"
 #include "Scene/Components.h"
@@ -46,7 +46,8 @@ namespace SE::Core
     template <typename _Ty>
     _Ty Get( YAML::Node const &aNode, _Ty aDefault )
     {
-        if( ( !aNode ) || ( aNode.IsNull() ) ) return aDefault;
+        if( ( !aNode ) || ( aNode.IsNull() ) )
+            return aDefault;
 
         return aNode.as<_Ty>();
     }

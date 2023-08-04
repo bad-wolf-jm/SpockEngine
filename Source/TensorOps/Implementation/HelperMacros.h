@@ -15,59 +15,105 @@
 #include "../ScalarTypes.h"
 #include "Core/Logging.h"
 
-#define DISPATCH_BY_TYPE( type, target_fname, args )                  \
-    do                                                                \
-    {                                                                 \
-        switch( type )                                                \
-        {                                                             \
-        case eScalarType::FLOAT32: target_fname<float> args; break;   \
-        case eScalarType::FLOAT64: target_fname<double> args; break;  \
-        case eScalarType::UINT8: target_fname<uint8_t> args; break;   \
-        case eScalarType::UINT16: target_fname<uint16_t> args; break; \
-        case eScalarType::UINT32: target_fname<uint32_t> args; break; \
-        case eScalarType::UINT64: target_fname<uint64_t> args; break; \
-        case eScalarType::INT8: target_fname<int8_t> args; break;     \
-        case eScalarType::INT16: target_fname<int16_t> args; break;   \
-        case eScalarType::INT32: target_fname<int32_t> args; break;   \
-        case eScalarType::INT64:                                      \
-        default: target_fname<int64_t> args;                          \
-        }                                                             \
+#define DISPATCH_BY_TYPE( type, target_fname, args ) \
+    do                                               \
+    {                                                \
+        switch( type )                               \
+        {                                            \
+        case eScalarType::FLOAT32:                   \
+            target_fname<float> args;                \
+            break;                                   \
+        case eScalarType::FLOAT64:                   \
+            target_fname<double> args;               \
+            break;                                   \
+        case eScalarType::UINT8:                     \
+            target_fname<uint8_t> args;              \
+            break;                                   \
+        case eScalarType::UINT16:                    \
+            target_fname<uint16_t> args;             \
+            break;                                   \
+        case eScalarType::UINT32:                    \
+            target_fname<uint32_t> args;             \
+            break;                                   \
+        case eScalarType::UINT64:                    \
+            target_fname<uint64_t> args;             \
+            break;                                   \
+        case eScalarType::INT8:                      \
+            target_fname<int8_t> args;               \
+            break;                                   \
+        case eScalarType::INT16:                     \
+            target_fname<int16_t> args;              \
+            break;                                   \
+        case eScalarType::INT32:                     \
+            target_fname<int32_t> args;              \
+            break;                                   \
+        case eScalarType::INT64:                     \
+        default:                                     \
+            target_fname<int64_t> args;              \
+        }                                            \
     } while( 0 )
 
-#define DISPATCH_BY_INTEGRAL_TYPE( aType, aTargetFname, aArgs )        \
-    do                                                                 \
-    {                                                                  \
-        switch( aType )                                                \
-        {                                                              \
-        case eScalarType::UINT8: aTargetFname<uint8_t> aArgs; break;   \
-        case eScalarType::UINT16: aTargetFname<uint16_t> aArgs; break; \
-        case eScalarType::UINT32: aTargetFname<uint32_t> aArgs; break; \
-        case eScalarType::UINT64: aTargetFname<uint64_t> aArgs; break; \
-        case eScalarType::INT8: aTargetFname<int8_t> aArgs; break;     \
-        case eScalarType::INT16: aTargetFname<int16_t> aArgs; break;   \
-        case eScalarType::INT32: aTargetFname<int32_t> aArgs; break;   \
-        case eScalarType::INT64:                                       \
-        default: aTargetFname<int64_t> aArgs;                          \
-        }                                                              \
+#define DISPATCH_BY_INTEGRAL_TYPE( aType, aTargetFname, aArgs ) \
+    do                                                          \
+    {                                                           \
+        switch( aType )                                         \
+        {                                                       \
+        case eScalarType::UINT8:                                \
+            aTargetFname<uint8_t> aArgs;                        \
+            break;                                              \
+        case eScalarType::UINT16:                               \
+            aTargetFname<uint16_t> aArgs;                       \
+            break;                                              \
+        case eScalarType::UINT32:                               \
+            aTargetFname<uint32_t> aArgs;                       \
+            break;                                              \
+        case eScalarType::UINT64:                               \
+            aTargetFname<uint64_t> aArgs;                       \
+            break;                                              \
+        case eScalarType::INT8:                                 \
+            aTargetFname<int8_t> aArgs;                         \
+            break;                                              \
+        case eScalarType::INT16:                                \
+            aTargetFname<int16_t> aArgs;                        \
+            break;                                              \
+        case eScalarType::INT32:                                \
+            aTargetFname<int32_t> aArgs;                        \
+            break;                                              \
+        case eScalarType::INT64:                                \
+        default:                                                \
+            aTargetFname<int64_t> aArgs;                        \
+        }                                                       \
     } while( 0 )
 
-#define DISPATCH_BY_SIGNED_TYPE( aType, aTargetFname, aArgs )         \
-    do                                                                \
-    {                                                                 \
-        switch( aType )                                               \
-        {                                                             \
-        case eScalarType::UINT8:                                      \
-        case eScalarType::UINT16:                                     \
-        case eScalarType::UINT32:                                     \
-        case eScalarType::UINT64: break;                              \
-        case eScalarType::FLOAT32: aTargetFname<float> aArgs; break;  \
-        case eScalarType::FLOAT64: aTargetFname<double> aArgs; break; \
-        case eScalarType::INT8: aTargetFname<int8_t> aArgs; break;    \
-        case eScalarType::INT16: aTargetFname<int16_t> aArgs; break;  \
-        case eScalarType::INT32: aTargetFname<int32_t> aArgs; break;  \
-        case eScalarType::INT64:                                      \
-        default: aTargetFname<int64_t> aArgs;                         \
-        }                                                             \
+#define DISPATCH_BY_SIGNED_TYPE( aType, aTargetFname, aArgs ) \
+    do                                                        \
+    {                                                         \
+        switch( aType )                                       \
+        {                                                     \
+        case eScalarType::UINT8:                              \
+        case eScalarType::UINT16:                             \
+        case eScalarType::UINT32:                             \
+        case eScalarType::UINT64:                             \
+            break;                                            \
+        case eScalarType::FLOAT32:                            \
+            aTargetFname<float> aArgs;                        \
+            break;                                            \
+        case eScalarType::FLOAT64:                            \
+            aTargetFname<double> aArgs;                       \
+            break;                                            \
+        case eScalarType::INT8:                               \
+            aTargetFname<int8_t> aArgs;                       \
+            break;                                            \
+        case eScalarType::INT16:                              \
+            aTargetFname<int16_t> aArgs;                      \
+            break;                                            \
+        case eScalarType::INT32:                              \
+            aTargetFname<int32_t> aArgs;                      \
+            break;                                            \
+        case eScalarType::INT64:                              \
+        default:                                              \
+            aTargetFname<int64_t> aArgs;                      \
+        }                                                     \
     } while( 0 )
 
 #ifndef CURAND_ASSERT
@@ -75,7 +121,8 @@
 
 inline void __CURAND_ASSERT( curandStatus_t err, const char *file, const int line )
 {
-    if( CURAND_STATUS_SUCCESS == err ) return;
+    if( CURAND_STATUS_SUCCESS == err )
+        return;
 
     SE::Logging::Error( "CURAND_ASSERT() API error = {} from file <{}>, line {}.\n", err, file, line );
     exit( EXIT_FAILURE );

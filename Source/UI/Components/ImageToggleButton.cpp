@@ -7,18 +7,40 @@ namespace SE::Core
     {
     }
 
-    void UIImageToggleButton::PushStyles() {}
-    void UIImageToggleButton::PopStyles() {}
+    void UIImageToggleButton::PushStyles()
+    {
+    }
+    void UIImageToggleButton::PopStyles()
+    {
+    }
 
-    void UIImageToggleButton::OnClick( std::function<bool( bool )> aOnChange ) { mOnClicked = aOnChange; }
-    void UIImageToggleButton::OnChanged( std::function<void()> aOnChanged ) { mOnChanged = aOnChanged; }
+    void UIImageToggleButton::OnClick( std::function<bool( bool )> aOnChange )
+    {
+        mOnClicked = aOnChange;
+    }
+    void UIImageToggleButton::OnChanged( std::function<void()> aOnChanged )
+    {
+        mOnChanged = aOnChanged;
+    }
 
-    void UIImageToggleButton::SetActiveImage( UIBaseImage *aImage ) { mActiveImage = aImage; }
+    void UIImageToggleButton::SetActiveImage( UIBaseImage *aImage )
+    {
+        mActiveImage = aImage;
+    }
 
-    void UIImageToggleButton::SetInactiveImage( UIBaseImage *aImage ) { mInactiveImage = aImage; }
+    void UIImageToggleButton::SetInactiveImage( UIBaseImage *aImage )
+    {
+        mInactiveImage = aImage;
+    }
 
-    bool UIImageToggleButton::IsActive() { return mActivated; }
-    void UIImageToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
+    bool UIImageToggleButton::IsActive()
+    {
+        return mActivated;
+    }
+    void UIImageToggleButton::SetActive( bool aValue )
+    {
+        mActivated = aValue;
+    }
 
     void UIImageToggleButton::PushStyles( bool aEnabled )
     {
@@ -126,7 +148,8 @@ namespace SE::Core
         auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
+        if( lInstance->mOnClickDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
         lInstance->mOnClickDelegate       = aDelegate;
         lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
@@ -149,7 +172,8 @@ namespace SE::Core
         auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+        if( lInstance->mOnChangeDelegate != nullptr )
+            mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
         lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );

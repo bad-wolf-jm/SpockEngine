@@ -46,10 +46,16 @@ namespace SE::Core
         void BeginMap();
 
         /// @brief Write a key/value pair
-        void WriteKey( uint32_t const &aKey ) { mOut << YAML::Key << aKey << YAML::Value; }
+        void WriteKey( uint32_t const &aKey )
+        {
+            mOut << YAML::Key << aKey << YAML::Value;
+        }
 
         /// @brief Write a key/value pair
-        void WriteKey( std::string const &aKey ) { mOut << YAML::Key << aKey << YAML::Value; }
+        void WriteKey( std::string const &aKey )
+        {
+            mOut << YAML::Key << aKey << YAML::Value;
+        }
 
         /// @brief Write the value part of a key/value pair
         template <typename _Ty>
@@ -116,7 +122,8 @@ namespace SE::Core
         {
             BeginSequence( true );
             for( uint32_t c = 0; c < 4; c++ )
-                for( uint32_t r = 0; r < 4; r++ ) mOut << aVector[c][r];
+                for( uint32_t r = 0; r < 4; r++ )
+                    mOut << aVector[c][r];
             EndSequence();
         }
 

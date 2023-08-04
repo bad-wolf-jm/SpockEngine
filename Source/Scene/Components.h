@@ -32,7 +32,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     using namespace math;
     using namespace literals;
-    
+
     using namespace SE::Graphics;
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core;

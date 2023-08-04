@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UI/UIContext.h"
 #include "UI/UI.h"
+#include "UI/UIContext.h"
 
 namespace SE::Core
 {
@@ -44,11 +44,14 @@ namespace SE::Core
         void SetVerticalAlignment( eVerticalAlignment const &aAlignment );
 
         void   SetBackgroundColor( math::vec4 aColor );
-        ImVec4 BackgroundColor() { return mBackgroundColor; }
+        ImVec4 BackgroundColor()
+        {
+            return mBackgroundColor;
+        }
 
-        void SetFont(FontFamilyFlags aFont);
+        void SetFont( FontFamilyFlags aFont );
 
-        void SetTooltip(UIComponent* aToolTip);
+        void SetTooltip( UIComponent *aToolTip );
 
       protected:
         math::vec4 mPadding{};
@@ -57,7 +60,7 @@ namespace SE::Core
         eHorizontalAlignment mHAlign = eHorizontalAlignment::CENTER;
         eVerticalAlignment   mVAlign = eVerticalAlignment::CENTER;
 
-        UIComponent* mTooltip = nullptr;
+        UIComponent *mTooltip = nullptr;
 
       protected:
         virtual void PushStyles() = 0;
