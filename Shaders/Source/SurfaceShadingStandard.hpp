@@ -1,48 +1,17 @@
 #if defined( __cplusplus )
+#    include "Brdf.hpp"
 #    include "Common/Definitions.hpp"
 #    include "Common/HelperFunctions.hpp"
 #endif
-
-float D_GGX( float roughness, float NoH, const float3 h )
-{
-    // Walter et al. 2007, "Microfacet Models for Refraction through Rough Surfaces"
-
-    float oneMinusNoHSquared = 1.0 - NoH * NoH;
-
-    float a = NoH * roughness;
-    float k = roughness / ( oneMinusNoHSquared + a * a );
-    float d = k * k * ( 1.0 / PI );
-
-    return saturate( d );
-}
 
 float Distribution( float roughness, float NoH, const float3 h )
 {
     return D_GGX( roughness, NoH, h );
 }
 
-float V_SmithGGXCorrelated( float roughness, float NoV, float NoL )
-{
-    // Heitz 2014, "Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs"
-    float a2 = roughness * roughness;
-
-    // TODO: lambdaV can be pre-computed for all the lights, it should be moved out of this function
-    float lambdaV = NoL * sqrt( ( NoV - a2 * NoV ) * NoV + a2 );
-    float lambdaL = NoV * sqrt( ( NoL - a2 * NoL ) * NoL + a2 );
-    float v       = 0.5 / ( lambdaV + lambdaL );
-
-    return saturate( v );
-}
-
 float Visibility( float roughness, float NoV, float NoL )
 {
     return V_SmithGGXCorrelated( roughness, NoV, NoL );
-}
-
-float3 F_Schlick( const float3 f0, float f90, float VoH )
-{
-    // Schlick 1994, "An Inexpensive BRDF Model for Physically-Based Rendering"
-    return f0 + ( f90 - f0 ) * pow5( 1.0 - VoH );
 }
 
 float3 Fresnel( const float3 f0, float LoH )
@@ -70,11 +39,6 @@ float3 SpecularLobe( ShadingData aShadingData, LightData aLightData, float aNdot
 #endif
 }
 
-float F_Schlick( float f0, float f90, float VoH )
-{
-    return f0 + ( f90 - f0 ) * pow5( 1.0 - VoH );
-}
-
 float3 DiffuseLobe( const ShadingData pixel, float aNoV, float aNoL, float aLoH )
 {
     // Burley 2012, "Physically-Based Shading at Disney"
@@ -98,7 +62,7 @@ float3 SurfaceShading( float3 V, float3 N, ShadingData aShadingData, LightData a
     float3 Fr = SpecularLobe( aShadingData, aLightData, NdotV, NdotL, NdotH, LdotH );
     float3 Fd = DiffuseLobe( aShadingData, NdotV, NdotL, NdotH );
 
-    float3 lColor = (Fr * aShadingData.mEnergyCompensation) + Fd;
+    float3 lColor = ( Fr * aShadingData.mEnergyCompensation ) + Fd;
 
     // TODO: Sheen
 
