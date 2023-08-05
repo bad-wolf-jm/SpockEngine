@@ -282,6 +282,7 @@ namespace SE::Core
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\ShaderMaterial.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\FragmentShaderUniformInputs.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\HelperFunctions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Brdf.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Material.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingData.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\LightData.hpp" );
