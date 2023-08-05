@@ -109,9 +109,7 @@ namespace SE::Core
     std::vector<Material> NewMaterialSystem::GetMaterialData()
     {
         std::vector<Material> lMaterials;
-        mMaterialRegistry.ForEach<sMaterialInfo>([&](auto aMaterial, auto const& aInfo) {
-            lMaterials.push_back(aMaterial);
-        });
+        mMaterialRegistry.ForEach<sMaterialInfo>( [&]( auto aMaterial, auto const &aInfo ) { lMaterials.push_back( aMaterial ); } );
 
         return lMaterials;
     }
@@ -194,17 +192,15 @@ namespace SE::Core
 
         switch( lMaterialInfo.mShadingModel )
         {
-        case eShadingModel::STANDARD:
-            DefineConstant( aShaderProgram, "SHADING_MODEL_STANDARD" );
-            break;
         case eShadingModel::SUBSURFACE:
             DefineConstant( aShaderProgram, "SHADING_MODEL_SUBSURFACE" );
             break;
         case eShadingModel::CLOTH:
             DefineConstant( aShaderProgram, "SHADING_MODEL_CLOTH" );
             break;
-        case eShadingModel::UNLIT:
-            DefineConstant( aShaderProgram, "SHADING_MODEL_UNLIT" );
+        case eShadingModel::STANDARD:
+        default:
+            DefineConstant( aShaderProgram, "SHADING_MODEL_STANDARD" );
             break;
         }
 
@@ -218,11 +214,11 @@ namespace SE::Core
             DefineConstant( aShaderProgram, "MATERIAL_HAS_NORMALS" );
 
         // clang-format off
-        DefineConstant<sBaseColorTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_BASE_COLOR_TEXTURE"  );
-        DefineConstant<sEmissiveTexture>   ( aShaderProgram, aMaterial, "MATERIAL_HAS_EMISSIVE_TEXTURE"    );
-        DefineConstant<sMetalRoughTexture> ( aShaderProgram, aMaterial, "MATERIAL_HAS_METAL_ROUGH_TEXTURE" );
-        DefineConstant<sNormalsTexture>    ( aShaderProgram, aMaterial, "MATERIAL_HAS_NORMALS_TEXTURE"     );
-        DefineConstant<sOcclusionTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_OCCLUSION_TEXTURE"   );
+        DefineConstantIfComponentIsPresent<sBaseColorTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_BASE_COLOR_TEXTURE"  );
+        DefineConstantIfComponentIsPresent<sEmissiveTexture>   ( aShaderProgram, aMaterial, "MATERIAL_HAS_EMISSIVE_TEXTURE"    );
+        DefineConstantIfComponentIsPresent<sMetalRoughTexture> ( aShaderProgram, aMaterial, "MATERIAL_HAS_METAL_ROUGH_TEXTURE" );
+        DefineConstantIfComponentIsPresent<sNormalsTexture>    ( aShaderProgram, aMaterial, "MATERIAL_HAS_NORMALS_TEXTURE"     );
+        DefineConstantIfComponentIsPresent<sOcclusionTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_OCCLUSION_TEXTURE"   );
         // clang-format on
     }
 
@@ -293,18 +289,18 @@ namespace SE::Core
         {
 
         case eShadingModel::SUBSURFACE:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingSubsurface.hpp" );
             break;
         case eShadingModel::CLOTH:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingClothW.hpp" );
             break;
-        case eShadingModel::UNLIT:
         case eShadingModel::STANDARD:
         default:
             lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingStandard.hpp" );
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
             break;
         }
+
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
 
         if( aMaterial.Has<sFragmentShader>() )
             lShader->AddCode( "//" );
@@ -316,73 +312,11 @@ namespace SE::Core
         return lShader;
     }
 
-    static void DumpProgram( eShaderStageTypeFlags aShaderStage, std::string const &aCode, fs::path const &aFileName )
-    {
-        glslang_input_t lInputDescription{};
-        lInputDescription.language = GLSLANG_SOURCE_GLSL;
-
-        switch( aShaderStage )
-        {
-        case eShaderStageTypeFlags::GEOMETRY:
-            lInputDescription.stage = GLSLANG_STAGE_GEOMETRY;
-            break;
-        case eShaderStageTypeFlags::FRAGMENT:
-            lInputDescription.stage = GLSLANG_STAGE_FRAGMENT;
-            break;
-        case eShaderStageTypeFlags::TESSELATION_CONTROL:
-            lInputDescription.stage = GLSLANG_STAGE_TESSCONTROL;
-            break;
-        case eShaderStageTypeFlags::TESSELATION_EVALUATION:
-            lInputDescription.stage = GLSLANG_STAGE_TESSEVALUATION;
-            break;
-        case eShaderStageTypeFlags::COMPUTE:
-            lInputDescription.stage = GLSLANG_STAGE_COMPUTE;
-            break;
-        case eShaderStageTypeFlags::VERTEX:
-        default:
-            lInputDescription.stage = GLSLANG_STAGE_VERTEX;
-            break;
-        }
-
-        lInputDescription.client                            = GLSLANG_CLIENT_VULKAN;
-        lInputDescription.client_version                    = GLSLANG_TARGET_VULKAN_1_3;
-        lInputDescription.target_language                   = GLSLANG_TARGET_SPV;
-        lInputDescription.target_language_version           = GLSLANG_TARGET_SPV_1_3;
-        lInputDescription.code                              = aCode.c_str();
-        lInputDescription.default_version                   = 460;
-        lInputDescription.default_profile                   = GLSLANG_NO_PROFILE;
-        lInputDescription.force_default_version_and_profile = false;
-        lInputDescription.forward_compatible                = false;
-        lInputDescription.messages                          = GLSLANG_MSG_VULKAN_RULES_BIT;
-        lInputDescription.resource                          = glslang_default_resource();
-
-        glslang_initialize_process();
-
-        glslang_shader_t *lNewShader = glslang_shader_create( &lInputDescription );
-
-        if( !glslang_shader_preprocess( lNewShader, &lInputDescription ) )
-        {
-            SE::Logging::Info( "{}", glslang_shader_get_info_log( lNewShader ) );
-            SE::Logging::Info( "{}", glslang_shader_get_info_debug_log( lNewShader ) );
-        }
-
-        std::ofstream lOutput( aFileName );
-        lOutput << glslang_shader_get_preprocessed_code( lNewShader );
-        lOutput.close();
-    }
-
     Ref<IGraphicsPipeline> NewMaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass )
     {
         auto lVertexShader   = CreateVertexShader( aMaterial );
         auto lFragmentShader = CreateFragmentShader( aMaterial );
         auto lNewPipeline    = SE::Graphics::CreateGraphicsPipeline( mGraphicContext, aRenderPass, ePrimitiveTopology::TRIANGLES );
-
-        auto lOut0 =
-            fmt::format( "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\debug_dump\\vertex_{}.hpp", GetMaterialHash( aMaterial ) );
-        auto lOut1 =
-            fmt::format( "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\debug_dump\\fragment_{}.hpp", GetMaterialHash( aMaterial ) );
-        DumpProgram( eShaderStageTypeFlags::VERTEX, lVertexShader->Program(), lOut0 );
-        DumpProgram( eShaderStageTypeFlags::FRAGMENT, lFragmentShader->Program(), lOut1 );
 
         lVertexShader->Compile();
         lFragmentShader->Compile();

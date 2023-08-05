@@ -200,7 +200,7 @@ namespace SE::Core
 
       private:
         template <typename _Ty>
-        void DefineConstant( Ref<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
+        void DefineConstantIfComponentIsPresent( Ref<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
         {
             if( aMaterial.Has<_Ty>() )
                 aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
