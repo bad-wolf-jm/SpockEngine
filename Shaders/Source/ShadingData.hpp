@@ -25,6 +25,8 @@ struct ShadingData
     // The roughness value expected by BRDFs. This value is the square of
     // perceptualRoughness. This value is between 0.0 and 1.0.
     float mRoughness;
+
+    float mEnergyCompensation;
 };
 
 #endif

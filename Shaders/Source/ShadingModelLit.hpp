@@ -111,7 +111,6 @@ void EvaluateDirectionalLight( MaterialInputs aMaterial, ShadingData aShadingDat
 #endif
 }
 
-
 #define EPSILON 0.15
 void ComputePointLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, samplerCube aShadowMap,
                             sPunctualLight aInData, out LightData aLightData )
@@ -158,6 +157,7 @@ void ComputeShadingData( float3 aBaseColor, float3 aReflectance, float aMetal, f
     aShadingData.mPerceptualRoughness = clamp( aRough, MIN_PERCEPTUAL_ROUGHNESS, 1.0 );
     aShadingData.mRoughness           = aShadingData.mPerceptualRoughness * aShadingData.mPerceptualRoughness;
     aShadingData.mDiffuseColor        = ( 1.0 - aMetal ) * aBaseColor;
+    aShadingData.mEnergyCompensation  = 1.0;
 }
 
 float4 EvaluateLights( MaterialInputs aMaterial )

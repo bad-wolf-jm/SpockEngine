@@ -1,79 +1,109 @@
 #if defined( __cplusplus )
 #    include "Common/Definitions.hpp"
+#    include "Common/HelperFunctions.hpp"
 #endif
 
-
-const float PI = 3.14159265359;
-// ----------------------------------------------------------------------------
-float DistributionGGX( float3 N, float3 H, float roughness )
+float D_GGX( float roughness, float NoH, const float3 h )
 {
-    float a2     = roughness * roughness;
-    float NdotH  = max( dot( N, H ), 0.0 );
-    float NdotH2 = NdotH * NdotH;
+    // Walter et al. 2007, "Microfacet Models for Refraction through Rough Surfaces"
 
-    float nom   = a2;
-    float denom = ( NdotH2 * ( a2 - 1.0 ) + 1.0 );
-    denom       = PI * denom; // * denom;
+    float oneMinusNoHSquared = 1.0 - NoH * NoH;
 
-    return nom / denom;
+    float a = NoH * roughness;
+    float k = roughness / ( oneMinusNoHSquared + a * a );
+    float d = k * k * ( 1.0 / PI );
+
+    return saturate( d );
 }
 
-// ----------------------------------------------------------------------------
-float GeometrySchlickGGX( float NdotV, float roughness )
+float Distribution( float roughness, float NoH, const float3 h )
 {
-    float r     = ( roughness + 1.0 );
-    float k     = ( r * r ) / 8.0;
-    float nom   = NdotV;
-    float denom = NdotV * ( 1.0 - k ) + k;
-
-    return nom / denom;
+    return D_GGX( roughness, NoH, h );
 }
 
-// ----------------------------------------------------------------------------
-float GeometrySmith( float3 N, float3 V, float3 L, float roughness )
+float V_SmithGGXCorrelated( float roughness, float NoV, float NoL )
 {
-    float NdotV = max( dot( N, V ), 0.0 );
-    float NdotL = max( dot( N, L ), 0.0 );
-    float ggx2  = GeometrySchlickGGX( NdotV, roughness );
-    float ggx1  = GeometrySchlickGGX( NdotL, roughness );
+    // Heitz 2014, "Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs"
+    float a2 = roughness * roughness;
 
-    return ggx1 * ggx2;
+    // TODO: lambdaV can be pre-computed for all the lights, it should be moved out of this function
+    float lambdaV = NoL * sqrt( ( NoV - a2 * NoV ) * NoV + a2 );
+    float lambdaL = NoV * sqrt( ( NoL - a2 * NoL ) * NoL + a2 );
+    float v       = 0.5 / ( lambdaV + lambdaL );
+
+    return saturate( v );
 }
 
-// ----------------------------------------------------------------------------
-float3 FresnelSchlick( float cosTheta, float3 F0 ) 
-{ 
-    return F0 + ( float3( 1.0 ) - F0 ) * pow( clamp( 1.0 - cosTheta, 0.0, 1.0 ), 5.0 ); 
-}
-
-float3 CookTorrance( float3 F0, float3 N, float3 L, float3 V, float3 H, float roughness )
+float Visibility( float roughness, float NoV, float NoL )
 {
-    // Cook-Torrance BRDF
-    float NDF = DistributionGGX( N, H, roughness );
-    float G   = GeometrySmith( N, V, L, roughness );
-    float3  F   = FresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-    return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0 ) * max( dot( N, L ), 0.0 ) + 0.0001 );
+    return V_SmithGGXCorrelated( roughness, NoV, NoL );
 }
 
+float3 F_Schlick( const float3 f0, float f90, float VoH )
+{
+    // Schlick 1994, "An Inexpensive BRDF Model for Physically-Based Rendering"
+    return f0 + ( f90 - f0 ) * pow5( 1.0 - VoH );
+}
+
+float3 Fresnel( const float3 f0, float LoH )
+{
+    float f90 = saturate( dot( f0, float3( 50.0 * 0.33 ) ) );
+
+    return F_Schlick( f0, f90, LoH );
+}
+
+float3 IsotropicLobe( const ShadingData pixel, const LightData light, const float3 h, float NoV, float NoL, float NoH, float LoH )
+{
+    float  D = Distribution( pixel.mRoughness, NoH, h );
+    float  V = Visibility( pixel.mRoughness, NoV, NoL );
+    float3 F = Fresnel( pixel.mF0, LoH );
+
+    return ( D * V ) * F;
+}
+
+float3 SpecularLobe( ShadingData aShadingData, LightData aLightData, float aNdotV, float aNdotL, float aNdotH, float aLdotH )
+{
+#if defined( MATERIAL_HAS_ANISOTROPY )
+    return AnisotropicLobe( aShadingData, aLightData, aLightData.mH, aNdotV, aNdotL, aNdotH, aLdotH );
+#else
+    return IsotropicLobe( aShadingData, aLightData, aLightData.mH, aNdotV, aNdotL, aNdotH, aLdotH );
+#endif
+}
+
+float F_Schlick( float f0, float f90, float VoH )
+{
+    return f0 + ( f90 - f0 ) * pow5( 1.0 - VoH );
+}
+
+float3 DiffuseLobe( const ShadingData pixel, float aNoV, float aNoL, float aLoH )
+{
+    // Burley 2012, "Physically-Based Shading at Disney"
+    float f90          = 0.5 + 2.0 * pixel.mRoughness * aLoH * aLoH;
+    float lightScatter = F_Schlick( 1.0, f90, aNoL );
+    float viewScatter  = F_Schlick( 1.0, f90, aNoV );
+
+    return pixel.mDiffuseColor * lightScatter * viewScatter * ( 1.0 / PI );
+}
+
+// Implement the standard shading model from Filament
 float3 SurfaceShading( float3 V, float3 N, ShadingData aShadingData, LightData aLightData )
 {
-    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
-    // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
-    // float3 lF0 = mix( float3( 0.04 ), aBaseColor, aMetal );
-    float3 lRadiance = aLightData.mColorIntensity.xyz * aLightData.mColorIntensity.w * aLightData.mAttenuation;
+    float3 H = aLightData.mH;
 
-    float3 H = normalize( V + aLightData.mL );
+    float NdotV = saturate( dot( N, V ) );
+    float NdotL = aLightData.mNdotL;
+    float NdotH = saturate( dot( N, H ) );
+    float LdotH = saturate( dot( aLightData.mL, H ) );
 
-    // Cook-Torrance BRDF
-    float3 lSpecular = CookTorrance( aShadingData.mF0, N, aLightData.mL, V, H, aShadingData.mRoughness );
+    float3 Fr = SpecularLobe( aShadingData, aLightData, NdotV, NdotL, NdotH, LdotH );
+    float3 Fd = DiffuseLobe( aShadingData, NdotV, NdotL, NdotH );
 
-    // kS is equal to Fresnel
-    float3 kS = FresnelSchlick( max( dot( H, V ), 0.0 ), aShadingData.mF0 );
+    float3 lColor = (Fr * aShadingData.mEnergyCompensation) + Fd;
 
-    // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
-    // this relationship the diffuse component (kD) should equal 1.0 - kS.
-    float3 kD = float3( 1.0 ) - kS;
+    // TODO: Sheen
 
-    // add to outgoing radiance Lo
-    return ( kD * aShadingData.mDiffuseColor / PI + lSpecular ) * lRadiance * aLightData.mNdotL * aLightData.mVisibility;
+    // TODO: Clear coat
+
+    return ( lColor * aLightData.mColorIntensity.rgb ) *
+           ( aLightData.mColorIntensity.w * aLightData.mAttenuation * NdotL * aLightData.mVisibility );
 }
