@@ -12,9 +12,11 @@ namespace SE::Graphics
     {
         switch( aValue )
         {
-        case eSamplerFilter::NEAREST: return VK_FILTER_NEAREST;
+        case eSamplerFilter::NEAREST:
+            return VK_FILTER_NEAREST;
         case eSamplerFilter::LINEAR:
-        default: return VK_FILTER_LINEAR;
+        default:
+            return VK_FILTER_LINEAR;
         }
     }
 
@@ -22,9 +24,11 @@ namespace SE::Graphics
     {
         switch( aValue )
         {
-        case eSamplerMipmap::NEAREST: return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        case eSamplerMipmap::NEAREST:
+            return VK_SAMPLER_MIPMAP_MODE_NEAREST;
         case eSamplerMipmap::LINEAR:
-        default: return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        default:
+            return VK_SAMPLER_MIPMAP_MODE_LINEAR;
         }
     }
 
@@ -32,17 +36,22 @@ namespace SE::Graphics
     {
         switch( aValue )
         {
-        case eSamplerWrapping::MIRRORED_REPEAT: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
-        case eSamplerWrapping::CLAMP_TO_EDGE: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        case eSamplerWrapping::CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
+        case eSamplerWrapping::MIRRORED_REPEAT:
+            return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        case eSamplerWrapping::CLAMP_TO_EDGE:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        case eSamplerWrapping::CLAMP_TO_BORDER:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
+            return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
         case eSamplerWrapping::REPEAT:
-        default: return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        default:
+            return VK_SAMPLER_ADDRESS_MODE_REPEAT;
         }
     }
 
     /** @brief */
-    VkSampler2D::VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
+    VkSampler2D::VkSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<VkTexture2D> aTextureData,
                               sTextureSamplingInfo const &aSamplingSpec )
         : ISampler2D( aGraphicContext, aTextureData, aSamplingSpec )
     {
@@ -62,7 +71,8 @@ namespace SE::Graphics
         mVkImageSampler = GraphicContext<VkGraphicContext>()->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
                                                                              Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );
 
-        if( mTextureData->mIsGraphicsOnly ) return;
+        if( mTextureData->mIsGraphicsOnly )
+            return;
 #ifdef CUDA_INTEROP
         InitializeTextureSampler();
 #endif

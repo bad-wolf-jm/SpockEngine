@@ -168,23 +168,23 @@ namespace SE::Core
         return lNewItem;
     }
 
-    Ref<UIMenuItem> UIMenu::AddAction( string_t const &aText, string_t const &aShortcut )
+    ref_t<UIMenuItem> UIMenu::AddAction( string_t const &aText, string_t const &aShortcut )
     {
-        Ref<UIMenuItem> lNewItem( AddActionRaw( aText, aShortcut ) );
+        ref_t<UIMenuItem> lNewItem( AddActionRaw( aText, aShortcut ) );
 
         return lNewItem;
     }
 
-    Ref<UIMenu> UIMenu::AddMenu( string_t const &aText )
+    ref_t<UIMenu> UIMenu::AddMenu( string_t const &aText )
     {
-        Ref<UIMenu> lNewItem( AddMenuRaw( aText ) );
+        ref_t<UIMenu> lNewItem( AddMenuRaw( aText ) );
 
         return lNewItem;
     }
 
-    Ref<UIMenuItem> UIMenu::AddSeparator()
+    ref_t<UIMenuItem> UIMenu::AddSeparator()
     {
-        Ref<UIMenuItem> lNewItem( AddSeparatorRaw() );
+        ref_t<UIMenuItem> lNewItem( AddSeparatorRaw() );
 
         return lNewItem;
     }

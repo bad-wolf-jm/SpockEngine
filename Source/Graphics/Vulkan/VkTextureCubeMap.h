@@ -24,22 +24,22 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+        VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                           uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                           bool aIsTransferDestination );
 
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData )
+        VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData )
             : VkTextureCubeMap( aGraphicContext, aCubeMapData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
+        VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
                           bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+        VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                           VkImage aExternalImage );
 
         /** @brief */
@@ -47,8 +47,8 @@ namespace SE::Graphics
 
         void GetPixelData( TextureDataCubeMap &mTextureData );
         void GetPixelData( TextureDataCubeMap &mTextureData, eCubeFace aFace );
-        void SetPixelData( Ref<IGraphicBuffer> aBuffer );
-        void SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer );
+        void SetPixelData( ref_t<IGraphicBuffer> aBuffer );
+        void SetPixelData( eCubeFace aFace, ref_t<IGraphicBuffer> aBuffer );
         void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:

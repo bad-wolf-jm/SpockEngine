@@ -96,8 +96,8 @@ namespace SE::Core
             return mViewportClient->GetFramebufferSize();
         }
 
-        Ref<IGraphicContext> &GetGraphicContext(); // { return mGraphicContext; }
-        Ref<UIContext>       &UIContext();         // { return mImGUIOverlay; };
+        ref_t<IGraphicContext> &GetGraphicContext(); // { return mGraphicContext; }
+        ref_t<UIContext>       &UIContext();         // { return mImGUIOverlay; };
 
         void SetApplicationName( string_t a_Name )
         {
@@ -134,13 +134,13 @@ namespace SE::Core
         vector_t<std::function<void()>> mMainThreadQueue;
         std::mutex                      mMainThreadQueueMutex;
 
-        Ref<SE::Core::IWindow>             mViewportClient;
-        Ref<SE::Graphics::IGraphicContext> mGraphicContext = nullptr;
+        ref_t<SE::Core::IWindow>             mViewportClient;
+        ref_t<SE::Graphics::IGraphicContext> mGraphicContext = nullptr;
 
-        Ref<SE::Core::UIContext> mImGUIOverlay;
+        ref_t<SE::Core::UIContext> mImGUIOverlay;
 
-        Ref<SE::Graphics::ISwapChain>     mSwapChain;
-        Ref<SE::Graphics::IRenderContext> mSwapChainRenderContext;
+        ref_t<SE::Graphics::ISwapChain>     mSwapChain;
+        ref_t<SE::Graphics::IRenderContext> mSwapChainRenderContext;
 
         double mEngineLoopStartTime;
         double mLastFrameTime = 0.0f;

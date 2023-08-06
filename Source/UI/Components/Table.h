@@ -88,7 +88,7 @@ namespace SE::Core
       public:
         UITable() = default;
 
-        void AddColumn( Ref<UITableColumn> aColumn );
+        void AddColumn( ref_t<UITableColumn> aColumn );
         void AddColumn( UITableColumn *aColumn );
         void SetRowHeight( float aRowHeight );
 

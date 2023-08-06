@@ -17,16 +17,16 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+        IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
                         std::string const &aName );
-        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+        IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
                         std::string const &aName, fs::path const &aCacheRoot );
 
         /** @brief */
         ~IShaderProgram() = default;
 
         template <typename _GCSubtype>
-        Ref<_GCSubtype> GraphicContext()
+        ref_t<_GCSubtype> GraphicContext()
         {
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
@@ -58,7 +58,7 @@ namespace SE::Graphics
         size_t       HashNum();
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
 
         vector_t<std::string> mCodeBlocks;
         vector_t<uint32_t>    mCompiledByteCode;

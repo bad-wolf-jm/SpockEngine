@@ -6,7 +6,7 @@
 
 namespace SE::Graphics
 {
-    VkDescriptorSetLayoutObject::VkDescriptorSetLayoutObject( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded,
+    VkDescriptorSetLayoutObject::VkDescriptorSetLayoutObject( ref_t<IGraphicContext> aGraphicContext, bool aIsUnbounded,
                                                               uint32_t aDescriptorCount )
         : IDescriptorSetLayout{ aGraphicContext, aIsUnbounded, aDescriptorCount }
     {
@@ -91,7 +91,7 @@ namespace SE::Graphics
         mLayout = New<sVkDescriptorSetLayoutObject>( Cast<VkGraphicContext>( mGraphicContext ), lBindings, mIsUnbounded );
     }
 
-    Ref<IDescriptorSet> VkDescriptorSetLayoutObject::Allocate( uint32_t aDescriptorCount )
+    ref_t<IDescriptorSet> VkDescriptorSetLayoutObject::Allocate( uint32_t aDescriptorCount )
     {
         return SE::Core::New<VkDescriptorSetObject>( mGraphicContext, this, aDescriptorCount );
     }

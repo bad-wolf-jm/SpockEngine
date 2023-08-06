@@ -22,32 +22,32 @@ namespace SE::Graphics
     {
       public:
         VkRenderTarget() = default;
-        VkRenderTarget( Ref<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
+        VkRenderTarget( ref_t<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
 
         ~VkRenderTarget();
 
         void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
         void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<VkTexture2D> aFramebufferImage );
+                            ref_t<VkTexture2D> aFramebufferImage );
 
         void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<VkTextureCubeMap> aFramebufferImage, eCubeFace aFace );
+                            ref_t<VkTextureCubeMap> aFramebufferImage, eCubeFace aFace );
 
         void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
 
         void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-                            Ref<VkTexture2D> aFramebufferImage );
+                            ref_t<VkTexture2D> aFramebufferImage );
 
         void Finalize();
 
-        Ref<IRenderPass> GetRenderPass()
+        ref_t<IRenderPass> GetRenderPass()
         {
             return mRenderPassObject;
         }
-        Ref<ICommandBuffer> GetCommandBuffer()
+        ref_t<ICommandBuffer> GetCommandBuffer()
         {
             return mCommandBufferObject[0];
         }
@@ -66,17 +66,17 @@ namespace SE::Graphics
 
         // virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
 
-        Ref<VkTexture2D> GetAttachment( string_t const &aKey );
+        ref_t<VkTexture2D> GetAttachment( string_t const &aKey );
 
       protected:
-        Ref<VkRenderPassObject> CreateDefaultRenderPass();
+        ref_t<VkRenderPassObject> CreateDefaultRenderPass();
 
         void InitializeCommandBuffers();
 
-        vector_t<VkClearValue>  mClearValues      = {};
-        Ref<VkRenderPassObject> mRenderPassObject = nullptr;
+        vector_t<VkClearValue>    mClearValues      = {};
+        ref_t<VkRenderPassObject> mRenderPassObject = nullptr;
 
-        vector_t<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
+        vector_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject = {};
 
         VkFramebuffer         mVkFramebuffer = VK_NULL_HANDLE;
         vector_t<VkImageView> mVkImageViews  = {};

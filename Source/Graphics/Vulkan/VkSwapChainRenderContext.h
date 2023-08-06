@@ -4,8 +4,8 @@
 #include "Graphics/Interface/IRenderContext.h"
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
-#include "VkRenderTarget.h"
 #include "VkBaseRenderContext.h"
+#include "VkRenderTarget.h"
 
 namespace SE::Graphics
 {
@@ -13,7 +13,7 @@ namespace SE::Graphics
     {
       public:
         VkSwapChainRenderContext() = default;
-        VkSwapChainRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget );
+        VkSwapChainRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget );
 
         ~VkSwapChainRenderContext() = default;
 

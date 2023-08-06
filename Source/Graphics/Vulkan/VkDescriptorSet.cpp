@@ -8,7 +8,7 @@
 namespace SE::Graphics
 {
 
-    VkDescriptorSetObject::VkDescriptorSetObject( Ref<IGraphicContext> aGraphicContext, IDescriptorSetLayout *aLayout,
+    VkDescriptorSetObject::VkDescriptorSetObject( ref_t<IGraphicContext> aGraphicContext, IDescriptorSetLayout *aLayout,
                                                   uint32_t aDescriptorCount )
         : IDescriptorSet{ aGraphicContext, aLayout, aDescriptorCount }
     {
@@ -19,7 +19,7 @@ namespace SE::Graphics
                                          aDescriptorCount ) );
     }
 
-    void VkDescriptorSetObject::Write( Ref<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize,
+    void VkDescriptorSetObject::Write( ref_t<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize,
                                        uint32_t aBinding )
     {
         sVkDescriptorSetObject::sBufferBindInfo lBufferBindInfo{};
@@ -33,7 +33,7 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lBufferBindInfo );
     }
 
-    void VkDescriptorSetObject::Write( vector_t<Ref<ISampler2D>> aWriteOperations, uint32_t aBinding )
+    void VkDescriptorSetObject::Write( vector_t<ref_t<ISampler2D>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 )
             return;
@@ -51,7 +51,7 @@ namespace SE::Graphics
     }
     // void VkDescriptorSetObject::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( vector_t{ aBuffer }, aBinding ); }
 
-    void VkDescriptorSetObject::Write( vector_t<Ref<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    void VkDescriptorSetObject::Write( vector_t<ref_t<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 )
             return;

@@ -5,7 +5,7 @@
 
 namespace SE::Graphics
 {
-    VkSwapChain::VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
+    VkSwapChain::VkSwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow )
         : ISwapChain( aGraphicContext, aWindow )
         , mViewportClient{ aWindow }
     {
@@ -14,7 +14,10 @@ namespace SE::Graphics
         RecreateSwapChain();
     }
 
-    VkSwapChain::~VkSwapChain() { GraphicContext<VkGraphicContext>()->DestroyVkSurface( mVkSurface ); }
+    VkSwapChain::~VkSwapChain()
+    {
+        GraphicContext<VkGraphicContext>()->DestroyVkSurface( mVkSurface );
+    }
 
     void VkSwapChain::RecreateSwapChain()
     {
@@ -134,10 +137,12 @@ namespace SE::Graphics
                 mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT );
 
             auto lRenderFinishedSemaphore = GetRenderFinishedSemaphore( i );
-            if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
+            if( lRenderFinishedSemaphore )
+                mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
 
             auto lSubmitFence = GetInFlightFence( i );
-            if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
+            if( lSubmitFence )
+                mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
     }
 

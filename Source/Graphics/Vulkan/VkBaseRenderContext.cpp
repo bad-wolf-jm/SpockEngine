@@ -6,14 +6,15 @@
 namespace SE::Graphics
 {
 
-    VkBaseRenderContext::VkBaseRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget )
+    VkBaseRenderContext::VkBaseRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget )
         : IRenderContext( aGraphicContext, aRenderTarget )
     {
     }
 
     bool VkBaseRenderContext::BeginRender()
     {
-        if( mFrameIsStarted ) return true;
+        if( mFrameIsStarted )
+            return true;
 
         IRenderContext::BeginRender();
 
@@ -22,7 +23,8 @@ namespace SE::Graphics
 
     bool VkBaseRenderContext::EndRender()
     {
-        if( !mFrameIsStarted ) return false;
+        if( !mFrameIsStarted )
+            return false;
 
         IRenderContext::EndRender();
 
@@ -37,7 +39,7 @@ namespace SE::Graphics
     }
 
     void VkBaseRenderContext::InternalDrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset,
-                                               uint32_t aInstanceCount, uint32_t aFirstInstance )
+                                                   uint32_t aInstanceCount, uint32_t aFirstInstance )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
@@ -45,16 +47,16 @@ namespace SE::Graphics
     }
 
     void VkBaseRenderContext::InternalDrawNonIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset,
-                                                  uint32_t aInstanceCount, uint32_t aFirstInstance )
+                                                      uint32_t aInstanceCount, uint32_t aFirstInstance )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
         lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
-    void VkBaseRenderContext::Bind( Ref<IGraphicsPipeline> aGraphicPipeline )
+    void VkBaseRenderContext::Bind( ref_t<IGraphicsPipeline> aGraphicPipeline )
     {
-        IRenderContext::Bind(aGraphicPipeline);
+        IRenderContext::Bind( aGraphicPipeline );
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
@@ -62,18 +64,18 @@ namespace SE::Graphics
         mCurrentPipelineLayout = Cast<VkGraphicsPipeline>( aGraphicPipeline )->GetVkPipelineLayoutObject();
     }
 
-    void VkBaseRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
+    void VkBaseRenderContext::Bind( ref_t<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
     {
-        IRenderContext::Bind(aVertexBuffer, aBindPoint);
+        IRenderContext::Bind( aVertexBuffer, aBindPoint );
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
         lCommandBuffer->Bind( Cast<VkGpuBuffer>( aVertexBuffer )->mVkBuffer, aBindPoint );
     }
 
-    void VkBaseRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
+    void VkBaseRenderContext::Bind( ref_t<IGraphicBuffer> aVertexBuffer, ref_t<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
     {
-        IRenderContext::Bind(aVertexBuffer, aIndexBuffer, aBindPoint);
+        IRenderContext::Bind( aVertexBuffer, aIndexBuffer, aBindPoint );
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
@@ -81,7 +83,7 @@ namespace SE::Graphics
                               aBindPoint );
     }
 
-    void VkBaseRenderContext::Bind( Ref<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
+    void VkBaseRenderContext::Bind( ref_t<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
@@ -106,10 +108,10 @@ namespace SE::Graphics
         GetCurrentCommandBuffer()->SetScissor( aOffset, aSize );
     }
 
-    void VkBaseRenderContext::PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize ) 
+    void VkBaseRenderContext::PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
-        lCommandBuffer->PushConstants( (VkShaderStageFlags)aShaderStages, aOffset, aValue, aSize, mCurrentPipelineLayout );        
+        lCommandBuffer->PushConstants( (VkShaderStageFlags)aShaderStages, aOffset, aValue, aSize, mCurrentPipelineLayout );
     }
 
 } // namespace SE::Graphics

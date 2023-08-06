@@ -26,17 +26,17 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+        ITextureCubeMap( ref_t<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                          bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData )
+        ITextureCubeMap( ref_t<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData )
             : ITextureCubeMap( aGraphicContext, aCubeMapData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
+        ITextureCubeMap( ref_t<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
                          bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
@@ -45,7 +45,7 @@ namespace SE::Graphics
         virtual void GetPixelData( TextureDataCubeMap &aTextureData )             = 0;
         virtual void GetPixelData( TextureData2D &aTextureData, eCubeFace aFace ) = 0;
 
-        virtual void SetPixelData( Ref<IGraphicBuffer> aBuffer )                  = 0;
-        virtual void SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer ) = 0;
+        virtual void SetPixelData( ref_t<IGraphicBuffer> aBuffer )                  = 0;
+        virtual void SetPixelData( eCubeFace aFace, ref_t<IGraphicBuffer> aBuffer ) = 0;
     };
 } // namespace SE::Graphics

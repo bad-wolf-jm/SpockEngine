@@ -7,7 +7,7 @@
 namespace SE::Graphics
 {
     /** @brief */
-    ITexture2D::ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
+    ITexture2D::ITexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
                             bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITexture( aGraphicContext, eTextureType::TEXTURE_2D, sTextureCreateInfo{}, aIsHostVisible, aSampleCount, aIsGraphicsOnly,
                     aIsTransferSource, false )
@@ -15,7 +15,7 @@ namespace SE::Graphics
         mSpec = mCreateInfo;
     }
 
-    ITexture2D::ITexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    ITexture2D::ITexture2D( ref_t<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                             uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                             bool aIsTransferDestination )
         : ITexture( aGraphicContext, eTextureType::TEXTURE_2D, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly,

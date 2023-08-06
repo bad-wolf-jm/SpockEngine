@@ -12,7 +12,7 @@ namespace SE::Graphics
     class VkSwapChain : public ISwapChain
     {
       public:
-        VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+        VkSwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow );
         ~VkSwapChain();
 
         bool                            BeginRender();
@@ -31,11 +31,11 @@ namespace SE::Graphics
         {
             return mRenderTargets[mCurrentImage]->GetFramebuffer();
         }
-        Ref<IRenderPass> GetRenderPass()
+        ref_t<IRenderPass> GetRenderPass()
         {
             return mRenderTargets[0]->GetRenderPass();
         }
-        Ref<ICommandBuffer> GetCommandBuffer()
+        ref_t<ICommandBuffer> GetCommandBuffer()
         {
             return mCommandBufferObject[mCurrentImage];
         }
@@ -58,16 +58,16 @@ namespace SE::Graphics
       private:
         void RecreateSwapChain();
 
-        Ref<IWindow> mViewportClient = nullptr;
+        ref_t<IWindow> mViewportClient = nullptr;
 
       private:
-        VkSurfaceKHR                          mVkSurface                = VK_NULL_HANDLE;
-        VkSwapchainKHR                        mVkObject                 = VK_NULL_HANDLE;
-        vector_t<Ref<VkRenderTarget>>         mRenderTargets            = {};
-        vector_t<VkSemaphore>                 mImageAvailableSemaphores = {};
-        vector_t<VkSemaphore>                 mRenderFinishedSemaphores = {};
-        vector_t<VkFence>                     mInFlightFences           = {};
-        vector_t<Ref<sVkCommandBufferObject>> mCommandBufferObject      = {};
+        VkSurfaceKHR                            mVkSurface                = VK_NULL_HANDLE;
+        VkSwapchainKHR                          mVkObject                 = VK_NULL_HANDLE;
+        vector_t<ref_t<VkRenderTarget>>         mRenderTargets            = {};
+        vector_t<VkSemaphore>                   mImageAvailableSemaphores = {};
+        vector_t<VkSemaphore>                   mRenderFinishedSemaphores = {};
+        vector_t<VkFence>                       mInFlightFences           = {};
+        vector_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject      = {};
 
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;

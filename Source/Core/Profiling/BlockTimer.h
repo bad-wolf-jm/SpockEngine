@@ -69,7 +69,7 @@ namespace SE::Core
             mCurrentSession = New<sProfilingSession>( aName );
         }
 
-        Ref<sProfilingSession> EndSession()
+        ref_t<sProfilingSession> EndSession()
         {
             std::lock_guard lLock( mMutex );
 
@@ -109,8 +109,8 @@ namespace SE::Core
         }
 
       private:
-        std::mutex             mMutex{};
-        Ref<sProfilingSession> mCurrentSession = nullptr;
+        std::mutex               mMutex{};
+        ref_t<sProfilingSession> mCurrentSession = nullptr;
     };
 
     /// @brief BlockTimer

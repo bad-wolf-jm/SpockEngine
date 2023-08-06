@@ -12,20 +12,28 @@ namespace SE::Graphics
     class VkGraphicsPipeline : public IGraphicsPipeline
     {
       public:
-        VkGraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, Ref<VkRenderContext> aRenderContext, ePrimitiveTopology aTopology );
+        VkGraphicsPipeline( ref_t<VkGraphicContext> aGraphicContext, ref_t<VkRenderContext> aRenderContext,
+                            ePrimitiveTopology aTopology );
         ~VkGraphicsPipeline() = default;
 
-        Ref<sVkPipelineObject>       GetVkPipelineObject() { return mPipelineObject; }
-        Ref<sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return mPipelineLayoutObject; }
+        ref_t<sVkPipelineObject> GetVkPipelineObject()
+        {
+            return mPipelineObject;
+        }
+        
+        ref_t<sVkPipelineLayoutObject> GetVkPipelineLayoutObject()
+        {
+            return mPipelineLayoutObject;
+        }
 
         void Build();
 
       private:
-        vector_t<Ref<sVkDescriptorSetLayoutObject>> mDescriptorSetLayouts{};
+        vector_t<ref_t<sVkDescriptorSetLayoutObject>> mDescriptorSetLayouts{};
 
-        Ref<sVkPipelineLayoutObject> mPipelineLayoutObject = nullptr;
-        Ref<sVkPipelineObject>       mPipelineObject       = nullptr;
-        vector_t<sShader>         mShaders{};
+        ref_t<sVkPipelineLayoutObject> mPipelineLayoutObject = nullptr;
+        ref_t<sVkPipelineObject>       mPipelineObject       = nullptr;
+        vector_t<sShader>              mShaders{};
     };
 
 } // namespace SE::Graphics

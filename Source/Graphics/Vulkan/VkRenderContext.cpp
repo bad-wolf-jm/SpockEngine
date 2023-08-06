@@ -6,18 +6,20 @@
 namespace SE::Graphics
 {
 
-    VkRenderContext::VkRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget )
+    VkRenderContext::VkRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget )
         : VkBaseRenderContext( aGraphicContext, aRenderTarget )
     {
     }
 
     bool VkRenderContext::BeginRender()
     {
-        if( mFrameIsStarted ) return true;
+        if( mFrameIsStarted )
+            return true;
 
         VkBaseRenderContext::BeginRender();
 
-        if( !mFrameIsStarted ) return false;
+        if( !mFrameIsStarted )
+            return false;
 
         float lWidth  = static_cast<float>( Cast<VkRenderTarget>( mRenderTarget )->mSpec.mWidth );
         float lHeight = static_cast<float>( Cast<VkRenderTarget>( mRenderTarget )->mSpec.mHeight );

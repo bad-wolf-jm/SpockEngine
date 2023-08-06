@@ -11,19 +11,21 @@ namespace SE::Graphics
 {
     static eGraphicsAPI gApi = eGraphicsAPI::VULKAN;
 
-    Ref<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount )
+    ref_t<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkGraphicContext>( aSampleCount, true );
+        case eGraphicsAPI::VULKAN:
+            return New<VkGraphicContext>( aSampleCount, true );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
-                                      bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
+                                        bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
     {
         switch( gApi )
         {
@@ -32,20 +34,22 @@ namespace SE::Graphics
                                      aIsTransferSource, aIsTransferDestination, aSize );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
-                                      bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
+                                        bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
     {
         return CreateBuffer( Cast<VkGraphicContext>( aGraphicContext ), eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly,
                              aIsTransferSource, aIsTransferDestination, aSize );
     }
 
     template <>
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
-                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
+                                        bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                        bool aIsTransferDestination )
     {
         auto lNewBuffer =
             CreateBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize );
@@ -54,9 +58,9 @@ namespace SE::Graphics
         return lNewBuffer;
     }
 
-    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
-                                   uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                                   bool aIsTransferDestination )
+    ref_t<ITexture2D> CreateTexture2D( ref_t<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
+                                       uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                       bool aIsTransferDestination )
     {
         switch( gApi )
         {
@@ -65,23 +69,26 @@ namespace SE::Graphics
                                      aIsTransferSource, aIsTransferDestination );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
+    ref_t<ITexture2D> CreateTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkTexture2D>( aGraphicContext, aTextureData );
+        case eGraphicsAPI::VULKAN:
+            return New<VkTexture2D>( aGraphicContext, aTextureData );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
-                                   bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+    ref_t<ITexture2D> CreateTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
+                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
     {
         switch( gApi )
         {
@@ -89,24 +96,27 @@ namespace SE::Graphics
             return New<VkTexture2D>( aGraphicContext, aTextureData, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
-                                   sTextureSamplingInfo const &aSamplingSpec )
+    ref_t<ISampler2D> CreateSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData,
+                                       sTextureSamplingInfo const &aSamplingSpec )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>(aTextureData), aSamplingSpec );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
-                                                   ePrimitiveTopology aTopology )
+    ref_t<IGraphicsPipeline> CreateGraphicsPipeline( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
+                                                     ePrimitiveTopology aTopology )
     {
         switch( gApi )
         {
@@ -115,51 +125,60 @@ namespace SE::Graphics
                                             aTopology );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<ISwapChain> CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
+    ref_t<ISwapChain> CreateSwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSwapChain>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSwapChain>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow )
+    ref_t<IRenderContext> CreateRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<ISwapChain> aWindow )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSwapChainRenderContext>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSwapChainRenderContext>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow )
+    ref_t<IRenderContext> CreateRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aWindow )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkRenderContext>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN:
+            return New<VkRenderContext>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 
-    Ref<IDescriptorSetLayout> CreateDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aUnbounded, uint32_t aCount )
+    ref_t<IDescriptorSetLayout> CreateDescriptorSetLayout( ref_t<IGraphicContext> aGraphicContext, bool aUnbounded, uint32_t aCount )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkDescriptorSetLayoutObject>( aGraphicContext, aUnbounded, aCount );
+        case eGraphicsAPI::VULKAN:
+            return New<VkDescriptorSetLayoutObject>( aGraphicContext, aUnbounded, aCount );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
+        default:
+            return nullptr;
         }
     }
 

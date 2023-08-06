@@ -8,7 +8,7 @@ namespace SE::Graphics
     {
         eShaderStageTypeFlags mShaderType;
 
-        path_t    mPath;
+        path_t   mPath;
         string_t mEntryPoint;
     };
 
@@ -16,7 +16,7 @@ namespace SE::Graphics
 
     struct sBufferLayoutElement
     {
-        string_t     mName;
+        string_t        mName;
         eBufferDataType mType;
         uint32_t        mBinding;
         uint32_t        mLocation;
@@ -59,7 +59,8 @@ namespace SE::Graphics
     class IGraphicsPipeline
     {
       public:
-        IGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext, ePrimitiveTopology aTopology );
+        IGraphicsPipeline( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
+                           ePrimitiveTopology aTopology );
         ~IGraphicsPipeline() = default;
 
       public:
@@ -80,13 +81,13 @@ namespace SE::Graphics
             AddPushConstantRange( aShaderStage, aOffset, sizeof( _Ty ) );
         }
 
-        void AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet );
+        void AddDescriptorSet( ref_t<IDescriptorSetLayout> aDescriptorSet );
 
       protected:
         bool mOpaque = false;
 
-        Ref<IGraphicContext> mGraphicContext = nullptr;
-        Ref<IRenderContext>  mRenderContext  = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IRenderContext>  mRenderContext  = nullptr;
 
         ePrimitiveTopology mTopology    = ePrimitiveTopology::TRIANGLES;
         eFaceCulling       mCulling     = eFaceCulling::BACK;
@@ -97,10 +98,10 @@ namespace SE::Graphics
         bool                   mDepthTestEnable  = false;
         eDepthCompareOperation mDepthComparison  = eDepthCompareOperation::ALWAYS;
 
-        vector_t<sShaderData>               mShaderStages         = {};
-        vector_t<sBufferLayoutElement>      mInputLayout          = {};
-        vector_t<sBufferLayoutElement>      mInstancedInputLayout = {};
-        vector_t<sPushConstantRange>        mPushConstants        = {};
-        vector_t<Ref<IDescriptorSetLayout>> mDescriptorSets       = {};
+        vector_t<sShaderData>                 mShaderStages         = {};
+        vector_t<sBufferLayoutElement>        mInputLayout          = {};
+        vector_t<sBufferLayoutElement>        mInstancedInputLayout = {};
+        vector_t<sPushConstantRange>          mPushConstants        = {};
+        vector_t<ref_t<IDescriptorSetLayout>> mDescriptorSets       = {};
     };
 } // namespace SE::Graphics

@@ -13,7 +13,6 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-
 #include "Graphics/API.h"
 
 namespace SE::Core
@@ -24,37 +23,37 @@ namespace SE::Core
     class UIWindow
     {
       public:
-        UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport );
-        UIWindow( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
+        UIWindow( ref_t<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport );
+        UIWindow( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext );
         ~UIWindow();
 
         template <typename _Ty>
-        Ref<_Ty> GraphicContext()
+        ref_t<_Ty> GraphicContext()
         {
             return std::reinterpret_pointer_cast<_Ty>( mGraphicContext );
         }
 
-        void Render( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData );
+        void Render( ref_t<IRenderContext> aRenderContext, ImDrawData *aDrawData );
         void Render( ImDrawData *aDrawData );
-        void Render( Ref<IRenderContext> aRenderContext, ImDrawList const *aDrawData, int aVertexOffset, int aIndexOffset,
+        void Render( ref_t<IRenderContext> aRenderContext, ImDrawList const *aDrawData, int aVertexOffset, int aIndexOffset,
                      int aFbWidth, int aFbHeight, ImVec2 aPosition, ImVec2 aScale );
         void EndRender( ImDrawData *aDrawData );
 
       private:
         ImGuiViewport *mViewport = nullptr;
 
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
 
-        Ref<IWindow>           mWindow           = nullptr;
-        Ref<ISwapChain>        mSwapChain        = nullptr;
-        Ref<IRenderContext>    mRenderContext    = nullptr;
-        Ref<IGraphicsPipeline> mUIRenderPipeline = nullptr;
+        ref_t<IWindow>           mWindow           = nullptr;
+        ref_t<ISwapChain>        mSwapChain        = nullptr;
+        ref_t<IRenderContext>    mRenderContext    = nullptr;
+        ref_t<IGraphicsPipeline> mUIRenderPipeline = nullptr;
 
-        Ref<IGraphicBuffer> mVertexBuffer = nullptr;
-        Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
+        ref_t<IGraphicBuffer> mVertexBuffer = nullptr;
+        ref_t<IGraphicBuffer> mIndexBuffer  = nullptr;
 
       private:
-        void SetupRenderState( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData );
+        void SetupRenderState( ref_t<IRenderContext> aRenderContext, ImDrawData *aDrawData );
         void CreatePipeline();
     };
 } // namespace SE::Core

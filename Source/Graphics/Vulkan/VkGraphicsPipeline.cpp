@@ -1,6 +1,6 @@
 #include "VkGraphicsPipeline.h"
-#include "VkRenderContext.h"
 #include "VkDescriptorSetLayout.h"
+#include "VkRenderContext.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -9,7 +9,7 @@
 
 namespace SE::Graphics
 {
-    VkGraphicsPipeline::VkGraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, Ref<VkRenderContext> aRenderContext,
+    VkGraphicsPipeline::VkGraphicsPipeline( ref_t<VkGraphicContext> aGraphicContext, ref_t<VkRenderContext> aRenderContext,
                                             ePrimitiveTopology aTopology )
         : IGraphicsPipeline( aGraphicContext, aRenderContext, aTopology )
     {

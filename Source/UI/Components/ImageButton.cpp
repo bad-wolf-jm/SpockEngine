@@ -13,12 +13,12 @@ namespace SE::Core
     {
     }
 
-    UIImageButton::UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize )
+    UIImageButton::UIImageButton( ref_t<ISampler2D> aImage, math::vec2 aSize )
         : UIImageButton( aImage, aSize, std::function<void()>{} )
     {
     }
 
-    UIImageButton::UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick )
+    UIImageButton::UIImageButton( ref_t<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick )
         : UIBaseImage( aImage, aSize )
         , mOnClick{ aOnClick }
     {

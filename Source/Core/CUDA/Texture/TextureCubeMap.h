@@ -124,8 +124,8 @@ namespace SE::Cuda
     class TextureSamplerCubeMap
     {
       public:
-        sTextureSamplingInfo mSpec{};            //!< Copy of the specification structure used to create the texture
-        Ref<TextureCubeMap>  mTexture = nullptr; //!< Reference to the parent texture
+        sTextureSamplingInfo  mSpec{};            //!< Copy of the specification structure used to create the texture
+        ref_t<TextureCubeMap> mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
         {
@@ -158,9 +158,11 @@ namespace SE::Cuda
          * @param aTexture Texture to sample
          * @param aSamplingInfo Sampling data
          */
-        TextureSamplerCubeMap( Ref<TextureCubeMap> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
+        TextureSamplerCubeMap( ref_t<TextureCubeMap> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
 
-        void InitializeTextureSampler() {}
+        void InitializeTextureSampler()
+        {
+        }
     };
 
     // cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );

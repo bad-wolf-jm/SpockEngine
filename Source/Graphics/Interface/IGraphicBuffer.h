@@ -30,7 +30,7 @@ namespace SE::Graphics
         IGraphicBuffer()                   = default;
         IGraphicBuffer( IGraphicBuffer & ) = default;
 
-        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+        IGraphicBuffer( ref_t<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                         bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
             : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize )
             , Cuda::Internal::sGPUDevicePointerView( aSize, nullptr )
@@ -38,7 +38,7 @@ namespace SE::Graphics
         {
         }
 
-        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+        IGraphicBuffer( ref_t<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                         bool aIsTransferDestination, size_t aSize )
             : IGraphicBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                               aIsTransferDestination, aSize )
@@ -46,7 +46,7 @@ namespace SE::Graphics
         }
 
         template <typename _Ty>
-        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, vector_t<_Ty> aData, eBufferType aType, bool aIsHostVisible,
+        IGraphicBuffer( ref_t<IGraphicContext> aGraphicContext, vector_t<_Ty> aData, eBufferType aType, bool aIsHostVisible,
                         bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : IGraphicBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                               aIsTransferDestination )
@@ -54,7 +54,7 @@ namespace SE::Graphics
         }
 
         template <typename _Ty>
-        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType, bool aIsHostVisible,
+        IGraphicBuffer( ref_t<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType, bool aIsHostVisible,
                         bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : IGraphicBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
                               aSize * sizeof( _Ty ) )
@@ -95,7 +95,7 @@ namespace SE::Graphics
 
         virtual void Allocate( size_t aSizeInBytes )                       = 0;
         virtual void Resize( size_t aNewSizeInBytes )                      = 0;
-        virtual void Copy( Ref<IGraphicBuffer> aSource, size_t aOffset )   = 0;
+        virtual void Copy( ref_t<IGraphicBuffer> aSource, size_t aOffset ) = 0;
         virtual void DoUpload( void *aData, size_t aSize, size_t aOffset ) = 0;
     };
 } // namespace SE::Graphics

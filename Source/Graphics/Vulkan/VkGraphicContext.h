@@ -31,7 +31,7 @@ namespace SE::Graphics
 
         VkGraphicContext( uint32_t aSampleCount, bool aEnableValidation );
 
-        VkSurfaceKHR CreateVkSurface( Ref<IWindow> aWindow );
+        VkSurfaceKHR CreateVkSurface( ref_t<IWindow> aWindow );
         void         DestroyVkSurface( VkSurfaceKHR aSurface );
 
         VkBuffer CreateBuffer( VkBufferUsageFlags aBufferFlags, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable );

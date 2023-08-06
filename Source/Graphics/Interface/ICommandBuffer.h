@@ -8,9 +8,9 @@
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
 
+#include "IGraphicBuffer.h"
 #include "IGraphicContext.h"
 #include "IGraphicResource.h"
-#include "IGraphicBuffer.h"
 
 namespace SE::Graphics
 {
@@ -21,13 +21,13 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        ICommandBuffer(  ) = default;
-        ICommandBuffer( Ref<IGraphicContext> aGraphicContext );
+        ICommandBuffer() = default;
+        ICommandBuffer( ref_t<IGraphicContext> aGraphicContext );
 
         /** @brief */
         ~ICommandBuffer() = default;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
     };
 } // namespace SE::Graphics

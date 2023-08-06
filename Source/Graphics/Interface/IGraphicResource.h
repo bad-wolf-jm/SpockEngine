@@ -21,7 +21,7 @@ namespace SE::Graphics
         IGraphicResource()                     = default;
         IGraphicResource( IGraphicResource & ) = default;
 
-        IGraphicResource( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+        IGraphicResource( ref_t<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                           bool aIsTransferDestination, size_t aSize )
             : mGraphicContext{ aGraphicContext }
             , mIsHostVisible{ aIsHostVisible }
@@ -34,12 +34,12 @@ namespace SE::Graphics
         ~IGraphicResource() = default;
 
         template <typename _GCSubtype>
-        Ref<_GCSubtype> GraphicContext()
+        ref_t<_GCSubtype> GraphicContext()
         {
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
     };
 } // namespace SE::Graphics

@@ -6,7 +6,7 @@
 
 namespace SE::Graphics
 {
-    ICommandBuffer::ICommandBuffer( Ref<IGraphicContext> aGraphicContext )
+    ICommandBuffer::ICommandBuffer( ref_t<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     {
     }

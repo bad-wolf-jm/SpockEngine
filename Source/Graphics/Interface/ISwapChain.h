@@ -12,11 +12,11 @@ namespace SE::Graphics
     class ISwapChain : public IRenderTarget
     {
       public:
-        ISwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+        ISwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow );
         ~ISwapChain() = default;
 
       protected:
-        Ref<IWindow> mViewportClient = nullptr;
+        ref_t<IWindow> mViewportClient = nullptr;
     };
 
 } // namespace SE::Graphics

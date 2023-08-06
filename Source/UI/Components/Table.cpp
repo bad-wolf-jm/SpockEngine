@@ -31,7 +31,7 @@ namespace SE::Core
         mRowHeight = aRowHeight;
     }
 
-    void UITable::AddColumn( Ref<UITableColumn> aColumn )
+    void UITable::AddColumn( ref_t<UITableColumn> aColumn )
     {
         mColumns.push_back( aColumn.get() );
     }

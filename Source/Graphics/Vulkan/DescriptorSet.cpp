@@ -6,7 +6,8 @@
 namespace SE::Graphics
 {
 
-    DescriptorSet::DescriptorSet( Ref<VkGraphicContext> aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount )
+    DescriptorSet::DescriptorSet( ref_t<VkGraphicContext> aGraphicContext, ref_t<DescriptorSetLayout> aLayout,
+                                  uint32_t aDescriptorCount )
         : mGraphicContext{ aGraphicContext }
         , mLayout{ aLayout }
     {
@@ -15,7 +16,7 @@ namespace SE::Graphics
             mGraphicContext->AllocateDescriptorSet( aLayout->GetVkDescriptorSetLayoutObject()->mVkObject, aDescriptorCount ) );
     }
 
-    void DescriptorSet::Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
+    void DescriptorSet::Write( ref_t<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
     {
         sVkDescriptorSetObject::sBufferBindInfo lBufferBindInfo{};
         lBufferBindInfo.mBuffer        = aBuffer->mVkBuffer;
@@ -28,7 +29,7 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lBufferBindInfo );
     }
 
-    void DescriptorSet::Write( vector_t<Ref<VkSampler2D>> aWriteOperations, uint32_t aBinding )
+    void DescriptorSet::Write( vector_t<ref_t<VkSampler2D>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 )
             return;
@@ -44,12 +45,12 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    void DescriptorSet::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding )
+    void DescriptorSet::Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding )
     {
         Write( std::vector{ aBuffer }, aBinding );
     }
 
-    void DescriptorSet::Write( vector_t<Ref<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    void DescriptorSet::Write( vector_t<ref_t<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 )
             return;
@@ -65,7 +66,7 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    void DescriptorSet::Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding )
+    void DescriptorSet::Write( ref_t<VkSamplerCubeMap> aBuffer, uint32_t aBinding )
     {
         Write( std::vector{ aBuffer }, aBinding );
     }
@@ -99,7 +100,7 @@ namespace SE::Graphics
         return lNewBinding;
     }
 
-    DescriptorSetLayout::DescriptorSetLayout( Ref<VkGraphicContext> aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
+    DescriptorSetLayout::DescriptorSetLayout( ref_t<VkGraphicContext> aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
                                               bool aUnbounded )
         : mGraphicContext{ aGraphicContext }
         , Spec( aCreateInfo )

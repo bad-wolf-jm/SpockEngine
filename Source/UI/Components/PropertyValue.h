@@ -30,7 +30,7 @@ namespace SE::Core
         }
 
       protected:
-        Ref<UILabel> mName;
-        Ref<UILabel> mValue;
+        ref_t<UILabel> mName;
+        ref_t<UILabel> mValue;
     };
 } // namespace SE::Core

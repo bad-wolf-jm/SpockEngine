@@ -9,7 +9,7 @@
 namespace SE::Graphics
 {
 
-    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, vector_t<VkAttachmentDescription> aAttachments,
+    VkRenderPassObject::VkRenderPassObject( ref_t<VkGraphicContext> aContext, vector_t<VkAttachmentDescription> aAttachments,
                                             vector_t<VkSubpassDescription> aSubpasses,
                                             vector_t<VkSubpassDependency>  aSubpassDependencies )
         : IRenderPass{ aContext, 1 }
@@ -17,7 +17,7 @@ namespace SE::Graphics
         mVkObject = Cast<VkGraphicContext>( mGraphicContext )->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+    VkRenderPassObject::VkRenderPassObject( ref_t<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                                             bool aIsPresented, math::vec4 aClearColor )
         : IRenderPass{ aContext, aSampleCount }
     {

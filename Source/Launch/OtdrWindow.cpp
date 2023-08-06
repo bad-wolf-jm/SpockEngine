@@ -17,7 +17,7 @@
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
-    MainWindow::MainWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
+    MainWindow::MainWindow( ref_t<IGraphicContext> aGraphicContext, ref_t<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
@@ -110,9 +110,15 @@ namespace SE::OtdrEditor
         return mRequestQuit;
     }
 
-    math::ivec2 MainWindow::GetWorkspaceAreaSize() { return mWorkspaceAreaSize; }
+    math::ivec2 MainWindow::GetWorkspaceAreaSize()
+    {
+        return mWorkspaceAreaSize;
+    }
 
-    void MainWindow::Update( Timestep aTs ) { UpdateFramerate( aTs ); }
+    void MainWindow::Update( Timestep aTs )
+    {
+        UpdateFramerate( aTs );
+    }
 
     void MainWindow::UpdateFramerate( Timestep ts )
     {

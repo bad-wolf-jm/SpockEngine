@@ -12,9 +12,11 @@ namespace SE::Graphics
     {
         switch( aValue )
         {
-        case eSamplerFilter::NEAREST: return VK_FILTER_NEAREST;
+        case eSamplerFilter::NEAREST:
+            return VK_FILTER_NEAREST;
         case eSamplerFilter::LINEAR:
-        default: return VK_FILTER_LINEAR;
+        default:
+            return VK_FILTER_LINEAR;
         }
     }
 
@@ -22,9 +24,11 @@ namespace SE::Graphics
     {
         switch( aValue )
         {
-        case eSamplerMipmap::NEAREST: return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        case eSamplerMipmap::NEAREST:
+            return VK_SAMPLER_MIPMAP_MODE_NEAREST;
         case eSamplerMipmap::LINEAR:
-        default: return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        default:
+            return VK_SAMPLER_MIPMAP_MODE_LINEAR;
         }
     }
 
@@ -32,17 +36,22 @@ namespace SE::Graphics
     {
         switch( aValue )
         {
-        case eSamplerWrapping::MIRRORED_REPEAT: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
-        case eSamplerWrapping::CLAMP_TO_EDGE: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        case eSamplerWrapping::CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
+        case eSamplerWrapping::MIRRORED_REPEAT:
+            return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        case eSamplerWrapping::CLAMP_TO_EDGE:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        case eSamplerWrapping::CLAMP_TO_BORDER:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
+            return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
         case eSamplerWrapping::REPEAT:
-        default: return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        default:
+            return VK_SAMPLER_ADDRESS_MODE_REPEAT;
         }
     }
 
     /** @brief */
-    VkSamplerCubeMap::VkSamplerCubeMap( Ref<VkGraphicContext> aGraphicContext, Ref<VkTextureCubeMap> aTextureData,
+    VkSamplerCubeMap::VkSamplerCubeMap( ref_t<VkGraphicContext> aGraphicContext, ref_t<VkTextureCubeMap> aTextureData,
                                         sTextureSamplingInfo const &aSamplingSpec )
         : ISamplerCubeMap( aGraphicContext, aTextureData, aSamplingSpec )
     {
@@ -55,16 +64,17 @@ namespace SE::Graphics
         else
             lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-        mVkImageView = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                           ->CreateImageView( std::reinterpret_pointer_cast<VkTextureCubeMap>( mTextureData )->mVkImage,
-                                              6, VK_IMAGE_VIEW_TYPE_CUBE,
-                                              ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+        mVkImageView =
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+                ->CreateImageView( std::reinterpret_pointer_cast<VkTextureCubeMap>( mTextureData )->mVkImage, 6,
+                                   VK_IMAGE_VIEW_TYPE_CUBE, ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
         mVkImageSampler = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
                               ->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ), Convert( mSpec.mWrapping ),
                                                Convert( mSpec.mMipFilter ) );
 
-        if( mTextureData->mIsGraphicsOnly ) return;
+        if( mTextureData->mIsGraphicsOnly )
+            return;
 
         InitializeTextureSampler();
     }

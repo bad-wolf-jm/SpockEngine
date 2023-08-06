@@ -146,7 +146,7 @@ namespace SE::Core
       public:
         UIPlot();
 
-        void Add( Ref<UIPlotData> aPlot );
+        void Add( ref_t<UIPlotData> aPlot );
         void Add( UIPlotData *aPlot );
         void Clear();
 

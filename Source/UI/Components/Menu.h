@@ -56,9 +56,9 @@ namespace SE::Core
         UIMenu( UIMenu const & ) = default;
         UIMenu( string_t const &aText );
 
-        Ref<UIMenuItem> AddAction( string_t const &aText, string_t const &aShortcut );
-        Ref<UIMenu>     AddMenu( string_t const &aText );
-        Ref<UIMenuItem> AddSeparator();
+        ref_t<UIMenuItem> AddAction( string_t const &aText, string_t const &aShortcut );
+        ref_t<UIMenu>     AddMenu( string_t const &aText );
+        ref_t<UIMenuItem> AddSeparator();
 
         void Update();
 

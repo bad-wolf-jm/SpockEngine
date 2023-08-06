@@ -39,9 +39,9 @@ namespace SE::OtdrEditor
         string_t ApplicationIcon = "";
         string_t ApplicationName = "";
 
-        Ref<Engine> mEngineLoop = nullptr;
+        ref_t<Engine> mEngineLoop = nullptr;
 
-        // Ref<DotNetInstance> mApplicationInstance = nullptr;
+        // ref_t<DotNetInstance> mApplicationInstance = nullptr;
         RenderMenuFn mManaged = nullptr;
 
       public:
@@ -55,7 +55,7 @@ namespace SE::OtdrEditor
       public:
         MainWindow()                     = default;
         MainWindow( MainWindow const & ) = default;
-        MainWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
+        MainWindow( ref_t<IGraphicContext> aGraphicContext, ref_t<UIContext> mUIOverlay );
 
         ~MainWindow() = default;
 
@@ -70,8 +70,8 @@ namespace SE::OtdrEditor
         UIMenu mMainMenu;
 
       private:
-        Ref<IGraphicContext> mGraphicContext;
-        Ref<UIContext>       mUIOverlay;
+        ref_t<IGraphicContext> mGraphicContext;
+        ref_t<UIContext>       mUIOverlay;
 
         uint32_t mFrameCounter = 0;
         float    mFpsTimer     = 0.0f;

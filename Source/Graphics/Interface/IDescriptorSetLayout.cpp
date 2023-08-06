@@ -6,7 +6,7 @@
 namespace SE::Graphics
 {
 
-    IDescriptorSetLayout::IDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded, uint32_t aDescriptorCount )
+    IDescriptorSetLayout::IDescriptorSetLayout( ref_t<IGraphicContext> aGraphicContext, bool aIsUnbounded, uint32_t aDescriptorCount )
         : mGraphicContext{ aGraphicContext }
         , mIsUnbounded{ aIsUnbounded }
         , mDescriptorCount{ aDescriptorCount }

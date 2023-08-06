@@ -14,9 +14,9 @@ namespace SE::Core
         UIImageButton() = default;
 
         UIImageButton( path_t const &aImagePath, math::vec2 aSize );
-        UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize );
+        UIImageButton( ref_t<ISampler2D> aImage, math::vec2 aSize );
         UIImageButton( path_t const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
-        UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick );
+        UIImageButton( ref_t<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick );
 
         void OnClick( std::function<void()> aOnClick );
 

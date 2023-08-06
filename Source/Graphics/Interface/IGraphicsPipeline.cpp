@@ -2,7 +2,7 @@
 
 namespace SE::Graphics
 {
-    IGraphicsPipeline::IGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+    IGraphicsPipeline::IGraphicsPipeline( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
                                           ePrimitiveTopology aTopology )
         : mGraphicContext{ aGraphicContext }
         , mRenderContext{ aRenderContext }
@@ -10,9 +10,15 @@ namespace SE::Graphics
     {
     }
 
-    void IGraphicsPipeline::SetCulling( eFaceCulling aCulling ) { mCulling = aCulling; }
+    void IGraphicsPipeline::SetCulling( eFaceCulling aCulling )
+    {
+        mCulling = aCulling;
+    }
 
-    void IGraphicsPipeline::SetLineWidth( float aLineWidth ) { mLineWidth = aLineWidth; }
+    void IGraphicsPipeline::SetLineWidth( float aLineWidth )
+    {
+        mLineWidth = aLineWidth;
+    }
 
     void IGraphicsPipeline::SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable,
                                                 eDepthCompareOperation aDepthComparison )
@@ -32,10 +38,12 @@ namespace SE::Graphics
         mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
     }
 
-    void IGraphicsPipeline::AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }
+    void IGraphicsPipeline::AddDescriptorSet( ref_t<IDescriptorSetLayout> aDescriptorSet )
+    {
+        mDescriptorSets.push_back( aDescriptorSet );
+    }
 
-    void IGraphicsPipeline::AddInput( string_t aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
-                                      bool aInstanced )
+    void IGraphicsPipeline::AddInput( string_t aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced )
     {
         auto &lInputDescription = ( aInstanced ? mInstancedInputLayout.emplace_back() : mInputLayout.emplace_back() );
 
@@ -73,9 +81,7 @@ namespace SE::Graphics
         return 0;
     };
 
-
-    sBufferLayoutElement::sBufferLayoutElement( const string_t &aName, eBufferDataType aType, uint32_t aBinding,
-                                                uint32_t aLocation )
+    sBufferLayoutElement::sBufferLayoutElement( const string_t &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation )
         : mName( aName )
         , mType( aType )
         , mBinding( aBinding )
@@ -84,6 +90,5 @@ namespace SE::Graphics
         , mOffset( 0 )
     {
     }
-
 
 } // namespace SE::Graphics

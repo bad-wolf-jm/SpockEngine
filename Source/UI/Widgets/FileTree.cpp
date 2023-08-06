@@ -8,9 +8,9 @@
 
 namespace SE::Core
 {
-    Ref<UIImage> mOpenFolder  = nullptr;
-    Ref<UIImage> mCloseFolder = nullptr;
-    Ref<UIImage> mDefaultFile = nullptr;
+    ref_t<UIImage> mOpenFolder  = nullptr;
+    ref_t<UIImage> mCloseFolder = nullptr;
+    ref_t<UIImage> mDefaultFile = nullptr;
 
     UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, path_t const &aPath, string_t const &aName )
         : UITreeViewNode( aTreeView, aParent )

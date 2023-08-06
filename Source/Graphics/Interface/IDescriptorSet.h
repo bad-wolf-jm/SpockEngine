@@ -14,7 +14,7 @@ namespace SE::Graphics
     class IDescriptorSet
     {
       public:
-        IDescriptorSet( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 0 );
+        IDescriptorSet( ref_t<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 0 );
         ~IDescriptorSet() = default;
 
         virtual void *GetID()
@@ -22,15 +22,15 @@ namespace SE::Graphics
             return 0;
         };
 
-        void         Write( Ref<ISampler2D> aBuffer, uint32_t aBinding );
-        void         Write( Ref<ISamplerCubeMap> aBuffer, uint32_t aBinding );
-        virtual void Write( Ref<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize,
-                            uint32_t aBinding )                                         = 0;
-        virtual void Write( vector_t<Ref<ISampler2D>> aBuffer, uint32_t aBinding )      = 0;
-        virtual void Write( vector_t<Ref<ISamplerCubeMap>> aBuffer, uint32_t aBinding ) = 0;
+        void         Write( ref_t<ISampler2D> aBuffer, uint32_t aBinding );
+        void         Write( ref_t<ISamplerCubeMap> aBuffer, uint32_t aBinding );
+        virtual void Write( ref_t<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize,
+                            uint32_t aBinding )                                           = 0;
+        virtual void Write( vector_t<ref_t<ISampler2D>> aBuffer, uint32_t aBinding )      = 0;
+        virtual void Write( vector_t<ref_t<ISamplerCubeMap>> aBuffer, uint32_t aBinding ) = 0;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext{};
+        ref_t<IGraphicContext> mGraphicContext{};
     };
 
 } // namespace SE::Graphics

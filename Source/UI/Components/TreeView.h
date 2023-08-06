@@ -36,10 +36,10 @@ namespace SE::Core
 
         UIImage* mIcon = nullptr;
 
-        Ref<UIStackLayout> mImage  = nullptr;
-        Ref<UIStackLayout> mIndicator = nullptr;
-        Ref<UILabel>       mText   = nullptr;
-        Ref<UIBoxLayout>   mLayout = nullptr;
+        ref_t<UIStackLayout> mImage  = nullptr;
+        ref_t<UIStackLayout> mIndicator = nullptr;
+        ref_t<UILabel>       mText   = nullptr;
+        ref_t<UIBoxLayout>   mLayout = nullptr;
 
         UITreeView* mTreeView;
         UITreeViewNode *mParent;

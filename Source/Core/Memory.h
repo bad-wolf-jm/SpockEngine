@@ -26,12 +26,13 @@ namespace SE::Core
     }
 
     template <typename _Ty>
-    using Ref = std::shared_ptr<_Ty>;
+    using ref_t = std::shared_ptr<_Ty>;
+
     template <typename _Ty>
     using WeakRef = std::weak_ptr<_Ty>;
 
     template <typename _Ty, typename _Tz>
-    Ref<_Ty> Cast( Ref<_Tz> aElement )
+    ref_t<_Ty> Cast( ref_t<_Tz> aElement )
     {
         return std::reinterpret_pointer_cast<_Ty>( aElement );
     }
@@ -39,7 +40,7 @@ namespace SE::Core
     template <typename _Ty, typename _Tz>
     _Ty *Cast( _Tz *aElement )
     {
-        return reinterpret_cast<_Ty*>( aElement );
+        return reinterpret_cast<_Ty *>( aElement );
     }
 
 } // namespace SE::Core

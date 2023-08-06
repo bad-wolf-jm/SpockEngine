@@ -553,7 +553,7 @@ namespace SE::Graphics
             vkDestroyInstance( mVkInstance, nullptr );
     }
 
-    VkSurfaceKHR VkGraphicContext::CreateVkSurface( Ref<IWindow> aWindow )
+    VkSurfaceKHR VkGraphicContext::CreateVkSurface( ref_t<IWindow> aWindow )
     {
         VkSurfaceKHR lNewSurface;
         VK_CHECK_RESULT( glfwCreateWindowSurface( mVkInstance, aWindow->GetGLFWWindow(), nullptr, &lNewSurface ) );

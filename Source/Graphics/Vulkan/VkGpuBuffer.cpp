@@ -23,24 +23,29 @@ namespace SE::Graphics
     {
         switch( aType )
         {
-        case eBufferType::VERTEX_BUFFER: return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        case eBufferType::INDEX_BUFFER: return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-        case eBufferType::STORAGE_BUFFER: return VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-        case eBufferType::UNIFORM_BUFFER: return VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+        case eBufferType::VERTEX_BUFFER:
+            return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        case eBufferType::INDEX_BUFFER:
+            return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+        case eBufferType::STORAGE_BUFFER:
+            return VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        case eBufferType::UNIFORM_BUFFER:
+            return VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         case eBufferType::UNKNOWN:
-        default: return VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        default:
+            return VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         };
     }
 
-    VkGpuBuffer::VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                              bool aIsTransferDestination, size_t aSize )
+    VkGpuBuffer::VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
+                              bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : VkGpuBuffer::VkGpuBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                                     aIsTransferDestination, aSize )
     {
         // Allocate( mSize );
     }
 
-    VkGpuBuffer::VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+    VkGpuBuffer::VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                               bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : IGraphicBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize )
         , mVkGraphicContext{ aGraphicContext }
@@ -54,7 +59,8 @@ namespace SE::Graphics
         mVkGraphicContext->FreeMemory( mVkMemory );
 
         // GPUMemory::Dispose();
-        if( mExternalMemoryHandle ) CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
+        if( mExternalMemoryHandle )
+            CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
         mExternalMemoryHandle = 0;
     }
 
@@ -64,8 +70,10 @@ namespace SE::Graphics
 
         VkBufferUsageFlags lBufferFlags = GetVkBufferType( mType );
         ;
-        if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         mVkBuffer = mVkGraphicContext->CreateBuffer( lBufferFlags, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
         mVkMemory = mVkGraphicContext->AllocateMemory( mVkBuffer, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
@@ -101,7 +109,7 @@ namespace SE::Graphics
             auto lStagingBuffer = VkGpuBuffer( mVkGraphicContext, eBufferType::UNKNOWN, true, false, true, false, aSize );
             lStagingBuffer.DoUpload( aData, aSize, 0 );
 
-            Ref<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
+            ref_t<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
             lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
             lCommandBuffer->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
             lCommandBuffer->End();
@@ -111,18 +119,19 @@ namespace SE::Graphics
         else
         {
             uint8_t *lMappedMemory = Map<uint8_t>( aSize, aOffset );
-            if( !lMappedMemory ) throw std::runtime_error( "Could not map memory" );
+            if( !lMappedMemory )
+                throw std::runtime_error( "Could not map memory" );
 
             memcpy( reinterpret_cast<void *>( lMappedMemory ), aData, aSize );
             Unmap();
         }
     }
 
-    void VkGpuBuffer::Copy( Ref<IGraphicBuffer> aSource, size_t aOffset )
+    void VkGpuBuffer::Copy( ref_t<IGraphicBuffer> aSource, size_t aOffset )
     {
         auto lSource = std::reinterpret_pointer_cast<VkGpuBuffer>( aSource );
 
-        Ref<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
+        ref_t<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
         lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBuffer->CopyBuffer( lSource->mVkBuffer, 0, lSource->mSize, mVkBuffer, aOffset );
         lCommandBuffer->End();
@@ -132,7 +141,8 @@ namespace SE::Graphics
 
     void VkGpuBuffer::Resize( size_t aNewSizeInBytes )
     {
-        if( aNewSizeInBytes <= mSize ) return;
+        if( aNewSizeInBytes <= mSize )
+            return;
 
         mVkGraphicContext->DestroyBuffer( mVkBuffer );
         mVkGraphicContext->FreeMemory( mVkMemory );
@@ -141,8 +151,10 @@ namespace SE::Graphics
         mSizeAligned = ( ( mSize - 1 ) / gBufferMemoryAlignment + 1 ) * gBufferMemoryAlignment;
 
         VkBufferUsageFlags lBufferFlags = GetVkBufferType( mType );
-        if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination )
+            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         mVkBuffer = mVkGraphicContext->CreateBuffer( lBufferFlags, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
         mVkMemory = mVkGraphicContext->AllocateMemory( mVkBuffer, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );

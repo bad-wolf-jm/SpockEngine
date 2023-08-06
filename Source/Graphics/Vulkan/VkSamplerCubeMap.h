@@ -22,13 +22,13 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        VkSamplerCubeMap( Ref<VkGraphicContext> aGraphicContext, Ref<VkTextureCubeMap> aTextureData,
+        VkSamplerCubeMap( ref_t<VkGraphicContext> aGraphicContext, ref_t<VkTextureCubeMap> aTextureData,
                           sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~VkSamplerCubeMap();
 
-        Ref<ITextureCubeMap> GetTexture() { return mTextureData; }
+        ref_t<ITextureCubeMap> GetTexture() { return mTextureData; }
         VkImageView          GetImageView() { return mVkImageView; }
         VkSampler            GetSampler() { return mVkImageSampler; }
 

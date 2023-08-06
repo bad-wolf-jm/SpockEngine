@@ -51,7 +51,7 @@ namespace SE::Core
     {
         mDocuments.push_back( aDocument );
     }
-    void UIWorkspace::Add( Ref<UIWorkspaceDocument> aDocument )
+    void UIWorkspace::Add( ref_t<UIWorkspaceDocument> aDocument )
     {
         Add( aDocument.get() );
 

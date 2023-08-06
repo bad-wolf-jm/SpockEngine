@@ -17,8 +17,8 @@
 namespace SE::Graphics
 {
     /** @brief */
-    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureDataCubeMap &mTextureData, uint8_t aSampleCount,
-                                        bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+    VkTextureCubeMap::VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, TextureDataCubeMap &mTextureData,
+                                        uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITextureCubeMap( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            false )
     {
@@ -39,7 +39,7 @@ namespace SE::Graphics
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
-    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTextureCubeMap::VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                                         uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                                         bool aIsTransferDestination )
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
@@ -54,7 +54,7 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
     }
 
-    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTextureCubeMap::VkTextureCubeMap( ref_t<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                                         VkImage aExternalImage )
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
@@ -143,9 +143,9 @@ namespace SE::Graphics
 #endif
     }
 
-    void VkTextureCubeMap::SetPixelData( Ref<IGraphicBuffer> aBuffer )
+    void VkTextureCubeMap::SetPixelData( ref_t<IGraphicBuffer> aBuffer )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
@@ -182,9 +182,9 @@ namespace SE::Graphics
             ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
     }
 
-    void VkTextureCubeMap::SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer )
+    void VkTextureCubeMap::SetPixelData( eCubeFace aFace, ref_t<IGraphicBuffer> aBuffer )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
@@ -223,7 +223,7 @@ namespace SE::Graphics
 
     void VkTextureCubeMap::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
@@ -258,7 +258,7 @@ namespace SE::Graphics
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
@@ -305,7 +305,7 @@ namespace SE::Graphics
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );

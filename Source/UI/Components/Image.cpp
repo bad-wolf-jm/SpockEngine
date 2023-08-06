@@ -7,7 +7,7 @@ namespace SE::Core
     {
     }
 
-    UIImage::UIImage( Ref<ISampler2D> aImage, math::vec2 aSize )
+    UIImage::UIImage( ref_t<ISampler2D> aImage, math::vec2 aSize )
         : UIBaseImage( aImage, aSize )
     {
     }

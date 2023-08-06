@@ -102,16 +102,16 @@ namespace SE::Core
 
         struct Block
         {
-            eBlockType           mType;
-            ImVec2               mPosition;
-            ImVec2               mSize;
-            Ref<Block>           mParent = nullptr;
-            vector_t<Ref<Block>> mChildren;
-            uint32_t             mDepth = 0;
+            eBlockType             mType;
+            ImVec2                 mPosition;
+            ImVec2                 mSize;
+            ref_t<Block>           mParent = nullptr;
+            vector_t<ref_t<Block>> mChildren;
+            uint32_t               mDepth = 0;
 
             Block() = default;
 
-            Block( Ref<Block> aParent, eBlockType aType )
+            Block( ref_t<Block> aParent, eBlockType aType )
                 : mType{ aType }
                 , mParent{ aParent }
             {
@@ -126,7 +126,7 @@ namespace SE::Core
 
         struct Document : public Block
         {
-            Document( Ref<Block> aParent, eBlockType aType )
+            Document( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -134,7 +134,7 @@ namespace SE::Core
 
         struct Quote : public Block
         {
-            Quote( Ref<Block> aParent, eBlockType aType )
+            Quote( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -148,7 +148,7 @@ namespace SE::Core
             char     mMarker        = '-';
             uint32_t mStartIndex    = 1;
 
-            List( Ref<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
+            List( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
                 : Block( aParent, aType )
                 , mMarker{ d->mark }
                 , mIsOrderedList{ false }
@@ -156,7 +156,7 @@ namespace SE::Core
             {
             }
 
-            List( Ref<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
+            List( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
                 : Block( aParent, aType )
                 , mMarker{ d->mark_delimiter }
                 , mIsOrderedList{ true }
@@ -171,7 +171,7 @@ namespace SE::Core
         // {
         //     char mMarker;
 
-        //     UnorderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
+        //     UnorderedList( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
         //         : Block( aParent, aType )
         //     {
         //     }
@@ -183,7 +183,7 @@ namespace SE::Core
         // {
         //     uint32_t mCurrentIndex = 1;
 
-        //     OrderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
+        //     OrderedList( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
         //         : Block( aParent, aType )
         //     {
         //     }
@@ -198,7 +198,7 @@ namespace SE::Core
             bool     mIsChecked;
             uint32_t mTaskMarkOffset;
 
-            ListItem( Ref<Block> aParent, eBlockType aType, MD_BLOCK_LI_DETAIL *d )
+            ListItem( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_LI_DETAIL *d )
                 : Block( aParent, aType )
             {
             }
@@ -208,7 +208,7 @@ namespace SE::Core
 
         struct HRule : public Block
         {
-            HRule( Ref<Block> aParent, eBlockType aType )
+            HRule( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -220,7 +220,7 @@ namespace SE::Core
         {
             uint32_t mLevel;
 
-            Heading( Ref<Block> aParent, eBlockType aType, MD_BLOCK_H_DETAIL *d )
+            Heading( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_H_DETAIL *d )
                 : Block( aParent, aType )
                 , mLevel{ d->level }
             {
@@ -234,7 +234,7 @@ namespace SE::Core
             char *mLanguage;
             char  mFenceChar;
 
-            Code( Ref<Block> aParent, eBlockType aType, MD_BLOCK_CODE_DETAIL *d )
+            Code( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_CODE_DETAIL *d )
                 : Block( aParent, aType )
             {
             }
@@ -244,7 +244,7 @@ namespace SE::Core
 
         struct Html : public Block
         {
-            Html( Ref<Block> aParent, eBlockType aType )
+            Html( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -254,7 +254,7 @@ namespace SE::Core
 
         struct Paragraph : public Block
         {
-            Paragraph( Ref<Block> aParent, eBlockType aType )
+            Paragraph( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -282,7 +282,7 @@ namespace SE::Core
             int32_t mCurrentRow    = -1;
             int32_t mCurrentColumn = -1;
 
-            Table( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TABLE_DETAIL *d )
+            Table( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_TABLE_DETAIL *d )
                 : Block( aParent, aType )
                 , mColumns{ d->col_count }
                 , mTableRows{ d->body_row_count }
@@ -295,7 +295,7 @@ namespace SE::Core
 
         struct TableHeader : public Block
         {
-            TableHeader( Ref<Block> aParent, eBlockType aType )
+            TableHeader( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -307,7 +307,7 @@ namespace SE::Core
 
         struct TableBody : public Block
         {
-            TableBody( Ref<Block> aParent, eBlockType aType )
+            TableBody( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -319,7 +319,7 @@ namespace SE::Core
 
         struct TableRow : public Block
         {
-            TableRow( Ref<Block> aParent, eBlockType aType )
+            TableRow( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -333,7 +333,7 @@ namespace SE::Core
         {
             eHorizontalAlignment mAlign;
 
-            TableData( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TD_DETAIL *d )
+            TableData( ref_t<Block> aParent, eBlockType aType, MD_BLOCK_TD_DETAIL *d )
                 : Block( aParent, aType )
             {
                 switch( d->align )
@@ -364,7 +364,7 @@ namespace SE::Core
             const char *mStart;
             const char *mEnd;
 
-            Text( Ref<Block> aParent, eBlockType aType, MD_TEXTTYPE d, const char *aStrBegin, const char *aStrEnd )
+            Text( ref_t<Block> aParent, eBlockType aType, MD_TEXTTYPE d, const char *aStrBegin, const char *aStrEnd )
                 : Block( aParent, aType )
                 , mStart{ aStrBegin }
                 , mEnd{ aStrEnd }
@@ -375,7 +375,7 @@ namespace SE::Core
         };
         struct Emphasis : public Block
         {
-            Emphasis( Ref<Block> aParent, eBlockType aType )
+            Emphasis( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -385,7 +385,7 @@ namespace SE::Core
 
         struct Strong : public Block
         {
-            Strong( Ref<Block> aParent, eBlockType aType )
+            Strong( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -395,7 +395,7 @@ namespace SE::Core
 
         struct Underline : public Block
         {
-            Underline( Ref<Block> aParent, eBlockType aType )
+            Underline( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -407,7 +407,7 @@ namespace SE::Core
 
         struct Link : public Block
         {
-            Link( Ref<Block> aParent, eBlockType aType, MD_SPAN_A_DETAIL *d )
+            Link( ref_t<Block> aParent, eBlockType aType, MD_SPAN_A_DETAIL *d )
                 : Block( aParent, aType )
             {
             }
@@ -419,7 +419,7 @@ namespace SE::Core
 
         struct Image : public Block
         {
-            Image( Ref<Block> aParent, eBlockType aType, MD_SPAN_IMG_DETAIL *d )
+            Image( ref_t<Block> aParent, eBlockType aType, MD_SPAN_IMG_DETAIL *d )
                 : Block( aParent, aType )
             {
             }
@@ -431,7 +431,7 @@ namespace SE::Core
 
         struct InlineCode : public Block
         {
-            InlineCode( Ref<Block> aParent, eBlockType aType )
+            InlineCode( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -443,7 +443,7 @@ namespace SE::Core
 
         struct StrikeThrough : public Block
         {
-            StrikeThrough( Ref<Block> aParent, eBlockType aType )
+            StrikeThrough( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -455,7 +455,7 @@ namespace SE::Core
 
         struct LaTeXMath : public Block
         {
-            LaTeXMath( Ref<Block> aParent, eBlockType aType )
+            LaTeXMath( ref_t<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
@@ -467,7 +467,7 @@ namespace SE::Core
 
         struct WikiLink : public Block
         {
-            WikiLink( Ref<Block> aParent, eBlockType aType, MD_SPAN_WIKILINK_DETAIL *d )
+            WikiLink( ref_t<Block> aParent, eBlockType aType, MD_SPAN_WIKILINK_DETAIL *d )
                 : Block( aParent, aType )
             {
             }
@@ -477,11 +477,11 @@ namespace SE::Core
             }
         };
 
-        Ref<Block> mRootBlock;
-        Ref<Block> mCurrentBlock;
-        Ref<Table> mCurrentTable;
+        ref_t<Block> mRootBlock;
+        ref_t<Block> mCurrentBlock;
+        ref_t<Table> mCurrentTable;
 
-        vector_t<Ref<List>> mListStack;
+        vector_t<ref_t<List>> mListStack;
 
         template <typename _Ty, typename... _Args>
         void PushBlock( _Args... aArgs )

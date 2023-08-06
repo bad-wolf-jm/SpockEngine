@@ -24,18 +24,21 @@ namespace SE::Core
     {
     }
 
-    void UIPlot::Add( Ref<UIPlotData> aPlot )
+    void UIPlot::Add( ref_t<UIPlotData> aPlot )
     {
         mElements.push_back( aPlot.get() );
     };
+
     void UIPlot::Add( UIPlotData *aPlot )
     {
         mElements.push_back( aPlot );
     };
+
     void UIPlot::Clear()
     {
         mElements.clear();
     };
+    
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
         mLegendPadding      = ImVec2{ aLegendPadding.x, aLegendPadding.y };

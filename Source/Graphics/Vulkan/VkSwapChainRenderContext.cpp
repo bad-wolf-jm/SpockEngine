@@ -7,18 +7,20 @@
 namespace SE::Graphics
 {
 
-    VkSwapChainRenderContext::VkSwapChainRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget )
+    VkSwapChainRenderContext::VkSwapChainRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget )
         : VkBaseRenderContext( aGraphicContext, aRenderTarget )
     {
     }
 
     bool VkSwapChainRenderContext::BeginRender()
     {
-        if( mFrameIsStarted ) return true;
+        if( mFrameIsStarted )
+            return true;
 
         VkBaseRenderContext::BeginRender();
 
-        if( !mFrameIsStarted ) return false;
+        if( !mFrameIsStarted )
+            return false;
 
         float lWidth  = static_cast<float>( Cast<VkSwapChain>( mRenderTarget )->Spec().mWidth );
         float lHeight = static_cast<float>( Cast<VkSwapChain>( mRenderTarget )->Spec().mHeight );

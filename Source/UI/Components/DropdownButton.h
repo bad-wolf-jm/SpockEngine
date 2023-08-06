@@ -26,9 +26,9 @@ namespace SE::Core
       private:
         bool mActivated = false;
 
-        Ref<UIStackLayout> mImage  = nullptr;
-        Ref<UILabel>       mText   = nullptr;
-        Ref<UIBoxLayout>   mLayout = nullptr;
+        ref_t<UIStackLayout> mImage  = nullptr;
+        ref_t<UILabel>       mText   = nullptr;
+        ref_t<UIBoxLayout>   mLayout = nullptr;
 
         UIComponent *mContent = nullptr;
         ImVec2       mContentSize{};

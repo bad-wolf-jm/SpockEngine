@@ -28,7 +28,7 @@ namespace SE::Core::UI
 
     struct ImageHandle
     {
-        Ref<IDescriptorSet> Handle = nullptr;
+        ref_t<IDescriptorSet> Handle = nullptr;
 
         ImageHandle()                      = default;
         ImageHandle( const ImageHandle & ) = default;

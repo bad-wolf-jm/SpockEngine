@@ -155,8 +155,8 @@ namespace SE::Core
         //     string_t mClassFullName = "";
 
         //     DotNetClass         mClass;
-        //     Ref<DotNetInstance> mInstance;
-        //     Ref<DotNetInstance> mEntityInstance;
+        //     ref_t<DotNetInstance> mInstance;
+        //     ref_t<DotNetInstance> mEntityInstance;
 
         //     sMonoActor()                     = default;
         //     sMonoActor( const sMonoActor & ) = default;
@@ -238,9 +238,9 @@ namespace SE::Core
 
         //     string_t            mClassFullName = "";
         //     DotNetClass         mClass;
-        //     Ref<DotNetInstance> mInstance;
-        //     Ref<DotNetInstance> mPreviewInstance;
-        //     Ref<DotNetInstance> mEntityInstance;
+        //     ref_t<DotNetInstance> mInstance;
+        //     ref_t<DotNetInstance> mPreviewInstance;
+        //     ref_t<DotNetInstance> mEntityInstance;
 
         //     sMonoUIComponent()                           = default;
         //     sMonoUIComponent( const sMonoUIComponent & ) = default;
