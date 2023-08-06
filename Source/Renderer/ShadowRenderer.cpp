@@ -46,6 +46,7 @@ namespace SE::Core
         mCameraSetLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
         mCameraSetLayout->Build();
         mCameraDescriptors = mCameraSetLayout->Allocate();
+        mCameraDescriptors->Write( mCameraBuffer, false, 0, 1, 0 );
 
         mPipeline->AddDescriptorSet( mCameraSetLayout );
 
@@ -261,8 +262,7 @@ namespace SE::Core
 
         if( mRenderPipeline->Pipeline() )
         {
-            uint32_t lLightIndex = 0;
-            View.mMVP            = mDirectionalLight.mTransform;
+            View.mMVP = mDirectionalLight.mTransform;
             mRenderPipeline->SetView( View );
 
             mDirectionalShadowMapRenderContext->BeginRender();
