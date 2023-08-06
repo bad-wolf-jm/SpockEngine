@@ -47,9 +47,7 @@ namespace SE::Core
 
         mUIRenderPipeline->SetCulling( eFaceCulling::NONE );
 
-        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader", lShaderPath );
+        auto lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader" );
         lVertexShader->AddCode( "#define __GLSL__" );
         lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
         lVertexShader->AddCode( "#define IMGUI_VERTEX_SHADER" );
@@ -58,8 +56,7 @@ namespace SE::Core
         lVertexShader->Compile();
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-        auto lFragmentShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "ui_fragment_shader", lShaderPath );
+        auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "ui_fragment_shader" );
         lFragmentShader->AddCode( "#define __GLSL__" );
         lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
         lFragmentShader->AddCode( "#define IMGUI_FRAGMENT_SHADER" );

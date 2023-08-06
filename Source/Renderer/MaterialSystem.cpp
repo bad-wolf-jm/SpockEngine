@@ -236,10 +236,8 @@ namespace SE::Core
         if( mVertexShaders.find( GetMaterialHash( aMaterial ) ) != mVertexShaders.end() )
             return mVertexShaders[GetMaterialHash( aMaterial )];
 
-        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-
         std::string lShaderName = CreateShaderName( aMaterial, "vertex_shader" );
-        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName );
         mVertexShaders[GetMaterialHash( aMaterial )] = lShader;
 
         AddDefinitions( lShader, aMaterial );
@@ -263,10 +261,8 @@ namespace SE::Core
         if( mFragmentShaders.find( GetMaterialHash( aMaterial ) ) != mFragmentShaders.end() )
             return mFragmentShaders[GetMaterialHash( aMaterial )];
 
-        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-
         std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
-        auto        lShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName, lShaderPath );
+        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName );
         mFragmentShaders[GetMaterialHash( aMaterial )] = lShader;
 
         lShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );

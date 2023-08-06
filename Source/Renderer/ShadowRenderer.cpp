@@ -23,9 +23,7 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
-        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader", lShaderPath );
+        auto lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader" );
         lVertexShader->AddCode( "#define __GLSL__" );
         lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
         lVertexShader->AddCode( "#define DIRECTIONAL_LIGHT_SHADOW_VERTEX_SHADER" );
@@ -69,9 +67,7 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
-        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+        auto lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader" );
 
         lVertexShader->AddCode( "#define __GLSL__" );
         lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
@@ -85,7 +81,7 @@ namespace SE::Core
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
         auto lFragmentShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader" );
         lFragmentShader->AddCode( "#define __GLSL__" );
         lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
         lFragmentShader->AddCode( "#define PUNCTUAL_LIGHT_SHADOW_FRAGMENT_SHADER" );
@@ -293,7 +289,8 @@ namespace SE::Core
             uint32_t lLightIndex = 0;
             for( auto &lContext : mPointLightsShadowMapRenderContext )
             {
-                RenderPunctualShadowMap( mPointLights[lLightIndex].mPosition, lContext, mPointLightsShadowCameraUniformBuffer[lLightIndex],
+                RenderPunctualShadowMap( mPointLights[lLightIndex].mPosition, lContext,
+                                         mPointLightsShadowCameraUniformBuffer[lLightIndex],
                                          mPointLightsShadowSceneDescriptors[lLightIndex] );
                 lLightIndex++;
             }
@@ -312,7 +309,7 @@ namespace SE::Core
             glm::mat4 viewMatrix = CreateCubeFaceViewMatrix( f );
             mOmniView.mMVP       = lProjection * math::Translate( viewMatrix, -aLightPosition );
             aUniforms[f]->Write( mOmniView );
-            
+
             RenderCubeFace( viewMatrix, lProjection, aContext[f], aDescriptors[f] );
         }
     }

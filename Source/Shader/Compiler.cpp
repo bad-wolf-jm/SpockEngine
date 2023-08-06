@@ -10,17 +10,7 @@
 
 namespace SE::Graphics
 {
-    static fs::path              gShaderCache       = "";
     static std::vector<fs::path> gShaderIncludePath = {};
-
-    void SetShaderCacheFolder( std::string const &aPath )
-    {
-        gShaderCache = aPath;
-    }
-    void AddShaderIncludePath( std::string const &aPath )
-    {
-        gShaderIncludePath.push_back( aPath );
-    }
 
     static std::tuple<char *, size_t> ReadFile( const char *header_name )
     {

@@ -11,6 +11,12 @@
 namespace SE::Graphics
 {
     static eGraphicsAPI gApi = eGraphicsAPI::VULKAN;
+    static fs::path     gShaderCacheRoot;
+
+    void SetShaderCacheFolder( fs::path aPath )
+    {
+        gShaderCacheRoot = aPath;
+    }
 
     Ref<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount )
     {
@@ -240,26 +246,11 @@ namespace SE::Graphics
         switch( gApi )
         {
         case eGraphicsAPI::VULKAN:
-            return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, "" );
+            return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, gShaderCacheRoot );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default:
             return nullptr;
         }
     }
-
-    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                                             std::string const &aName, fs::path const &aCacheRoot )
-    {
-        switch( gApi )
-        {
-        case eGraphicsAPI::VULKAN:
-            return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot );
-        case eGraphicsAPI::OPENGL:
-        case eGraphicsAPI::DIRECTX:
-        default:
-            return nullptr;
-        }
-    }
-
 } // namespace SE::Graphics

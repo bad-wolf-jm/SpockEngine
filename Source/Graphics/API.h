@@ -17,6 +17,8 @@ namespace SE::Graphics
         DIRECTX
     };
 
+    void SetShaderCacheFolder( fs::path aPath );
+
     Ref<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount );
 
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
@@ -81,7 +83,4 @@ namespace SE::Graphics
 
     Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
                                              std::string const &aName );
-    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                                             std::string const &aName, fs::path const &aCacheRoot );
-
 } // namespace SE::Graphics

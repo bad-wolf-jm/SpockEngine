@@ -200,14 +200,18 @@ int main( int argc, char **argv )
     SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
 
     // Create Assets, Assets/Materials, Assets/Models
-    if( !fs::exists( lProjectRoot / "Assets" / "Materials" ) ) fs::create_directories( lProjectRoot / "Assets" / "Materials" );
-    if( !fs::exists( lProjectRoot / "Assets" / "Models" ) ) fs::create_directories( lProjectRoot / "Assets" / "Models" );
+    if( !fs::exists( lProjectRoot / "Assets" / "Materials" ) )
+        fs::create_directories( lProjectRoot / "Assets" / "Materials" );
+    if( !fs::exists( lProjectRoot / "Assets" / "Models" ) )
+        fs::create_directories( lProjectRoot / "Assets" / "Models" );
 
     // Create Saved, Saved/Logs
-    if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
+    if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) )
+        fs::create_directories( lProjectRoot / "Saved" / "Logs" );
 
     // Create Saved, Saved/Config
-    if( !fs::exists( lProjectRoot / "Saved" / "Config" ) ) fs::create_directories( lProjectRoot / "Saved" / "Config" );
+    if( !fs::exists( lProjectRoot / "Saved" / "Config" ) )
+        fs::create_directories( lProjectRoot / "Saved" / "Config" );
 
     // Configure logger to send messages to Saved/Logs/EditorLogs.txt
     auto lOutputLogFile = lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt";
@@ -224,10 +228,14 @@ int main( int argc, char **argv )
     else
         SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) ) lWindowSize.x = lResXOverride.value();
-    if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) ) lWindowSize.y = lResYOverride.value();
-    if( auto lPosXOverride = lProgramArguments->present<int>( "--pos_x" ) ) lWindowPosition.x = lPosXOverride.value();
-    if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) ) lWindowPosition.y = lPosYOverride.value();
+    if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) )
+        lWindowSize.x = lResXOverride.value();
+    if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) )
+        lWindowSize.y = lResYOverride.value();
+    if( auto lPosXOverride = lProgramArguments->present<int>( "--pos_x" ) )
+        lWindowPosition.x = lPosXOverride.value();
+    if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) )
+        lWindowPosition.y = lPosYOverride.value();
 
     auto     lProjectName              = lProgramArguments->get<std::string>( "--project" );
     fs::path lProjectConfigurationPath = lProjectRoot / fmt::format( "{}.yaml", lProjectName );
@@ -238,10 +246,16 @@ int main( int argc, char **argv )
         std::exit( 1 );
     }
 
+    auto lShaderCacheFolder = lLocalConfigFolder / "SpockEngine" / "Resources" / "Shaders";
+    if( !fs::exists( lShaderCacheFolder ) )
+        fs::create_directories( lShaderCacheFolder );
+    SE::Graphics::SetShaderCacheFolder( lShaderCacheFolder );
+
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
 
     auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
-    if( !fs::exists( lScenario ) ) SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
+    if( !fs::exists( lScenario ) )
+        SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
     SE::Graphics::OptixDeviceContextObject::Initialize();
 
@@ -252,13 +266,15 @@ int main( int argc, char **argv )
     {
         lMonoPath = lPath;
         if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono_runtime" ) )
-            if( fs ::exists( lMonoPathOverride.value() ) ) lMonoPath = lMonoPathOverride.value();
+            if( fs ::exists( lMonoPathOverride.value() ) )
+                lMonoPath = lMonoPathOverride.value();
     }
 
     // Retrieve the Mono core assembly path
     fs::path lCoreScriptingPath = "D:/Work/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
-        if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
+        if( fs ::exists( lCoreScriptingPathOverride.value() ) )
+            lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
     DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
@@ -267,17 +283,16 @@ int main( int argc, char **argv )
     if( !lApplicationName.empty() )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
-        auto lApplicationAssembly     = fs::path( "D:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" /
-                                    fmt::format( "{}.dll", lApplicationName );
-        if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
+        auto lApplicationAssembly =
+            fs::path( "D:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
+        if( fs::exists( lApplicationAssembly ) )
+            DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigurationPath ) )
             SE::Logging::Info( "Application configuration file '{}' does not exist", lApplicationConfigurationPath.string() );
     }
 
     DotNetRuntime::ReloadAssemblies();
-
-    SE::Graphics::AddShaderIncludePath( "D:\\Work\\Git\\SpockEngine\\Source\\Scene\\Renderer\\Shaders" );
 
     SE::Editor::BaseEditorApplication lEditorApplication;
 
