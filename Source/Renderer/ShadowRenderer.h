@@ -24,7 +24,7 @@ namespace SE::Core
 
     struct ShadowMatrices
     {
-        math::mat4 mMVP;
+        mat4 mMVP;
 
         ShadowMatrices()  = default;
         ~ShadowMatrices() = default;
@@ -34,8 +34,8 @@ namespace SE::Core
 
     struct OmniShadowMatrices
     {
-        math::mat4 mMVP;
-        math::vec4 mLightPos;
+        mat4 mMVP;
+        vec4 mLightPos;
 
         OmniShadowMatrices()  = default;
         ~OmniShadowMatrices() = default;
@@ -143,11 +143,10 @@ namespace SE::Core
         void SetLights( std::vector<sPunctualLight> const &aPointLights );
 
       private:
-        void RenderPunctualShadowMap( math::vec3 aLightPosition, std::array<Ref<IRenderContext>, 6> aContext,
+        void RenderPunctualShadowMap( vec3 aLightPosition, std::array<Ref<IRenderContext>, 6> aContext,
                                       std::array<Ref<IGraphicBuffer>, 6> const &aUniforms,
                                       std::array<Ref<IDescriptorSet>, 6> const &aDescriptors );
-        void RenderCubeFace( math::mat4 viewMatrix, math::mat4 lProjection, Ref<IRenderContext> lContext,
-                             Ref<IDescriptorSet> aDescriptors );
+        void RenderCubeFace( mat4 viewMatrix, mat4 lProjection, Ref<IRenderContext> lContext, Ref<IDescriptorSet> aDescriptors );
 
       protected:
         Ref<IRenderContext>     mDirectionalShadowMapRenderContext    = nullptr;

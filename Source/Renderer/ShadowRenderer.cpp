@@ -110,7 +110,7 @@ namespace SE::Core
         return mCameraSetLayout->Allocate();
     }
 
-    static math::mat4 CreateCubeFaceViewMatrix( int aFace )
+    static mat4 CreateCubeFaceViewMatrix( int aFace )
     {
         glm::mat4 lViewMatrix = glm::mat4( 1.0f );
         switch( aFace )
@@ -297,24 +297,24 @@ namespace SE::Core
         }
     }
 
-    void ShadowSceneRenderer::RenderPunctualShadowMap( math::vec3 aLightPosition, std::array<Ref<IRenderContext>, 6> aContext,
+    void ShadowSceneRenderer::RenderPunctualShadowMap( vec3 aLightPosition, std::array<Ref<IRenderContext>, 6> aContext,
                                                        std::array<Ref<IGraphicBuffer>, 6> const &aUniforms,
                                                        std::array<Ref<IDescriptorSet>, 6> const &aDescriptors )
     {
-        math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 1000.0f );
-        mOmniView.mLightPos    = math::vec4( aLightPosition, 0.0f );
+        mat4 lProjection    = Perspective( radians( 90.0f ), 1.0f, .2f, 1000.0f );
+        mOmniView.mLightPos = vec4( aLightPosition, 0.0f );
 
         for( uint32_t f = 0; f < 6; f++ )
         {
             glm::mat4 viewMatrix = CreateCubeFaceViewMatrix( f );
-            mOmniView.mMVP       = lProjection * math::Translate( viewMatrix, -aLightPosition );
+            mOmniView.mMVP       = lProjection * Translate( viewMatrix, -aLightPosition );
             aUniforms[f]->Write( mOmniView );
 
             RenderCubeFace( viewMatrix, lProjection, aContext[f], aDescriptors[f] );
         }
     }
 
-    void ShadowSceneRenderer::RenderCubeFace( math::mat4 viewMatrix, math::mat4 lProjection, Ref<IRenderContext> lContext,
+    void ShadowSceneRenderer::RenderCubeFace( mat4 viewMatrix, mat4 lProjection, Ref<IRenderContext> lContext,
                                               Ref<IDescriptorSet> aDescriptors )
     {
         lContext->BeginRender();

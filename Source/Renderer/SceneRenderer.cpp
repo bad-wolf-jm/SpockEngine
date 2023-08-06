@@ -167,12 +167,12 @@ namespace SE::Core
         mShadowSceneRenderer->Render();
 
         auto lMaterialSystem = mScene->GetMaterialSystem();
+        lMaterialSystem->SetViewParameters( mProjectionMatrix, mViewMatrix, mCameraPosition );
+        lMaterialSystem->SetCameraParameters( mGamma, mExposure, mCameraPosition );
 
         mGeometryContext->BeginRender();
         for( auto const &[_, lQueue] : mPipelines )
         {
-            lMaterialSystem->SetViewParameters( mProjectionMatrix, mViewMatrix, mCameraPosition );
-            lMaterialSystem->SetCameraParameters( mGamma, mExposure, mCameraPosition );
 
             mGeometryContext->Bind( lQueue.mPipeline );
             lMaterialSystem->ConfigureRenderContext( mGeometryContext );

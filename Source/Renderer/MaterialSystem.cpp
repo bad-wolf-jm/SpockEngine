@@ -82,14 +82,12 @@ namespace SE::Core
         mDirectionalLightsDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mDirectionalLightsDescriptorLayout->Build();
 
-        // Descriptors layout for pun ctual lights
-
+        // Descriptors layout for punctual lights
+        mShaderPunctualLights =
+            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sPunctualLight ) );
         mPunctualLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mPunctualLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mPunctualLightsDescriptorLayout->Build();
-
-        mShaderPunctualLights =
-            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sPunctualLight ) );
         mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1 );
         mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, 1, 0 );
 
@@ -132,8 +130,11 @@ namespace SE::Core
             mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, lBufferSize, 0 );
         }
 
-        mShaderPunctualLights->Upload( mPointLights );
-    }
+        if( mPointLights.size() > 0 )
+            mShaderPunctualLights->Upload( mPointLights );
+        else
+            mShaderPunctualLights->Write(sPunctualLight{});
+    }   
 
     Material MaterialSystem::CreateMaterial( std::string const &aName )
     {
@@ -578,7 +579,9 @@ namespace SE::Core
 
     void MaterialSystem::SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps )
     {
-        mPunctualLightShadowMapDescriptor = mPunctualLightShadowMapDescriptorLayout->Allocate( aPunctualLightShadowMaps.size() );
+        auto lDescriptorSize = math::max( (uint32_t)aPunctualLightShadowMaps.size(), 1u );
+
+        mPunctualLightShadowMapDescriptor = mPunctualLightShadowMapDescriptorLayout->Allocate( lDescriptorSize );
         mPunctualLightShadowMapDescriptor->Write( aPunctualLightShadowMaps, 0 );
     }
 
