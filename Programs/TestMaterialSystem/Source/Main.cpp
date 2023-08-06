@@ -100,14 +100,14 @@ int main( int argc, char **argv )
 {
     auto mGraphicContext = CreateGraphicContext( 1 );
 
-    auto lMaterialSystem = New<NewMaterialSystem>( mGraphicContext );
+    auto lMaterialSystem = New<MaterialSystem>( mGraphicContext );
 
     auto lMaterial = lMaterialSystem->BeginMaterial( "TEST_MATERIAL" );
 
     lMaterialSystem->EndMaterial( lMaterial );
 
-    lMaterial.Get<sMaterialInfo>().mRequiresUV0 = false;
-    lMaterial.Get<sMaterialInfo>().mRequiresUV1 = false;
+    lMaterial.Get<sMaterialInfo>().mRequiresUV0     = false;
+    lMaterial.Get<sMaterialInfo>().mRequiresUV1     = false;
     lMaterial.Get<sMaterialInfo>().mRequiresNormals = false;
 
     {

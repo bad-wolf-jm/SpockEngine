@@ -129,8 +129,8 @@ namespace SE::Core
             } );
         // clang-format on
 
-        mScene->GetNewMaterialSystem()->SetLights( lDirectionalLight );
-        mScene->GetNewMaterialSystem()->SetLights( lPointLights );
+        mScene->GetMaterialSystem()->SetLights( lDirectionalLight );
+        mScene->GetMaterialSystem()->SetLights( lPointLights );
 
         mShadowSceneRenderer->SetLights( lDirectionalLight );
         mShadowSceneRenderer->SetLights( lPointLights );
@@ -141,20 +141,20 @@ namespace SE::Core
         mScene->ForEach<sStaticMeshComponent, sMaterialComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
             {
-                size_t lMaterialHash = mScene->GetNewMaterialSystem()->GetMaterialHash( aMaterial.mMaterialID );
+                size_t lMaterialHash = mScene->GetMaterialSystem()->GetMaterialHash( aMaterial.mMaterialID );
                 if( mPipelines.find( lMaterialHash ) == mPipelines.end() )
                 {
                     mPipelines.emplace( lMaterialHash, sRenderQueue{} );
                     mPipelines[lMaterialHash].mPipeline =
-                        mScene->GetNewMaterialSystem()->CreateGraphicsPipeline( aMaterial.mMaterialID, mGeometryContext );
+                        mScene->GetMaterialSystem()->CreateGraphicsPipeline( aMaterial.mMaterialID, mGeometryContext );
                 }
                 mPipelines[lMaterialHash].mMeshes.emplace_back( aStaticMeshComponent, aMaterial );
             } );
         // clang-format on
 
         mShadowSceneRenderer->Update( aWorld );
-        mScene->GetNewMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetDirectionalShadowMapSampler() );
-        mScene->GetNewMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetPointLightShadowMapSamplers() );
+        mScene->GetMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetDirectionalShadowMapSampler() );
+        mScene->GetMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetPointLightShadowMapSamplers() );
     }
 
     void SceneRenderer::Render()
@@ -166,7 +166,7 @@ namespace SE::Core
 
         mShadowSceneRenderer->Render();
 
-        auto lMaterialSystem = mScene->GetNewMaterialSystem();
+        auto lMaterialSystem = mScene->GetMaterialSystem();
 
         mGeometryContext->BeginRender();
         for( auto const &[_, lQueue] : mPipelines )

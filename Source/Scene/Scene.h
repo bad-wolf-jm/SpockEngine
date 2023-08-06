@@ -119,7 +119,7 @@ namespace SE::Core
         //     return mMaterialSystem;
         // }
 
-        Ref<NewMaterialSystem> GetNewMaterialSystem()
+        Ref<MaterialSystem> GetMaterialSystem()
         {
             return mMaterialSystem;
         }
@@ -137,7 +137,7 @@ namespace SE::Core
         Ref<OptixScene>               mAccelerationStructure = nullptr;
 
         // Handle to the new version of the material system
-        Ref<NewMaterialSystem> mMaterialSystem = nullptr;
+        Ref<MaterialSystem> mMaterialSystem = nullptr;
 
         std::vector<sActorComponent> mActorComponents;
 

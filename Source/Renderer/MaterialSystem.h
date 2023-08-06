@@ -114,13 +114,13 @@ namespace SE::Core
         sFragmentShader( const sFragmentShader & ) = default;
     };
 
-    class NewMaterialSystem
+    class MaterialSystem
     {
       public:
-        NewMaterialSystem() = default;
-        NewMaterialSystem( Ref<IGraphicContext> aGraphicContext );
+        MaterialSystem() = default;
+        MaterialSystem( Ref<IGraphicContext> aGraphicContext );
 
-        ~NewMaterialSystem() = default;
+        ~MaterialSystem() = default;
 
         Material CreateMaterial( std::string const &aName );
         Material CreateMaterial( fs::path const &aMaterialPath );
@@ -190,8 +190,8 @@ namespace SE::Core
         void SetLights( sDirectionalLight const &aDirectionalLights );
         void SetLights( std::vector<sPunctualLight> const &aPointLights );
 
-        void SetShadowMap(Ref<ISampler2D> aDirectionalShadowMap);
-        void SetShadowMap(std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps);
+        void SetShadowMap( Ref<ISampler2D> aDirectionalShadowMap );
+        void SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps );
 
         void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
         void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );

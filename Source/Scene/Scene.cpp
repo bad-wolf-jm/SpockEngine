@@ -44,8 +44,7 @@ namespace SE::Core
     Scene::Scene( Ref<IGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI )
         : mGraphicContext{ aGraphicContext }
     {
-        // mMaterialSystem    = New<MaterialSystem>( mGraphicContext );
-        mMaterialSystem = New<NewMaterialSystem>( mGraphicContext );
+        mMaterialSystem = New<MaterialSystem>( mGraphicContext );
 
         mEditorView = Translate( mat4( 1.0f ), -vec3( 0.0f, 1.0f, 7.5f ) );
 

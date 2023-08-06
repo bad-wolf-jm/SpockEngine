@@ -47,7 +47,7 @@ namespace SE::Core
         bool x = true;
     };
 
-    NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
+    MaterialSystem::MaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     {
         mViewParameters =
@@ -106,7 +106,7 @@ namespace SE::Core
         mPunctualLightShadowMapDescriptorLayout->Build();
     }
 
-    std::vector<Material> NewMaterialSystem::GetMaterialData()
+    std::vector<Material> MaterialSystem::GetMaterialData()
     {
         std::vector<Material> lMaterials;
         mMaterialRegistry.ForEach<sMaterialInfo>( [&]( auto aMaterial, auto const &aInfo ) { lMaterials.push_back( aMaterial ); } );
@@ -114,13 +114,13 @@ namespace SE::Core
         return lMaterials;
     }
 
-    void NewMaterialSystem::SetLights( sDirectionalLight const &aDirectionalLights )
+    void MaterialSystem::SetLights( sDirectionalLight const &aDirectionalLights )
     {
         mDirectionalLight = aDirectionalLights;
         mShaderDirectionalLights->Write( mDirectionalLight );
     }
 
-    void NewMaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
+    void MaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
 
@@ -135,7 +135,7 @@ namespace SE::Core
         mShaderPunctualLights->Upload( mPointLights );
     }
 
-    Material NewMaterialSystem::CreateMaterial( std::string const &aName )
+    Material MaterialSystem::CreateMaterial( std::string const &aName )
     {
         Material lNewMaterial = mMaterialRegistry.CreateEntity( aName );
         lNewMaterial.Add<sMaterialInfo>();
@@ -143,7 +143,7 @@ namespace SE::Core
         return lNewMaterial;
     }
 
-    Material NewMaterialSystem::BeginMaterial( std::string const &aName )
+    Material MaterialSystem::BeginMaterial( std::string const &aName )
     {
         auto lNewMaterial = CreateMaterial( aName );
         lNewMaterial.Add<sMaterialNotReady>();
@@ -151,13 +151,13 @@ namespace SE::Core
         return lNewMaterial;
     }
 
-    void NewMaterialSystem::EndMaterial( Material const &aMaterial )
+    void MaterialSystem::EndMaterial( Material const &aMaterial )
     {
         aMaterial.Remove<sMaterialNotReady>();
         aMaterial.Add<sMaterialNeedsUpdate>();
     }
 
-    size_t NewMaterialSystem::GetMaterialHash( Material const &aMaterial )
+    size_t MaterialSystem::GetMaterialHash( Material const &aMaterial )
     {
         uint8_t lBitOffset = 0;
         size_t  lHashValue = 0;
@@ -183,7 +183,7 @@ namespace SE::Core
         return lHashValue;
     }
 
-    void NewMaterialSystem::AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
+    void MaterialSystem::AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
     {
         DefineConstant( aShaderProgram, "__GLSL__" );
         DefineConstant( aShaderProgram, "VULKAN_SEMANTICS" );
@@ -222,7 +222,7 @@ namespace SE::Core
         // clang-format on
     }
 
-    std::string NewMaterialSystem::CreateShaderName( Material aMaterial, const char *aPrefix )
+    std::string MaterialSystem::CreateShaderName( Material aMaterial, const char *aPrefix )
     {
         std::string lMateriaName = aMaterial.TryGet<sTag>( sTag{} ).mValue;
         if( !lMateriaName.empty() )
@@ -231,7 +231,7 @@ namespace SE::Core
             return fmt::format( "{}_UNNAMED_{}", aPrefix, lMateriaName, GetMaterialHash( aMaterial ) );
     }
 
-    Ref<IShaderProgram> NewMaterialSystem::CreateVertexShader( Material const &aMaterial )
+    Ref<IShaderProgram> MaterialSystem::CreateVertexShader( Material const &aMaterial )
     {
         if( mVertexShaders.find( GetMaterialHash( aMaterial ) ) != mVertexShaders.end() )
             return mVertexShaders[GetMaterialHash( aMaterial )];
@@ -255,7 +255,7 @@ namespace SE::Core
         return lShader;
     }
 
-    Ref<IShaderProgram> NewMaterialSystem::CreateFragmentShader( Material const &aMaterial )
+    Ref<IShaderProgram> MaterialSystem::CreateFragmentShader( Material const &aMaterial )
     {
 
         if( mFragmentShaders.find( GetMaterialHash( aMaterial ) ) != mFragmentShaders.end() )
@@ -308,7 +308,7 @@ namespace SE::Core
         return lShader;
     }
 
-    Ref<IGraphicsPipeline> NewMaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass )
+    Ref<IGraphicsPipeline> MaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass )
     {
         auto lVertexShader   = CreateVertexShader( aMaterial );
         auto lFragmentShader = CreateFragmentShader( aMaterial );
@@ -360,14 +360,14 @@ namespace SE::Core
         return lNewPipeline;
     }
 
-    int32_t NewMaterialSystem::AppendTextureData( Ref<ISampler2D> aTexture )
+    int32_t MaterialSystem::AppendTextureData( Ref<ISampler2D> aTexture )
     {
         mTextureData.push_back( aTexture );
 
         return mTextureData.size() - 1;
     }
 
-    void NewMaterialSystem::AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo )
+    void MaterialSystem::AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo )
     {
         auto &lNew                      = mMaterialData.emplace_back();
         mMaterialIndexLookup[aMaterial] = mMaterialData.size() - 1;
@@ -417,7 +417,7 @@ namespace SE::Core
         }
     }
 
-    void NewMaterialSystem::UpdateMaterialData()
+    void MaterialSystem::UpdateMaterialData()
     {
         mMaterialData.clear();
         mTextureData.clear();
@@ -461,9 +461,9 @@ namespace SE::Core
         }
     }
 
-    Material NewMaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
+    Material MaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
     {
-        SE::Logging::Info( "NewMaterialSystem::CreateMaterial( {} )", aMaterialPath.string() );
+        SE::Logging::Info( "MaterialSystem::CreateMaterial( {} )", aMaterialPath.string() );
         BinaryAsset lBinaryDataFile( aMaterialPath );
 
         uint32_t lTextureCount = lBinaryDataFile.CountAssets() - 1;
@@ -534,7 +534,7 @@ namespace SE::Core
         return lNewMaterial;
     }
 
-    void NewMaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
+    void MaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
     {
         aRenderPass->Bind( mViewParametersDescriptor, VIEW_PARAMETERS_BIND_POINT );
         aRenderPass->Bind( mCameraParametersDescriptor, CAMERA_PARAMETERS_BIND_POINT );
@@ -546,19 +546,19 @@ namespace SE::Core
         aRenderPass->Bind( mPunctualLightShadowMapDescriptor, PUNCTUAL_LIGHTS_SHADOW_MAP_BIND_POINT );
     }
 
-    void NewMaterialSystem::SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition )
+    void MaterialSystem::SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition )
     {
         ViewParameters lView{ aProjection, aView, aCameraPosition };
         mViewParameters->Write( lView );
     }
 
-    void NewMaterialSystem::SetCameraParameters( float aGamma, float aExposure, vec3 aCameraPosition )
+    void MaterialSystem::SetCameraParameters( float aGamma, float aExposure, vec3 aCameraPosition )
     {
         CameraParameters lCamera{ aExposure, aGamma, aCameraPosition };
         mCameraParameters->Write( lCamera );
     }
 
-    int32_t NewMaterialSystem::GetMaterialIndex( Material aMaterial )
+    int32_t MaterialSystem::GetMaterialIndex( Material aMaterial )
     {
         if( mMaterialIndexLookup.find( aMaterial ) == mMaterialIndexLookup.end() )
             return -1;
@@ -566,17 +566,17 @@ namespace SE::Core
         return mMaterialIndexLookup[aMaterial];
     }
 
-    void NewMaterialSystem::SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID )
+    void MaterialSystem::SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID )
     {
         aRenderPass->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, GetMaterialIndex( aMaterialID ) );
     }
 
-    void NewMaterialSystem::SetShadowMap( Ref<ISampler2D> aDirectionalShadowMap )
+    void MaterialSystem::SetShadowMap( Ref<ISampler2D> aDirectionalShadowMap )
     {
         mDirectionalLightShadowMapDescriptor->Write( aDirectionalShadowMap, 0 );
     }
 
-    void NewMaterialSystem::SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps )
+    void MaterialSystem::SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps )
     {
         mPunctualLightShadowMapDescriptor = mPunctualLightShadowMapDescriptorLayout->Allocate( aPunctualLightShadowMaps.size() );
         mPunctualLightShadowMapDescriptor->Write( aPunctualLightShadowMaps, 0 );
