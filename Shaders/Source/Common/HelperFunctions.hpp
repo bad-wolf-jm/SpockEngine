@@ -40,5 +40,10 @@ float pow5( float x )
     return x2 * x2 * x;
 }
 
+float sq( float x )
+{
+    return x * x;
+}
+
 #define saturate( x ) clamp( x, 0.0, 1.0 )
 #define PI            3.14159265359

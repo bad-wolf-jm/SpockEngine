@@ -289,14 +289,14 @@ namespace SE::Core
         {
 
         case eShadingModel::SUBSURFACE:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingSubsurface.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModels\\SurfaceShadingSubsurface.hpp" );
             break;
         case eShadingModel::CLOTH:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingClothW.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModels\\SurfaceShadingCloth.hpp" );
             break;
         case eShadingModel::STANDARD:
         default:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingStandard.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModels\\SurfaceShadingStandard.hpp" );
             break;
         }
 

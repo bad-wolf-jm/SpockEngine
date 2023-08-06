@@ -23,7 +23,7 @@ struct MaterialInputs
     float4 mEmissive;
 #endif
 
-#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
+#if defined( MATERIAL_HAS_SHEEN_COLOR )
     float3 mSheenColor;
     float  mSheenRoughness;
 #endif
@@ -191,7 +191,7 @@ void InitializeMaterial( out MaterialInputs aMaterial )
     aMaterial.mEmissive = GetEmissive();
 #endif
 
-#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
+#if defined(MATERIAL_HAS_SHEEN_COLOR) && !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
     aMaterial.mSheenColor     = float3( 0.0f );
     aMaterial.mSheenRoughness = 0.0f;
 #endif

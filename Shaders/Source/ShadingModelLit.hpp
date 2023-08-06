@@ -8,7 +8,7 @@
 #    include "Material.hpp"
 #    include "ShadingData.hpp"
 #    include "ShadingModelLit.hpp"
-#    include "SurfaceShadingStandard.hpp"
+#    include "ShadingModels/SurfaceShadingStandard.hpp"
 #    include "Varying.hpp"
 #endif
 
@@ -151,13 +151,25 @@ void EvaluatePunctualLights( MaterialInputs aMaterial, ShadingData aShadingData,
 
 #define MIN_PERCEPTUAL_ROUGHNESS 0.045
 #define MIN_ROUGHNESS            0.002025
-void ComputeShadingData( float3 aBaseColor, float3 aReflectance, float aMetal, float aRough, out ShadingData aShadingData )
+void ComputeShadingData( MaterialInputs aMaterial, float3 aBaseColor, float3 aReflectance, float aMetal, float aRough,
+                         out ShadingData aShadingData )
 {
     aShadingData.mF0                  = aBaseColor * aMetal + ( aReflectance * ( 1.0 - aMetal ) );
     aShadingData.mPerceptualRoughness = clamp( aRough, MIN_PERCEPTUAL_ROUGHNESS, 1.0 );
     aShadingData.mRoughness           = aShadingData.mPerceptualRoughness * aShadingData.mPerceptualRoughness;
     aShadingData.mDiffuseColor        = ( 1.0 - aMetal ) * aBaseColor;
     aShadingData.mEnergyCompensation  = 1.0;
+
+#if defined( MATERIAL_HAS_SUBSURFACE_COLOR )
+    aShadingData.mSubsurfaceColor = aMaterial.mSubsurfaceColor;
+#endif
+
+#if defined( MATERIAL_HAS_SHEEN_COLOR ) && !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
+    aShadingData.mSheenColor               = aMaterial.mSheenColor;
+    aShadingData.mSheenPerceptualRoughness = clamp( aMaterial.mSheenRoughness, MIN_PERCEPTUAL_ROUGHNESS, 1.0 );
+    aShadingData.mSheenRoughness           = aShadingData.mSheenPerceptualRoughness * aShadingData.mSheenPerceptualRoughness;
+    aShadingData.mSheenScaling             = 1.0; // TODO: this has to do with IBL
+#endif
 }
 
 float4 EvaluateLights( MaterialInputs aMaterial )
@@ -165,8 +177,8 @@ float4 EvaluateLights( MaterialInputs aMaterial )
     float3 lColor = float3( 0.0 ); // aMaterial.mBaseColor.xyz;
 
     ShadingData lShadingData;
-    ComputeShadingData( aMaterial.mBaseColor.rgb * aMaterial.mBaseColor.a, float3( 0.04 ), aMaterial.mMetallic, aMaterial.mRoughness,
-                        lShadingData );
+    ComputeShadingData( aMaterial, aMaterial.mBaseColor.rgb * aMaterial.mBaseColor.a, float3( 0.04 ), aMaterial.mMetallic,
+                        aMaterial.mRoughness, lShadingData );
 
     EvaluateIBL( aMaterial, lShadingData, inPos, lColor );
     EvaluateDirectionalLight( aMaterial, lShadingData, inPos, lColor );

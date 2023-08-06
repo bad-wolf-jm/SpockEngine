@@ -5,6 +5,32 @@
 #    include "Common/Definitions.hpp"
 #endif
 
+float Fd_Wrap( float NoL, float w )
+{
+    return saturate( ( NoL + w ) / sq( 1.0 + w ) );
+}
+
+float V_Kelemen( float LoH )
+{
+    // Kelemen 2001, "A Microfacet Based Coupled Specular-Matte BRDF Model with Importance Sampling"
+    return 0.25 / ( LoH * LoH );
+}
+
+float V_Neubelt( float NoV, float NoL )
+{
+    // Neubelt and Pettineo 2013, "Crafting a Next-gen Material Pipeline for The Order: 1886"
+    return ( 1.0 / ( 4.0 * ( NoL + NoV - NoL * NoV ) ) );
+}
+
+float D_Charlie( float roughness, float NoH )
+{
+    // Estevez and Kulla 2017, "Production Friendly Microfacet Sheen BRDF"
+    float invAlpha = 1.0 / roughness;
+    float cos2h    = NoH * NoH;
+    float sin2h    = max( 1.0 - cos2h, 0.0078125 ); // 2^(-14/2), so sin2h^2 > 0 in fp16
+    return ( 2.0 + invAlpha ) * pow( sin2h, invAlpha * 0.5 ) / ( 2.0 * PI );
+}
+
 float D_GGX( float roughness, float NoH, const float3 h )
 {
     // Walter et al. 2007, "Microfacet Models for Refraction through Rough Surfaces"
