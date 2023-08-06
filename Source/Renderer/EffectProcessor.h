@@ -17,8 +17,7 @@ namespace SE::Core
     {
         Ref<IShaderProgram> mVertexShader   = nullptr;
         Ref<IShaderProgram> mFragmentShader = nullptr;
-
-        Ref<IRenderContext> RenderPass = nullptr;
+        Ref<IRenderContext> RenderPass      = nullptr;
     };
 
     class EffectProcessor
