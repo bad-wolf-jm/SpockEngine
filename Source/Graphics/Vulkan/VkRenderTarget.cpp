@@ -11,7 +11,8 @@ namespace SE::Graphics
     {
         GraphicContext<VkGraphicContext>()->DestroyFramebuffer( mVkFramebuffer );
 
-        for( auto &lImageView : mVkImageViews ) GraphicContext<VkGraphicContext>()->DestroyImageView( lImageView );
+        for( auto &lImageView : mVkImageViews )
+            GraphicContext<VkGraphicContext>()->DestroyImageView( lImageView );
     }
 
     std::vector<VkClearValue> VkRenderTarget::GetClearValues()
@@ -128,10 +129,13 @@ namespace SE::Graphics
     {
         switch( aOp )
         {
-        case eAttachmentLoadOp::CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
-        case eAttachmentLoadOp::LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
+        case eAttachmentLoadOp::CLEAR:
+            return VK_ATTACHMENT_LOAD_OP_CLEAR;
+        case eAttachmentLoadOp::LOAD:
+            return VK_ATTACHMENT_LOAD_OP_LOAD;
         case eAttachmentLoadOp::UNSPECIFIED:
-        default: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        default:
+            return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         }
     }
 
@@ -139,9 +143,11 @@ namespace SE::Graphics
     {
         switch( aOp )
         {
-        case eAttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+        case eAttachmentStoreOp::STORE:
+            return VK_ATTACHMENT_STORE_OP_STORE;
         case eAttachmentStoreOp::UNSPECIFIED:
-        default: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        default:
+            return VK_ATTACHMENT_STORE_OP_DONT_CARE;
         }
     }
 
@@ -192,15 +198,16 @@ namespace SE::Graphics
             }
             case eAttachmentType::DEPTH:
             {
-                lDescription = lNewRenderPass->DepthAttachment( mAttachmentInfo[i].mIsDefined, mSpec.mSampleCount, lAttachmentLoadOp,
-                                                                lAttachmentStoreOp );
+                lDescription = lNewRenderPass->DepthAttachment( mAttachmentInfo[i].mIsDefined, mSpec.mSampleCount,
+                                                                mAttachmentInfo[i].mIsSampled, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lDepthAttachment.attachment = i;
                 lDepthAttachment.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
                 lDepthAttachmentPtr         = &lDepthAttachment;
                 break;
             }
-            default: break;
+            default:
+                break;
             }
         }
 
@@ -216,21 +223,43 @@ namespace SE::Graphics
         return std::static_pointer_cast<VkTexture2D>( mAttachments[aKey].mTexture );
     }
 
-    bool VkRenderTarget::BeginRender() { return true; }
+    bool VkRenderTarget::BeginRender()
+    {
+        return true;
+    }
 
-    void VkRenderTarget::EndRender() {}
+    void VkRenderTarget::EndRender()
+    {
+    }
 
-    void VkRenderTarget::Present() {}
+    void VkRenderTarget::Present()
+    {
+    }
 
-    uint32_t VkRenderTarget::GetCurrentImage() { return 0; };
+    uint32_t VkRenderTarget::GetCurrentImage()
+    {
+        return 0;
+    };
 
-    VkFramebuffer VkRenderTarget::GetFramebuffer() { return mVkFramebuffer; }
+    VkFramebuffer VkRenderTarget::GetFramebuffer()
+    {
+        return mVkFramebuffer;
+    }
 
-    VkSemaphore VkRenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkSemaphore VkRenderTarget::GetImageAvailableSemaphore( uint32_t i )
+    {
+        return VK_NULL_HANDLE;
+    }
 
-    VkSemaphore VkRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkSemaphore VkRenderTarget::GetRenderFinishedSemaphore( uint32_t i )
+    {
+        return VK_NULL_HANDLE;
+    }
 
-    VkFence VkRenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkFence VkRenderTarget::GetInFlightFence( uint32_t i )
+    {
+        return VK_NULL_HANDLE;
+    }
 
     void VkRenderTarget::InitializeCommandBuffers()
     {
@@ -248,10 +277,12 @@ namespace SE::Graphics
                 mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT );
 
             auto lRenderFinishedSemaphore = GetRenderFinishedSemaphore( i );
-            if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
+            if( lRenderFinishedSemaphore )
+                mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
 
             auto lSubmitFence = GetInFlightFence( i );
-            if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
+            if( lSubmitFence )
+                mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
     }
 

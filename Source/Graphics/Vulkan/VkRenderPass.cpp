@@ -90,22 +90,16 @@ namespace SE::Graphics
         lAttachmentSpec.initialLayout  = aIsDefined ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_UNDEFINED;
 
         if( aIsSampled )
-        {
             lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        }
         else if( aIsPresented )
-        {
             lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-        }
         else
-        {
             lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        }
 
         return lAttachmentSpec;
     }
 
-    VkAttachmentDescription VkRenderPassObject::DepthAttachment( bool aIsDefined, uint32_t aSampleCount,
+    VkAttachmentDescription VkRenderPassObject::DepthAttachment( bool aIsDefined, uint32_t aSampleCount, bool aIsSampled,
                                                                  VkAttachmentLoadOp  aAttachmentLoadOp,
                                                                  VkAttachmentStoreOp aAttachmentStoreOp )
     {
@@ -119,6 +113,11 @@ namespace SE::Graphics
         lAttachmentSpec.initialLayout  = aIsDefined ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_UNDEFINED;
         lAttachmentSpec.finalLayout    = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
+        if( aIsSampled )
+            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+        else
+            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+ 
         return lAttachmentSpec;
     }
 

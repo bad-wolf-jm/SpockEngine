@@ -19,22 +19,21 @@ namespace SE::Graphics
         VkRenderPass mVkObject    = VK_NULL_HANDLE;
         uint32_t     mSampleCount = 1;
 
-        VkRenderPassObject()                                = default;
+        VkRenderPassObject()                       = default;
         VkRenderPassObject( VkRenderPassObject & ) = default;
         VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
-                                     std::vector<VkSubpassDescription> aSubpasses,
-                                     std::vector<VkSubpassDependency>  aSubpassDependencies );
+                            std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
 
         VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
-                                     bool aIsPresented, math::vec4 aClearColor );
+                            bool aIsPresented, math::vec4 aClearColor );
 
         ~VkRenderPassObject();
 
         VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
                                                  bool aIsDefined, VkAttachmentLoadOp aAttachmentLoadOp,
                                                  VkAttachmentStoreOp aAttachmentStoreOp );
-        VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
-                                                 VkAttachmentStoreOp aAttachmentStoreOp );
+        VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, bool aIsSampled,
+                                                 VkAttachmentLoadOp aAttachmentLoadOp, VkAttachmentStoreOp aAttachmentStoreOp );
 
         std::vector<VkClearValue> GetClearValues();
 
@@ -45,7 +44,10 @@ namespace SE::Graphics
                                          VkAttachmentReference               *aDepthAttachmentReference,
                                          VkAttachmentReference               *aResolveAttachmentReference );
 
-        uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
+        uint32_t GetColorAttachmentCount()
+        {
+            return mColorAttachmentCount;
+        }
 
       protected:
         Ref<VkGraphicContext>     mContext              = nullptr;
