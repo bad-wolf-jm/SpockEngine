@@ -245,7 +245,7 @@ namespace SE::Core
         AddDefinitions( lShader, aMaterial );
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
 
         if( aMaterial.Has<sVertexShader>() )
             lShader->AddCode( "//" );
@@ -273,21 +273,21 @@ namespace SE::Core
 
         AddDefinitions( lShader, aMaterial );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\LightInputData.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\ShaderMaterial.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\FragmentShaderUniformInputs.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\HelperFunctions.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Brdf.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Material.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingData.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\LightData.hpp" );
 
         auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
 
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModels\\Brdf.hpp" );
+
         switch( lMaterialInfo.mShadingModel )
         {
-
         case eShadingModel::SUBSURFACE:
             lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModels\\SurfaceShadingSubsurface.hpp" );
             break;
@@ -300,7 +300,7 @@ namespace SE::Core
             break;
         }
 
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModels\\ShadingModelLit.hpp" );
 
         if( aMaterial.Has<sFragmentShader>() )
             lShader->AddCode( "//" );

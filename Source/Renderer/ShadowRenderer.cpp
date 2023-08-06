@@ -32,7 +32,7 @@ namespace SE::Core
         lVertexShader->AddCode( "#define MATERIAL_HAS_NORMALS" );
         lVertexShader->AddCode( "#define MATERIAL_HAS_UV0" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Varying.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
         lVertexShader->Compile();
 
@@ -79,7 +79,7 @@ namespace SE::Core
         lVertexShader->AddCode( "#define MATERIAL_HAS_NORMALS" );
         lVertexShader->AddCode( "#define MATERIAL_HAS_UV0" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Varying.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
         lVertexShader->Compile();
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
