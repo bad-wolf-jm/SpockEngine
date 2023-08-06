@@ -91,6 +91,7 @@ namespace SE::Graphics
         {
             std::vector<VkSampler>   mSampler   = {};
             std::vector<VkImageView> mImageView = {};
+            std::vector<bool>        mIsDepth   = {};
             uint32_t                 mBinding   = 0;
         };
 

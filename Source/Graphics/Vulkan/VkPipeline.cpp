@@ -180,9 +180,10 @@ namespace SE::Graphics
         for( uint32_t j = 0; j < aImages.mSampler.size(); j++ )
         {
             VkDescriptorImageInfo lImageInfo{};
-            lImageInfo.sampler     = aImages.mSampler[j];
-            lImageInfo.imageView   = aImages.mImageView[j];
-            lImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            lImageInfo.sampler   = aImages.mSampler[j];
+            lImageInfo.imageView = aImages.mImageView[j];
+            lImageInfo.imageLayout =
+                aImages.mIsDepth[j] ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
             lWriteBufferInfo.push_back( lImageInfo );
         }

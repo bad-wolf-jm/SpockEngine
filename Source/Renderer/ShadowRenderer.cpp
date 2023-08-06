@@ -183,7 +183,7 @@ namespace SE::Core
         lRenderTargetSpec.mSampleCount = 1;
 
         auto lRenderTarget = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
-        lRenderTarget->AddAttachment( "SHADOW_MAP", sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
+        lRenderTarget->AddAttachment( "SHADOW_MAP", sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED, true ) );
         lRenderTarget->Finalize();
 
         return lRenderTarget;
