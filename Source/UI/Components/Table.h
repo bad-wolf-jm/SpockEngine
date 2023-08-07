@@ -31,42 +31,6 @@ namespace SE::Core
         void             Clear();
     };
 
-    // struct UIFloat64Column : public UITableColumn
-    // {
-    //     string_t mFormat;
-    //     string_t mNaNFormat;
-
-    //     vector_t<double> mData;
-
-    //     UIFloat64Column() = default;
-    //     UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
-
-    //     ~UIFloat64Column() = default;
-
-    //     ImVec2 RequiredSize();
-    //     void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //     uint32_t Size();
-    //     void     Render( int aRow, ImVec2 aCellSize );
-    //     void     Clear();
-    // };
-
-    // struct UIUint32Column : public UITableColumn
-    // {
-    //     vector_t<uint32_t> mData;
-
-    //     UIUint32Column() = default;
-    //     UIUint32Column( string_t aHeader, float aInitialSize );
-
-    //     ~UIUint32Column() = default;
-    //     ImVec2 RequiredSize();
-    //     void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //     uint32_t Size();
-    //     void     Render( int aRow, ImVec2 aCellSize );
-    //     void     Clear();
-    // };
-
     struct UIStringColumn : public UITableColumn
     {
         vector_t<string_t> mData;
@@ -112,6 +76,8 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void   DrawTableRows( ImGuiTable *lThisTable, uint32_t lRowCount, int aRowStart, int aRowEnd );
+        void   DrawTableCell( ImGuiTable *lThisTable, UITableColumn *lColumnData, int lColumn, int lRow );
 
       public:
         void *mOnRowClickDelegate       = nullptr;
