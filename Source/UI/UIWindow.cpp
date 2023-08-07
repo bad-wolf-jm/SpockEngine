@@ -150,6 +150,7 @@ namespace SE::Core
 
             if( lClipRect.x < 0.0f )
                 lClipRect.x = 0.0f;
+                
             if( lClipRect.y < 0.0f )
                 lClipRect.y = 0.0f;
 

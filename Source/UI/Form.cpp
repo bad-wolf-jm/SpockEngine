@@ -18,10 +18,12 @@ namespace SE::Core
     {
         mTitle = aTitle;
     }
+
     void UIForm::SetContent( UIComponent *aContent )
     {
         mContent = aContent;
     }
+
     void UIForm::SetSize( float aWidth, float aHeight )
     {
         mWidth         = aWidth;
@@ -43,6 +45,7 @@ namespace SE::Core
             return;
 
         ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{ mPadding.z, mPadding.x } );
+        
         if( mResizeRequest )
         {
             ImGui::SetNextWindowSize( ImVec2{ mWidth, mHeight }, ImGuiCond_Once );

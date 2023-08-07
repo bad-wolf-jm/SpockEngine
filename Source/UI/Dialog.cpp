@@ -17,6 +17,7 @@ namespace SE::Core
     void UIDialog::PushStyles()
     {
     }
+
     void UIDialog::PopStyles()
     {
     }
@@ -25,10 +26,12 @@ namespace SE::Core
     {
         mTitle = aTitle;
     }
+
     void UIDialog::SetSize( math::vec2 aSize )
     {
         mSize = aSize;
     }
+
     void UIDialog::SetContent( UIComponent *aContent )
     {
         mContent = aContent;
@@ -54,6 +57,7 @@ namespace SE::Core
 
         if( !ImGui::IsPopupOpen( mTitle.c_str() ) )
             ImGui::OpenPopup( mTitle.c_str() );
+            
         ImGui::SetNextWindowSize( ImVec2{ mSize.x, mSize.y } );
         ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize |
                                   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
