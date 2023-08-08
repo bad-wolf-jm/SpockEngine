@@ -22,22 +22,28 @@ namespace SE::Core
     void UICheckBox::PushStyles( bool aEnabled )
     {
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
+        ImGui::PushStyleVar( ImGuiStyleVar_FrameRounding, 4.0f );
 
         if( !aEnabled )
         {
-            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.3f, 0.3f, 0.3f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
+            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 1.f, 1.f, 1.f, .5f } );
+            ImGui::PushStyleColor( ImGuiCol_FrameBgActive, ImVec4{ 0.1f, 0.1f, 0.1f, .1f } );
+            ImGui::PushStyleColor( ImGuiCol_FrameBgHovered, ImVec4{ 0.1f, 0.1f, 0.1f, .1f } );
+            ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4{ 0.1f, 0.1f, 0.1f, .1f } );
+        }
+        else
+        {
+            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 1.f, 1.f, 1.f, 1.f } );
+            ImGui::PushStyleColor( ImGuiCol_FrameBgActive, ImVec4{ 0.1f, 0.1f, 0.1f, .25f } );
+            ImGui::PushStyleColor( ImGuiCol_FrameBgHovered, ImVec4{ 0.1f, 0.1f, 0.1f, .25f } );
+            ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4{ 0.1f, 0.1f, 0.1f, .25f } );
         }
     }
 
     void UICheckBox::PopStyles( bool aEnabled )
     {
-        if( !aEnabled )
-            ImGui::PopStyleColor( 4 );
-             
-        ImGui::PopStyleVar();
+        ImGui::PopStyleColor( 4 );
+        ImGui::PopStyleVar(2);
     }
 
     ImVec2 UICheckBox::RequiredSize()

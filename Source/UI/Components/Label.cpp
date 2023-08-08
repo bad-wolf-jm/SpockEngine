@@ -38,6 +38,7 @@ namespace SE::Core
     {
         bool lTextColorSet =
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
+            
         if( lTextColorSet )
             ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
