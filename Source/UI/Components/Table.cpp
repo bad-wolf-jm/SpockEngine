@@ -16,9 +16,6 @@ namespace SE::Core
         mBackgroundColor.clear();
     }
 
-    // void UITableColumn::PushStyles() {}
-    // void UITableColumn::PopStyles() {}
-
     void UITable::PushStyles()
     {
     }
