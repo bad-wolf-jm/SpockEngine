@@ -1,6 +1,7 @@
 #include "InteropCalls.h"
 
 #include "Core/File.h"
+#include "Core/Profiling/BlockTimer.h"
 #include "Core/String.h"
 
 #include "Engine/Engine.h"
@@ -797,41 +798,6 @@ namespace SE::Core::Interop
         }
 #pragma endregion
 
-        // #pragma region UIFloat64Column
-        //         CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64Column )
-        //         DESTROY_INTERFACE( UIFloat64Column )
-
-        //         void UIFloat64Column_Clear( UIFloat64Column *aSelf ) { aSelf->Clear(); }
-
-        //         void UIFloat64Column_SetFormat( UIFloat64Column *aSelf, wchar_t *aValue )
-        //         {
-        //             aSelf->mFormat = ConvertStringForCoreclr( aValue );
-        //         }
-
-        //         void UIFloat64Column_SetNanFormat( UIFloat64Column *aSelf, wchar_t *aValue )
-        //         {
-        //             aSelf->mNaNFormat = ConvertStringForCoreclr( aValue );
-        //         }
-
-        //         void UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength )
-        //         {
-        //             aSelf->mData = vector_t( aValue, aValue + aLength );
-        //         }
-        // #pragma endregion
-
-        // #pragma region UIUint32Column
-        //         CONSTRUCT_WITHOUT_PARAMETERS( UIUint32Column )
-        //         DESTROY_INTERFACE( UIUint32Column )
-
-        //         void UIUint32Column_Clear( UIUint32Column *aSelf ) { aSelf->Clear(); }
-
-        //         void UIUint32Column_SetData( UIUint32Column *aSelf, uint32_t *aValue, int aLength )
-        //         {
-        //             aSelf->mData = vector_t( aValue, aValue + aLength );
-        //         }
-
-        // #pragma endregion
-
 #pragma region UIStringColumn
         CONSTRUCT_WITHOUT_PARAMETERS( UIStringColumn )
         DESTROY_INTERFACE( UIStringColumn )
@@ -844,8 +810,10 @@ namespace SE::Core::Interop
         void UIStringColumn_SetData( UIStringColumn *aSelf, wchar_t **aValue, int aLength )
         {
             aSelf->mData.clear();
+            aSelf->mData.resize( aLength );
+
             for( int i = 0; i < aLength; i++ )
-                aSelf->mData.push_back( ConvertStringForCoreclr( aValue[i] ) );
+                aSelf->mData[i] = ConvertStringForCoreclr( aValue[i] );
         }
 #pragma endregion
 
