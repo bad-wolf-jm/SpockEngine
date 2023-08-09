@@ -24,6 +24,7 @@ namespace SE::Core
     {
         mOnClicked = aOnChange;
     }
+
     void UITextToggleButton::OnChanged( std::function<void()> aOnChanged )
     {
         mOnChanged = aOnChanged;
@@ -33,6 +34,7 @@ namespace SE::Core
     {
         return mActivated;
     }
+    
     void UITextToggleButton::SetActive( bool aValue )
     {
         mActivated = aValue;

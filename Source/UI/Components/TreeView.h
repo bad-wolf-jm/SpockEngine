@@ -33,6 +33,8 @@ namespace SE::Core
 
       protected:
         ImGuiTreeNodeFlags mFlags;
+        uint32_t mID = std::numeric_limits<uint32_t>::max();
+        uint32_t mParentID = std::numeric_limits<uint32_t>::max();
 
         UIImage* mIcon = nullptr;
 
@@ -45,6 +47,9 @@ namespace SE::Core
         UITreeViewNode *mParent;
         vector_t<UITreeViewNode*> mChildren;
 
+        uint32_t mLevel = 0;
+        bool mIsOpen= false;
+
       protected:
         void PushStyles();
         void PopStyles();
@@ -52,7 +57,7 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      protected:
+      public:
         void TreePushOverrideID( );
         void TreePop();
         bool IsOpen();
@@ -72,13 +77,12 @@ namespace SE::Core
         void SetIconSpacing(float aSpacing);
         UITreeViewNode* Add();
 
-
         protected:
             float mIndent = 5.0f;
             float mIconSpacing = 12.0f;
+            uint32_t mCurrentID = 0;
             UITreeViewNode* mRoot; 
-
-
+            std::vector<UITreeViewNode*> mRows;
 
       protected:
         void PushStyles();

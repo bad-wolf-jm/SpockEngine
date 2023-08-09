@@ -124,44 +124,46 @@ namespace SE::Core
 
     bool UITreeViewNode::IsOpen()
     {
-        if( mFlags & ImGuiTreeNodeFlags_Leaf )
-            return true;
+        return mIsOpen;
 
-        // We only write to the tree storage if the user clicks (or explicitly use the SetNextItemOpen function)
-        ImGuiContext &lImGuiContext  = *GImGui;
-        ImGuiWindow  *lWindow        = lImGuiContext.CurrentWindow;
-        ImGuiStorage *lWindowStorage = lWindow->DC.StateStorage;
+        // if( mFlags & ImGuiTreeNodeFlags_Leaf )
+        //     return true;
 
-        bool lNodeIsOpen;
-        if( lImGuiContext.NextItemData.Flags & ImGuiNextItemDataFlags_HasOpen )
-        {
-            if( lImGuiContext.NextItemData.OpenCond & ImGuiCond_Always )
-            {
-                lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
-                lWindowStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
-            }
-            else
-            {
-                // We treat ImGuiCond_Once and ImGuiCond_FirstUseEver the same because tree node state are not saved persistently.
-                const int lStoredValue = lWindowStorage->GetInt( lWindow->GetID( (void *)this ), -1 );
-                if( lStoredValue == -1 )
-                {
-                    lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
-                    lWindowStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
-                }
-                else
-                {
-                    lNodeIsOpen = ( lStoredValue != 0 );
-                }
-            }
-        }
-        else
-        {
-            lNodeIsOpen =
-                lWindowStorage->GetInt( lWindow->GetID( (void *)this ), ( mFlags & ImGuiTreeNodeFlags_DefaultOpen ) ? 1 : 0 ) != 0;
-        }
+        // // We only write to the tree storage if the user clicks (or explicitly use the SetNextItemOpen function)
+        // ImGuiContext &lImGuiContext  = *GImGui;
+        // ImGuiWindow  *lWindow        = lImGuiContext.CurrentWindow;
+        // ImGuiStorage *lWindowStorage = lWindow->DC.StateStorage;
 
-        return lNodeIsOpen;
+        // bool lNodeIsOpen;
+        // if( lImGuiContext.NextItemData.Flags & ImGuiNextItemDataFlags_HasOpen )
+        // {
+        //     if( lImGuiContext.NextItemData.OpenCond & ImGuiCond_Always )
+        //     {
+        //         lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
+        //         lWindowStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
+        //     }
+        //     else
+        //     {
+        //         // We treat ImGuiCond_Once and ImGuiCond_FirstUseEver the same because tree node state are not saved persistently.
+        //         const int lStoredValue = lWindowStorage->GetInt( lWindow->GetID( (void *)this ), -1 );
+        //         if( lStoredValue == -1 )
+        //         {
+        //             lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
+        //             lWindowStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
+        //         }
+        //         else
+        //         {
+        //             lNodeIsOpen = ( lStoredValue != 0 );
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     lNodeIsOpen =
+        //         lWindowStorage->GetInt( lWindow->GetID( (void *)this ), ( mFlags & ImGuiTreeNodeFlags_DefaultOpen ) ? 1 : 0 ) != 0;
+        // }
+
+        // return lNodeIsOpen;
     }
 
     bool UITreeViewNode::IsLeaf()
@@ -221,7 +223,7 @@ namespace SE::Core
         {
             if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
             {
-                TreePushOverrideID();
+                // TreePushOverrideID();
             }
 
             return lNodeIsOpen;
@@ -299,6 +301,7 @@ namespace SE::Core
                 lIsToggled = true;
                 ImGui::NavMoveRequestCancel();
             }
+
             if( lImGuiContext.NavId == lWindow->GetID( (void *)this ) && lImGuiContext.NavMoveDir == ImGuiDir_Right &&
                 !lNodeIsOpen ) // If there's something upcoming on the line we may want to give it the priority?
             {
@@ -350,13 +353,14 @@ namespace SE::Core
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
         mLayout->Update( lNodePosition, lSize );
 
-        if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
-            TreePushOverrideID();
+        // if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
+        //     TreePushOverrideID();
 
         if( lDoubleClicked && lNodeIsLeaf && mOnSelected )
             mOnSelected( this );
 
-        return lNodeIsOpen;
+        // return lNodeIsOpen;
+        mIsOpen = lNodeIsOpen;
     }
 
     void UITreeViewNode::RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
@@ -389,6 +393,7 @@ namespace SE::Core
             IM_ASSERT( 0 );
             break;
         }
+
         aDrawList->AddTriangleFilled( lCenter + a, lCenter + b, lCenter + c, aColor );
     }
 
@@ -423,22 +428,26 @@ namespace SE::Core
                                           lLabelSize.y + lPadding.y * 2 );
         ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
-        if( mParent == nullptr )
-        {
-            for( auto lChild : Children() )
-            {
-                lChild->Update( ImGui::GetCursorPos(), lSize );
-            }
-        }
-        else if( RenderNode() )
-        {
-            for( auto lChild : Children() )
-            {
-                lChild->Update( ImGui::GetCursorPos(), lSize );
-            }
+        SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
 
-            TreePop();
-        }
+        // ImGui::SetCursorPos(aPosition);
+        RenderNode();
+        // if( mParent == nullptr )
+        // {
+        //     for( auto lChild : Children() )
+        //     {
+        //         lChild->Update( ImGui::GetCursorPos(), lSize );
+        //     }
+        // }
+        // else if( RenderNode() )
+        // {
+        //     for( auto lChild : Children() )
+        //     {
+        //         lChild->Update( ImGui::GetCursorPos(), lSize );
+        //     }
+
+        //     TreePop();
+        // }
     }
 
     UITreeView::UITreeView()
@@ -450,9 +459,11 @@ namespace SE::Core
     void UITreeView::PushStyles()
     {
     }
+
     void UITreeView::PopStyles()
     {
     }
+
     ImVec2 UITreeView::RequiredSize()
     {
         return ImVec2{};
@@ -462,10 +473,12 @@ namespace SE::Core
     {
         mIndent = aIndent;
     }
+
     void UITreeView::SetIconSpacing( float aSpacing )
     {
         mIconSpacing = aSpacing;
     }
+
     UITreeViewNode *UITreeView::Add()
     {
         return mRoot->Add();
@@ -473,6 +486,56 @@ namespace SE::Core
 
     void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        mRoot->Update( aPosition, aSize );
+        std::vector<UITreeViewNode *> lElements;
+        std::vector<UITreeViewNode *> lStack;
+
+        for( auto *lNode : mRoot->Children() )
+            lStack.push_back( lNode );
+
+        while( lStack.size() > 0 )
+        {
+            auto *lNode = lStack.back();
+            lStack.pop_back();
+            lElements.push_back( lNode );
+
+            if( !lNode->IsLeaf() && lNode->IsOpen() )
+            {
+                for( auto *lChild : lNode->Children() )
+                    lStack.push_back( lChild );
+            }
+        }
+
+        ImGui::SetCursorPos( aPosition );
+
+        const ImGuiTableFlags lTableFlags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
+
+        if( ImGui::BeginTable( "##", 1, lTableFlags, aSize ) )
+        {
+
+            ImGuiTable *lThisTable = ImGui::GetCurrentContext()->CurrentTable;
+
+            ImGui::TableSetupColumn( "XXX", ImGuiTableColumnFlags_WidthStretch, 1.0f );
+            ImGui::TableHeadersRow();
+            ImGui::TableSetColumnIndex( 0 );
+
+            ImGuiListClipper lRowClipping;
+            lRowClipping.Begin( lElements.size() );
+            while( lRowClipping.Step() )
+            {
+                ImGui::TableNextRow();
+                SE::Logging::Info( "{} - {}", lRowClipping.DisplayStart, lRowClipping.DisplayEnd );
+                for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
+                {
+                    ImGui::Dummy( ImVec2{ aSize.x, 20.0f } );
+                    lElements[lRowID]->Update( aPosition, ImVec2{ aSize.x, 20.0f } );
+                    aPosition.y += 20.0f;
+                }
+            }
+            ImGui::EndTable();
+        }
+        // for( auto *lNode : lElements )
+        // {
+        // }
+        // mRoot->Update( aPosition, aSize );
     }
 } // namespace SE::Core
