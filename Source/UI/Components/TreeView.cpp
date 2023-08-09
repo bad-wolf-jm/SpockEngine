@@ -84,43 +84,43 @@ namespace SE::Core
         return mLayout->RequiredSize();
     }
 
-    void UITreeViewNode::TreePushOverrideID()
-    {
-        ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
+    // void UITreeViewNode::TreePushOverrideID()
+    // {
+    //     ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
 
-        ImGuiContext &lImGuiContext = *GImGui;
-        lImGuiContext.CurrentWindow->DC.TreeDepth++;
+    //     ImGuiContext &lImGuiContext = *GImGui;
+    //     lImGuiContext.CurrentWindow->DC.TreeDepth++;
 
-        ImGui::Indent( mTreeView->mIndent );
-        ImGui::PushOverrideID( lWindow->GetID( (void *)this ) );
-    }
+    //     ImGui::Indent( mTreeView->mIndent );
+    //     ImGui::PushOverrideID( lWindow->GetID( (void *)this ) );
+    // }
 
-    void UITreeViewNode::TreePop()
-    {
-        ImGuiContext &lImGuiContext = *GImGui;
-        ImGuiWindow  *lWindow       = GImGui->CurrentWindow;
+    // void UITreeViewNode::TreePop()
+    // {
+    //     ImGuiContext &lImGuiContext = *GImGui;
+    //     ImGuiWindow  *lWindow       = GImGui->CurrentWindow;
 
-        ImGui::Unindent( mTreeView->mIndent );
+    //     ImGui::Unindent( mTreeView->mIndent );
 
-        lWindow->DC.TreeDepth--;
-        ImU32 lTreeDepthMask = ( 1 << lWindow->DC.TreeDepth );
+    //     lWindow->DC.TreeDepth--;
+    //     ImU32 lTreeDepthMask = ( 1 << lWindow->DC.TreeDepth );
 
-        // Handle Left arrow to move to parent tree node (when ImGuiTreeNodeFlags_NavLeftJumpsBackHere is enabled)
-        if( lImGuiContext.NavMoveDir == ImGuiDir_Left && lImGuiContext.NavWindow == lWindow && ImGui::NavMoveRequestButNoResultYet() )
-        {
-            if( lImGuiContext.NavIdIsAlive && ( lWindow->DC.TreeJumpToParentOnPopMask & lTreeDepthMask ) )
-            {
-                ImGui::SetNavID( lWindow->IDStack.back(), lImGuiContext.NavLayer, 0, ImRect() );
-                ImGui::NavMoveRequestCancel();
-            }
-        }
+    //     // Handle Left arrow to move to parent tree node (when ImGuiTreeNodeFlags_NavLeftJumpsBackHere is enabled)
+    //     if( lImGuiContext.NavMoveDir == ImGuiDir_Left && lImGuiContext.NavWindow == lWindow && ImGui::NavMoveRequestButNoResultYet() )
+    //     {
+    //         if( lImGuiContext.NavIdIsAlive && ( lWindow->DC.TreeJumpToParentOnPopMask & lTreeDepthMask ) )
+    //         {
+    //             ImGui::SetNavID( lWindow->IDStack.back(), lImGuiContext.NavLayer, 0, ImRect() );
+    //             ImGui::NavMoveRequestCancel();
+    //         }
+    //     }
 
-        lWindow->DC.TreeJumpToParentOnPopMask &= lTreeDepthMask - 1;
+    //     lWindow->DC.TreeJumpToParentOnPopMask &= lTreeDepthMask - 1;
 
-        IM_ASSERT( lWindow->IDStack.Size > 1 );
+    //     IM_ASSERT( lWindow->IDStack.Size > 1 );
 
-        ImGui::PopID();
-    }
+    //     ImGui::PopID();
+    // }
 
     bool UITreeViewNode::IsOpen()
     {
@@ -174,8 +174,9 @@ namespace SE::Core
     bool UITreeViewNode::RenderNode()
     {
         ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
-        if( lWindow->SkipItems )
-            return false;
+        // if( lWindow->SkipItems )
+        //     return false;
+        // SE::Logging::Info("RenderNode");
 
         ImGuiContext     &lImGuiContext = *GImGui;
         const ImGuiStyle &style         = lImGuiContext.Style;
@@ -189,7 +190,8 @@ namespace SE::Core
         // We vertically grow up to current line height up the typical widget height.
         const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
                                           lLabelSize.y + lPadding.y * 2 );
-        ImRect      lFrameBoundingBox;
+
+        ImRect lFrameBoundingBox;
         lFrameBoundingBox.Min.x = ( mFlags & ImGuiTreeNodeFlags_SpanFullWidth ) ? lWindow->WorkRect.Min.x : lWindow->DC.CursorPos.x;
         lFrameBoundingBox.Min.y = lWindow->DC.CursorPos.y;
         lFrameBoundingBox.Max.x = lWindow->WorkRect.Max.x;
@@ -219,15 +221,15 @@ namespace SE::Core
         lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
         lImGuiContext.LastItemData.DisplayRect = lFrameBoundingBox;
 
-        if( !lItemAdd )
-        {
-            if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
-            {
-                // TreePushOverrideID();
-            }
-
-            return lNodeIsOpen;
-        }
+        // if( !lItemAdd )
+        // {
+        //     if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
+        //     {
+        //         // TreePushOverrideID();
+        //     }
+        //     SE::Logging::Info("RETURNING");
+        //     return lNodeIsOpen;
+        // }
 
         ImGuiButtonFlags lButtonFlags = ImGuiTreeNodeFlags_None;
         if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap )
@@ -336,6 +338,7 @@ namespace SE::Core
                                                                                          : ImGuiCol_Header );
             ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, lBackgroundColor, false );
         }
+
         ImGui::RenderNavHighlight( lFrameBoundingBox, lWindow->GetID( (void *)this ), lNavHighlightFlags );
         if( !lNodeIsLeaf )
             RenderArrow(
@@ -348,9 +351,12 @@ namespace SE::Core
                 lWindow->DrawList,
                 ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
                         lTextPosition.y + ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize ) * 0.5f ) );
+
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
+        // SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", lNodePosition.x, lNodePosition.y, lSize.x, lSize.y );
+
         mLayout->Update( lNodePosition, lSize );
 
         // if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
@@ -361,6 +367,7 @@ namespace SE::Core
 
         // return lNodeIsOpen;
         mIsOpen = lNodeIsOpen;
+        return mIsOpen;
     }
 
     void UITreeViewNode::RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
@@ -428,7 +435,7 @@ namespace SE::Core
                                           lLabelSize.y + lPadding.y * 2 );
         ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
-        SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
+        // SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
 
         // ImGui::SetCursorPos(aPosition);
         RenderNode();
@@ -509,30 +516,39 @@ namespace SE::Core
 
         const ImGuiTableFlags lTableFlags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
 
+        SE::Logging::Info( "RENDER TREE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
+
+        ImGui::SetCursorPos( aPosition );
+        ImGui::PushID( (void *)this );
+        ImGui::BeginChild( "##ContainerItem", aSize );
+
         if( ImGui::BeginTable( "##", 1, lTableFlags, aSize ) )
         {
-
             ImGuiTable *lThisTable = ImGui::GetCurrentContext()->CurrentTable;
 
-            ImGui::TableSetupColumn( "XXX", ImGuiTableColumnFlags_WidthStretch, 1.0f );
+            ImGui::TableSetupColumn( "##", ImGuiTableColumnFlags_WidthStretch, 1.0f );
             ImGui::TableHeadersRow();
             ImGui::TableSetColumnIndex( 0 );
 
             ImGuiListClipper lRowClipping;
-            lRowClipping.Begin( lElements.size() );
+            lRowClipping.Begin( lElements.size(), 20.0f );
+
             while( lRowClipping.Step() )
             {
                 ImGui::TableNextRow();
-                SE::Logging::Info( "{} - {}", lRowClipping.DisplayStart, lRowClipping.DisplayEnd );
+                // SE::Logging::Info( "{} - {}", lRowClipping.DisplayStart, lRowClipping.DisplayEnd );
                 for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
                 {
-                    ImGui::Dummy( ImVec2{ aSize.x, 20.0f } );
+                    // ImGui::Dummy( ImVec2{ aSize.x, 20.0f } );
                     lElements[lRowID]->Update( aPosition, ImVec2{ aSize.x, 20.0f } );
                     aPosition.y += 20.0f;
                 }
             }
             ImGui::EndTable();
         }
+
+        ImGui::EndChild();
+        ImGui::PopID();
         // for( auto *lNode : lElements )
         // {
         // }
