@@ -30,9 +30,6 @@ namespace SE::Core
 
     bool UIFileTreeNode::IsLeaf()
     {
-        // if( mParent == nullptr )
-        //     return false;
-
         return fs::is_regular_file( mPath / mName );
     }
 

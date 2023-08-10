@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 #include "UI/Components/Component.h"
 #include "UI/Components/Label.h"
 #include "UI/Components/Image.h"
@@ -33,8 +35,6 @@ namespace SE::Core
 
       protected:
         ImGuiTreeNodeFlags mFlags;
-        uint32_t mID = std::numeric_limits<uint32_t>::max();
-        uint32_t mParentID = std::numeric_limits<uint32_t>::max();
 
         UIImage* mIcon = nullptr;
 
@@ -58,10 +58,8 @@ namespace SE::Core
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
-        void TreePushOverrideID( );
-        void TreePop();
         bool IsOpen();
-        bool RenderNode();
+        void RenderNode();
         void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale );
         void RenderIcon( ImDrawList *aDrawList, ImVec2 aPosition );
         
@@ -76,6 +74,7 @@ namespace SE::Core
         void SetIndent(float aIndent);
         void SetIconSpacing(float aSpacing);
         UITreeViewNode* Add();
+        void UpdateRows();
 
         protected:
             float mIndent = 5.0f;
@@ -83,6 +82,7 @@ namespace SE::Core
             uint32_t mCurrentID = 0;
             UITreeViewNode* mRoot; 
             std::vector<UITreeViewNode*> mRows;
+            std::mutex mRowsLock;
 
       protected:
         void PushStyles();
@@ -90,7 +90,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
         friend class UITreeViewNode;
     };
 } // namespace SE::Core
