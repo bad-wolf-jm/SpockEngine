@@ -110,6 +110,7 @@ namespace SE::Core
 
         return lNewNode;
     }
+    
     void UIFileTree::Remove( path_t const &aPath )
     {
         ( (UIFileTreeNode *)mRoot )->Remove( aPath );
