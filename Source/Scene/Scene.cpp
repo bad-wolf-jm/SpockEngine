@@ -470,13 +470,6 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sRayTracingTargetComponent>()], lReadContext );
             }
 
-            // if( HasTypeTag<sMaterialShaderComponent>( lEntityConfiguration ) )
-            // {
-            // auto &lComponent = lEntity.Add<sMaterialShaderComponent>();
-
-            // ReadComponent( lComponent, lEntityConfiguration[TypeTag<sMaterialShaderComponent>()], lReadContext );
-            // }
-
             if( HasTypeTag<sBackgroundComponent>( lEntityConfiguration ) )
             {
                 auto &lComponent = lEntity.Add<sBackgroundComponent>();
@@ -652,6 +645,7 @@ namespace SE::Core
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform, std::string a_Name )
     {
+        SE::Logging::Info( "Loading model" );
         auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
@@ -659,177 +653,197 @@ namespace SE::Core
         // for( auto &lTexture : aModelData->mTextures )
         //     lTextureIds.push_back( mMaterialSystem->CreateTexture( lTexture.mTexture, lTexture.mSampler ) );
 
-        // std::vector<uint32_t>                 lMaterialIds        = {};
-        // std::vector<sMaterialShaderComponent> lMaterialCreateInfo = {};
-        // for( auto &lMaterial : aModelData->mMaterials )
-        // {
-        //     auto &lNewMaterial = mMaterialSystem->CreateMaterial();
-        //     lNewMaterial.mName = lMaterial.mName;
+        std::vector<Ref<ISampler2D>> lTextures{};
+        for( auto &lTexture : aModelData->mTextures )
+        {
+            // auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
 
-        //     lNewMaterial.mType = eMaterialType::Opaque;
+            auto lNewInteropTexture = CreateTexture2D( mGraphicContext, *lTexture.mTexture, 1, false, false, true );
+            auto lNewInteropSampler = CreateSampler2D( mGraphicContext, lNewInteropTexture, lTexture.mSampler->mSamplingSpec );
 
-        //     lNewMaterial.mLineWidth      = 1.0f;
-        //     lNewMaterial.mIsTwoSided     = lMaterial.mConstants.mIsTwoSided;
-        //     lNewMaterial.mUseAlphaMask   = false;
-        //     lNewMaterial.mAlphaThreshold = 0.5;
+            lTextures.push_back( lNewInteropSampler );
+            SE::Logging::Info( "Created texture: [{}]", lTexture.mName );
+        }
 
-        //     auto lGetTexID = [&]( uint32_t aID, uint32_t aDefault )
-        //     { return aID == std::numeric_limits<uint32_t>::max() ? aDefault : lTextureIds[aID]; };
+        std::vector<Material> lMaterialIds = {};
+        for( auto &lMaterial : aModelData->mMaterials )
+        {
+            auto lNewMaterial = mMaterialSystem->BeginMaterial( lMaterial.mName );
 
-        //     lNewMaterial.mBaseColorFactor             = lMaterial.mConstants.mBaseColorFactor;
-        //     lNewMaterial.mBaseColorTexture.mTextureID = lGetTexID( lMaterial.mTextures.mBaseColorTexture.TextureID, 1 );
-        //     lNewMaterial.mBaseColorTexture.mUVChannel = lMaterial.mTextures.mBaseColorTexture.UVChannel;
+            auto &lMaterialInfo            = lNewMaterial.Get<sMaterialInfo>();
+            lMaterialInfo.mType            = eBlendMode::Opaque;
+            lMaterialInfo.mShadingModel    = eShadingModel::STANDARD;
+            lMaterialInfo.mLineWidth       = 1.0f;
+            lMaterialInfo.mIsTwoSided      = lMaterial.mConstants.mIsTwoSided;
+            lMaterialInfo.mRequiresNormals = true;
+            lMaterialInfo.mRequiresUV0     = true;
+            lMaterialInfo.mRequiresUV1     = false;
+            SE::Logging::Info( "Created material: [{}]", lMaterial.mName );
 
-        //     lNewMaterial.mEmissiveFactor             = lMaterial.mConstants.mEmissiveFactor;
-        //     lNewMaterial.mEmissiveTexture.mTextureID = lGetTexID( lMaterial.mTextures.mEmissiveTexture.TextureID, 0 );
-        //     lNewMaterial.mEmissiveTexture.mUVChannel = lMaterial.mTextures.mEmissiveTexture.UVChannel;
+            if( lMaterial.mTextures.mBaseColorTexture.TextureID < std::numeric_limits<uint32_t>::max() && ( lTextures.size() > 0 ) )
+            {
+                auto &lBaseColor    = lNewMaterial.Add<sBaseColorTexture>();
+                lBaseColor.mFactor  = lMaterial.mConstants.mBaseColorFactor;
+                lBaseColor.mTexture = lTextures[lMaterial.mTextures.mBaseColorTexture.TextureID];
+            }
 
-        //     lNewMaterial.mRoughnessFactor              = lMaterial.mConstants.mRoughnessFactor;
-        //     lNewMaterial.mMetallicFactor               = lMaterial.mConstants.mMetallicFactor;
-        //     lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID, 0 );
-        //     lNewMaterial.mMetalRoughTexture.mUVChannel = lMaterial.mTextures.mMetallicRoughnessTexture.UVChannel;
+            if( lMaterial.mTextures.mEmissiveTexture.TextureID < std::numeric_limits<uint32_t>::max() && ( lTextures.size() > 0 ) )
+            {
+                auto &lEmissive    = lNewMaterial.Add<sEmissiveTexture>();
+                lEmissive.mFactor  = vec3( lMaterial.mConstants.mEmissiveFactor );
+                lEmissive.mTexture = lTextures[lMaterial.mTextures.mEmissiveTexture.TextureID];
+            }
 
-        //     lNewMaterial.mOcclusionStrength           = 0.0f;
-        //     lNewMaterial.mOcclusionTexture.mTextureID = lGetTexID( lMaterial.mTextures.mOcclusionTexture.TextureID, 1 );
-        //     lNewMaterial.mOcclusionTexture.mUVChannel = lMaterial.mTextures.mOcclusionTexture.UVChannel;
+            if( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID < std::numeric_limits<uint32_t>::max() &&
+                ( lTextures.size() > 0 ) )
+            {
+                auto &lMetalRough            = lNewMaterial.Add<sMetalRoughTexture>();
+                lMetalRough.mMetallicFactor  = lMaterial.mConstants.mMetallicFactor;
+                lMetalRough.mRoughnessFactor = lMaterial.mConstants.mRoughnessFactor;
+                lMetalRough.mTexture         = lTextures[lMaterial.mTextures.mMetallicRoughnessTexture.TextureID];
+            }
 
-        //     lNewMaterial.mNormalsTexture.mTextureID = lGetTexID( lMaterial.mTextures.mNormalTexture.TextureID, 0 );
-        //     lNewMaterial.mNormalsTexture.mUVChannel = lMaterial.mTextures.mNormalTexture.UVChannel;
-        //     lMaterialIds.push_back( lNewMaterial.mID );
+            if( lMaterial.mTextures.mOcclusionTexture.TextureID < std::numeric_limits<uint32_t>::max() && ( lTextures.size() > 0 ) )
+            {
+                auto &lOcclusion    = lNewMaterial.Add<sOcclusionTexture>();
+                lOcclusion.mFactor  = 0.0f;
+                lOcclusion.mTexture = lTextures[lMaterial.mTextures.mOcclusionTexture.TextureID];
+            }
 
-        //     sMaterialShaderComponent lMaterialShader{};
-        //     lMaterialShader.Type              = eMaterialType::Opaque;
-        //     lMaterialShader.IsTwoSided        = lMaterial.mConstants.mIsTwoSided;
-        //     lMaterialShader.UseAlphaMask      = true;
-        //     lMaterialShader.LineWidth         = 1.0f;
-        //     lMaterialShader.AlphaMaskTheshold = 0.5;
+            if( lMaterial.mTextures.mNormalTexture.TextureID < std::numeric_limits<uint32_t>::max() && ( lTextures.size() > 0 ) )
+            {
+                auto &lNormals    = lNewMaterial.Add<sNormalsTexture>();
+                lNormals.mFactor  = math::vec3( 1.0 );
+                lNormals.mTexture = lTextures[lMaterial.mTextures.mNormalTexture.TextureID];
+            }
 
-        //     lMaterialCreateInfo.push_back( lMaterialShader );
-        // }
+            mMaterialSystem->EndMaterial( lNewMaterial );
 
-        // std::vector<Element>    lMeshes           = {};
-        // uint32_t                lVertexBufferSize = 0;
-        // uint32_t                lIndexBufferSize  = 0;
-        // std::vector<VertexData> lVertexData       = {};
-        // std::vector<uint32_t>   lIndexData        = {};
-        // for( auto &lMesh : aModelData->mMeshes )
-        // {
-        //     sStaticMeshComponent lMeshComponent{};
-        //     lMeshComponent.mName      = lMesh.mName;
-        //     lMeshComponent.mPrimitive = lMesh.mPrimitive;
+            lMaterialIds.push_back( lNewMaterial );
+        }
 
-        //     std::vector<VertexData> lVertices( lMesh.mPositions.size() );
-        //     for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
-        //     {
-        //         lVertices[i].Position    = lMesh.mPositions[i];
-        //         lVertices[i].Normal      = lMesh.mNormals[i];
-        //         lVertices[i].TexCoords_0 = lMesh.mUV0[i];
-        //         lVertices[i].Bones       = lMesh.mJoints[i];
-        //         lVertices[i].Weights     = lMesh.mWeights[i];
-        //     }
+        std::vector<Element>    lMeshes           = {};
+        uint32_t                lVertexBufferSize = 0;
+        uint32_t                lIndexBufferSize  = 0;
+        std::vector<VertexData> lVertexData       = {};
+        std::vector<uint32_t>   lIndexData        = {};
+        for( auto &lMesh : aModelData->mMeshes )
+        {
+            sStaticMeshComponent lMeshComponent{};
+            lMeshComponent.mName      = lMesh.mName;
+            lMeshComponent.mPrimitive = lMesh.mPrimitive;
 
-        //     lMeshComponent.mVertexBuffer =
-        //         CreateBuffer( mGraphicContext, lVertices, eBufferType::VERTEX_BUFFER, false, false, true, true );
-        //     lMeshComponent.mIndexBuffer =
-        //         CreateBuffer( mGraphicContext, lMesh.mIndices, eBufferType::INDEX_BUFFER, false, false, true, true );
-        //     lMeshComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-        //                                                       lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
+            std::vector<VertexData> lVertices( lMesh.mPositions.size() );
+            for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
+            {
+                lVertices[i].Position    = lMesh.mPositions[i];
+                lVertices[i].Normal      = lMesh.mNormals[i];
+                lVertices[i].TexCoords_0 = lMesh.mUV0[i];
+                lVertices[i].Bones       = lMesh.mJoints[i];
+                lVertices[i].Weights     = lMesh.mWeights[i];
+            }
 
-        //     lMeshComponent.mVertexOffset = 0;
-        //     lMeshComponent.mVertexCount  = lVertices.size();
-        //     lMeshComponent.mIndexOffset  = 0;
-        //     lMeshComponent.mIndexCount   = lMesh.mIndices.size();
+            lMeshComponent.mVertexBuffer =
+                CreateBuffer( mGraphicContext, lVertices, eBufferType::VERTEX_BUFFER, false, false, true, true );
+            lMeshComponent.mIndexBuffer =
+                CreateBuffer( mGraphicContext, lMesh.mIndices, eBufferType::INDEX_BUFFER, false, false, true, true );
+            lMeshComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
+                                                              lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
-        //     auto lMeshEntity = Create( lMesh.mName, lAssetEntity );
-        //     lMeshEntity.Add<sStaticMeshComponent>( lMeshComponent );
-        //     lMeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
-        //     lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
-        //     lMeshEntity.Add<sNodeTransformComponent>( mat4( 1.0f ) );
+            lMeshComponent.mVertexOffset = 0;
+            lMeshComponent.mVertexCount  = lVertices.size();
+            lMeshComponent.mIndexOffset  = 0;
+            lMeshComponent.mIndexCount   = lMesh.mIndices.size();
 
-        //     lMeshes.push_back( lMeshEntity );
-        // }
+            auto lMeshEntity = Create( lMesh.mName, lAssetEntity );
+            lMeshEntity.Add<sStaticMeshComponent>( lMeshComponent );
+            lMeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
+            // lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
+            lMeshEntity.Add<sNodeTransformComponent>( mat4( 1.0f ) );
 
-        // std::vector<Element> lNodes = {};
-        // for( auto &lNode : aModelData->mNodes )
-        // {
-        //     auto lNodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
-        //     lNodeEntity.Add<sNodeTransformComponent>( lNode.mTransform );
+            lMeshes.push_back( lMeshEntity );
+        }
 
-        //     lNodes.push_back( lNodeEntity );
-        // }
+        std::vector<Element> lNodes = {};
+        for( auto &lNode : aModelData->mNodes )
+        {
+            auto lNodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
+            lNodeEntity.Add<sNodeTransformComponent>( lNode.mTransform );
 
-        // int32_t lIndex = 0;
-        // for( auto &lNodeEntity : lNodes )
-        // {
-        //     if( aModelData->mNodes[lIndex].mParentID == std::numeric_limits<uint32_t>::max() )
-        //         mRegistry.SetParent( lNodeEntity, lAssetEntity );
-        //     else
-        //         mRegistry.SetParent( lNodeEntity, lNodes[aModelData->mNodes[lIndex].mParentID] );
-        //     lIndex++;
-        // }
+            lNodes.push_back( lNodeEntity );
+        }
 
-        // for( uint32_t lNodeID = 0; lNodeID < aModelData->mNodes.size(); lNodeID++ )
-        // {
-        //     auto &lNode = aModelData->mNodes[lNodeID];
+        int32_t lIndex = 0;
+        for( auto &lNodeEntity : lNodes )
+        {
+            if( aModelData->mNodes[lIndex].mParentID == std::numeric_limits<uint32_t>::max() )
+                mRegistry.SetParent( lNodeEntity, lAssetEntity );
+            else
+                mRegistry.SetParent( lNodeEntity, lNodes[aModelData->mNodes[lIndex].mParentID] );
+            lIndex++;
+        }
 
-        //     if( lNode.mMeshes.size() == 0 )
-        //         continue;
+        for( uint32_t lNodeID = 0; lNodeID < aModelData->mNodes.size(); lNodeID++ )
+        {
+            auto &lNode = aModelData->mNodes[lNodeID];
 
-        //     for( uint32_t lNodeMeshID = 0; lNodeMeshID < lNode.mMeshes.size(); lNodeMeshID++ )
-        //         mRegistry.SetParent( lMeshes[lNodeMeshID], lNodes[lNodeID] );
+            if( lNode.mMeshes.size() == 0 )
+                continue;
 
-        //     if( lNode.mSkinID != std::numeric_limits<uint32_t>::max() )
-        //     {
-        //         auto &lSkin = aModelData->mSkins[lNode.mSkinID];
+            for( uint32_t lNodeMeshID = 0; lNodeMeshID < lNode.mMeshes.size(); lNodeMeshID++ )
+                mRegistry.SetParent( lMeshes[lNodeMeshID], lNodes[lNodeID] );
 
-        //         sSkeletonComponent lNodeSkeleton{};
+            if( lNode.mSkinID != std::numeric_limits<uint32_t>::max() )
+            {
+                auto &lSkin = aModelData->mSkins[lNode.mSkinID];
 
-        //         std::vector<Element> lJointNodes = {};
-        //         for( uint32_t i = 0; i < lSkin.mJointNodeID.size(); i++ )
-        //         {
-        //             lNodeSkeleton.Bones.push_back( lNodes[lSkin.mJointNodeID[i]] );
-        //             lNodeSkeleton.InverseBindMatrices.push_back( lSkin.mInverseBindMatrices[i] );
-        //             lNodeSkeleton.JointMatrices.push_back( mat4( 0.0f ) );
-        //         }
+                sSkeletonComponent lNodeSkeleton{};
 
-        //         lNodeSkeleton.BoneCount = lNodeSkeleton.Bones.size();
-        //         for( uint32_t i = 0; i < lNode.mMeshes.size(); i++ )
-        //         {
-        //             auto &lMesh = lMeshes[lNode.mMeshes[i]];
-        //             lMesh.Add<sSkeletonComponent>( lNodeSkeleton );
-        //         }
-        //     }
-        // }
+                std::vector<Element> lJointNodes = {};
+                for( uint32_t i = 0; i < lSkin.mJointNodeID.size(); i++ )
+                {
+                    lNodeSkeleton.Bones.push_back( lNodes[lSkin.mJointNodeID[i]] );
+                    lNodeSkeleton.InverseBindMatrices.push_back( lSkin.mInverseBindMatrices[i] );
+                    lNodeSkeleton.JointMatrices.push_back( mat4( 0.0f ) );
+                }
 
-        // if( aModelData->mAnimations.size() > 0 )
-        //     lAssetEntity.Add<sAnimationChooser>();
+                lNodeSkeleton.BoneCount = lNodeSkeleton.Bones.size();
+                for( uint32_t i = 0; i < lNode.mMeshes.size(); i++ )
+                {
+                    auto &lMesh = lMeshes[lNode.mMeshes[i]];
+                    lMesh.Add<sSkeletonComponent>( lNodeSkeleton );
+                }
+            }
+        }
 
-        // for( auto &lAnimation : aModelData->mAnimations )
-        // {
-        //     auto &lAnimationChooser = lAssetEntity.Get<sAnimationChooser>();
+        if( aModelData->mAnimations.size() > 0 )
+            lAssetEntity.Add<sAnimationChooser>();
 
-        //     auto  l_AnimationEntity   = mRegistry.CreateEntity( lAssetEntity, lAnimation.mName );
-        //     auto &lAnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
+        for( auto &lAnimation : aModelData->mAnimations )
+        {
+            auto &lAnimationChooser = lAssetEntity.Get<sAnimationChooser>();
 
-        //     lAnimationChooser.Animations.push_back( l_AnimationEntity );
-        //     lAnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
+            auto  l_AnimationEntity   = mRegistry.CreateEntity( lAssetEntity, lAnimation.mName );
+            auto &lAnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
 
-        //     for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++
-        //     )
-        //     {
-        //         sAnimationChannel lAnimationChannel{};
-        //         lAnimationChannel.mChannelID     = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
-        //         lAnimationChannel.mInterpolation = lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
-        //         lAnimationChannel.mTargetNode    = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
-        //         lAnimationChannel.mTargetNode.TryAdd<sAnimatedTransformComponent>();
-        //         lAnimationChannel.mTargetNode.TryAdd<sStaticTransformComponent>(
-        //             lAnimationChannel.mTargetNode.Get<sNodeTransformComponent>().mMatrix );
+            lAnimationChooser.Animations.push_back( l_AnimationEntity );
+            lAnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
 
-        //         lAnimationComponent.mChannels.push_back( lAnimationChannel );
-        //     }
-        // }
+            for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++ )
+            {
+                sAnimationChannel lAnimationChannel{};
+                lAnimationChannel.mChannelID     = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
+                lAnimationChannel.mInterpolation = lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
+                lAnimationChannel.mTargetNode    = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
+                lAnimationChannel.mTargetNode.TryAdd<sAnimatedTransformComponent>();
+                lAnimationChannel.mTargetNode.TryAdd<sStaticTransformComponent>(
+                    lAnimationChannel.mTargetNode.Get<sNodeTransformComponent>().mMatrix );
 
-        // ResizeCUDABuffers();
+                lAnimationComponent.mChannels.push_back( lAnimationChannel );
+            }
+        }
+
+        ResizeCUDABuffers();
 
         return lAssetEntity;
     }
@@ -1260,12 +1274,6 @@ namespace SE::Core
             if( aEntity.Has<sStaticMeshComponent>() )
                 WriteComponent( lOut, aEntity.Get<sStaticMeshComponent>(), aMeshDataMap[aUUID.mValue.str()] );
 
-            // if( aEntity.Has<sParticleSystemComponent>() )
-            // WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
-
-            // if( aEntity.Has<sParticleShaderComponent>() )
-            // WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
-
             if( aEntity.Has<sSkeletonComponent>() )
                 WriteComponent( lOut, aEntity.Get<sSkeletonComponent>() );
 
@@ -1283,9 +1291,6 @@ namespace SE::Core
 
             if( aEntity.Has<sMaterialComponent>() )
                 WriteComponent( lOut, aEntity.Get<sMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
-
-            // if( aEntity.Has<sMaterialShaderComponent>() )
-            // WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
 
             if( aEntity.Has<sBackgroundComponent>() )
                 WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );
@@ -1319,11 +1324,9 @@ namespace SE::Core
         if( !fs::exists( aPath / "Animations" ) )
             fs::create_directories( aPath / "Animations" );
 
-        // std::vector<std::string> lMaterialList{};
         std::unordered_map<std::string, std::string> lMaterialList{};
         {
             auto &lMaterials = mMaterialSystem->GetMaterialData();
-            // auto &lTextures  = mMaterialSystem->GetTextures();
 
             for( auto &lMaterial : lMaterials )
             {

@@ -246,7 +246,11 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         Material mMaterialID;
 
-        sMaterialComponent()                             = default;
+        sMaterialComponent() = default;
+        sMaterialComponent( Material const &aMaterial )
+            : mMaterialID{ aMaterial }
+        {
+        }
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
 

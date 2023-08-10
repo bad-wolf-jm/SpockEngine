@@ -11,7 +11,9 @@
             "program": "${workspaceFolder}/Build/CoreLibrary/Source/SE_Run.exe",
             "args": [ "--application", "SEEditor", "--project", "TestProject", "--res_x", "2900", "--res_y", "1350" ],
             "cwd": "D:/Work/Projects/TestProject",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "name": "SE_Material Debug",
