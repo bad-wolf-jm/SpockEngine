@@ -649,15 +649,9 @@ namespace SE::Core
         auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
-        // std::vector<uint32_t> lTextureIds = {};
-        // for( auto &lTexture : aModelData->mTextures )
-        //     lTextureIds.push_back( mMaterialSystem->CreateTexture( lTexture.mTexture, lTexture.mSampler ) );
-
         std::vector<Ref<ISampler2D>> lTextures{};
         for( auto &lTexture : aModelData->mTextures )
         {
-            // auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
-
             auto lNewInteropTexture = CreateTexture2D( mGraphicContext, *lTexture.mTexture, 1, false, false, true );
             auto lNewInteropSampler = CreateSampler2D( mGraphicContext, lNewInteropTexture, lTexture.mSampler->mSamplingSpec );
 
