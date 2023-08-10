@@ -535,19 +535,32 @@ namespace SE::Core
         const ImGuiTableFlags lTableFlags =
             ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_ScrollY | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
 
-        // SE::Logging::Info( "RENDER TREE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
-
         // ImGui::SetCursorPos( aPosition );
         ImGui::PushID( (void *)this );
         ImGui::BeginChild( "##ContainerItem", aSize );
 
-        for( auto *lNode : lElements )
-        {
-            ImVec2 lPos = ImGui::GetCursorPos();
-            lNode->Update( lPos, ImVec2{ aSize.x, 20.0f } );
-            lPos.y += 20.0f;
-            ImGui::SetCursorPos( lPos );
-        }
+            ImGuiListClipper lRowClipping;
+            lRowClipping.Begin( lElements.size(), 20.0f );
+
+            while( lRowClipping.Step() )
+            {
+                for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
+                {
+                    ImVec2 lPos = ImGui::GetCursorPos();
+                    lElements[lRowID]->Update( lPos, ImVec2{ aSize.x, 20.0f } );
+                    lPos.y += 20.0f;
+                    ImGui::SetCursorPos( lPos );
+                }
+            }
+
+
+        // for( auto *lNode : lElements )
+        // {
+        //     ImVec2 lPos = ImGui::GetCursorPos();
+        //     lNode->Update( lPos, ImVec2{ aSize.x, 20.0f } );
+        //     lPos.y += 20.0f;
+        //     ImGui::SetCursorPos( lPos );
+        // }
 
         // if( ImGui::BeginTable( "##", 1, lTableFlags, aSize ) )
         // {
