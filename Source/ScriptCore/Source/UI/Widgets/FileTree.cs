@@ -22,6 +22,9 @@ namespace SpockEngine
             Interop.UIFileTree_OnSelected(mInstance, Marshal.GetFunctionPointerForDelegate(onSelected));
         }
 
-
+        public void Update()
+        {
+            Interop.UIFileTree_Update(mInstance);
+        }
     }
 }

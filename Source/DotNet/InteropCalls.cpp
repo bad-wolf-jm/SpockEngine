@@ -1286,6 +1286,11 @@ namespace SE::Core::Interop
             return aSelf->Remove( ConvertStringForCoreclr( aPath ) );
         }
 
+        void UIFileTree_Update( UIFileTree *aSelf )
+        {
+            return aSelf->UpdateRows();
+        }
+
         void UIFileTree_OnSelected( UIFileTree *aSelf, void *aDelegate )
         {
             auto lInstance = aSelf;
