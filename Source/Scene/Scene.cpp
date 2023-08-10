@@ -715,7 +715,8 @@ namespace SE::Core
 
             lMaterialIds.push_back( lNewMaterial );
         }
-
+        mMaterialSystem->UpdateMaterialData();
+        
         std::vector<Element>    lMeshes           = {};
         uint32_t                lVertexBufferSize = 0;
         uint32_t                lIndexBufferSize  = 0;
