@@ -758,7 +758,6 @@ namespace SE::Core
             auto lMeshEntity = Create( lMesh.mName, lAssetEntity );
             lMeshEntity.Add<sStaticMeshComponent>( lMeshComponent );
             lMeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
-            // lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
             lMeshEntity.Add<sNodeTransformComponent>( mat4( 1.0f ) );
 
             lMeshes.push_back( lMeshEntity );
