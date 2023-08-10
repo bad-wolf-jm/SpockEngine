@@ -175,26 +175,6 @@ namespace SE::Core::EntityComponentSystem::Components
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
     };
 
-    // struct sParticleSystemComponent
-    // {
-    //     std::string Name = "";
-
-    //     Ref<IGraphicBuffer> Particles     = nullptr;
-    //     uint32_t            ParticleCount = 0;
-    //     float               ParticleSize  = 0.0f;
-
-    //     sParticleSystemComponent()                                   = default;
-    //     sParticleSystemComponent( const sParticleSystemComponent & ) = default;
-    // };
-
-    // struct sParticleShaderComponent
-    // {
-    //     float LineWidth = 1.0f;
-
-    //     sParticleShaderComponent()                                   = default;
-    //     sParticleShaderComponent( const sParticleShaderComponent & ) = default;
-    // };
-
     struct sSkeletonComponent
     {
         uint32_t            BoneCount;
@@ -253,17 +233,6 @@ namespace SE::Core::EntityComponentSystem::Components
         }
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
-
-    // struct sMaterialShaderComponent
-    // {
-    //     eMaterialType Type              = eMaterialType::Opaque;
-    //     bool          IsTwoSided        = false;
-    //     bool          UseAlphaMask      = true;
-    //     float         LineWidth         = 1.0f;
-    //     float         AlphaMaskTheshold = 0.5;
-    //     sMaterialShaderComponent()                                   = default;
-    //     sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
-    // };
 
     struct sBackgroundComponent
     {
