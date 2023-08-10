@@ -230,6 +230,7 @@ namespace SE::Core
                     ImGui::BeginChild( "##BoxLayoutItem", lItemSize );
                     lItemPosition = ImVec2{};
                 }
+
                 lItem.mItem->Update( lItemPosition, lItemSize );
                 if( !mSimple )
                 {

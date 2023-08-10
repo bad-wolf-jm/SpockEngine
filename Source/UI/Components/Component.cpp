@@ -136,6 +136,7 @@ namespace SE::Core
         ImVec2 lContentPosition = aPosition + GetContentOffset();
 
         DrawContent( lContentPosition, lContentSize );
+
         if( ImGui::IsItemHovered() && ( mTooltip != nullptr ) )
         {
             ImGui::BeginTooltip();
