@@ -16,6 +16,7 @@ namespace SE::Core
 
         mText = New<UILabel>( "" );
         mText->SetPadding( 0.0f );
+        mText->mIsVisible = true;
 
         mIndicator = New<UIStackLayout>();
         mIndicator->SetPadding( 0.0f );
@@ -28,8 +29,12 @@ namespace SE::Core
         mLayout->Add( mText.get(), true, true );
         mLayout->Add( mIndicator.get(), 20.0f, false, true );
 
+        mLayout->mIsVisible    = true;
         mImage->mIsVisible     = false;
         mIndicator->mIsVisible = false;
+
+        if( mParent )
+            mLevel = mParent->mLevel + 1;
     }
 
     void UITreeViewNode::PushStyles()
@@ -106,7 +111,8 @@ namespace SE::Core
     //     ImU32 lTreeDepthMask = ( 1 << lWindow->DC.TreeDepth );
 
     //     // Handle Left arrow to move to parent tree node (when ImGuiTreeNodeFlags_NavLeftJumpsBackHere is enabled)
-    //     if( lImGuiContext.NavMoveDir == ImGuiDir_Left && lImGuiContext.NavWindow == lWindow && ImGui::NavMoveRequestButNoResultYet() )
+    //     if( lImGuiContext.NavMoveDir == ImGuiDir_Left && lImGuiContext.NavWindow == lWindow && ImGui::NavMoveRequestButNoResultYet()
+    //     )
     //     {
     //         if( lImGuiContext.NavIdIsAlive && ( lWindow->DC.TreeJumpToParentOnPopMask & lTreeDepthMask ) )
     //         {
@@ -174,6 +180,7 @@ namespace SE::Core
     bool UITreeViewNode::RenderNode()
     {
         ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
+
         // if( lWindow->SkipItems )
         //     return false;
         // SE::Logging::Info("RenderNode");
@@ -232,8 +239,10 @@ namespace SE::Core
         // }
 
         ImGuiButtonFlags lButtonFlags = ImGuiTreeNodeFlags_None;
+
         if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap )
             lButtonFlags |= ImGuiButtonFlags_AllowItemOverlap;
+
         if( !lNodeIsLeaf )
             lButtonFlags |= ImGuiButtonFlags_PressedOnDragDropHold;
 
@@ -343,20 +352,24 @@ namespace SE::Core
         if( !lNodeIsLeaf )
             RenderArrow(
                 lWindow->DrawList,
-                ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
+                ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f +
+                            mTreeView->mIndent * mLevel,
                         lTextPosition.y + ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize * 0.8f ) * 0.5f ),
                 lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
         else
             RenderIcon(
                 lWindow->DrawList,
-                ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
+                ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f +
+                            mTreeView->mIndent * mLevel,
                         lTextPosition.y + ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize ) * 0.5f ) );
 
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
-        // SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", lNodePosition.x, lNodePosition.y, lSize.x, lSize.y );
+        lNodePosition.x += mTreeView->mIndent * mLevel;
+        // auto lNodePosition0 = ImGui::GetCursorScreenPos();
 
+        // SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", lNodePosition.x, lNodePosition.y, lSize.x, lSize.y );
         mLayout->Update( lNodePosition, lSize );
 
         // if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
@@ -422,18 +435,18 @@ namespace SE::Core
 
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
-        ImGuiContext     &lImGuiContext = *GImGui;
-        const ImGuiStyle &style         = lImGuiContext.Style;
-        const ImVec2      lPadding =
-            ( mFlags & ImGuiTreeNodeFlags_FramePadding )
-                     ? style.FramePadding
-                     : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
-        const ImVec2 lLabelSize = mLayout->RequiredSize();
+        // ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
+        // ImGuiContext     &lImGuiContext = *GImGui;
+        // const ImGuiStyle &style         = lImGuiContext.Style;
+        // const ImVec2      lPadding =
+        //     ( mFlags & ImGuiTreeNodeFlags_FramePadding )
+        //              ? style.FramePadding
+        //              : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
+        // const ImVec2 lLabelSize = mLayout->RequiredSize();
 
-        const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
-                                          lLabelSize.y + lPadding.y * 2 );
-        ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
+        // const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
+        //                                   lLabelSize.y + lPadding.y * 2 );
+        // ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
         // SE::Logging::Info( "RENDER NODE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
 
@@ -496,7 +509,9 @@ namespace SE::Core
         std::vector<UITreeViewNode *> lElements;
         std::vector<UITreeViewNode *> lStack;
 
-        for( auto *lNode : mRoot->Children() )
+        auto lRootChildren = std::vector( mRoot->Children().begin(), mRoot->Children().end() );
+        std::reverse( lRootChildren.begin(), lRootChildren.end() );
+        for( auto *lNode : lRootChildren )
             lStack.push_back( lNode );
 
         while( lStack.size() > 0 )
@@ -507,45 +522,60 @@ namespace SE::Core
 
             if( !lNode->IsLeaf() && lNode->IsOpen() )
             {
-                for( auto *lChild : lNode->Children() )
+                auto lChildren = std::vector( lNode->Children().begin(), lNode->Children().end() );
+                std::reverse( lChildren.begin(), lChildren.end() );
+
+                for( auto *lChild : lChildren )
                     lStack.push_back( lChild );
             }
         }
 
         ImGui::SetCursorPos( aPosition );
 
-        const ImGuiTableFlags lTableFlags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
+        const ImGuiTableFlags lTableFlags =
+            ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_ScrollY | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
 
-        SE::Logging::Info( "RENDER TREE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
+        // SE::Logging::Info( "RENDER TREE: {} {} | {} {} ", aPosition.x, aPosition.y, aSize.x, aSize.y );
 
-        ImGui::SetCursorPos( aPosition );
+        // ImGui::SetCursorPos( aPosition );
         ImGui::PushID( (void *)this );
         ImGui::BeginChild( "##ContainerItem", aSize );
 
-        if( ImGui::BeginTable( "##", 1, lTableFlags, aSize ) )
+        for( auto *lNode : lElements )
         {
-            ImGuiTable *lThisTable = ImGui::GetCurrentContext()->CurrentTable;
-
-            ImGui::TableSetupColumn( "##", ImGuiTableColumnFlags_WidthStretch, 1.0f );
-            ImGui::TableHeadersRow();
-            ImGui::TableSetColumnIndex( 0 );
-
-            ImGuiListClipper lRowClipping;
-            lRowClipping.Begin( lElements.size(), 20.0f );
-
-            while( lRowClipping.Step() )
-            {
-                ImGui::TableNextRow();
-                // SE::Logging::Info( "{} - {}", lRowClipping.DisplayStart, lRowClipping.DisplayEnd );
-                for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
-                {
-                    // ImGui::Dummy( ImVec2{ aSize.x, 20.0f } );
-                    lElements[lRowID]->Update( aPosition, ImVec2{ aSize.x, 20.0f } );
-                    aPosition.y += 20.0f;
-                }
-            }
-            ImGui::EndTable();
+            ImVec2 lPos = ImGui::GetCursorPos();
+            lNode->Update( lPos, ImVec2{ aSize.x, 20.0f } );
+            lPos.y += 20.0f;
+            ImGui::SetCursorPos( lPos );
         }
+
+        // if( ImGui::BeginTable( "##", 1, lTableFlags, aSize ) )
+        // {
+        //     ImGuiTable *lThisTable = ImGui::GetCurrentContext()->CurrentTable;
+
+        //     ImGui::TableSetupColumn( "##", ImGuiTableColumnFlags_WidthStretch, 100.0f );
+        //     ImGui::TableHeadersRow();
+        //     ImGui::TableSetColumnIndex( 0 );
+
+        //     ImGuiListClipper lRowClipping;
+        //     lRowClipping.Begin( lElements.size(), 20.0f );
+
+        //     while( lRowClipping.Step() )
+        //     {
+        //         ImGui::TableNextRow();
+        //         // SE::Logging::Info( "{} - {}", lRowClipping.DisplayStart, lRowClipping.DisplayEnd );
+        //         for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
+        //         {
+        //             // ImGui::Dummy( ImVec2{ aSize.x, 20.0f } );
+        //             ImVec2 lPos = ImGui::GetCursorPos();
+        //             lElements[lRowID]->Update( lPos, ImVec2{ aSize.x, 20.0f } );
+        //             // ImGui::Text(lElements[lRowID]->mText->mText.c_str());
+        //             lPos.y += 20.0f;
+        //             ImGui::SetCursorPos( lPos );
+        //         }
+        //     }
+        //     ImGui::EndTable();
+        // }
 
         ImGui::EndChild();
         ImGui::PopID();
