@@ -109,9 +109,12 @@ namespace SE::Core
             int lColumn = 0;
             for( const auto &lColumnData : mColumns )
             {
+                if( !lColumnData->mIsVisible )
+                    continue;
+
                 ImGui::TableSetColumnIndex( lColumn );
 
-                DrawTableCell(lThisTable, lColumnData, lColumn, lRow);
+                DrawTableCell( lThisTable, lColumnData, lColumn, lRow );
 
                 lColumn++;
             }
@@ -132,7 +135,12 @@ namespace SE::Core
             ImGuiTable *lThisTable = ImGui::GetCurrentContext()->CurrentTable;
 
             for( const auto &lColumn : mColumns )
+            {
+                if( !lColumn->mIsVisible )
+                    continue;
+
                 ImGui::TableSetupColumn( lColumn->mHeader.c_str(), ImGuiTableColumnFlags_None, lColumn->mInitialSize );
+            }
 
             ImGui::TableHeadersRow();
 

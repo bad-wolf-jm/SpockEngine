@@ -133,12 +133,12 @@ namespace SpockEngine
 
         public void SetDisplayedRowIndices(int[] aIndices)
         {
-            Interop.UITable_SetDisplayedRowIndices(mInstance, aIndices, aIndices.Length);
+            Interop.UITable_SetDisplayedRowIndices(mInstance, aIndices, aIndices?.Length ?? 0);
         }
 
         public void SetDisplayedRowIndices(IEnumerable<int> aIndices)
         {
-            SetDisplayedRowIndices(aIndices.ToArray());
+            SetDisplayedRowIndices(aIndices?.ToArray());
         }
 
         public void SetRowBackgroundColor(Math.vec4[] aColors)
