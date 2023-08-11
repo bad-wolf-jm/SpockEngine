@@ -43,7 +43,7 @@ namespace SE::Core
     void UITextInput::SetBuffersize( uint32_t aSize )
     {
         mBufferSize = aSize;
-        mBuffer.reserve( mBufferSize );
+        mBuffer.resize( mBufferSize );
     }
 
     ImVec2 UITextInput::RequiredSize()

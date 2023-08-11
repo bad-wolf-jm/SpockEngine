@@ -36,7 +36,7 @@ namespace SpockEngine
             Interop.UITextInput_SetBufferSize(mInstance, aSize);
         }
 
-        public delegate bool OnChangeDelegate(string aValue);
+        public delegate bool OnChangeDelegate([MarshalAs(UnmanagedType.LPWStr)] string aValue);
         OnChangeDelegate onChanged;
         public void OnTextChanged(OnChangeDelegate aHandler)
         {
