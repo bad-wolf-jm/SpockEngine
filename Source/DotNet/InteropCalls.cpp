@@ -830,6 +830,7 @@ namespace SE::Core::Interop
         {
             aSelf->SetText( ConvertStringForCoreclr( aText ) );
         }
+        
         wchar_t *UITextInput_GetText( UITextInput *aSelf )
         {
             return CopyCharactersForCoreClr( aSelf->GetText() );
@@ -852,7 +853,7 @@ namespace SE::Core::Interop
             typedef void ( *fptr )( wchar_t * );
             fptr lDelegate = (fptr)aDelegate;
             lInstance->OnTextChanged( [lInstance, lDelegate]( string_t aString )
-                                      { lDelegate( ConvertStringForCoreclr( aString ).data() ); } );
+                                      { lDelegate( CopyCharactersForCoreClr( aString ) ); } );
         }
 #pragma endregion
 
