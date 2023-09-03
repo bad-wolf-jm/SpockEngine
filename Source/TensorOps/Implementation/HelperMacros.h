@@ -135,9 +135,9 @@ namespace SE::TensorOps::Private
     constexpr uint32_t ThreadsPerBlock = 1024;
 
     template <typename _Type>
-    std::vector<_Type> Resolve( std::vector<ScalarValue> const &aValue )
+    vec_t<_Type> Resolve( vec_t<ScalarValue> const &aValue )
     {
-        std::vector<_Type> lValue( aValue.size() );
+        vec_t<_Type> lValue( aValue.size() );
         for( uint32_t i = 0; i < aValue.size(); i++ )
         {
             lValue[i] = std::get<_Type>( aValue[i] );

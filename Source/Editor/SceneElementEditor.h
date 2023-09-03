@@ -19,17 +19,17 @@ namespace SE::Editor
     {
       public:
         Entity     ElementToEdit{};
-        Ref<Scene> World;
+        ref_t<Scene> World;
 
       public:
         SceneElementEditor() = default;
-        SceneElementEditor( Ref<IGraphicContext> aGraphicContext );
+        SceneElementEditor( ref_t<IGraphicContext> aGraphicContext );
         ~SceneElementEditor() = default;
 
         void Display( int32_t width, int32_t height );
 
       private:
-        Ref<IGraphicContext> mGraphicContext;
+        ref_t<IGraphicContext> mGraphicContext;
     };
 
 } // namespace SE::Editor

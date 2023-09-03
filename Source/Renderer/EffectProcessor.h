@@ -15,29 +15,29 @@ namespace SE::Core
 
     struct EffectProcessorCreateInfo
     {
-        Ref<IShaderProgram> mVertexShader   = nullptr;
-        Ref<IShaderProgram> mFragmentShader = nullptr;
-        Ref<IRenderContext> RenderPass      = nullptr;
+        ref_t<IShaderProgram> mVertexShader   = nullptr;
+        ref_t<IShaderProgram> mFragmentShader = nullptr;
+        ref_t<IRenderContext> RenderPass      = nullptr;
     };
 
     class EffectProcessor
     {
       public:
-        EffectProcessor( Ref<IGraphicContext> mGraphicContext, Ref<IRenderContext> aRenderContext,
+        EffectProcessor( ref_t<IGraphicContext> mGraphicContext, ref_t<IRenderContext> aRenderContext,
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
-        void Render( Ref<ISampler2D> aImageSampler, Ref<IRenderContext> aRenderContext );
+        void Render( ref_t<ISampler2D> aImageSampler, ref_t<IRenderContext> aRenderContext );
 
         EffectProcessorCreateInfo Spec;
-        Ref<IDescriptorSetLayout> PipelineLayout = nullptr;
-        Ref<IDescriptorSet>       mTextures      = nullptr;
+        ref_t<IDescriptorSetLayout> PipelineLayout = nullptr;
+        ref_t<IDescriptorSet>       mTextures      = nullptr;
 
       private:
-        Ref<IGraphicContext>   mGraphicContext    = nullptr;
-        Ref<IGraphicsPipeline> mPipeline          = nullptr;
-        Ref<IGraphicBuffer>    mCameraBuffer      = nullptr;
-        Ref<IDescriptorSet>    mCameraDescriptors = nullptr;
+        ref_t<IGraphicContext>   mGraphicContext    = nullptr;
+        ref_t<IGraphicsPipeline> mPipeline          = nullptr;
+        ref_t<IGraphicBuffer>    mCameraBuffer      = nullptr;
+        ref_t<IDescriptorSet>    mCameraDescriptors = nullptr;
     };
 
 } // namespace SE::Core

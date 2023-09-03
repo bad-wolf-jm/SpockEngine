@@ -118,7 +118,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     struct sVectorValueComponent
     {
-        std::vector<_Ty> mValue = {}; //!< Values to upload
+        vec_t<_Ty> mValue = {}; //!< Values to upload
 
         sVectorValueComponent()                                = default;
         sVectorValueComponent( const sVectorValueComponent & ) = default;
@@ -163,10 +163,10 @@ namespace SE::TensorOps
     ///
     struct sOperandComponent
     {
-        std::vector<OpNode> mOperands = {}; //!< List of entities that have to be run before the current entity.
+        vec_t<OpNode> mOperands = {}; //!< List of entities that have to be run before the current entity.
 
         sOperandComponent() = default;
-        sOperandComponent( std::vector<OpNode> const &aOpNodes )
+        sOperandComponent( vec_t<OpNode> const &aOpNodes )
         {
             mOperands = aOpNodes;
         };
@@ -352,16 +352,16 @@ namespace SE::TensorOps
     ///
     struct sVectorInitializerComponent
     {
-        std::vector<ScalarValue> mValue = {}; //!< Vector of values
+        vec_t<ScalarValue> mValue = {}; //!< Vector of values
         MemoryBuffer             mData;       //!< GPU representation of the data of values
 
         sVectorInitializerComponent() = default;
 
         template <typename _Ty>
-        sVectorInitializerComponent( std::vector<_Ty> const &aValues )
+        sVectorInitializerComponent( vec_t<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
-            mValue               = std::vector<ScalarValue>( lVectorSize );
+            mValue               = vec_t<ScalarValue>( lVectorSize );
 
             for( uint32_t i = 0; i < lVectorSize; i++ )
             {
@@ -381,15 +381,15 @@ namespace SE::TensorOps
 
     struct sDataInitializerComponent
     {
-        std::vector<ScalarValue> mValue = {}; //!< Vector of values
+        vec_t<ScalarValue> mValue = {}; //!< Vector of values
 
         sDataInitializerComponent() = default;
 
         template <typename _Ty>
-        sDataInitializerComponent( std::vector<_Ty> const &aValues )
+        sDataInitializerComponent( vec_t<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
-            mValue               = std::vector<ScalarValue>( lVectorSize );
+            mValue               = vec_t<ScalarValue>( lVectorSize );
 
             for( uint32_t i = 0; i < lVectorSize; i++ )
             {

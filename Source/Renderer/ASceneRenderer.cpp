@@ -13,7 +13,7 @@ namespace SE::Core
     using namespace math;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    BaseSceneRenderer::BaseSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    BaseSceneRenderer::BaseSceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : mGraphicContext{ aGraphicContext }
         , mOutputFormat{ aOutputFormat }
         , mOutputSampleCount{ aOutputSampleCount }
@@ -44,7 +44,7 @@ namespace SE::Core
         mOutputHeight = aOutputHeight;
     }
 
-    void BaseSceneRenderer::Update( Ref<Scene> aScene )
+    void BaseSceneRenderer::Update( ref_t<Scene> aScene )
     {
         SE_PROFILE_SCOPE( "FOO" );
 

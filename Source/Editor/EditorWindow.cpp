@@ -34,18 +34,18 @@ namespace SE::Editor
     class Slider
     {
       public:
-        std::string ID = "";
+        string_t ID = "";
 
         _SliderType MinValue{};
         _SliderType MaxValue{};
         _SliderType CurrentValue{};
 
-        std::string Format = "";
+        string_t Format = "";
 
         bool Changed = false;
 
         Slider() = default;
-        Slider( std::string a_ID )
+        Slider( string_t a_ID )
             : ID{ a_ID }
         {
         }
@@ -61,11 +61,11 @@ namespace SE::Editor
     class PropertyEditor
     {
       public:
-        std::string       Label;
+        string_t       Label;
         float             LabelWidth;
         _ValueChooserType ValueChooser;
 
-        PropertyEditor( std::string ID )
+        PropertyEditor( string_t ID )
         {
             ValueChooser = _ValueChooserType( ID );
         }
@@ -83,10 +83,10 @@ namespace SE::Editor
         }
     };
 
-    static std::string UTF16ToAscii( const char *aPayloadData, size_t aSize )
+    static string_t UTF16ToAscii( const char *aPayloadData, size_t aSize )
     {
         size_t      lPayloadSize = static_cast<size_t>( aSize / 2 );
-        std::string lItemPathStr( lPayloadSize - 1, '\0' );
+        string_t lItemPathStr( lPayloadSize - 1, '\0' );
         for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
             lItemPathStr[i] = aPayloadData[2 * i];
 
@@ -163,7 +163,7 @@ namespace SE::Editor
         }
     }
 
-    EditorWindow::EditorWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
+    EditorWindow::EditorWindow( ref_t<IGraphicContext> aGraphicContext, ref_t<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
@@ -180,7 +180,7 @@ namespace SE::Editor
         m_SceneViewport_new = a_SceneViewport;
     }
 
-    EditorWindow &EditorWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
+    EditorWindow &EditorWindow::AddMenuItem( string_t l_Icon, string_t l_Title, std::function<bool()> l_Action )
     {
         m_MainMenuItems.push_back( { l_Icon, l_Title, l_Action } );
         return *this;
@@ -366,7 +366,7 @@ namespace SE::Editor
             UI::Slider( "##alpha_threshold", "%.2f", 0.0f, 1.0f, &l_AlphaMaskThreshold );
 
             {
-                static Ref<Texture2D> lBaseColorTexture = nullptr;
+                static ref_t<Texture2D> lBaseColorTexture = nullptr;
                 static ImageHandle                  lBaseColorTextureHandle{};
                 UI::Text( "Base color:" );
                 ImGui::Columns( 2, NULL, false );
@@ -397,7 +397,7 @@ namespace SE::Editor
             }
 
             {
-                static Ref<Texture2D> lEmissiveTexture = nullptr;
+                static ref_t<Texture2D> lEmissiveTexture = nullptr;
                 static ImageHandle                  lEmissiveTextureHandle{};
                 UI::Text( "Emissive:" );
                 ImGui::Columns( 2, NULL, false );
@@ -427,7 +427,7 @@ namespace SE::Editor
             }
 
             {
-                static Ref<Texture2D> lNormalsTexture = nullptr;
+                static ref_t<Texture2D> lNormalsTexture = nullptr;
                 static ImageHandle                  lNormalsTextureHandle{};
                 UI::Text( "Normals:" );
                 auto l_TopLeft     = ImGui::GetCursorScreenPos();
@@ -450,7 +450,7 @@ namespace SE::Editor
             }
 
             {
-                static Ref<Texture2D> lOcclusionTexture = nullptr;
+                static ref_t<Texture2D> lOcclusionTexture = nullptr;
                 static ImageHandle                  lOcclusionTextureHandle{};
                 UI::Text( "Occlusion:" );
                 ImGui::Columns( 2, NULL, false );
@@ -480,7 +480,7 @@ namespace SE::Editor
             }
 
             {
-                static Ref<Texture2D> lPhysicalTexture = nullptr;
+                static ref_t<Texture2D> lPhysicalTexture = nullptr;
                 static ImageHandle                  lPhysicalTextureHandle{};
                 UI::Text( "Physical properties:" );
                 ImGui::Columns( 2, NULL, false );
@@ -528,10 +528,10 @@ namespace SE::Editor
             static bool lIsProfiling            = false;
             static bool lProfilingDataAvailable = false;
 
-            static std::unordered_map<std::string, float>    lProfilingResults = {};
-            static std::unordered_map<std::string, uint32_t> lProfilingCount   = {};
+            static std::unordered_map<string_t, float>    lProfilingResults = {};
+            static std::unordered_map<string_t, uint32_t> lProfilingCount   = {};
 
-            std::string lButtonText = lIsProfiling ? "Stop capture" : "Start capture";
+            string_t lButtonText = lIsProfiling ? "Stop capture" : "Start capture";
             if( UI::Button( lButtonText.c_str(), { 150.0f, 50.0f } ) )
             {
                 if( lIsProfiling )
@@ -688,12 +688,12 @@ namespace SE::Editor
     class ManipulationTypeChooser
     {
       public:
-        std::string                    ID = "";
+        string_t                    ID = "";
         UI::ComboBox<ManipulationType> Dropdown;
 
       public:
         ManipulationTypeChooser() = default;
-        ManipulationTypeChooser( std::string a_ID )
+        ManipulationTypeChooser( string_t a_ID )
             : ID{ a_ID }
             , Dropdown{ UI::ComboBox<ManipulationType>( a_ID ) } {};
 
@@ -718,7 +718,7 @@ namespace SE::Editor
         auto lName = aPath.filename().string();
         auto lExt  = aPath.extension().string();
 
-        Ref<sImportedModel> lImporter = nullptr;
+        ref_t<sImportedModel> lImporter = nullptr;
         if( lExt == ".gltf" )
             lImporter = New<GlTFImporter>( aPath );
         else if( lExt == ".obj" )
@@ -738,7 +738,7 @@ namespace SE::Editor
         // auto lName = aPath.filename().string();
         // auto lExt  = aPath.extension().string();
 
-        // Ref<sImportedModel> lModelData = nullptr;
+        // ref_t<sImportedModel> lModelData = nullptr;
         // if( lExt == ".gltf" )
         //     lModelData = New<GlTFImporter>( aPath );
         // else if( lExt == ".obj" )
@@ -755,12 +755,12 @@ namespace SE::Editor
 
         // for( auto &lMaterial : lModelData->mMaterials )
         // {
-        //     std::string lSerializedMeshName = fmt::format( "{}.material", lMaterial.mName );
+        //     string_t lSerializedMeshName = fmt::format( "{}.material", lMaterial.mName );
         //     auto        lPath               = mModelsPath / lModelName / "Materials" / lSerializedMeshName;
 
         //     BinaryAsset                    lBinaryDataFile;
-        //     std::vector<sAssetIndex>       lAssetIndex{};
-        //     std::vector<std::vector<char>> lPackets{};
+        //     vec_t<sAssetIndex>       lAssetIndex{};
+        //     vec_t<vec_t<char>> lPackets{};
 
         //     sMaterial lNewMaterial{};
         //     lNewMaterial.mName                         = lMaterial.mName;
@@ -865,10 +865,10 @@ namespace SE::Editor
         // {
         //     BinaryAsset lBinaryDataFile;
 
-        //     std::string lSerializedMeshName = fmt::format( "{}.mesh", lMesh.mName );
+        //     string_t lSerializedMeshName = fmt::format( "{}.mesh", lMesh.mName );
         //     auto        lPath               = mModelsPath / lModelName / "Meshes" / lSerializedMeshName;
 
-        //     std::vector<VertexData> lVertices( lMesh.mPositions.size() );
+        //     vec_t<VertexData> lVertices( lMesh.mPositions.size() );
         //     for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
         //     {
         //         lVertices[i].Position    = lMesh.mPositions[i];
@@ -1074,7 +1074,7 @@ namespace SE::Editor
         //         {
         //             const char *lPayloadData = (const char *)payload->Data;
         //             size_t      lPayloadSize = static_cast<size_t>( payload->DataSize / 2 );
-        //             std::string lItemPath( lPayloadSize - 1, '\0' );
+        //             string_t lItemPath( lPayloadSize - 1, '\0' );
         //             for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
         //             {
         //                 lItemPath[i] = lPayloadData[2 * i];
@@ -1378,7 +1378,7 @@ namespace SE::Editor
                 {
                     const char *lPayloadData = (const char *)payload->Data;
                     size_t      lPayloadSize = static_cast<size_t>( payload->DataSize / 2 );
-                    std::string lItemPath( lPayloadSize - 1, '\0' );
+                    string_t lItemPath( lPayloadSize - 1, '\0' );
                     for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
                     {
                         lItemPath[i] = lPayloadData[2 * i];

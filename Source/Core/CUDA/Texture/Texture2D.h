@@ -65,7 +65,7 @@ namespace SE::Cuda
          * @param aSpec Texture specification
          * @param aData Texture data
          */
-        Texture2D( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
+        Texture2D( sTextureCreateInfo &aSpec, vec_t<uint8_t> aData );
 
         /** @brief Constructor
          *
@@ -127,7 +127,7 @@ namespace SE::Cuda
     {
       public:
         sTextureSamplingInfo mSpec{};            //!< Copy of the specification structure used to create the texture
-        Ref<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
+        ref_t<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
         {
@@ -159,7 +159,7 @@ namespace SE::Cuda
          * @param aTexture Texture to sample
          * @param aSamplingInfo Sampling data
          */
-        TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
+        TextureSampler2D( ref_t<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
         void InitializeTextureSampler();
     };
 } // namespace SE::Cuda

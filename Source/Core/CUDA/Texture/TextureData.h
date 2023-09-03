@@ -81,7 +81,7 @@ namespace SE::Core
 
         void SaveTo( fs::path const &aImagePath );
 
-        std::vector<char> Serialize() const;
+        vec_t<char> Serialize() const;
 
       private:
         // Common initialization for all constructor versions.
@@ -183,8 +183,8 @@ namespace SE::Core
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aKTXImagePath );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
-        TextureDataCubeMap( std::vector<uint8_t> aKTXData, uint32_t aSize );
-        TextureDataCubeMap( std::array<std::vector<uint8_t>, 6> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( vec_t<uint8_t> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( std::array<vec_t<uint8_t>, 6> aKTXData, uint32_t aSize );
 
         sCubeMapImageData GetImageData();
 

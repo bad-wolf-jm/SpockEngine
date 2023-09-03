@@ -12,7 +12,7 @@ inline void __VK_ASSERT( VkResult aErr, const char *aFile, const int aLine )
 {
     if( aErr != VK_SUCCESS )
     {
-        std::string lErrorString = fmt::format( "Fatal : VkResult is \"{}\" in {} at line {}", aErr, aFile, aLine );
+        string_t lErrorString = fmt::format( "Fatal : VkResult is \"{}\" in {} at line {}", aErr, aFile, aLine );
         SE::Logging::Error( lErrorString );
 
         throw std::runtime_error( lErrorString );

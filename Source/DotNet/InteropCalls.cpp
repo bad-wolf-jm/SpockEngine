@@ -730,7 +730,7 @@ namespace SE::Core::Interop
 
         void UITableColumn_SetTooltip( UITableColumn *aSelf, UIComponent **aTooptip, int aLength )
         {
-            aSelf->mToolTip = std::vector( aTooptip, aTooptip + aLength );
+            aSelf->mToolTip = vec_t( aTooptip, aTooptip + aLength );
         }
 
         void UITableColumn_SetForegroundColor( UITableColumn *aSelf, CLRVec4 *aForegroundColor, int aLength )

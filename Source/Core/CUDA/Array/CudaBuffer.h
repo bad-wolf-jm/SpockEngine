@@ -62,7 +62,7 @@ namespace SE::Cuda
         }
 
         template <typename _Ty>
-        static GPUMemory Create( std::vector<_Ty> aVec )
+        static GPUMemory Create( vec_t<_Ty> aVec )
         {
             GPUMemory lOut = GPUMemory::Create<_Ty>( aVec.size() );
             lOut.Upload( aVec );

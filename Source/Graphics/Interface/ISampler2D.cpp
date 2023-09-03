@@ -9,7 +9,7 @@
 namespace SE::Graphics
 {
     /** @brief */
-    ISampler2D::ISampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
+    ISampler2D::ISampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData,
                             sTextureSamplingInfo const &aSamplingSpec )
         : mGraphicContext( aGraphicContext )
         , mTextureData{ aTextureData }

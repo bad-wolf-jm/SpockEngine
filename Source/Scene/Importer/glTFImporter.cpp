@@ -40,10 +40,10 @@ namespace SE::Core
     GlTFImporter::GlTFImporter( fs::path aPath )
     {
         tinygltf::TinyGLTF lGltfContext;
-        std::string        lError;
-        std::string        lWarning;
+        string_t        lError;
+        string_t        lWarning;
 
-        std::string lExtension = aPath.extension().string();
+        string_t lExtension = aPath.extension().string();
 
         bool lFileLoaded = false;
         if( lExtension == ".glb" )
@@ -94,7 +94,7 @@ namespace SE::Core
         }
     }
 
-    void GlTFImporter::CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
+    void GlTFImporter::CreateTexture( uint32_t aTextureIndex, string_t aName, tinygltf::Image const &aGltfimage,
                                       sTextureSamplingInfo const &aTextureSamplingInfo )
     {
         sImageData lImageData{};
@@ -105,7 +105,7 @@ namespace SE::Core
         if( aGltfimage.component == 3 )
         {
             lImageData.mByteSize  = aGltfimage.width * aGltfimage.height * 4;
-            lImageData.mPixelData = std::vector<uint8_t>( lImageData.mByteSize );
+            lImageData.mPixelData = vec_t<uint8_t>( lImageData.mByteSize );
 
             unsigned char       *rgba = lImageData.mPixelData.data();
             unsigned char const *rgb  = &aGltfimage.image[0];
@@ -121,7 +121,7 @@ namespace SE::Core
         }
         else
         {
-            lImageData.mPixelData = std::vector<uint8_t>( &aGltfimage.image[0], &aGltfimage.image[0] + aGltfimage.image.size() );
+            lImageData.mPixelData = vec_t<uint8_t>( &aGltfimage.image[0], &aGltfimage.image[0] + aGltfimage.image.size() );
             lImageData.mByteSize  = aGltfimage.image.size();
         }
 
@@ -152,7 +152,7 @@ namespace SE::Core
         }
     }
 
-    sImportedMaterial::sTextureReference GlTFImporter::RetrieveTextureData( tinygltf::Material &aMaterial, std::string aName )
+    sImportedMaterial::sTextureReference GlTFImporter::RetrieveTextureData( tinygltf::Material &aMaterial, string_t aName )
     {
         if( aMaterial.values.find( aName ) != aMaterial.values.end() )
         {
@@ -166,7 +166,7 @@ namespace SE::Core
     }
 
     sImportedMaterial::sTextureReference GlTFImporter::RetrieveAdditionalTextureData( tinygltf::Material &aMaterial,
-                                                                                      std::string         aName )
+                                                                                      string_t         aName )
     {
         if( aMaterial.additionalValues.find( aName ) != aMaterial.additionalValues.end() )
         {
@@ -179,7 +179,7 @@ namespace SE::Core
         return sImportedMaterial::sTextureReference{};
     }
 
-    math::vec4 GlTFImporter::RetrieveVec4( tinygltf::Material &aMaterial, std::string aName, math::vec4 aDefault )
+    math::vec4 GlTFImporter::RetrieveVec4( tinygltf::Material &aMaterial, string_t aName, math::vec4 aDefault )
     {
         if( aMaterial.values.find( aName ) != aMaterial.values.end() )
         {
@@ -190,7 +190,7 @@ namespace SE::Core
     }
 
     std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> GlTFImporter::RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive,
-                                                                                             std::string                aName )
+                                                                                             string_t                aName )
     {
         if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
         {
@@ -335,21 +335,21 @@ namespace SE::Core
 
                 RetrievePrimitiveAttribute<math::vec3>( lPrimitive, "NORMAL", lNewImportedMesh.mNormals );
                 if( lNewImportedMesh.mNormals.size() == 0 )
-                    lNewImportedMesh.mNormals = std::vector<math::vec3>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mNormals = vec_t<math::vec3>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_0", lNewImportedMesh.mUV0 );
                 if( lNewImportedMesh.mUV0.size() == 0 )
-                    lNewImportedMesh.mUV0 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mUV0 = vec_t<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
                 if( lNewImportedMesh.mUV1.size() == 0 )
-                    lNewImportedMesh.mUV1 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mUV1 = vec_t<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec4>( lPrimitive, "WEIGHTS_0", lNewImportedMesh.mWeights );
                 if( lNewImportedMesh.mWeights.size() == 0 )
-                    lNewImportedMesh.mWeights = std::vector<math::vec4>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mWeights = vec_t<math::vec4>( lNewImportedMesh.mPositions.size() );
 
-                std::vector<uint8_t> lJointData;
+                vec_t<uint8_t> lJointData;
                 RetrievePrimitiveAttribute<uint8_t>( lPrimitive, "JOINTS_0", lJointData );
                 auto [lCount, lStride, lComponentType, lComponentSize] = RetrievePrimitiveCount( lPrimitive, "JOINTS_0" );
                 if( lCount > 0 )
@@ -361,10 +361,10 @@ namespace SE::Core
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
                     {
                         const uint16_t       *buf = reinterpret_cast<const uint16_t *>( lJointData.data() );
-                        std::vector<uint16_t> lJoints0( lCount * lComponentCount );
+                        vec_t<uint16_t> lJoints0( lCount * lComponentCount );
                         memcpy( lJoints0.data(), buf, lCount * lStride );
 
-                        std::vector<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
+                        vec_t<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
                         lNewImportedMesh.mJoints.resize( lCount );
 
                         for( uint32_t i = 0; i < lCount; i++ )
@@ -376,10 +376,10 @@ namespace SE::Core
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
                     {
                         const uint8_t       *buf = reinterpret_cast<const uint8_t *>( lJointData.data() );
-                        std::vector<uint8_t> lJoints0( lCount * lComponentCount );
+                        vec_t<uint8_t> lJoints0( lCount * lComponentCount );
                         memcpy( lJoints0.data(), buf, lCount * lStride );
 
-                        std::vector<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
+                        vec_t<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
                         lNewImportedMesh.mJoints.resize( lCount );
 
                         for( uint32_t i = 0; i < lCount; i++ )
@@ -396,7 +396,7 @@ namespace SE::Core
                 }
                 else
                 {
-                    lNewImportedMesh.mJoints = std::vector<math::uvec4>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mJoints = vec_t<math::uvec4>( lNewImportedMesh.mPositions.size() );
                 }
 
                 if( lPrimitive.indices > -1 )

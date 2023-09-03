@@ -36,12 +36,12 @@ namespace SE::Editor
     {
       public:
         EditorWindow mEditorWindow;
-        Ref<Engine>  mEngineLoop             = nullptr;
+        ref_t<Engine>  mEngineLoop             = nullptr;
         fs::path     ConfigurationRoot       = "";
         fs::path     ConfigurationFile       = "";
         fs::path     SensorConfigurationFile = "";
-        std::string  ApplicationName         = "Sensor Model Editor";
-        std::string  ImGuiIniFile            = "imgui_config.ini";
+        string_t  ApplicationName         = "Sensor Model Editor";
+        string_t  ImGuiIniFile            = "imgui_config.ini";
         math::ivec2  WindowSize              = { 1920, 1080 };
         math::ivec2  WindowPosition          = { 100, 100 };
 
@@ -51,7 +51,7 @@ namespace SE::Editor
         ~BaseEditorApplication() = default;
 
         void Init();
-        void Init( std::string aAppClass, fs::path aConfigurationPath );
+        void Init( string_t aAppClass, fs::path aConfigurationPath );
 
         void RenderScene();
         void Update( Timestep ts );
@@ -68,26 +68,26 @@ namespace SE::Editor
         uint32_t   mViewportHeight        = 1;
         uint32_t   mViewportWidth         = 1;
         bool       mShouldRebuildViewport = true;
-        Ref<Scene> mWorld                 = nullptr;
-        Ref<Scene> mTestWorld             = nullptr;
+        ref_t<Scene> mWorld                 = nullptr;
+        ref_t<Scene> mTestWorld             = nullptr;
 
-        // Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
-        Ref<SceneRenderer> mNewSceneRenderer = nullptr;
-        // Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
-        // Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
+        // ref_t<DeferredRenderer>     mDeferredRenderer   = nullptr;
+        ref_t<SceneRenderer> mNewSceneRenderer = nullptr;
+        // ref_t<ForwardSceneRenderer> mForwardRenderer    = nullptr;
+        // ref_t<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
-        Ref<ISampler2D> mOffscreenRenderTargetTexture = nullptr;
+        ref_t<ISampler2D> mOffscreenRenderTargetTexture = nullptr;
         ImageHandle     mOffscreenRenderTargetDisplayHandle{};
 
-        Ref<ISampler2D> mDeferredRenderTargetTexture = nullptr;
+        ref_t<ISampler2D> mDeferredRenderTargetTexture = nullptr;
         ImageHandle     mDeferredRenderTargetDisplayHandle{};
 
-        Ref<ISampler2D> mNewRenderTargetTexture = nullptr;
+        ref_t<ISampler2D> mNewRenderTargetTexture = nullptr;
         ImageHandle     mNewRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
 
-        Ref<DotNetInstance> mApplicationInstance = nullptr;
+        ref_t<DotNetInstance> mApplicationInstance = nullptr;
     };
 
 } // namespace SE::Editor

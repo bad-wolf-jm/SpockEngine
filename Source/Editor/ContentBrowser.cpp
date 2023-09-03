@@ -9,7 +9,7 @@
 
 namespace SE::Editor
 {
-    ContentBrowser::ContentBrowser( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
+    ContentBrowser::ContentBrowser( ref_t<IGraphicContext> aGraphicContext, ref_t<UIContext> aUIOverlay, fs::path aRoot )
         : mGraphicContext{ aGraphicContext }
         , mCurrentDirectory( aRoot )
         , Root{ aRoot }
@@ -71,8 +71,8 @@ namespace SE::Editor
         ImGui::Columns( columnCount, 0, false );
         ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
-        std::vector<fs::path> lFolderContent;
-        std::vector<fs::path> lFiles;
+        vec_t<fs::path> lFolderContent;
+        vec_t<fs::path> lFiles;
 
         for( auto &directoryEntry : std::filesystem::directory_iterator( mCurrentDirectory ) )
         {
@@ -88,7 +88,7 @@ namespace SE::Editor
         {
             const auto &path           = directoryEntry;
             auto        relativePath   = std::filesystem::relative( path, Root );
-            std::string filenameString = relativePath.filename().string();
+            string_t filenameString = relativePath.filename().string();
 
             ImGui::PushID( filenameString.c_str() );
             auto icon = std::filesystem::is_directory( directoryEntry ) ? mDirectoryIconHandle : mFileIconHandle;

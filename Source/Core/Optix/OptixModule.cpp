@@ -6,8 +6,8 @@
 namespace SE::Graphics
 {
 
-    OptixModuleObject::OptixModuleObject( const std::string aLaunchParameterVariableName, const char *aPtxCode,
-                                          Ref<OptixDeviceContextObject> aRayTracingContext )
+    OptixModuleObject::OptixModuleObject( const string_t aLaunchParameterVariableName, const char *aPtxCode,
+                                          ref_t<OptixDeviceContextObject> aRayTracingContext )
         : mRayTracingContext{ aRayTracingContext }
         , mLaunchParameterVariableName{ aLaunchParameterVariableName }
     {
@@ -26,7 +26,7 @@ namespace SE::Graphics
 
         mPipelineLinkOptions.maxTraceDepth = 2;
 
-        const std::string ptxCode = aPtxCode;
+        const string_t ptxCode = aPtxCode;
 
         char   lLogString[2048];
         size_t lLogStringSize = sizeof( lLogString );
@@ -37,7 +37,7 @@ namespace SE::Graphics
 
     OptixModuleObject::~OptixModuleObject() { OPTIX_CHECK_NO_EXCEPT( optixModuleDestroy( mOptixObject ) ); }
 
-    void OptixModuleObject::CreateMissGroup( std::string aEntryName )
+    void OptixModuleObject::CreateMissGroup( string_t aEntryName )
     {
         OptixProgramGroupOptions lProgramGroupOptions{};
         OptixProgramGroupDesc    lProgramGroupDescription{};
@@ -49,7 +49,7 @@ namespace SE::Graphics
             SE::Core::New<OptixProgramGroupObject>( lProgramGroupDescription, lProgramGroupOptions, mRayTracingContext ) );
     }
 
-    void OptixModuleObject::CreateRayGenGroup( std::string aEntryName )
+    void OptixModuleObject::CreateRayGenGroup( string_t aEntryName )
     {
         OptixProgramGroupOptions lProgramGroupOptions{};
         OptixProgramGroupDesc    lProgramGroupDescription{};
@@ -61,7 +61,7 @@ namespace SE::Graphics
             SE::Core::New<OptixProgramGroupObject>( lProgramGroupDescription, lProgramGroupOptions, mRayTracingContext ) );
     }
 
-    void OptixModuleObject::CreateHitGroup( std::string aClosestHitEntryName, std::string aAnyHitHitEntryName )
+    void OptixModuleObject::CreateHitGroup( string_t aClosestHitEntryName, string_t aAnyHitHitEntryName )
     {
         OptixProgramGroupOptions lProgramGroupOptions{};
         OptixProgramGroupDesc    lProgramGroupDescription{};
@@ -76,9 +76,9 @@ namespace SE::Graphics
             SE::Core::New<OptixProgramGroupObject>( lProgramGroupDescription, lProgramGroupOptions, mRayTracingContext ) );
     }
 
-    Ref<OptixPipelineObject> OptixModuleObject::CreatePipeline()
+    ref_t<OptixPipelineObject> OptixModuleObject::CreatePipeline()
     {
-        std::vector<Ref<OptixProgramGroupObject>> lProgramGroups;
+        vec_t<ref_t<OptixProgramGroupObject>> lProgramGroups;
         for( auto pg : mRayGenProgramGroups ) lProgramGroups.push_back( pg );
         for( auto pg : mHitProgramGroups ) lProgramGroups.push_back( pg );
         for( auto pg : mMissProgramGroups ) lProgramGroups.push_back( pg );

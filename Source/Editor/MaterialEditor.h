@@ -17,7 +17,7 @@ namespace SE::Editor
     {
       public:
         Entity     ElementToEdit{};
-        Ref<Scene> World;
+        ref_t<Scene> World;
 
       public:
         MaterialEditor()  = default;

@@ -896,7 +896,7 @@ namespace SE::Core
         return false;
     }
 
-    static bool skip_spaces( const std::string &d, size_t &p )
+    static bool skip_spaces( const string_t &d, size_t &p )
     {
         for( ; p < d.length(); ++p )
         {
@@ -908,18 +908,18 @@ namespace SE::Core
         return p < d.length();
     }
 
-    static std::string get_div_class( const char *str, const char *str_end )
+    static string_t get_div_class( const char *str, const char *str_end )
     {
         if( str_end <= str )
             return "";
 
-        std::string d( str, str_end - str );
+        string_t d( str, str_end - str );
         if( d.back() == '>' )
             d.pop_back();
 
         const char attr[] = "class";
         size_t     p      = d.find( attr );
-        if( p == std::string::npos )
+        if( p == string_t::npos )
             return "";
         p += sizeof( attr ) - 1;
 
@@ -1017,7 +1017,7 @@ namespace SE::Core
         return false;
     }
 
-    void UIMarkdownRendererInternal::html_div( const std::string &dclass, bool e )
+    void UIMarkdownRendererInternal::html_div( const string_t &dclass, bool e )
     {
     }
 

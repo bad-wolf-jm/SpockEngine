@@ -38,7 +38,7 @@ namespace SE::Core
         struct SignalHandler
         {
             // entt::sigh<void( Internal::Entity<EntityRegistry *>, _ComponentType & )> Signal;
-            std::vector<std::function<void( EntityType, _ComponentType & )>> mHandlers;
+            vec_t<std::function<void( EntityType, _ComponentType & )>> mHandlers;
 
             SignalHandler()                        = default;
             SignalHandler( const SignalHandler & ) = default;
@@ -97,7 +97,7 @@ namespace SE::Core
         ///
         /// @param a_Name The name tag to add to the entity.
         ///
-        EntityType CreateEntity( std::string const &aName )
+        EntityType CreateEntity( string_t const &aName )
         {
             EntityType lNewEntity = CreateEntity();
             lNewEntity.Add<sTag>( aName.empty() ? "Unnamed_Entity" : aName );
@@ -118,7 +118,7 @@ namespace SE::Core
         ///
         /// @param a_Name The name tag to add to the entity.
         ///
-        EntityType CreateEntityWithRelationship( std::string const &aName )
+        EntityType CreateEntityWithRelationship( string_t const &aName )
         {
             EntityType lNewEntity = CreateEntity( aName );
             lNewEntity.Add<RelationshipType>();
@@ -133,7 +133,7 @@ namespace SE::Core
         /// @param aParentEntity The parent entity.
         /// @param aName The name tag to add to the entity.
         ///
-        EntityType CreateEntity( EntityType const &aParentEntity, std::string const &aName )
+        EntityType CreateEntity( EntityType const &aParentEntity, string_t const &aName )
         {
             EntityType lNewEntity = CreateEntityWithRelationship( aName );
             SetParent( lNewEntity, aParentEntity );

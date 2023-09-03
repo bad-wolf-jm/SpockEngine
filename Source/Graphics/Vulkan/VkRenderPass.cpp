@@ -9,22 +9,22 @@
 namespace SE::Graphics
 {
 
-    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
-                                            std::vector<VkSubpassDescription> aSubpasses,
-                                            std::vector<VkSubpassDependency>  aSubpassDependencies )
+    VkRenderPassObject::VkRenderPassObject( ref_t<VkGraphicContext> aContext, vec_t<VkAttachmentDescription> aAttachments,
+                                            vec_t<VkSubpassDescription> aSubpasses,
+                                            vec_t<VkSubpassDependency>  aSubpassDependencies )
         : IRenderPass{ aContext, 1 }
     {
         mVkObject = Cast<VkGraphicContext>( mGraphicContext )->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+    VkRenderPassObject::VkRenderPassObject( ref_t<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                                             bool aIsPresented, math::vec4 aClearColor )
         : IRenderPass{ aContext, aSampleCount }
     {
     }
 
-    void VkRenderPassObject::CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
-                                                         std::vector<VkAttachmentReference>   aColorAttachmentReferences,
+    void VkRenderPassObject::CreateUnderlyingRenderpass( vec_t<VkAttachmentDescription> aAttachments,
+                                                         vec_t<VkAttachmentReference>   aColorAttachmentReferences,
                                                          VkAttachmentReference               *aDepthAttachmentReference,
                                                          VkAttachmentReference               *aResolveAttachmentReference )
     {
@@ -38,14 +38,14 @@ namespace SE::Graphics
 
         mVkObject =
             Cast<VkGraphicContext>( mGraphicContext )
-                ->CreateRenderPass( aAttachments, std::vector<VkSubpassDescription>{ lSubpass }, DefaultSubpassDependencies() );
+                ->CreateRenderPass( aAttachments, vec_t<VkSubpassDescription>{ lSubpass }, DefaultSubpassDependencies() );
 
         mColorAttachmentCount = aColorAttachmentReferences.size();
     }
 
-    std::vector<VkSubpassDependency> VkRenderPassObject::DefaultSubpassDependencies()
+    vec_t<VkSubpassDependency> VkRenderPassObject::DefaultSubpassDependencies()
     {
-        std::vector<VkSubpassDependency> lSubpassDependencies( 2 );
+        vec_t<VkSubpassDependency> lSubpassDependencies( 2 );
         lSubpassDependencies[0].srcSubpass    = VK_SUBPASS_EXTERNAL;
         lSubpassDependencies[0].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
         lSubpassDependencies[0].srcStageMask  = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
@@ -70,7 +70,7 @@ namespace SE::Graphics
         Cast<VkGraphicContext>( mGraphicContext )->DestroyRenderPass( mVkObject );
     }
 
-    std::vector<VkClearValue> VkRenderPassObject::GetClearValues()
+    vec_t<VkClearValue> VkRenderPassObject::GetClearValues()
     {
         return mClearValues;
     }

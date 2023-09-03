@@ -9,11 +9,11 @@ namespace SE::Graphics
 
     OptixPipelineObject::OptixPipelineObject( OptixPipelineLinkOptions                  aPipelineLinkOptions,
                                               OptixPipelineCompileOptions               aPipelineCompileOptions,
-                                              std::vector<Ref<OptixProgramGroupObject>> aProgramGroups,
-                                              Ref<OptixDeviceContextObject>             aRayTracingContext )
+                                              vec_t<ref_t<OptixProgramGroupObject>> aProgramGroups,
+                                              ref_t<OptixDeviceContextObject>             aRayTracingContext )
         : mRayTracingContext{ aRayTracingContext }
     {
-        std::vector<OptixProgramGroup> lProgramGroups;
+        vec_t<OptixProgramGroup> lProgramGroups;
         for( auto pg : aProgramGroups ) lProgramGroups.push_back( pg->mOptixObject );
 
         char   lLogString[2048];
@@ -31,7 +31,7 @@ namespace SE::Graphics
     OptixPipelineObject::~OptixPipelineObject() { OPTIX_CHECK_NO_EXCEPT( optixPipelineDestroy( mOptixObject ) ); }
 
     void OptixPipelineObject::Launch( CUstream aStream, RawPointer aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
-                                      Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions )
+                                      ref_t<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions )
     {
         OPTIX_CHECK( optixLaunch( mOptixObject, aStream, aLaunchParamsBuffer, aLaunchParamBufferSize,
                                   &aShaderBindingTable->mOptixObject, aLaunchDimensions.x, aLaunchDimensions.y,

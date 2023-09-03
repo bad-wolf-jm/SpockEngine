@@ -17,7 +17,7 @@ namespace SE::Core
       public:
         BaseSceneRenderer() = default;
 
-        BaseSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        BaseSceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~BaseSceneRenderer() = default;
 
@@ -31,17 +31,17 @@ namespace SE::Core
         void SetExposure( float aExposure );
         void SetAmbientLighting( vec4 aAmbientLight );
 
-        virtual void Update( Ref<Scene> aWorld );
+        virtual void Update( ref_t<Scene> aWorld );
         virtual void Render();
 
         virtual void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
-        virtual Ref<ITexture2D> GetOutputImage() = 0;
+        virtual ref_t<ITexture2D> GetOutputImage() = 0;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext{};
+        ref_t<IGraphicContext> mGraphicContext{};
 
-        Ref<Scene> mScene = nullptr;
+        ref_t<Scene> mScene = nullptr;
 
         uint32_t mOutputWidth  = 0;
         uint32_t mOutputHeight = 0;

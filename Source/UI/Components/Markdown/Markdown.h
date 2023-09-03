@@ -13,7 +13,7 @@ namespace SE::Core
 
         bool get_image( image_info &nfo ) const override { return false; }
 
-        void html_div( const std::string &dclass, bool e ) override
+        void html_div( const string_t &dclass, bool e ) override
         {
             if( dclass == "red" )
             {

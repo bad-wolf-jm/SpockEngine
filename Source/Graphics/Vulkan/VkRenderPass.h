@@ -21,10 +21,10 @@ namespace SE::Graphics
 
         VkRenderPassObject()                       = default;
         VkRenderPassObject( VkRenderPassObject & ) = default;
-        VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
-                            std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
+        VkRenderPassObject( ref_t<VkGraphicContext> aContext, vec_t<VkAttachmentDescription> aAttachments,
+                            vec_t<VkSubpassDescription> aSubpasses, vec_t<VkSubpassDependency> aSubpassDependencies );
 
-        VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+        VkRenderPassObject( ref_t<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                             bool aIsPresented, math::vec4 aClearColor );
 
         ~VkRenderPassObject();
@@ -35,12 +35,12 @@ namespace SE::Graphics
         VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, bool aIsSampled,
                                                  VkAttachmentLoadOp aAttachmentLoadOp, VkAttachmentStoreOp aAttachmentStoreOp );
 
-        std::vector<VkClearValue> GetClearValues();
+        vec_t<VkClearValue> GetClearValues();
 
-        std::vector<VkSubpassDependency> DefaultSubpassDependencies();
+        vec_t<VkSubpassDependency> DefaultSubpassDependencies();
 
-        void CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
-                                         std::vector<VkAttachmentReference>   aAttachmentReferences,
+        void CreateUnderlyingRenderpass( vec_t<VkAttachmentDescription> aAttachments,
+                                         vec_t<VkAttachmentReference>   aAttachmentReferences,
                                          VkAttachmentReference               *aDepthAttachmentReference,
                                          VkAttachmentReference               *aResolveAttachmentReference );
 
@@ -50,8 +50,8 @@ namespace SE::Graphics
         }
 
       protected:
-        Ref<VkGraphicContext>     mContext              = nullptr;
-        std::vector<VkClearValue> mClearValues          = {};
+        ref_t<VkGraphicContext>     mContext              = nullptr;
+        vec_t<VkClearValue> mClearValues          = {};
         uint32_t                  mColorAttachmentCount = 0;
     };
 

@@ -37,7 +37,7 @@ namespace SE::Graphics
         };
     }
 
-    VkGpuBuffer::VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+    VkGpuBuffer::VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                               bool aIsTransferDestination, size_t aSize )
         : VkGpuBuffer::VkGpuBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                                     aIsTransferDestination, aSize )
@@ -45,7 +45,7 @@ namespace SE::Graphics
         // Allocate( mSize );
     }
 
-    VkGpuBuffer::VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+    VkGpuBuffer::VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                               bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : IGraphicBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize )
         , mVkGraphicContext{ aGraphicContext }
@@ -107,7 +107,7 @@ namespace SE::Graphics
             auto lStagingBuffer = VkGpuBuffer( mVkGraphicContext, eBufferType::UNKNOWN, true, false, true, false, aSize );
             lStagingBuffer.DoUpload( aData, aSize, 0 );
 
-            Ref<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
+            ref_t<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
             lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
             lCommandBuffer->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
             lCommandBuffer->End();
@@ -125,11 +125,11 @@ namespace SE::Graphics
         }
     }
 
-    void VkGpuBuffer::Copy( Ref<IGraphicBuffer> aSource, size_t aOffset )
+    void VkGpuBuffer::Copy( ref_t<IGraphicBuffer> aSource, size_t aOffset )
     {
         auto lSource = std::reinterpret_pointer_cast<VkGpuBuffer>( aSource );
 
-        Ref<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
+        ref_t<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mVkGraphicContext );
         lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBuffer->CopyBuffer( lSource->mVkBuffer, 0, lSource->mSize, mVkBuffer, aOffset );
         lCommandBuffer->End();

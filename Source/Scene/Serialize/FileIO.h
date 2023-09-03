@@ -34,7 +34,7 @@ namespace SE::Core
         ~ConfigurationWriter();
 
         /// @brief Retrieve the written configuration as a string
-        std::string GetString();
+        string_t GetString();
 
         /// @brief Create ann inlined representation of the mapping or sequence that follows
         void InlineRepresentation();
@@ -52,7 +52,7 @@ namespace SE::Core
         }
 
         /// @brief Write a key/value pair
-        void WriteKey( std::string const &aKey )
+        void WriteKey( string_t const &aKey )
         {
             mOut << YAML::Key << aKey << YAML::Value;
         }
@@ -66,7 +66,7 @@ namespace SE::Core
 
         /// @brief Write the key part of a key/value pair
         template <typename _Ty>
-        void WriteKey( std::string const &aKey, _Ty const &aValue )
+        void WriteKey( string_t const &aKey, _Ty const &aValue )
         {
             mOut << YAML::Key << aKey << YAML::Value << aValue;
         }
@@ -90,7 +90,7 @@ namespace SE::Core
         /// @param aVector Vector to serialize
         /// @param aKeys Keys to use for the individual vector components
         ///
-        void Write( math::vec2 const &aVector, std::array<std::string, 2> const &aKeys );
+        void Write( math::vec2 const &aVector, std::array<string_t, 2> const &aKeys );
 
         /// @brief Write a vector as a mapping
         ///
@@ -99,7 +99,7 @@ namespace SE::Core
         /// @param aVector Vector to serialize
         /// @param aKeys Keys to use for the individual vector components
         ///
-        void Write( math::vec3 const &aVector, std::array<std::string, 3> const &aKeys );
+        void Write( math::vec3 const &aVector, std::array<string_t, 3> const &aKeys );
 
         /// @brief Write a vector as a mapping
         ///
@@ -108,8 +108,8 @@ namespace SE::Core
         /// @param aVector Vector to serialize
         /// @param aKeys Keys to use for the individual vector components
         ///
-        void Write( math::vec4 const &aVector, std::array<std::string, 4> const &aKeys );
-        void Write( math::quat const &aVector, std::array<std::string, 4> const &aKeys );
+        void Write( math::vec4 const &aVector, std::array<string_t, 4> const &aKeys );
+        void Write( math::quat const &aVector, std::array<string_t, 4> const &aKeys );
 
         template <typename _Ty>
         void Write( _Ty const &aElement )

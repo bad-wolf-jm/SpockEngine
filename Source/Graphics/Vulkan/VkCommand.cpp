@@ -11,13 +11,13 @@
 namespace SE::Graphics
 {
 
-    sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer )
+    sVkCommandBufferObject::sVkCommandBufferObject( ref_t<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer )
         : ICommandBuffer( aContext )
         , mVkObject{ aCommandBuffer }
     {
     }
 
-    sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkGraphicContext> aContext )
+    sVkCommandBufferObject::sVkCommandBufferObject( ref_t<VkGraphicContext> aContext )
         : ICommandBuffer( aContext )
     {
         mVkObject    = Cast<VkGraphicContext>( mGraphicContext )->AllocateCommandBuffer( 1 )[0];
@@ -43,8 +43,8 @@ namespace SE::Graphics
         VK_CHECK_RESULT( vkBeginCommandBuffer( mVkObject, &lCommandBufferBeginInfo ) );
     }
 
-    void sVkCommandBufferObject::BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
-                                                  std::vector<VkClearValue> aClearValues )
+    void sVkCommandBufferObject::BeginRenderPass( ref_t<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
+                                                  vec_t<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -94,7 +94,7 @@ namespace SE::Graphics
         vkCmdDrawIndexed( mVkObject, aVertexCount, aInstanceCount, aVertexOffset, aVertexBufferOffset, aFirstInstance );
     }
 
-    void sVkCommandBufferObject::Bind( Ref<sVkPipelineObject> aPipeline, VkPipelineBindPoint aBindPoint )
+    void sVkCommandBufferObject::Bind( ref_t<sVkPipelineObject> aPipeline, VkPipelineBindPoint aBindPoint )
     {
         vkCmdBindPipeline( mVkObject, aBindPoint, aPipeline->mVkObject );
     }
@@ -112,8 +112,8 @@ namespace SE::Graphics
         vkCmdBindIndexBuffer( mVkObject, a_IndexBuffer, 0, VK_INDEX_TYPE_UINT32 );
     }
 
-    void sVkCommandBufferObject::Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
-                                       Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
+    void sVkCommandBufferObject::Bind( ref_t<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
+                                       ref_t<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         VkDescriptorSet lDescriptorSetArray[1] = { aDescriptorSet->mVkObject };
         if( aDynamicOffset == -1 )
@@ -130,7 +130,7 @@ namespace SE::Graphics
     }
 
     void sVkCommandBufferObject::Bind( void *aDescriptorSet, VkPipelineBindPoint aBindPoint,
-                                       Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
+                                       ref_t<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         VkDescriptorSet lDescriptorSetArray[1] = { (VkDescriptorSet)aDescriptorSet };
         if( aDynamicOffset == -1 )
@@ -219,13 +219,13 @@ namespace SE::Graphics
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion,
                                              sImageRegion const &aImageRegion )
     {
-        CopyBuffer( aSource, aDestination, std::vector<sImageRegion>{ aBufferRegion }, aImageRegion );
+        CopyBuffer( aSource, aDestination, vec_t<sImageRegion>{ aBufferRegion }, aImageRegion );
     }
 
-    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
+    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, vec_t<sImageRegion> aBufferRegions,
                                              sImageRegion const &aImageRegion )
     {
-        std::vector<VkBufferImageCopy> lBufferCopyRegions;
+        vec_t<VkBufferImageCopy> lBufferCopyRegions;
 
         for( auto const &lRegion : aBufferRegions )
         {
@@ -284,10 +284,10 @@ namespace SE::Graphics
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1, 1 );
     }
 
-    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions,
+    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, vec_t<sImageRegion> aImageRegions,
                                             uint32_t aBufferOffset )
     {
-        std::vector<VkBufferImageCopy> lBufferCopyRegions;
+        vec_t<VkBufferImageCopy> lBufferCopyRegions;
 
         for( auto const &lRegion : aImageRegions )
         {

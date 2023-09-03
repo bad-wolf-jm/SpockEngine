@@ -57,7 +57,7 @@ namespace SE::Core
     struct sMaterial
     {
         uint32_t    mID   = std::numeric_limits<uint32_t>::max();
-        std::string mName = "";
+        string_t mName = "";
 
         eMaterialType mType = eMaterialType::Opaque;
 

@@ -12,7 +12,7 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-std::optional<std::string> FileDialogs::OpenFile( GLFWwindow *owner, const char *filter )
+std::optional<string_t> FileDialogs::OpenFile( GLFWwindow *owner, const char *filter )
 {
     OPENFILENAMEA ofn;
     CHAR szFile[260] = { 0 };
@@ -30,7 +30,7 @@ std::optional<std::string> FileDialogs::OpenFile( GLFWwindow *owner, const char 
     return std::nullopt;
 }
 
-std::optional<std::string> FileDialogs::SaveFile( GLFWwindow *owner, const char *filter )
+std::optional<string_t> FileDialogs::SaveFile( GLFWwindow *owner, const char *filter )
 {
     OPENFILENAMEA ofn;
     CHAR szFile[260] = { 0 };

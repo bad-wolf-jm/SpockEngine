@@ -7,7 +7,7 @@ namespace SE::SensorModel::Dev
 
     extern "C" char g_SensorModelEnvironmentSampler[];
 
-    WorldSampler::WorldSampler( Ref<OptixDeviceContextObject> aRayTracingContext )
+    WorldSampler::WorldSampler( ref_t<OptixDeviceContextObject> aRayTracingContext )
         : mRayTracingContext{ aRayTracingContext }
     {
         mRayTracingModule = New<OptixModuleObject>( "gOptixLaunchParams", g_SensorModelEnvironmentSampler, mRayTracingContext );
@@ -20,21 +20,21 @@ namespace SE::SensorModel::Dev
         mLaunchParamsBuffer = GPUMemory::Create<LaunchParams>( 1 );
     }
 
-    void WorldSampler::BuildShaderBindingTable( Ref<Scene> a_Scene )
+    void WorldSampler::BuildShaderBindingTable( ref_t<Scene> a_Scene )
     {
         mSBT = New<OptixShaderBindingTableObject>();
 
         // build raygen records
-        std::vector<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->mRayGenProgramGroups );
+        vec_t<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->mRayGenProgramGroups );
         mRaygenRecordsBuffer                      = GPUMemory::Create( lRaygenRecords );
         mSBT->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
         // build miss records
-        std::vector<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->mMissProgramGroups );
+        vec_t<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->mMissProgramGroups );
         mMissRecordsBuffer                    = GPUMemory::Create( lMissRecords );
         mSBT->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(), mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
-        std::vector<sHitgroupRecord> lHitgroupRecords;
+        vec_t<sHitgroupRecord> lHitgroupRecords;
         a_Scene->ForEach<SE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
                          SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto &l_Component, auto &aMeshComponent )
@@ -48,7 +48,7 @@ namespace SE::SensorModel::Dev
         mSBT->BindHitRecordTable<sHitgroupRecord>( mHitgroupRecordsBuffer.RawDevicePtr(), mHitgroupRecordsBuffer.Size() );
     }
 
-    void WorldSampler::Sample( mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
+    void WorldSampler::Sample( mat4 a_SensorTransform, ref_t<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
                                MultiTensor &a_Intensities, MultiTensor &a_SamplePoints )
     {
         SE_PROFILE_FUNCTION();

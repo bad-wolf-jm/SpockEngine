@@ -18,7 +18,7 @@ namespace SE::Graphics
     // template <typename _BufType>
     // struct DescriptorBufferInfo
     // {
-    //     Ref<_BufType> Buffer        = nullptr;
+    //     ref_t<_BufType> Buffer        = nullptr;
     //     bool          DynamicOffset = false;
     //     uint32_t      Binding       = 0;
     //     uint32_t      Offset        = 0;
@@ -28,7 +28,7 @@ namespace SE::Graphics
     class VkDescriptorSetObject : public IDescriptorSet
     {
       public:
-        VkDescriptorSetObject( Ref<IGraphicContext> aGraphicContext, IDescriptorSetLayout *aLayout, uint32_t aDescriptorCount = 0 );
+        VkDescriptorSetObject( ref_t<IGraphicContext> aGraphicContext, IDescriptorSetLayout *aLayout, uint32_t aDescriptorCount = 0 );
         ~VkDescriptorSetObject() = default;
 
         void *GetID()
@@ -36,9 +36,9 @@ namespace SE::Graphics
             return (void *)mDescriptorSetObject->mVkObject;
         }
 
-        void Write( Ref<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
-        void Write( std::vector<Ref<ISampler2D>> aBuffer, uint32_t aBinding );
-        void Write( std::vector<Ref<ISamplerCubeMap>> aBuffer, uint32_t aBinding );
+        void Write( ref_t<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
+        void Write( vec_t<ref_t<ISampler2D>> aBuffer, uint32_t aBinding );
+        void Write( vec_t<ref_t<ISamplerCubeMap>> aBuffer, uint32_t aBinding );
 
         void Build();
 
@@ -47,13 +47,13 @@ namespace SE::Graphics
             return mDescriptorSetObject->mVkObject;
         }
 
-        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject()
+        ref_t<sVkDescriptorSetObject> GetVkDescriptorSetObject()
         {
             return mDescriptorSetObject;
         }
 
       private:
-        Ref<sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
+        ref_t<sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
     };
 
 } // namespace SE::Graphics

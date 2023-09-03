@@ -9,15 +9,15 @@ namespace SE::Graphics
     {
         eShaderStageTypeFlags mShaderType;
 
-        Ref<IShaderProgram> mProgram;
-        std::string     mEntryPoint;
+        ref_t<IShaderProgram> mProgram;
+        string_t     mEntryPoint;
     };
 
     uint32_t BufferDataTypeSize( eBufferDataType aType );
 
     struct sBufferLayoutElement
     {
-        std::string     mName;
+        string_t     mName;
         eBufferDataType mType;
         uint32_t        mBinding;
         uint32_t        mLocation;
@@ -25,7 +25,7 @@ namespace SE::Graphics
         size_t          mOffset;
 
         sBufferLayoutElement() = default;
-        sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation );
+        sBufferLayoutElement( const string_t &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation );
     };
 
     struct sDepthTesting
@@ -60,21 +60,21 @@ namespace SE::Graphics
     class IGraphicsPipeline
     {
       public:
-        IGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext, ePrimitiveTopology aTopology );
+        IGraphicsPipeline( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext, ePrimitiveTopology aTopology );
         ~IGraphicsPipeline() = default;
 
       public:
         virtual void Build() = 0;
 
       public:
-        // void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint );
-        void SetShader( eShaderStageTypeFlags aShaderType, Ref<IShaderProgram> aProgram, std::string aEntryPoint );
+        // void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, string_t aEntryPoint );
+        void SetShader( eShaderStageTypeFlags aShaderType, ref_t<IShaderProgram> aProgram, string_t aEntryPoint );
         void SetCulling( eFaceCulling aCulling );
         void SetLineWidth( float aLineWidth );
         void SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable, eDepthCompareOperation aDepthComparison );
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset, uint32_t aSize );
 
-        void AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced = false );
+        void AddInput( string_t aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced = false );
 
         template <typename _Ty>
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset )
@@ -82,13 +82,13 @@ namespace SE::Graphics
             AddPushConstantRange( aShaderStage, aOffset, sizeof( _Ty ) );
         }
 
-        void AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet );
+        void AddDescriptorSet( ref_t<IDescriptorSetLayout> aDescriptorSet );
 
       protected:
         bool mOpaque = false;
 
-        Ref<IGraphicContext> mGraphicContext = nullptr;
-        Ref<IRenderContext>  mRenderContext  = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IRenderContext>  mRenderContext  = nullptr;
 
         ePrimitiveTopology mTopology    = ePrimitiveTopology::TRIANGLES;
         eFaceCulling       mCulling     = eFaceCulling::BACK;
@@ -99,10 +99,10 @@ namespace SE::Graphics
         bool                   mDepthTestEnable  = false;
         eDepthCompareOperation mDepthComparison  = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sShaderData>               mShaderStages         = {};
-        std::vector<sBufferLayoutElement>      mInputLayout          = {};
-        std::vector<sBufferLayoutElement>      mInstancedInputLayout = {};
-        std::vector<sPushConstantRange>        mPushConstants        = {};
-        std::vector<Ref<IDescriptorSetLayout>> mDescriptorSets       = {};
+        vec_t<sShaderData>               mShaderStages         = {};
+        vec_t<sBufferLayoutElement>      mInputLayout          = {};
+        vec_t<sBufferLayoutElement>      mInstancedInputLayout = {};
+        vec_t<sPushConstantRange>        mPushConstants        = {};
+        vec_t<ref_t<IDescriptorSetLayout>> mDescriptorSets       = {};
     };
 } // namespace SE::Graphics

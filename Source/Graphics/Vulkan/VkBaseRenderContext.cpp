@@ -7,7 +7,7 @@
 namespace SE::Graphics
 {
 
-    VkBaseRenderContext::VkBaseRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget )
+    VkBaseRenderContext::VkBaseRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget )
         : IRenderContext( aGraphicContext, aRenderTarget )
     {
     }
@@ -53,7 +53,7 @@ namespace SE::Graphics
         lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
-    void VkBaseRenderContext::Bind( Ref<IGraphicsPipeline> aGraphicPipeline )
+    void VkBaseRenderContext::Bind( ref_t<IGraphicsPipeline> aGraphicPipeline )
     {
         IRenderContext::Bind( aGraphicPipeline );
 
@@ -63,7 +63,7 @@ namespace SE::Graphics
         mCurrentPipelineLayout = Cast<VkGraphicsPipeline>( aGraphicPipeline )->GetVkPipelineLayoutObject();
     }
 
-    void VkBaseRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
+    void VkBaseRenderContext::Bind( ref_t<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
     {
         IRenderContext::Bind( aVertexBuffer, aBindPoint );
 
@@ -72,7 +72,7 @@ namespace SE::Graphics
         lCommandBuffer->Bind( Cast<VkGpuBuffer>( aVertexBuffer )->mVkBuffer, aBindPoint );
     }
 
-    void VkBaseRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
+    void VkBaseRenderContext::Bind( ref_t<IGraphicBuffer> aVertexBuffer, ref_t<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
     {
         IRenderContext::Bind( aVertexBuffer, aIndexBuffer, aBindPoint );
 
@@ -82,7 +82,7 @@ namespace SE::Graphics
                               aBindPoint );
     }
 
-    void VkBaseRenderContext::Bind( Ref<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
+    void VkBaseRenderContext::Bind( ref_t<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 

@@ -50,7 +50,7 @@ namespace SE::TensorOps
         ///
         /// @returns The parent scope for method chaining/
         ///
-        Scope &WithOpName( const std::string &aName );
+        Scope &WithOpName( const string_t &aName );
 
         /// @brief Create a node in the database
         ///
@@ -62,7 +62,7 @@ namespace SE::TensorOps
         OpNode CreateNode();
 
         /// @brief Retrieve a node by name
-        OpNode operator[]( std::string const &aNodeName );
+        OpNode operator[]( string_t const &aNodeName );
 
         /// @brief Clears the node registry, and resets the memory pool
         void Reset();
@@ -74,7 +74,7 @@ namespace SE::TensorOps
         ///
         /// This implies running all nodes used as inputs for the nodes to run.
         ///
-        void Run( std::vector<OpNode> const &aNode );
+        void Run( vec_t<OpNode> const &aNode );
 
         /// @brief Access the underlying nodes registry
         SE::Core::EntityCollection &GetNodesRegistry()
@@ -84,8 +84,8 @@ namespace SE::TensorOps
 
       private:
         SE::Core::EntityCollection mNodesRegistry{};     //!< Underlying node database
-        std::optional<std::string> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
-        std::unordered_map<std::string, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
+        std::optional<string_t> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
+        std::unordered_map<string_t, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };
 
     /// @brief Create a constant @ref MultiTensor initialized with the given constant
@@ -153,7 +153,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode VectorValue( Scope &aScope, std::vector<_Ty> const &aValue )
+    OpNode VectorValue( Scope &aScope, vec_t<_Ty> const &aValue )
     {
         auto l_NewEntity = aScope.CreateNode();
 
@@ -183,10 +183,10 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, std::vector<_Ty> const &aValue )
+    OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, vec_t<_Ty> const &aValue )
     {
         uint32_t                 lSize = aValue.size();
-        std::vector<ScalarValue> lValues( lSize );
+        vec_t<ScalarValue> lValues( lSize );
         for( uint32_t i = 0; i < lSize; i++ )
         {
             lValues[i] = aValue[i];

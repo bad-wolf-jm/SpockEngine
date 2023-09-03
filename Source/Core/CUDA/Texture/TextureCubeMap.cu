@@ -12,7 +12,7 @@
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    TextureSamplerCubeMap::TextureSamplerCubeMap( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
+    TextureSamplerCubeMap::TextureSamplerCubeMap( ref_t<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
         : mTexture{ aTexture }
         , mSpec{ aSamplingSpec }
     {

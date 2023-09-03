@@ -74,7 +74,7 @@ namespace SE::Core::EntityComponentSystem::Components
         uint32_t CurrentTick    = 0;
         float    CurrentTime    = 0.0f;
 
-        std::vector<sAnimationChannel> mChannels = {};
+        vec_t<sAnimationChannel> mChannels = {};
 
         sAnimationComponent()                              = default;
         sAnimationComponent( const sAnimationComponent & ) = default;
@@ -82,7 +82,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sAnimationChooser
     {
-        std::vector<Entity> Animations = {};
+        vec_t<Entity> Animations = {};
 
         sAnimationChooser()                            = default;
         sAnimationChooser( const sAnimationChooser & ) = default;
@@ -160,12 +160,12 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sStaticMeshComponent
     {
-        std::string mName = "";
+        string_t mName = "";
 
         ePrimitiveTopology  mPrimitive         = ePrimitiveTopology::TRIANGLES;
-        Ref<IGraphicBuffer> mVertexBuffer      = nullptr;
-        Ref<IGraphicBuffer> mIndexBuffer       = nullptr;
-        Ref<IGraphicBuffer> mTransformedBuffer = nullptr;
+        ref_t<IGraphicBuffer> mVertexBuffer      = nullptr;
+        ref_t<IGraphicBuffer> mIndexBuffer       = nullptr;
+        ref_t<IGraphicBuffer> mTransformedBuffer = nullptr;
         uint32_t            mVertexOffset      = 0;
         uint32_t            mVertexCount       = 0;
         uint32_t            mIndexOffset       = 0;
@@ -178,9 +178,9 @@ namespace SE::Core::EntityComponentSystem::Components
     struct sSkeletonComponent
     {
         uint32_t            BoneCount;
-        std::vector<Entity> Bones;
-        std::vector<mat4>   InverseBindMatrices;
-        std::vector<mat4>   JointMatrices;
+        vec_t<Entity> Bones;
+        vec_t<mat4>   InverseBindMatrices;
+        vec_t<mat4>   JointMatrices;
 
         sSkeletonComponent()                             = default;
         sSkeletonComponent( const sSkeletonComponent & ) = default;

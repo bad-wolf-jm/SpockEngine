@@ -81,7 +81,7 @@ namespace SE::Core
             float mIconSpacing = 12.0f;
             uint32_t mCurrentID = 0;
             UITreeViewNode* mRoot; 
-            std::vector<UITreeViewNode*> mRows;
+            vec_t<UITreeViewNode*> mRows;
             std::mutex mRowsLock;
 
       protected:

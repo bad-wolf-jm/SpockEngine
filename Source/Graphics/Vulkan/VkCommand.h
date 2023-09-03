@@ -33,16 +33,16 @@ namespace SE::Graphics
 
         sVkCommandBufferObject()                           = default;
         sVkCommandBufferObject( sVkCommandBufferObject & ) = default;
-        sVkCommandBufferObject( Ref<VkGraphicContext> aContext );
-        sVkCommandBufferObject( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer );
+        sVkCommandBufferObject( ref_t<VkGraphicContext> aContext );
+        sVkCommandBufferObject( ref_t<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer );
 
         ~sVkCommandBufferObject();
 
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
-                              std::vector<VkClearValue> aClearValues );
+        void BeginRenderPass( ref_t<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
+                              vec_t<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
@@ -51,12 +51,12 @@ namespace SE::Graphics
                    uint32_t aFirstInstance );
         void DrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount,
                           uint32_t aFirstInstance );
-        void Bind( Ref<sVkPipelineObject> aGraphicPipeline, VkPipelineBindPoint aBindPoint );
+        void Bind( ref_t<sVkPipelineObject> aGraphicPipeline, VkPipelineBindPoint aBindPoint );
         void Bind( VkBuffer aVertexBuffer, uint32_t aBindPoint );
         void Bind( VkBuffer aVertexBuffer, VkBuffer aIndexBuffer, uint32_t aBindPoint );
-        void Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
-                   Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
-        void Bind( void *aDescriptorSet, VkPipelineBindPoint aBindPoint, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+        void Bind( ref_t<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
+                   ref_t<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
+        void Bind( void *aDescriptorSet, VkPipelineBindPoint aBindPoint, ref_t<sVkPipelineLayoutObject> aPipelineLayout,
                    uint32_t aSetIndex, int32_t aDynamicOffset );
 
         void ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
@@ -66,21 +66,21 @@ namespace SE::Graphics
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
 
         void CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion );
-        void CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
+        void CopyBuffer( VkBuffer aSource, VkImage aDestination, vec_t<sImageRegion> aBufferRegions,
                          sImageRegion const &aImageRegion );
 
         void CopyImage( VkImage aSource, sImageRegion const &aSourceRegion, VkImage aDestination, sImageRegion const &aDestRegion );
-        void CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset );
+        void CopyImage( VkImage aSource, VkBuffer aDestination, vec_t<sImageRegion> aImageRegions, uint32_t aBufferOffset );
 
         template <typename T>
         void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue,
-                            Ref<sVkPipelineLayoutObject> aPipelineLayout )
+                            ref_t<sVkPipelineLayoutObject> aPipelineLayout )
         {
             vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void *)&aValue );
         }
 
         void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize,
-                            Ref<sVkPipelineLayoutObject> aPipelineLayout )
+                            ref_t<sVkPipelineLayoutObject> aPipelineLayout )
         {
             vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, aSize, aValue );
         }
@@ -95,8 +95,8 @@ namespace SE::Graphics
 
       private:
         VkFence                           mSubmitFence              = nullptr;
-        std::vector<VkSemaphore>          mSubmitWaitSemaphores     = {};
-        std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
-        std::vector<VkSemaphore>          mSubmitSignalSemaphores   = {};
+        vec_t<VkSemaphore>          mSubmitWaitSemaphores     = {};
+        vec_t<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
+        vec_t<VkSemaphore>          mSubmitSignalSemaphores   = {};
     };
 } // namespace SE::Graphics

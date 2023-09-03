@@ -73,19 +73,19 @@ namespace SE::Core
         }
 
         template <>
-        std::string Read()
+        string_t Read()
         {
             auto lStrLen = Read<uint32_t>();
             auto lBuffer = Read<char>( lStrLen );
 
-            return std::string( lBuffer.data(), lStrLen );
+            return string_t( lBuffer.data(), lStrLen );
         }
 
         /// @brief Read `aCount` elements of type _Ty from the file, and return a vector containing them
         template <typename _Ty>
-        std::vector<_Ty> Read( size_t aCount )
+        vec_t<_Ty> Read( size_t aCount )
         {
-            std::vector<_Ty> lBuffer( aCount );
+            vec_t<_Ty> lBuffer( aCount );
             mFileStream.read( (char *)lBuffer.data(), aCount * sizeof( _Ty ) );
 
             return lBuffer;
@@ -103,15 +103,15 @@ namespace SE::Core
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
         void                                        Retrieve( uint32_t aIndex, TextureData2D &aData, TextureSampler2D &aSampler );
-        void Retrieve( uint32_t aIndex, std::vector<VertexData> &aVertexData, std::vector<uint32_t> &aIndexData );
+        void Retrieve( uint32_t aIndex, vec_t<VertexData> &aVertexData, vec_t<uint32_t> &aIndexData );
         void Retrieve( uint32_t aIndex, sMaterial &aMaterialData );
         void Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData );
 
         void Package( Core::TextureData2D const &aData, sTextureSamplingInfo const &aSampler );
-        void Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
+        void Package( vec_t<VertexData> const &aVertexData, vec_t<uint32_t> const &aIndexData );
         void Package( sMaterial const &aMaterialData );
         void Package( sImportedAnimationSampler const &aMaterialData );
-        void Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler );
+        void Package( ref_t<TextureData2D> aData, ref_t<TextureSampler2D> aSampler );
         void Package( sImportedTexture const &aData );
 
       private:
@@ -121,8 +121,8 @@ namespace SE::Core
         size_t        mFileSize = 0;
 
         uint32_t                       mAssetCount = 0;
-        std::vector<sAssetIndex>       mAssetIndex{};
-        std::vector<std::vector<char>> mPackets{};
+        vec_t<sAssetIndex>       mAssetIndex{};
+        vec_t<vec_t<char>> mPackets{};
         uint32_t                       mTotalPacketSize = 0;
     };
 

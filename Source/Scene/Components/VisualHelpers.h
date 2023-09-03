@@ -22,8 +22,8 @@ namespace SE::Core::EntityComponentSystem::Components
         using VertexType = _VertexType;
         using IndexType  = _IndexType;
 
-        Ref<VkGpuBuffer> Vertices;
-        Ref<VkGpuBuffer> Indices;
+        ref_t<VkGpuBuffer> Vertices;
+        ref_t<VkGpuBuffer> Indices;
 
         MeshData()                   = default;
         MeshData( const MeshData & ) = default;
@@ -36,7 +36,7 @@ namespace SE::Core::EntityComponentSystem::Components
         PyramidMeshData()                          = default;
         PyramidMeshData( const PyramidMeshData & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct SurfaceMeshData
@@ -46,7 +46,7 @@ namespace SE::Core::EntityComponentSystem::Components
         SurfaceMeshData()                          = default;
         SurfaceMeshData( const SurfaceMeshData & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct CubeMeshData
@@ -57,7 +57,7 @@ namespace SE::Core::EntityComponentSystem::Components
         CubeMeshData()                       = default;
         CubeMeshData( const CubeMeshData & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct ConeMeshData
@@ -70,7 +70,7 @@ namespace SE::Core::EntityComponentSystem::Components
         ConeMeshData()                       = default;
         ConeMeshData( const ConeMeshData & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct ArrowMeshData
@@ -82,7 +82,7 @@ namespace SE::Core::EntityComponentSystem::Components
         ArrowMeshData()                        = default;
         ArrowMeshData( const ArrowMeshData & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct CircleMeshData
@@ -95,7 +95,7 @@ namespace SE::Core::EntityComponentSystem::Components
         CircleMeshData()                         = default;
         CircleMeshData( const CircleMeshData & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct AxesComponent
@@ -112,7 +112,7 @@ namespace SE::Core::EntityComponentSystem::Components
         AxesComponent()                        = default;
         AxesComponent( const AxesComponent & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
         {
             AxisArrow.UpdateMesh( a_GraphicContext );
             Origin.UpdateMesh( a_GraphicContext );
@@ -129,7 +129,7 @@ namespace SE::Core::EntityComponentSystem::Components
         PointLightHelperComponent()                                    = default;
         PointLightHelperComponent( const PointLightHelperComponent & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
         {
             Origin.UpdateMesh( a_GraphicContext );
             AxisCircle.UpdateMesh( a_GraphicContext );
@@ -146,7 +146,7 @@ namespace SE::Core::EntityComponentSystem::Components
         DirectionalLightHelperComponent()                                          = default;
         DirectionalLightHelperComponent( const DirectionalLightHelperComponent & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
         {
             Origin.UpdateMesh( a_GraphicContext );
             Direction.UpdateMesh( a_GraphicContext );
@@ -163,7 +163,7 @@ namespace SE::Core::EntityComponentSystem::Components
         SpotlightHelperComponent()                                   = default;
         SpotlightHelperComponent( const SpotlightHelperComponent & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct FieldOfViewHelperComponent
@@ -179,7 +179,7 @@ namespace SE::Core::EntityComponentSystem::Components
         FieldOfViewHelperComponent()                                     = default;
         FieldOfViewHelperComponent( const FieldOfViewHelperComponent & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext );
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext );
     };
 
     struct CameraHelperComponent
@@ -192,7 +192,7 @@ namespace SE::Core::EntityComponentSystem::Components
         CameraHelperComponent()                                = default;
         CameraHelperComponent( const CameraHelperComponent & ) = default;
 
-        void UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+        void UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
         {
             Origin.UpdateMesh( a_GraphicContext );
             FieldOfView.UpdateMesh( a_GraphicContext );

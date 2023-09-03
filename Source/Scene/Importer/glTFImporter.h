@@ -18,7 +18,7 @@ namespace SE::Core
 
       private:
         tinygltf::Model                        mGltfModel;
-        std::vector<sTextureSamplingInfo>      mTextureSamplers  = {};
+        vec_t<sTextureSamplingInfo>      mTextureSamplers  = {};
         std::unordered_map<uint32_t, uint32_t> mTextureIDLookup  = {};
         std::unordered_map<uint32_t, uint32_t> mMaterialIDLookup = {};
         std::unordered_map<uint32_t, uint32_t> mNodeIDLookup     = {};
@@ -27,13 +27,13 @@ namespace SE::Core
 
       private:
         void LoadSamplers();
-        void CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
+        void CreateTexture( uint32_t aTextureIndex, string_t aName, tinygltf::Image const &aGltfimage,
                             sTextureSamplingInfo const &aTextureSamplingInfo );
         void LoadTextures();
-        sImportedMaterial::sTextureReference RetrieveTextureData( tinygltf::Material &aMaterial, std::string aName );
-        sImportedMaterial::sTextureReference RetrieveAdditionalTextureData( tinygltf::Material &aMaterial, std::string aName );
+        sImportedMaterial::sTextureReference RetrieveTextureData( tinygltf::Material &aMaterial, string_t aName );
+        sImportedMaterial::sTextureReference RetrieveAdditionalTextureData( tinygltf::Material &aMaterial, string_t aName );
         template <typename _Ty>
-        _Ty RetrieveValue( tinygltf::Material &aMaterial, std::string aName, _Ty aDefault )
+        _Ty RetrieveValue( tinygltf::Material &aMaterial, string_t aName, _Ty aDefault )
         {
             if( aMaterial.values.find( aName ) != aMaterial.values.end() )
             {
@@ -42,10 +42,10 @@ namespace SE::Core
 
             return aDefault;
         }
-        math::vec4 RetrieveVec4( tinygltf::Material &aMaterial, std::string aName, math::vec4 aDefault );
+        math::vec4 RetrieveVec4( tinygltf::Material &aMaterial, string_t aName, math::vec4 aDefault );
 
         template <typename _Ty>
-        void RetrievePrimitiveAttribute( const tinygltf::Primitive &aPrimitive, std::string aName, std::vector<_Ty> &aOutput )
+        void RetrievePrimitiveAttribute( const tinygltf::Primitive &aPrimitive, string_t aName, vec_t<_Ty> &aOutput )
         {
             if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
             {
@@ -63,7 +63,7 @@ namespace SE::Core
         }
 
         std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive,
-                                                                                   std::string                aName );
+                                                                                   string_t                aName );
 
         void LoadMaterials();
 

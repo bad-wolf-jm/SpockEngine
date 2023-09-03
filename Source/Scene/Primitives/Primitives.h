@@ -9,8 +9,8 @@ namespace SE::Core::Primitives
 
     struct VertexBufferData
     {
-        std::vector<SE::Core::VertexData> Vertices = {};
-        std::vector<uint32_t>             Indices  = {};
+        vec_t<SE::Core::VertexData> Vertices = {};
+        vec_t<uint32_t>             Indices  = {};
 
         VertexBufferData()  = default;
         ~VertexBufferData() = default;
@@ -21,8 +21,8 @@ namespace SE::Core::Primitives
 
     struct WireframeVertexBufferData
     {
-        std::vector<math::vec3> Vertices = {};
-        std::vector<uint32_t>   Indices  = {};
+        vec_t<math::vec3> Vertices = {};
+        vec_t<uint32_t>   Indices  = {};
 
         WireframeVertexBufferData()  = default;
         ~WireframeVertexBufferData() = default;

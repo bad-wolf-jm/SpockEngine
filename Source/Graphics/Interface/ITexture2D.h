@@ -25,23 +25,23 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        ITexture2D( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+        ITexture2D( ref_t<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
+        ITexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
             : ITexture2D( aGraphicContext, aTextureData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
+        ITexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
                     bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
         ~ITexture2D() = default;
 
         virtual void GetPixelData( TextureData2D &mTextureData )  = 0;
-        virtual void SetPixelData( Ref<IGraphicBuffer> a_Buffer ) = 0;
+        virtual void SetPixelData( ref_t<IGraphicBuffer> a_Buffer ) = 0;
     };
 } // namespace SE::Graphics

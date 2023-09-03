@@ -19,7 +19,7 @@ namespace SE::Graphics
         ~OptixShaderBindingTableObject() = default;
 
         template <typename _RecordType>
-        _RecordType NewRecordType( Ref<SE::Graphics::OptixProgramGroupObject> aProgramGroup )
+        _RecordType NewRecordType( ref_t<SE::Graphics::OptixProgramGroupObject> aProgramGroup )
         {
             _RecordType lNewRecord;
             OPTIX_CHECK( optixSbtRecordPackHeader( aProgramGroup->mOptixObject, &lNewRecord ) );
@@ -27,9 +27,9 @@ namespace SE::Graphics
         }
 
         template <typename _RecordType>
-        std::vector<_RecordType> NewRecordType( std::vector<Ref<SE::Graphics::OptixProgramGroupObject>> aProgramGroup )
+        vec_t<_RecordType> NewRecordType( vec_t<ref_t<SE::Graphics::OptixProgramGroupObject>> aProgramGroup )
         {
-            std::vector<_RecordType> lNewRecordTypes;
+            vec_t<_RecordType> lNewRecordTypes;
             for( int i = 0; i < aProgramGroup.size(); i++ )
             {
                 _RecordType rec = NewRecordType<_RecordType>( aProgramGroup[i] );

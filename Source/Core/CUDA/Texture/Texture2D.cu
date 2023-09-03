@@ -12,7 +12,7 @@
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    Texture2D::Texture2D( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData )
+    Texture2D::Texture2D( sTextureCreateInfo &aSpec, vec_t<uint8_t> aData )
         : mSpec( aSpec )
     {
         MallocArray( &mInternalCudaArray, mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ) );
@@ -53,7 +53,7 @@ namespace SE::Cuda
         DestroyExternalMemory( &mExternalMemoryHandle );
     }
 
-    TextureSampler2D::TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
+    TextureSampler2D::TextureSampler2D( ref_t<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
         : mTexture{ aTexture }
         , mSpec{ aSamplingSpec }
     {

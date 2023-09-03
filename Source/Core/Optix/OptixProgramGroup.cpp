@@ -8,7 +8,7 @@ namespace SE::Graphics
 
     OptixProgramGroupObject::OptixProgramGroupObject( OptixProgramGroupDesc         aProgramGroupDescription,
                                                       OptixProgramGroupOptions      aProgramGroupOptions,
-                                                      Ref<OptixDeviceContextObject> aRayTracingContext )
+                                                      ref_t<OptixDeviceContextObject> aRayTracingContext )
         : mRayTracingContext{ aRayTracingContext }
     {
 

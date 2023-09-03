@@ -4,7 +4,7 @@
 namespace SE::Editor
 {
 
-    MaterialCreator::MaterialCreator( std::string a_Title, math::vec2 a_Size )
+    MaterialCreator::MaterialCreator( string_t a_Title, math::vec2 a_Size )
         : PopupWindow( a_Title, a_Size )
     {
     }

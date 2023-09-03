@@ -14,17 +14,17 @@ namespace SE::Graphics
         struct sSwapChainSupportDetails
         {
             VkSurfaceCapabilitiesKHR        mCapabilities;
-            std::vector<VkSurfaceFormatKHR> mFormats;
-            std::vector<VkPresentModeKHR>   mPresentModes;
+            vec_t<VkSurfaceFormatKHR> mFormats;
+            vec_t<VkPresentModeKHR>   mPresentModes;
         };
 
-        std::vector<const char *> GetRequiredInstanceExtensions( bool aEnableValidationLayers )
+        vec_t<const char *> GetRequiredInstanceExtensions( bool aEnableValidationLayers )
         {
             uint32_t     lGlfwExtensionCount = 0;
             const char **lGlfwExtensions;
             lGlfwExtensions = glfwGetRequiredInstanceExtensions( &lGlfwExtensionCount );
 
-            std::vector<const char *> lRequiredExtensions( lGlfwExtensions, lGlfwExtensions + lGlfwExtensionCount );
+            vec_t<const char *> lRequiredExtensions( lGlfwExtensions, lGlfwExtensions + lGlfwExtensionCount );
             lRequiredExtensions.push_back( VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME );
             lRequiredExtensions.push_back( VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME );
             lRequiredExtensions.push_back( VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME );
@@ -47,29 +47,29 @@ namespace SE::Graphics
             return true;
         }
 
-        bool CheckValidationLayerSupport( const std::vector<const char *> aValidationLayers )
+        bool CheckValidationLayerSupport( const vec_t<const char *> aValidationLayers )
         {
             uint32_t lLayerCount;
             vkEnumerateInstanceLayerProperties( &lLayerCount, nullptr );
 
-            std::vector<VkLayerProperties> lAvailableLayers( lLayerCount );
+            vec_t<VkLayerProperties> lAvailableLayers( lLayerCount );
             vkEnumerateInstanceLayerProperties( &lLayerCount, lAvailableLayers.data() );
 
-            std::set<std::string> lAvailableValidationLayers;
+            std::set<string_t> lAvailableValidationLayers;
             for( const auto &lLayer : lAvailableLayers )
                 lAvailableValidationLayers.emplace( lLayer.layerName );
 
-            std::set<std::string> lRequestedValidationLayers( aValidationLayers.begin(), aValidationLayers.end() );
+            std::set<string_t> lRequestedValidationLayers( aValidationLayers.begin(), aValidationLayers.end() );
 
             return IsSubset( lRequestedValidationLayers, lAvailableValidationLayers );
         }
 
-        bool CkeckRequiredInstanceExtensions( const std::vector<const char *> aRequiredExtensions )
+        bool CkeckRequiredInstanceExtensions( const vec_t<const char *> aRequiredExtensions )
         {
             uint32_t lExtensionCount = 0;
             vkEnumerateInstanceExtensionProperties( nullptr, &lExtensionCount, nullptr );
 
-            std::vector<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
+            vec_t<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
             vkEnumerateInstanceExtensionProperties( nullptr, &lExtensionCount, lAvailableExtensions.data() );
 
             std::set<const char *> lAvailableExtensionSet;
@@ -81,17 +81,17 @@ namespace SE::Graphics
             return IsSubset( lRequestedExtensionSet, lAvailableExtensionSet );
         }
 
-        bool CheckRequiredDeviceExtensions( VkPhysicalDevice aVkPhysicalDevice, std::vector<const char *> aRequestedExtensions )
+        bool CheckRequiredDeviceExtensions( VkPhysicalDevice aVkPhysicalDevice, vec_t<const char *> aRequestedExtensions )
         {
             uint32_t lExtensionCount;
             vkEnumerateDeviceExtensionProperties( aVkPhysicalDevice, nullptr, &lExtensionCount, nullptr );
 
-            std::vector<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
+            vec_t<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
             vkEnumerateDeviceExtensionProperties( aVkPhysicalDevice, nullptr, &lExtensionCount, lAvailableExtensions.data() );
 
-            std::set<std::string> lRequestedExtensionsSet( aRequestedExtensions.begin(), aRequestedExtensions.end() );
+            std::set<string_t> lRequestedExtensionsSet( aRequestedExtensions.begin(), aRequestedExtensions.end() );
 
-            std::set<std::string> lAvailableExtensionSet;
+            std::set<string_t> lAvailableExtensionSet;
             for( const auto &lExtension : lAvailableExtensions )
                 lAvailableExtensionSet.emplace( lExtension.extensionName );
 
@@ -103,7 +103,7 @@ namespace SE::Graphics
             uint32_t lQueueFamilyCount = 0;
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, nullptr );
 
-            std::vector<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
+            vec_t<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, lAvailableQueueFamilies.data() );
 
             int lCurrentQueueIndex = 0;
@@ -134,7 +134,7 @@ namespace SE::Graphics
             uint32_t lQueueFamilyCount = 0;
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, nullptr );
 
-            std::vector<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
+            vec_t<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, lAvailableQueueFamilies.data() );
 
             int lCurrentQueueIndex = 0;
@@ -188,7 +188,7 @@ namespace SE::Graphics
             return lSwapChainSupportDetails;
         }
 
-        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, std::vector<const char *> aRequestedExtensions )
+        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, vec_t<const char *> aRequestedExtensions )
         {
             bool lRequiredExtensionsAreSupported = CheckRequiredDeviceExtensions( aVkPhysicalDevice, aRequestedExtensions );
 
@@ -208,21 +208,21 @@ namespace SE::Graphics
                    lSupportedPhysicalDeviceFeatures.samplerAnisotropy;
         }
 
-        std::vector<VkPhysicalDevice> EnumeratePhysicalDevices( VkInstance aVkInstance )
+        vec_t<VkPhysicalDevice> EnumeratePhysicalDevices( VkInstance aVkInstance )
         {
             uint32_t lPhysicalDeviceCount = 0;
             vkEnumeratePhysicalDevices( aVkInstance, &lPhysicalDeviceCount, nullptr );
 
-            std::vector<VkPhysicalDevice> lPhysicalDeviceObjects( lPhysicalDeviceCount );
+            vec_t<VkPhysicalDevice> lPhysicalDeviceObjects( lPhysicalDeviceCount );
             if( 0 != lPhysicalDeviceCount )
                 vkEnumeratePhysicalDevices( aVkInstance, &lPhysicalDeviceCount, lPhysicalDeviceObjects.data() );
 
             return lPhysicalDeviceObjects;
         }
 
-        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, std::vector<const char *> aRequestedExtensions )
+        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, vec_t<const char *> aRequestedExtensions )
         {
-            std::vector<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance );
+            vec_t<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance );
 
             for( const auto &lPhysicalDevice : lPhysicalDeviceList )
             {
@@ -235,7 +235,7 @@ namespace SE::Graphics
             throw std::runtime_error( "failed to find a suitable GPU!" );
         }
 
-        VkFormat FindSupportedFormat( VkPhysicalDevice aVkPhysicalDevice, const std::vector<VkFormat> &aCandidates,
+        VkFormat FindSupportedFormat( VkPhysicalDevice aVkPhysicalDevice, const vec_t<VkFormat> &aCandidates,
                                       VkImageTiling aImageTiling, VkFormatFeatureFlags aFeatures )
         {
             for( VkFormat lCurrentFormat : aCandidates )
@@ -306,7 +306,7 @@ namespace SE::Graphics
             return lNewMemory;
         }
 
-        VkSurfaceFormatKHR ChooseSwapSurfaceFormat( const std::vector<VkSurfaceFormatKHR> &aAvailableFormats )
+        VkSurfaceFormatKHR ChooseSwapSurfaceFormat( const vec_t<VkSurfaceFormatKHR> &aAvailableFormats )
         {
             for( const auto &lFormat : aAvailableFormats )
             {
@@ -317,7 +317,7 @@ namespace SE::Graphics
             return aAvailableFormats[0];
         }
 
-        VkPresentModeKHR ChooseSwapPresentMode( const std::vector<VkPresentModeKHR> &aAvailablePresentModes )
+        VkPresentModeKHR ChooseSwapPresentMode( const vec_t<VkPresentModeKHR> &aAvailablePresentModes )
         {
             for( const auto &lPresentMode : aAvailablePresentModes )
             {
@@ -378,7 +378,7 @@ namespace SE::Graphics
         lInstanceCreateInfo.enabledExtensionCount   = static_cast<uint32_t>( lRequiredExtensions.size() );
         lInstanceCreateInfo.ppEnabledExtensionNames = lRequiredExtensions.data();
 
-        const std::vector<const char *> lRequiredValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+        const vec_t<const char *> lRequiredValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 
         bool                               lShouldAttatchDebugCallback = false;
         VkDebugUtilsMessengerCreateInfoEXT lDebugOutputCreateInfo{};
@@ -417,7 +417,7 @@ namespace SE::Graphics
                 VK_CHECK_RESULT( VK_ERROR_EXTENSION_NOT_PRESENT );
         }
 
-        const std::vector<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+        const vec_t<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
@@ -431,7 +431,7 @@ namespace SE::Graphics
         mGraphicFamily  = GetGraphicsQueueFamilies( mVkPhysicalDevice );
         mTransferFamily = GetTransferQueueFamilies( mVkPhysicalDevice );
 
-        std::vector<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
+        vec_t<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
         std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily, mTransferFamily };
 
         float lQueuePriority = 1.0f;
@@ -489,7 +489,7 @@ namespace SE::Graphics
         lGraphicsCommandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
         VK_CHECK_RESULT( vkCreateCommandPool( mVkLogicalDevice, &lGraphicsCommandPoolCreateInfo, nullptr, &mVkGraphicsCommandPool ) );
 
-        std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
+        vec_t<VkDescriptorPoolSize> lPoolSizes( 4 );
         lPoolSizes[0]     = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 10000 };
         lPoolSizes[1]     = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 10000 };
         lPoolSizes[2]     = { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 10000 };
@@ -553,7 +553,7 @@ namespace SE::Graphics
             vkDestroyInstance( mVkInstance, nullptr );
     }
 
-    VkSurfaceKHR VkGraphicContext::CreateVkSurface( Ref<IWindow> aWindow )
+    VkSurfaceKHR VkGraphicContext::CreateVkSurface( ref_t<IWindow> aWindow )
     {
         VkSurfaceKHR lNewSurface;
         VK_CHECK_RESULT( glfwCreateWindowSurface( mVkInstance, aWindow->GetGLFWWindow(), nullptr, &lNewSurface ) );
@@ -649,9 +649,9 @@ namespace SE::Graphics
         VK_CHECK_RESULT( vkBindImageMemory( mVkLogicalDevice, aVkImageObject, aMemory, 0 ) );
     }
 
-    std::vector<VkCommandBuffer> VkGraphicContext::AllocateCommandBuffer( uint32_t aCount )
+    vec_t<VkCommandBuffer> VkGraphicContext::AllocateCommandBuffer( uint32_t aCount )
     {
-        std::vector<VkCommandBuffer> lNewCommandBuffers( aCount );
+        vec_t<VkCommandBuffer> lNewCommandBuffers( aCount );
 
         VkCommandBufferAllocateInfo lCommandBufferAllocInfo{};
         lCommandBufferAllocInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -828,7 +828,7 @@ namespace SE::Graphics
         }
     }
 
-    VkFramebuffer VkGraphicContext::CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight,
+    VkFramebuffer VkGraphicContext::CreateFramebuffer( vec_t<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight,
                                                        uint32_t aLayers, VkRenderPass aRenderPass )
     {
         VkFramebufferCreateInfo lFramebufferCreateInfo{};
@@ -858,9 +858,9 @@ namespace SE::Graphics
         }
     }
 
-    VkRenderPass VkGraphicContext::CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments,
-                                                     std::vector<VkSubpassDescription>    aSubpasses,
-                                                     std::vector<VkSubpassDependency>     aSubpassDependencies )
+    VkRenderPass VkGraphicContext::CreateRenderPass( vec_t<VkAttachmentDescription> aAttachments,
+                                                     vec_t<VkSubpassDescription>    aSubpasses,
+                                                     vec_t<VkSubpassDependency>     aSubpassDependencies )
     {
         VkRenderPassCreateInfo lRenderPassCreateInfo{};
         lRenderPassCreateInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -953,9 +953,9 @@ namespace SE::Graphics
         }
     }
 
-    void VkGraphicContext::ResetFences( std::vector<VkFence> aFences )
+    void VkGraphicContext::ResetFences( vec_t<VkFence> aFences )
     {
-        std::vector<VkFence> aNonNullFences;
+        vec_t<VkFence> aNonNullFences;
         for( auto &lFence : aFences )
         {
             if( lFence != VK_NULL_HANDLE )
@@ -971,9 +971,9 @@ namespace SE::Graphics
         ResetFences( { aFence } );
     }
 
-    void VkGraphicContext::WaitForFences( std::vector<VkFence> aFences, uint64_t aTimeout )
+    void VkGraphicContext::WaitForFences( vec_t<VkFence> aFences, uint64_t aTimeout )
     {
-        std::vector<VkFence> aNonNullFences;
+        vec_t<VkFence> aNonNullFences;
         for( auto &lFence : aFences )
         {
             if( lFence != VK_NULL_HANDLE )
@@ -984,7 +984,7 @@ namespace SE::Graphics
             vkWaitForFences( mVkLogicalDevice, aNonNullFences.size(), aNonNullFences.data(), VK_TRUE, aTimeout );
     }
 
-    void VkGraphicContext::WaitForFences( std::vector<VkFence> aFences )
+    void VkGraphicContext::WaitForFences( vec_t<VkFence> aFences )
     {
         WaitForFences( aFences, std::numeric_limits<uint64_t>::max() );
     }
@@ -1049,18 +1049,18 @@ namespace SE::Graphics
         }
     }
 
-    std::vector<VkImage> VkGraphicContext::GetSwapChainImages( VkSwapchainKHR aSwapChain )
+    vec_t<VkImage> VkGraphicContext::GetSwapChainImages( VkSwapchainKHR aSwapChain )
     {
         uint32_t lImageCount;
         VK_CHECK_RESULT( vkGetSwapchainImagesKHR( mVkLogicalDevice, aSwapChain, &lImageCount, nullptr ) );
 
-        std::vector<VkImage> lImages( lImageCount );
+        vec_t<VkImage> lImages( lImageCount );
         VK_CHECK_RESULT( vkGetSwapchainImagesKHR( mVkLogicalDevice, aSwapChain, &lImageCount, lImages.data() ) );
 
         return lImages;
     }
 
-    VkShaderModule VkGraphicContext::CreateShaderModule( std::vector<uint32_t> aByteCode )
+    VkShaderModule VkGraphicContext::CreateShaderModule( vec_t<uint32_t> aByteCode )
     {
         VkShaderModuleCreateInfo lShaderModuleCreateInfo{};
         lShaderModuleCreateInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -1083,7 +1083,7 @@ namespace SE::Graphics
         }
     }
 
-    VkDescriptorSetLayout VkGraphicContext::CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings,
+    VkDescriptorSetLayout VkGraphicContext::CreateDescriptorSetLayout( vec_t<VkDescriptorSetLayoutBinding> aBindings,
                                                                        bool                                      aUnbounded )
     {
         VkDescriptorSetLayoutCreateInfo lDescriptorSetLayoutCreateInfo{};
@@ -1093,7 +1093,7 @@ namespace SE::Graphics
         lDescriptorSetLayoutCreateInfo.flags        = 0;
         lDescriptorSetLayoutCreateInfo.pNext        = nullptr;
 
-        std::vector<VkDescriptorBindingFlagsEXT> bindFlag( aBindings.size() );
+        vec_t<VkDescriptorBindingFlagsEXT> bindFlag( aBindings.size() );
 
         VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo{};
         if( aUnbounded )
@@ -1130,7 +1130,7 @@ namespace SE::Graphics
     }
 
     VkDescriptorPool VkGraphicContext::CreateDescriptorPool( uint32_t                          aDescriptorSetCount,
-                                                             std::vector<VkDescriptorPoolSize> aPoolSizes )
+                                                             vec_t<VkDescriptorPoolSize> aPoolSizes )
     {
         VkDescriptorPoolCreateInfo lDescriptorPoolCreateInfo{};
         lDescriptorPoolCreateInfo.sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -1191,8 +1191,8 @@ namespace SE::Graphics
         }
     }
 
-    VkPipelineLayout VkGraphicContext::CreatePipelineLayout( std::vector<VkDescriptorSetLayout> aDescriptorSetLayout,
-                                                             std::vector<VkPushConstantRange>   aPushConstants )
+    VkPipelineLayout VkGraphicContext::CreatePipelineLayout( vec_t<VkDescriptorSetLayout> aDescriptorSetLayout,
+                                                             vec_t<VkPushConstantRange>   aPushConstants )
     {
         VkPipelineLayoutCreateInfo lPipelineLayoutCreateInfo{};
         lPipelineLayoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

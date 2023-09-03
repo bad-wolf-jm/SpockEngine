@@ -38,7 +38,7 @@ namespace SE::TensorOps
     }
 
     template <typename T>
-    static inline void ResolveAndUpload( MemoryBuffer &aData, std::vector<ScalarValue> const &aValue )
+    static inline void ResolveAndUpload( MemoryBuffer &aData, vec_t<ScalarValue> const &aValue )
     {
         aData.Upload( Private::Resolve<T>( aValue ) );
     }

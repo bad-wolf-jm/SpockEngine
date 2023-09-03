@@ -31,7 +31,7 @@ namespace SE::Graphics
 
         VkGraphicContext( uint32_t aSampleCount, bool aEnableValidation );
 
-        VkSurfaceKHR CreateVkSurface( Ref<IWindow> aWindow );
+        VkSurfaceKHR CreateVkSurface( ref_t<IWindow> aWindow );
         void         DestroyVkSurface( VkSurfaceKHR aSurface );
 
         VkBuffer CreateBuffer( VkBufferUsageFlags aBufferFlags, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable );
@@ -52,42 +52,42 @@ namespace SE::Graphics
                                      VkFormat aImageFormat, VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
         void        DestroyImageView( VkImageView aImage );
 
-        VkRenderPass CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,
-                                       std::vector<VkSubpassDependency> aSubpassDependencies );
+        VkRenderPass CreateRenderPass( vec_t<VkAttachmentDescription> aAttachments, vec_t<VkSubpassDescription> aSubpasses,
+                                       vec_t<VkSubpassDependency> aSubpassDependencies );
         void         DestroyRenderPass( VkRenderPass aRenderPass );
 
-        VkFramebuffer CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
+        VkFramebuffer CreateFramebuffer( vec_t<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
                                          VkRenderPass aRenderPass );
         void          DestroyFramebuffer( VkFramebuffer aFramebuffer );
 
-        VkPipelineLayout CreatePipelineLayout( std::vector<VkDescriptorSetLayout> aDescriptorSetLayout,
-                                               std::vector<VkPushConstantRange>   aPushConstants );
+        VkPipelineLayout CreatePipelineLayout( vec_t<VkDescriptorSetLayout> aDescriptorSetLayout,
+                                               vec_t<VkPushConstantRange>   aPushConstants );
         void             DestroyPipelineLayout( VkPipelineLayout aPipelineLayout );
 
         VkPipeline CreatePipeline( VkGraphicsPipelineCreateInfo aCreateInfo );
         void       DestroyPipeline( VkPipeline aPipeline );
 
-        VkShaderModule CreateShaderModule( std::vector<uint32_t> aByteCode );
+        VkShaderModule CreateShaderModule( vec_t<uint32_t> aByteCode );
         void           DestroyShaderModule( VkShaderModule aShaderModule );
 
-        VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
+        VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, vec_t<VkDescriptorPoolSize> aPoolSizes );
         void             DestroyDescriptorPool( VkDescriptorPool aDescriptorPool );
         VkDescriptorSet  AllocateDescriptorSet( VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount = 0 );
         void             FreeDescriptorSet( VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
-        VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
+        VkDescriptorSetLayout CreateDescriptorSetLayout( vec_t<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
         void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
 
         std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain( VkExtent2D aSize, VkSurfaceKHR aSurface );
         void                                                       DestroySwapChain( VkSwapchainKHR aSwapchain );
-        std::vector<VkImage>                                       GetSwapChainImages( VkSwapchainKHR aSwapChain );
+        vec_t<VkImage>                                       GetSwapChainImages( VkSwapchainKHR aSwapChain );
 
         VkFence CreateFence();
         void    DestroyFence( VkFence aFence );
-        void    ResetFences( std::vector<VkFence> aFences );
+        void    ResetFences( vec_t<VkFence> aFences );
         void    ResetFence( VkFence aFence );
-        void    WaitForFences( std::vector<VkFence> aFences, uint64_t aTimeout );
-        void    WaitForFences( std::vector<VkFence> aFences );
+        void    WaitForFences( vec_t<VkFence> aFences, uint64_t aTimeout );
+        void    WaitForFences( vec_t<VkFence> aFences );
         void    WaitForFence( VkFence aFence, uint64_t aTimeout );
         void    WaitForFence( VkFence aFence );
 
@@ -115,7 +115,7 @@ namespace SE::Graphics
             vkUnmapMemory( mVkLogicalDevice, aMemory );
         }
 
-        std::vector<VkCommandBuffer> AllocateCommandBuffer( uint32_t aCount );
+        vec_t<VkCommandBuffer> AllocateCommandBuffer( uint32_t aCount );
         void                         DestroyCommandBuffer( VkCommandBuffer aBuffer );
 
         void BindMemory( VkBuffer aVkBufferObject, VkDeviceMemory aMemory );
@@ -181,7 +181,7 @@ namespace SE::Graphics
         std::set<VkSwapchainKHR>        mSwapChains;
 
       private:
-        // Ref<IWindow> mWindow;
+        // ref_t<IWindow> mWindow;
 
         VkInstance       mVkInstance            = VK_NULL_HANDLE;
         VkPhysicalDevice mVkPhysicalDevice      = VK_NULL_HANDLE;

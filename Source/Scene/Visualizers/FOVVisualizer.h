@@ -8,7 +8,7 @@
 #include "Renderer/Buffer.h"
 #include "Scene3D/VertexData.h"
 
-// #include <Corrade/Containers/std::vector.h>
+// #include <Corrade/Containers/vec_t.h>
 
 using namespace math::literals;
 
@@ -54,18 +54,18 @@ struct FOVVisualizer
         return *this;
     }
 
-    std::vector<SE::Scene::VertexData> &GetVertexData()
+    vec_t<SE::Scene::VertexData> &GetVertexData()
     {
         return m_VertexData;
     }
-    std::vector<uint32_t> &GetIndices()
+    vec_t<uint32_t> &GetIndices()
     {
         return m_Indices;
     }
     void UpdatePositions();
 
   private:
-    std::vector<SE::Scene::VertexData> m_VertexData;
-    std::vector<uint32_t>              m_Indices;
-    std::vector<math::vec3>            m_Positions;
+    vec_t<SE::Scene::VertexData> m_VertexData;
+    vec_t<uint32_t>              m_Indices;
+    vec_t<math::vec3>            m_Positions;
 };

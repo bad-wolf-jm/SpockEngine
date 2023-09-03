@@ -530,11 +530,11 @@ namespace SE::Core
 
         // e==true : enter
         // e==false : leave
-        virtual void html_div( const std::string &dclass, bool e );
+        virtual void html_div( const string_t &dclass, bool e );
         ////////////////////////////////////////////////////////////////////////////
 
         // current state
-        std::string m_href; // empty if no link/image
+        string_t m_href; // empty if no link/image
 
         bool     m_is_underline     = false;
         bool     m_is_strikethrough = false;
@@ -581,7 +581,7 @@ namespace SE::Core
         };
         vector_t<list_info> m_list_stack;
 
-        vector_t<std::string> m_div_stack;
+        vector_t<string_t> m_div_stack;
 
         MD_PARSER m_md;
     };

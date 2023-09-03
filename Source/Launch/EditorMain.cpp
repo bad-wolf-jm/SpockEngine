@@ -53,13 +53,13 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
     {
         aUIConfiguration.mFontSize = lUIProperties["font_size"].as<int>();
 
-        aUIConfiguration.mMainFont       = lFontRoot / lUIProperties["main_font"]["regular"].as<std::string>();
-        aUIConfiguration.mBoldFont       = lFontRoot / lUIProperties["main_font"]["bold"].as<std::string>();
-        aUIConfiguration.mItalicFont     = lFontRoot / lUIProperties["main_font"]["italic"].as<std::string>();
-        aUIConfiguration.mBoldItalicFont = lFontRoot / lUIProperties["main_font"]["bold_italic"].as<std::string>();
+        aUIConfiguration.mMainFont       = lFontRoot / lUIProperties["main_font"]["regular"].as<string_t>();
+        aUIConfiguration.mBoldFont       = lFontRoot / lUIProperties["main_font"]["bold"].as<string_t>();
+        aUIConfiguration.mItalicFont     = lFontRoot / lUIProperties["main_font"]["italic"].as<string_t>();
+        aUIConfiguration.mBoldItalicFont = lFontRoot / lUIProperties["main_font"]["bold_italic"].as<string_t>();
 
-        aUIConfiguration.mIconFont = fs::path( lUIProperties["icon_font"].as<std::string>() );
-        aUIConfiguration.mMonoFont = fs::path( lUIProperties["mono_font"].as<std::string>() );
+        aUIConfiguration.mIconFont = fs::path( lUIProperties["icon_font"].as<string_t>() );
+        aUIConfiguration.mMonoFont = fs::path( lUIProperties["mono_font"].as<string_t>() );
     }
 }
 
@@ -104,22 +104,22 @@ void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowS
     fout << lConfigurationOut.c_str();
 }
 
-Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
+ref_t<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 {
     auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
 
     // clang-format off
     lProgramArguments->add_argument( "-a", "--application" )
         .help( "Specify input file" )
-        .default_value( std::string{ "" } );
+        .default_value( string_t{ "" } );
 
     lProgramArguments->add_argument( "-p", "--project" )
         .help( "Specify input file" )
-        .default_value( std::string{ "" } );
+        .default_value( string_t{ "" } );
 
     lProgramArguments->add_argument( "-s", "--scenario" )
         .help( "Specify input file" )
-        .default_value( std::string{ "" } );
+        .default_value( string_t{ "" } );
 
     lProgramArguments->add_argument( "-x", "--pos_x" )
         .help( "Specify output file" )
@@ -167,7 +167,7 @@ fs::path GetCwd()
 {
     char buff[MAX_PATH];
     _getcwd( buff, MAX_PATH );
-    fs::path lCwd = std::string( buff );
+    fs::path lCwd = string_t( buff );
 
     return lCwd;
 }
@@ -237,7 +237,7 @@ int main( int argc, char **argv )
     if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) )
         lWindowPosition.y = lPosYOverride.value();
 
-    auto     lProjectName              = lProgramArguments->get<std::string>( "--project" );
+    auto     lProjectName              = lProgramArguments->get<string_t>( "--project" );
     fs::path lProjectConfigurationPath = lProjectRoot / fmt::format( "{}.yaml", lProjectName );
     if( !fs::exists( lProjectConfigurationPath ) )
     {
@@ -253,7 +253,7 @@ int main( int argc, char **argv )
 
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
 
-    auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
+    auto lScenario = fs::path( lProgramArguments->get<string_t>( "--scenario" ) );
     if( !fs::exists( lScenario ) )
         SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
@@ -265,20 +265,20 @@ int main( int argc, char **argv )
     if( lPath && fs::exists( lPath ) )
     {
         lMonoPath = lPath;
-        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono_runtime" ) )
+        if( auto lMonoPathOverride = lProgramArguments->present<string_t>( "--mono_runtime" ) )
             if( fs ::exists( lMonoPathOverride.value() ) )
                 lMonoPath = lMonoPathOverride.value();
     }
 
     // Retrieve the Mono core assembly path
     fs::path lCoreScriptingPath = "D:/Work/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
-    if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
+    if( auto lCoreScriptingPathOverride = lProgramArguments->present<string_t>( "--script_core" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) )
             lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
     DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    auto     lApplicationName              = lProgramArguments->get<std::string>( "--application" );
+    auto     lApplicationName              = lProgramArguments->get<string_t>( "--application" );
     fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
     {
@@ -313,12 +313,12 @@ int main( int argc, char **argv )
         YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
 
         // YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
-        // if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-        //     DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "" );
+        // if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<string_t>() ) )
+        //     DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<string_t>(), "" );
 
         YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
-        if( ( !lDefaultScenarioPath.IsNull() ) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
-            lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
+        if( ( !lDefaultScenarioPath.IsNull() ) && fs::exists( lDefaultScenarioPath.as<string_t>() ) )
+            lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<string_t>() );
     }
 
     while( SE::Core::Engine::GetInstance()->Tick() )

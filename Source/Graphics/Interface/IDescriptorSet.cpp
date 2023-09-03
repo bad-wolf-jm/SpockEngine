@@ -6,7 +6,7 @@
 namespace SE::Graphics
 {
 
-    IDescriptorSet::IDescriptorSet( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded, uint32_t aDescriptorCount )
+    IDescriptorSet::IDescriptorSet( ref_t<IGraphicContext> aGraphicContext, bool aIsUnbounded, uint32_t aDescriptorCount )
         : mGraphicContext{ aGraphicContext }
         // , mIsUnbounded{ aIsUnbounded }
         // , mDescriptorCount{ aDescriptorCount }
@@ -14,6 +14,6 @@ namespace SE::Graphics
     {
     }
 
-    void IDescriptorSet::Write( Ref<ISampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
-    void IDescriptorSet::Write( Ref<ISamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+    void IDescriptorSet::Write( ref_t<ISampler2D> aBuffer, uint32_t aBinding ) { Write( vec_t{ aBuffer }, aBinding ); }
+    void IDescriptorSet::Write( ref_t<ISamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( vec_t{ aBuffer }, aBinding ); }
 } // namespace SE::Graphics

@@ -35,11 +35,11 @@ struct Wall2D
         UpdatePositions();
     }
 
-    std::vector<math::vec3> &GetVertexData()
+    vec_t<math::vec3> &GetVertexData()
     {
         return m_WireframeGrid.Vertices;
     }
-    std::vector<uint32_t> &GetIndices()
+    vec_t<uint32_t> &GetIndices()
     {
         return m_WireframeGrid.Indices;
     }

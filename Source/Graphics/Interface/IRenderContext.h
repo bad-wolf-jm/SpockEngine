@@ -12,17 +12,17 @@ namespace SE::Graphics
     {
       public:
         IRenderContext() = default;
-        IRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget );
+        IRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget );
 
         ~IRenderContext() = default;
 
         virtual bool BeginRender();
         virtual bool EndRender();
-        virtual void Bind( Ref<IGraphicsPipeline> aGraphicPipeline );
+        virtual void Bind( ref_t<IGraphicsPipeline> aGraphicPipeline );
         virtual void Bind( void* aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 ) = 0;
-        virtual void Bind( Ref<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 ) = 0;
-        virtual void Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint = 0 );
-        virtual void Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint = 0 );
+        virtual void Bind( ref_t<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 ) = 0;
+        virtual void Bind( ref_t<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint = 0 );
+        virtual void Bind( ref_t<IGraphicBuffer> aVertexBuffer, ref_t<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint = 0 );
         virtual void PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize ) = 0;
         virtual void SetViewport( math::ivec2 aOffset, math::uvec2 aSize ) = 0;
         virtual void SetScissor( math::ivec2 aOffset, math::uvec2 aSize ) = 0;
@@ -46,11 +46,11 @@ namespace SE::Graphics
         void ResetBuffers();
 
       protected:
-        Ref<IGraphicContext>   mGraphicContext   = nullptr;
-        Ref<IRenderTarget>     mRenderTarget     = nullptr;
-        Ref<IGraphicsPipeline> mGraphicsPipeline = nullptr;
-        Ref<IGraphicBuffer>    mVertexBuffer     = nullptr;
-        Ref<IGraphicBuffer>    mIndexBuffer      = nullptr;
+        ref_t<IGraphicContext>   mGraphicContext   = nullptr;
+        ref_t<IRenderTarget>     mRenderTarget     = nullptr;
+        ref_t<IGraphicsPipeline> mGraphicsPipeline = nullptr;
+        ref_t<IGraphicBuffer>    mVertexBuffer     = nullptr;
+        ref_t<IGraphicBuffer>    mIndexBuffer      = nullptr;
 
         bool mFrameIsStarted = false;
         bool mHasIndex       = false;

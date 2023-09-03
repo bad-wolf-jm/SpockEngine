@@ -17,14 +17,14 @@ namespace SE::Editor
     class MaterialCombo
     {
       public:
-        Ref<Scene>           World;
-        std::string          ID            = "";
+        ref_t<Scene>           World;
+        string_t          ID            = "";
         float                ThumbnailSize = 50.0f;
         UI::ComboBox<Entity> Dropdown;
 
       public:
         MaterialCombo() = default;
-        MaterialCombo( std::string a_ID )
+        MaterialCombo( string_t a_ID )
             : ID{ a_ID }
             , Dropdown{ UI::ComboBox<Entity>( a_ID ) } {};
 
@@ -64,18 +64,18 @@ namespace SE::Editor
     class Slider
     {
       public:
-        std::string ID = "";
+        string_t ID = "";
 
         _SliderType MinValue{};
         _SliderType MaxValue{};
         _SliderType CurrentValue{};
 
-        std::string Format = "";
+        string_t Format = "";
 
         bool Changed = false;
 
         Slider() = default;
-        Slider( std::string a_ID )
+        Slider( string_t a_ID )
             : ID{ a_ID }
         {
         }
@@ -88,11 +88,11 @@ namespace SE::Editor
     class PropertyEditor
     {
       public:
-        std::string       Label;
+        string_t       Label;
         float             LabelWidth;
         _ValueChooserType ValueChooser;
 
-        PropertyEditor( std::string ID ) { ValueChooser = _ValueChooserType( ID ); }
+        PropertyEditor( string_t ID ) { ValueChooser = _ValueChooserType( ID ); }
 
         template <typename... _ArgTypes>
         void Display( _ArgTypes... a_ArgList )
@@ -128,7 +128,7 @@ namespace SE::Editor
         return false;
     }
 
-    static bool EditComponent( SE::Graphics::Ref<IGraphicContext> aGraphicContext, sLightComponent &aComponent )
+    static bool EditComponent( SE::Graphics::ref_t<IGraphicContext> aGraphicContext, sLightComponent &aComponent )
     {
         static UI::ComboBox<eLightType> lPrimitiveChooser( "##combo_light_type_chooser" );
         lPrimitiveChooser.Labels = { "Point light", "Spotlight", "Directional light" };
@@ -206,7 +206,7 @@ namespace SE::Editor
         return false;
     }
 
-    SceneElementEditor::SceneElementEditor( Ref<IGraphicContext> aGraphicContext )
+    SceneElementEditor::SceneElementEditor( ref_t<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext } {};
 
     void SceneElementEditor::Display( int32_t width, int32_t height )
@@ -222,7 +222,7 @@ namespace SE::Editor
                       std::min( ElementToEdit.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
         if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
         {
-            ElementToEdit.Get<sTag>().mValue = std::string( buf );
+            ElementToEdit.Get<sTag>().mValue = string_t( buf );
         }
         UI::SameLine();
         if( UI::Button( fmt::format( "{} Add component", ICON_FA_PLUS ).c_str(), math::vec2{ 150.0f, 30.0f } ) )

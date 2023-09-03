@@ -22,10 +22,10 @@ namespace SE::Core
 
     struct sImportedTexture
     {
-        std::string mName = "";
+        string_t mName = "";
 
-        Ref<TextureData2D>    mTexture = nullptr;
-        Ref<TextureSampler2D> mSampler = nullptr;
+        ref_t<TextureData2D>    mTexture = nullptr;
+        ref_t<TextureSampler2D> mSampler = nullptr;
     };
 
     struct sImportedMaterial
@@ -49,7 +49,7 @@ namespace SE::Core
             uint32_t UVChannel = 0;
         };
 
-        std::string mName = "";
+        string_t mName = "";
 
         struct
         {
@@ -86,8 +86,8 @@ namespace SE::Core
         };
 
         Interpolation          mInterpolation = Interpolation::LINEAR;
-        std::vector<float>     mInputs        = {};
-        std::vector<glm::vec4> mOutputsVec4   = {};
+        vec_t<float>     mInputs        = {};
+        vec_t<glm::vec4> mOutputsVec4   = {};
     };
 
     struct sImportedAnimationChannel
@@ -106,54 +106,54 @@ namespace SE::Core
 
     struct sImportedAnimation
     {
-        std::string                            mName     = "";
-        std::vector<sImportedAnimationSampler> mSamplers = {};
-        std::vector<sImportedAnimationChannel> mChannels = {};
+        string_t                            mName     = "";
+        vec_t<sImportedAnimationSampler> mSamplers = {};
+        vec_t<sImportedAnimationChannel> mChannels = {};
         float                                  mStart    = std::numeric_limits<float>::max();
         float                                  mEnd      = std::numeric_limits<float>::min();
     };
 
     struct sImportedSkin
     {
-        std::string           mName                = "";
+        string_t           mName                = "";
         uint32_t              mSkeletonRootNodeID  = 0;
-        std::vector<uint32_t> mJointNodeID         = {};
-        std::vector<mat4>     mInverseBindMatrices = {};
+        vec_t<uint32_t> mJointNodeID         = {};
+        vec_t<mat4>     mInverseBindMatrices = {};
     };
 
     struct sImportedMesh
     {
-        std::string mName = "";
+        string_t mName = "";
 
         Graphics::ePrimitiveTopology mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
 
         uint32_t              mMaterialID = 0;
-        std::vector<uint32_t> mIndices    = {};
-        std::vector<vec3>     mPositions  = {};
-        std::vector<vec3>     mNormals    = {};
-        std::vector<vec2>     mUV0        = {};
-        std::vector<vec2>     mUV1        = {};
-        std::vector<uvec4>    mJoints     = {};
-        std::vector<vec4>     mWeights    = {};
+        vec_t<uint32_t> mIndices    = {};
+        vec_t<vec3>     mPositions  = {};
+        vec_t<vec3>     mNormals    = {};
+        vec_t<vec2>     mUV0        = {};
+        vec_t<vec2>     mUV1        = {};
+        vec_t<uvec4>    mJoints     = {};
+        vec_t<vec4>     mWeights    = {};
     };
 
     struct sImportedNode
     {
-        std::string           mName      = "";
+        string_t           mName      = "";
         uint32_t              mParentID  = std::numeric_limits<uint32_t>::max();
         uint32_t              mSkinID    = std::numeric_limits<uint32_t>::max();
         mat4                  mTransform = mat4( 1.0f );
-        std::vector<uint32_t> mChildren  = {};
-        std::vector<uint32_t> mMeshes    = {};
+        vec_t<uint32_t> mChildren  = {};
+        vec_t<uint32_t> mMeshes    = {};
     };
 
     struct sImportedModel
     {
-        std::vector<sImportedTexture>   mTextures   = {};
-        std::vector<sImportedMaterial>  mMaterials  = {};
-        std::vector<sImportedAnimation> mAnimations = {};
-        std::vector<sImportedMesh>      mMeshes     = {};
-        std::vector<sImportedNode>      mNodes      = {};
-        std::vector<sImportedSkin>      mSkins      = {};
+        vec_t<sImportedTexture>   mTextures   = {};
+        vec_t<sImportedMaterial>  mMaterials  = {};
+        vec_t<sImportedAnimation> mAnimations = {};
+        vec_t<sImportedMesh>      mMeshes     = {};
+        vec_t<sImportedNode>      mNodes      = {};
+        vec_t<sImportedSkin>      mSkins      = {};
     };
 } // namespace SE::Core

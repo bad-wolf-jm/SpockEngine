@@ -20,17 +20,17 @@ namespace SE::Core
     class CoordinateGridRenderer
     {
       public:
-        CoordinateGridRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
+        CoordinateGridRenderer( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext );
         ~CoordinateGridRenderer() = default;
 
-        void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext );
+        void Render( math::mat4 aProjection, math::mat4 aView, ref_t<IRenderContext> aRenderContext );
 
       private:
-        Ref<IDescriptorSetLayout> mPipelineLayout     = nullptr;
-        Ref<IGraphicContext>      mGraphicContext    = nullptr;
-        Ref<IGraphicBuffer>       mCameraBuffer      = nullptr;
-        Ref<IDescriptorSet>       mCameraDescriptors = nullptr;
-        Ref<IGraphicsPipeline>    mPipeline          = nullptr;
+        ref_t<IDescriptorSetLayout> mPipelineLayout     = nullptr;
+        ref_t<IGraphicContext>      mGraphicContext    = nullptr;
+        ref_t<IGraphicBuffer>       mCameraBuffer      = nullptr;
+        ref_t<IDescriptorSet>       mCameraDescriptors = nullptr;
+        ref_t<IGraphicsPipeline>    mPipeline          = nullptr;
     };
 
 } // namespace SE::Core

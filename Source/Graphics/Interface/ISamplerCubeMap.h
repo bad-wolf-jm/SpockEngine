@@ -22,17 +22,17 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        ISamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
+        ISamplerCubeMap( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData,
                          sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~ISamplerCubeMap() = default;
 
-        Ref<ITexture2D> GetTexture() { return mTextureData; }
+        ref_t<ITexture2D> GetTexture() { return mTextureData; }
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
-        Ref<ITexture2D>      mTextureData    = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<ITexture2D>      mTextureData    = nullptr;
 
         friend class ITexture2D;
     };

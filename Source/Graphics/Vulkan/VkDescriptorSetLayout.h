@@ -17,24 +17,24 @@ namespace SE::Graphics
     class VkDescriptorSetLayoutObject : public IDescriptorSetLayout
     {
       public:
-        VkDescriptorSetLayoutObject( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 1 );
+        VkDescriptorSetLayoutObject( ref_t<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 1 );
         ~VkDescriptorSetLayoutObject() = default;
 
         void Build();
 
-        Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount = 1 );
+        ref_t<IDescriptorSet> Allocate( uint32_t aDescriptorCount = 1 );
 
         VkDescriptorSetLayout GetVkDescriptorSetLayout()
         {
             return mLayout->mVkObject;
         }
-        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject()
+        ref_t<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject()
         {
             return mLayout;
         }
 
       private:
-        Ref<sVkDescriptorSetLayoutObject> mLayout = nullptr;
+        ref_t<sVkDescriptorSetLayoutObject> mLayout = nullptr;
     };
 
 } // namespace SE::Graphics

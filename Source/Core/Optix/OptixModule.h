@@ -18,8 +18,8 @@ namespace SE::Graphics
         OptixModule mOptixObject = nullptr;
 
         OptixModuleObject() = default;
-        OptixModuleObject( const std::string aLaunchParameterVariableName, const char *aPtxCode,
-                           Ref<OptixDeviceContextObject> aRayTracingContext );
+        OptixModuleObject( const string_t aLaunchParameterVariableName, const char *aPtxCode,
+                           ref_t<OptixDeviceContextObject> aRayTracingContext );
 
         ~OptixModuleObject();
 
@@ -27,21 +27,21 @@ namespace SE::Graphics
 
         OptixPipelineLinkOptions GetPipelineLinkOptions() { return mPipelineLinkOptions; };
 
-        void CreateMissGroup( std::string aEntryName );
-        void CreateRayGenGroup( std::string aEntryName );
-        void CreateHitGroup( std::string aClosestHitEntryName, std::string aAnyHitHitEntryName );
+        void CreateMissGroup( string_t aEntryName );
+        void CreateRayGenGroup( string_t aEntryName );
+        void CreateHitGroup( string_t aClosestHitEntryName, string_t aAnyHitHitEntryName );
 
-        Ref<OptixPipelineObject> CreatePipeline();
+        ref_t<OptixPipelineObject> CreatePipeline();
 
-        std::vector<Ref<OptixProgramGroupObject>> mRayGenProgramGroups = {};
-        std::vector<Ref<OptixProgramGroupObject>> mHitProgramGroups    = {};
-        std::vector<Ref<OptixProgramGroupObject>> mMissProgramGroups   = {};
+        vec_t<ref_t<OptixProgramGroupObject>> mRayGenProgramGroups = {};
+        vec_t<ref_t<OptixProgramGroupObject>> mHitProgramGroups    = {};
+        vec_t<ref_t<OptixProgramGroupObject>> mMissProgramGroups   = {};
 
       private:
-        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
+        ref_t<OptixDeviceContextObject> mRayTracingContext = nullptr;
         OptixPipelineLinkOptions      mPipelineLinkOptions{};
         OptixPipelineCompileOptions   mPipelineCompileOptions{};
-        const std::string             mLaunchParameterVariableName;
+        const string_t             mLaunchParameterVariableName;
     };
 
 } // namespace SE::Graphics

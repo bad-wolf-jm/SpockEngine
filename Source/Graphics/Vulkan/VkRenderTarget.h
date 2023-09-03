@@ -21,32 +21,32 @@ namespace SE::Graphics
     {
       public:
         VkRenderTarget() = default;
-        VkRenderTarget( Ref<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
+        VkRenderTarget( ref_t<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
 
         ~VkRenderTarget();
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<VkTexture2D> aFramebufferImage );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            ref_t<VkTexture2D> aFramebufferImage );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<VkTexture2D> aFramebufferImage, eCubeFace aFace );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            ref_t<VkTexture2D> aFramebufferImage, eCubeFace aFace );
 
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+        void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
 
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+        void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-                            Ref<VkTexture2D> aFramebufferImage );
+                            ref_t<VkTexture2D> aFramebufferImage );
 
         void Finalize();
 
-        Ref<IRenderPass> GetRenderPass()
+        ref_t<IRenderPass> GetRenderPass()
         {
             return mRenderPassObject;
         }
-        Ref<ICommandBuffer> GetCommandBuffer()
+        ref_t<ICommandBuffer> GetCommandBuffer()
         {
             return mCommandBufferObject[0];
         }
@@ -55,7 +55,7 @@ namespace SE::Graphics
         virtual void EndRender();
         virtual void Present();
 
-        virtual std::vector<VkClearValue> GetClearValues();
+        virtual vec_t<VkClearValue> GetClearValues();
         virtual VkFramebuffer             GetFramebuffer();
         virtual VkSemaphore               GetImageAvailableSemaphore( uint32_t i );
         virtual VkSemaphore               GetRenderFinishedSemaphore( uint32_t i );
@@ -63,21 +63,21 @@ namespace SE::Graphics
 
         virtual uint32_t GetCurrentImage();
 
-        // virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
+        // virtual ref_t<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
 
-        Ref<VkTexture2D> GetAttachment( std::string const &aKey );
+        ref_t<VkTexture2D> GetAttachment( string_t const &aKey );
 
       protected:
-        Ref<VkRenderPassObject> CreateDefaultRenderPass();
+        ref_t<VkRenderPassObject> CreateDefaultRenderPass();
 
         void InitializeCommandBuffers();
 
-        std::vector<VkClearValue> mClearValues      = {};
-        Ref<VkRenderPassObject>   mRenderPassObject = nullptr;
+        vec_t<VkClearValue> mClearValues      = {};
+        ref_t<VkRenderPassObject>   mRenderPassObject = nullptr;
 
-        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
+        vec_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject = {};
 
         VkFramebuffer            mVkFramebuffer = VK_NULL_HANDLE;
-        std::vector<VkImageView> mVkImageViews  = {};
+        vec_t<VkImageView> mVkImageViews  = {};
     };
 } // namespace SE::Graphics
