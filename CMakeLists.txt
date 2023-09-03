@@ -108,7 +108,7 @@ set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 FetchContent_Declare(
   tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        release
+  GIT_TAG        v2.8.14
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(tinygltf)
 include_directories(${tinygltf_SOURCE_DIR}/include)

@@ -20,22 +20,22 @@ namespace SE::Editor
         ContentBrowser()  = default;
         ~ContentBrowser() = default;
 
-        ContentBrowser( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot );
+        ContentBrowser( ref_t<IGraphicContext> aGraphicContext, ref_t<UIContext> aUIOverlay, fs::path aRoot );
 
         void Display();
 
       private:
-        Ref<IGraphicContext>  mGraphicContext;
+        ref_t<IGraphicContext>  mGraphicContext;
         std::filesystem::path mRootDirectory;
         std::filesystem::path mCurrentDirectory;
 
-        Ref<SE::Graphics::ISampler2D> mDirectoryIcon;
+        ref_t<SE::Graphics::ISampler2D> mDirectoryIcon;
         ImageHandle                   mDirectoryIconHandle;
 
-        Ref<SE::Graphics::ISampler2D> mFileIcon;
+        ref_t<SE::Graphics::ISampler2D> mFileIcon;
         ImageHandle                   mFileIconHandle;
 
-        Ref<SE::Graphics::ISampler2D> mBackIcon;
+        ref_t<SE::Graphics::ISampler2D> mBackIcon;
         ImageHandle                   mBackIconHandle;
 
         float mPadding       = 5.0f;

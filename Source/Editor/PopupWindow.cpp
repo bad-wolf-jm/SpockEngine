@@ -4,7 +4,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
-PopupWindow::PopupWindow( std::string a_Title, math::vec2 a_Size )
+PopupWindow::PopupWindow( SE::Core::string_t a_Title, math::vec2 a_Size )
     : Title{ a_Title }
     , Size{ a_Size }
 {

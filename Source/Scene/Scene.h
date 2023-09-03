@@ -47,20 +47,20 @@ namespace SE::Core
 
         typedef Entity Element;
 
-        Scene( Ref<IGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
-        Scene( Ref<Scene> aSource );
+        Scene( ref_t<IGraphicContext> a_GraphicContext, ref_t<SE::Core::UIContext> a_UI );
+        Scene( ref_t<Scene> aSource );
         Scene( Scene & ) = delete;
         ~Scene();
 
-        Element Create( std::string a_Name, Element a_Parent );
+        Element Create( string_t a_Name, Element a_Parent );
 
         Element CreateEntity();
-        Element CreateEntity( std::string a_Name );
+        Element CreateEntity( string_t a_Name );
 
         void LoadScenario( fs::path aScenarioPath );
 
-        Element LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform );
-        Element LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform, std::string a_Name );
+        Element LoadModel( ref_t<sImportedModel> aModelData, mat4 aTransform );
+        Element LoadModel( ref_t<sImportedModel> aModelData, mat4 aTransform, string_t a_Name );
 
         void SaveAs( fs::path aPath );
 
@@ -68,7 +68,7 @@ namespace SE::Core
         void EndScenario();
 
         void MarkAsRayTracingTarget( Element a_Element );
-        void AttachScript( Element aElement, std::string aScriptPath );
+        void AttachScript( Element aElement, string_t aScriptPath );
 
         mat4 GetView();
         mat4 GetProjection();
@@ -84,7 +84,7 @@ namespace SE::Core
         Element CurrentCamera;
         Element DefaultCamera;
 
-        Ref<IGraphicContext> GetGraphicContext()
+        ref_t<IGraphicContext> GetGraphicContext()
         {
             return mGraphicContext;
         }
@@ -104,7 +104,7 @@ namespace SE::Core
             return 0;
         }
 
-        Ref<SE::Graphics::OptixDeviceContextObject> GetRayTracingContext()
+        ref_t<SE::Graphics::OptixDeviceContextObject> GetRayTracingContext()
         {
             return mRayTracingContext;
         }
@@ -114,12 +114,12 @@ namespace SE::Core
             return mState;
         }
 
-        // Ref<MaterialSystem> GetMaterialSystem()
+        // ref_t<MaterialSystem> GetMaterialSystem()
         // {
         //     return mMaterialSystem;
         // }
 
-        Ref<MaterialSystem> GetMaterialSystem()
+        ref_t<MaterialSystem> GetMaterialSystem()
         {
             return mMaterialSystem;
         }
@@ -132,12 +132,12 @@ namespace SE::Core
 
       private:
         eSceneState                   mState                 = eSceneState::EDITING;
-        Ref<IGraphicContext>          mGraphicContext        = nullptr;
-        Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
-        Ref<OptixScene>               mAccelerationStructure = nullptr;
+        ref_t<IGraphicContext>          mGraphicContext        = nullptr;
+        ref_t<OptixDeviceContextObject> mRayTracingContext     = nullptr;
+        ref_t<OptixScene>               mAccelerationStructure = nullptr;
 
         // Handle to the new version of the material system
-        Ref<MaterialSystem> mMaterialSystem = nullptr;
+        ref_t<MaterialSystem> mMaterialSystem = nullptr;
 
         std::vector<sActorComponent> mActorComponents;
 

@@ -9,15 +9,15 @@ namespace SE::Core
       public:
         UILabel() = default;
 
-        UILabel( std::string const &aText );
+        UILabel( string_t const &aText );
 
-        void SetText( std::string const &aText );
+        void SetText( string_t const &aText );
         void SetTextColor( math::vec4 aColor );
 
         ImVec2 RequiredSize();
 
       protected:
-        std::string mText;
+        string_t mText;
         ImVec4      mTextColor;
 
       protected:

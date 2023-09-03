@@ -114,7 +114,7 @@ namespace SE::Core
         mInitialMainWindowSize = a_Size;
     }
 
-    void Engine::SetImGuiConfigurationFile( std::string a_Path )
+    void Engine::SetImGuiConfigurationFile( string_t a_Path )
     {
         mImGuiConfigPath = a_Path;
     }
@@ -150,7 +150,7 @@ namespace SE::Core
         return { w, h };
     }
 
-    std::string Engine::GetImGuiConfigurationFile()
+    string_t Engine::GetImGuiConfigurationFile()
     {
         return mImGuiConfigPath;
     }

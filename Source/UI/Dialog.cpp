@@ -8,7 +8,7 @@ namespace SE::Core
         mIsVisible = false;
     }
 
-    UIDialog::UIDialog( std::string aTitle, math::vec2 aSize )
+    UIDialog::UIDialog( string_t aTitle, math::vec2 aSize )
         : mTitle{ aTitle }
         , mSize{ aSize }
     {
@@ -22,7 +22,7 @@ namespace SE::Core
     {
     }
 
-    void UIDialog::SetTitle( std::string const &aTitle )
+    void UIDialog::SetTitle( string_t const &aTitle )
     {
         mTitle = aTitle;
     }

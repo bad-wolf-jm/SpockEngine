@@ -3,6 +3,7 @@
 #include "Core/File.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
+#include "Core/String.h"
 
 #include "Engine/Engine.h"
 
@@ -23,7 +24,6 @@
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
 #include "UI/Components/ColorButton.h"
-#include "UI/Components/Slider.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Component.h"
 #include "UI/Components/DropdownButton.h"
@@ -35,6 +35,7 @@
 #include "UI/Components/Plot.h"
 #include "UI/Components/ProgressBar.h"
 #include "UI/Components/PropertyValue.h"
+#include "UI/Components/Slider.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextInput.h"
 #include "UI/Components/TextOverlay.h"
@@ -65,21 +66,21 @@ using namespace SE::MonoInternalCalls;
 namespace SE::Core
 {
     using PathList     = std::vector<fs::path>;
-    using ClassMapping = std::map<std::string, DotNetClass>;
+    using ClassMapping = std::map<string_t, DotNetClass>;
 
     struct sAssemblyData
     {
         fs::path      mPath           = "";
         fs::path      mFilename       = "";
-        std::string   mCategory       = "";
+        string_t      mCategory       = "";
         MonoAssembly *mAssembly       = nullptr;
         MonoImage    *mImage          = nullptr;
         bool          mNeedsReloading = false;
         bool          mFileExists     = false;
 
-        std::vector<std::string> mClasses{};
+        std::vector<string_t> mClasses{};
 
-        std::shared_ptr<filewatch::FileWatch<std::string>> mWatcher{};
+        std::shared_ptr<filewatch::FileWatch<string_t>> mWatcher{};
 
         sAssemblyData()                        = default;
         sAssemblyData( const sAssemblyData & ) = default;
@@ -99,8 +100,8 @@ namespace SE::Core
         AssemblyMapping mAssemblies       = {};
         ClassMapping    mClasses          = {};
 
-        std::map<std::string, std::vector<sAssemblyData *>> mCategories;
-        HINSTANCE                                           mMonoPosixHelper;
+        std::map<string_t, std::vector<sAssemblyData *>> mCategories;
+        HINSTANCE                                        mMonoPosixHelper;
     };
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
@@ -122,20 +123,28 @@ namespace SE::Core
     {
         switch( change_type )
         {
-        case filewatch::Event::modified: sRuntimeData->mAssemblies[path].mNeedsReloading = true; break;
-        case filewatch::Event::removed: sRuntimeData->mAssemblies[path].mFileExists = false; break;
-        case filewatch::Event::added: sRuntimeData->mAssemblies[path].mFileExists = true; break;
-        default: break;
+        case filewatch::Event::modified:
+            sRuntimeData->mAssemblies[path].mNeedsReloading = true;
+            break;
+        case filewatch::Event::removed:
+            sRuntimeData->mAssemblies[path].mFileExists = false;
+            break;
+        case filewatch::Event::added:
+            sRuntimeData->mAssemblies[path].mFileExists = true;
+            break;
+        default:
+            break;
         }
     }
 
-    void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, std::string const &aCategory )
+    void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, string_t const &aCategory )
     {
         if( std::find( sRuntimeData->mAppAssemblyFiles.begin(), sRuntimeData->mAppAssemblyFiles.end(), aFilepath ) !=
             sRuntimeData->mAppAssemblyFiles.end() )
             return;
 
-        if( !fs::exists( aFilepath.parent_path() ) ) return;
+        if( !fs::exists( aFilepath.parent_path() ) )
+            return;
 
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
@@ -143,11 +152,11 @@ namespace SE::Core
         sRuntimeData->mAssemblies[aFilepath].mPath     = aFilepath.parent_path();
         sRuntimeData->mAssemblies[aFilepath].mFilename = aFilepath.filename();
 
-        Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
+        ref_t<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
 
-        sRuntimeData->mAssemblies[aFilepath].mWatcher = std::make_shared<filewatch::FileWatch<std::string>>(
+        sRuntimeData->mAssemblies[aFilepath].mWatcher = std::make_shared<filewatch::FileWatch<string_t>>(
             aFilepath.parent_path().string(),
-            [lAssemblyFilePath]( const std::string &path, const filewatch::Event change_type )
+            [lAssemblyFilePath]( const string_t &path, const filewatch::Event change_type )
             {
                 if( lAssemblyFilePath->filename().string() == path )
                 {
@@ -162,7 +171,8 @@ namespace SE::Core
 
     void DotNetRuntime::Initialize( fs::path &aMonoPath, const fs::path &aCoreAssemblyPath )
     {
-        if( sRuntimeData != nullptr ) return;
+        if( sRuntimeData != nullptr )
+            return;
 
         sRuntimeData = new sMonoRuntimeData();
 
@@ -200,15 +210,15 @@ namespace SE::Core
         sRuntimeData->mRootDomain = nullptr;
     }
 
-    MonoString *DotNetRuntime::NewString( std::string const &aString )
+    MonoString *DotNetRuntime::NewString( string_t const &aString )
     {
         return mono_string_new( sRuntimeData->mAppDomain, aString.c_str() );
     }
 
-    std::string DotNetRuntime::NewString( MonoString *aString )
+    string_t DotNetRuntime::NewString( MonoString *aString )
     {
         auto *lCharacters = mono_string_to_utf8( aString );
-        auto  lString     = std::string( mono_string_to_utf8( aString ) );
+        auto  lString     = string_t( mono_string_to_utf8( aString ) );
         mono_free( lCharacters );
 
         return lString;
@@ -217,7 +227,8 @@ namespace SE::Core
     void DotNetRuntime::ReloadAssemblies()
     {
         mono_domain_set( mono_get_root_domain(), true );
-        if( sRuntimeData->mAppDomain != nullptr ) mono_domain_unload( sRuntimeData->mAppDomain );
+        if( sRuntimeData->mAppDomain != nullptr )
+            mono_domain_unload( sRuntimeData->mAppDomain );
 
         sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
         mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
@@ -228,22 +239,24 @@ namespace SE::Core
 
         for( auto &[lFile, lData] : sRuntimeData->mAssemblies )
         {
-            if( !fs::exists( lFile ) ) continue;
+            if( !fs::exists( lFile ) )
+                continue;
 
             lData.mAssembly = Mono::Utils::LoadMonoAssembly( lData.mPath / lData.mFilename );
             lData.mImage    = mono_assembly_get_image( lData.mAssembly );
         }
     }
 
-    DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
+    DotNetClass &DotNetRuntime::GetClassType( const string_t &aClassName )
     {
-        if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() ) return sRuntimeData->mClasses[aClassName];
+        if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() )
+            return sRuntimeData->mClasses[aClassName];
 
         for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )
         {
             std::size_t lPos       = aClassName.find_last_of( "." );
-            std::string lNameSpace = aClassName.substr( 0, lPos );
-            std::string lClassName = aClassName.substr( lPos + 1 );
+            string_t    lNameSpace = aClassName.substr( 0, lPos );
+            string_t    lClassName = aClassName.substr( lPos + 1 );
 
             MonoClass *lClass = mono_class_from_name( lAssembly.mImage, lNameSpace.c_str(), lClassName.c_str() );
             if( lClass != nullptr )
@@ -256,7 +269,7 @@ namespace SE::Core
         return DotNetClass{};
     }
 
-    MonoType *DotNetRuntime::GetCoreTypeFromName( std::string &aName )
+    MonoType *DotNetRuntime::GetCoreTypeFromName( string_t &aName )
     {
         MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssembly.mImage );
         if( !lMonoType )
@@ -274,15 +287,17 @@ namespace SE::Core
         auto  lFilter     = DotNetRuntime::NewString( aFilter );
         char *lCharacters = lFilter.data();
 
-        for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
+        for( uint32_t i = 0; i < lFilter.size(); i++ )
+            lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
         auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
 
-        if( lFilePath.has_value() ) return DotNetRuntime::NewString( lFilePath.value() );
+        if( lFilePath.has_value() )
+            return DotNetRuntime::NewString( lFilePath.value() );
 
         return DotNetRuntime::NewString( "" );
     }
 
-    static void ICall( std::string const &aName, void *aFunction )
+    static void ICall( string_t const &aName, void *aFunction )
     {
         auto lFullName = fmt::format( "SpockEngine.{}", aName );
 

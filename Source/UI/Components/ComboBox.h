@@ -9,9 +9,9 @@ namespace SE::Core
       public:
         UIComboBox() = default;
 
-        UIComboBox( std::vector<std::string> const &aItems );
+        UIComboBox( std::vector<string_t> const &aItems );
 
-        void SetItemList( std::vector<std::string> aItems );
+        void SetItemList( std::vector<string_t> aItems );
 
         void OnChange( std::function<void( int aIndex )> aOnChange );
         int  Current()
@@ -28,7 +28,7 @@ namespace SE::Core
 
       protected:
         uint32_t                 mCurrentItem = 0;
-        std::vector<std::string> mItems       = {};
+        std::vector<string_t> mItems       = {};
         bool                     mChanged     = false;
 
         void PushStyles();

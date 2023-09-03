@@ -6,8 +6,8 @@
 
 namespace SE::Graphics
 {
-    IShaderProgram::IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                                    std::string const &aName, fs::path const &aCacheRoot )
+    IShaderProgram::IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                    string_t const &aName, fs::path const &aCacheRoot )
         : mGraphicContext{ aGraphicContext }
         , mVersion{ aVersion }
         , mShaderType{ aShaderType }
@@ -17,16 +17,16 @@ namespace SE::Graphics
         if( mCacheRoot.empty() ) mCacheRoot = fs::temp_directory_path() / "Shaders";
     }
 
-    IShaderProgram::IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                                    std::string const &aName )
+    IShaderProgram::IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                    string_t const &aName )
         : IShaderProgram( aGraphicContext, aShaderType, aVersion, aName, "" )
     {
     }
 
-    void IShaderProgram::AddCode( std::string const &aCode ) { mCodeBlocks.push_back( aCode ); }
+    void IShaderProgram::AddCode( string_t const &aCode ) { mCodeBlocks.push_back( aCode ); }
     void IShaderProgram::AddCode( std::vector<uint8_t> const &aCode )
     {
-        mCodeBlocks.push_back( std::string( aCode.begin(), aCode.end() ) );
+        mCodeBlocks.push_back( string_t( aCode.begin(), aCode.end() ) );
     }
 
     static std::vector<char> ReadFile( const fs::path &filename )
@@ -51,7 +51,7 @@ namespace SE::Graphics
         mCodeBlocks.emplace_back( lContent.begin(), lContent.end() );
     }
 
-    std::string IShaderProgram::Program()
+    string_t IShaderProgram::Program()
     {
         std::ostringstream lOutput;
 
@@ -66,10 +66,10 @@ namespace SE::Graphics
         return x;
     }
 
-    std::string IShaderProgram::Hash()
+    string_t IShaderProgram::Hash()
     {
         std::stringstream stream;
-        stream << std::hex << std::hash<std::string>{}( Program() );
+        stream << std::hex << std::hash<string_t>{}( Program() );
 
         return stream.str();
     }
@@ -77,7 +77,7 @@ namespace SE::Graphics
     size_t IShaderProgram::HashNum()
     {
         std::stringstream stream;
-        return std::hash<std::string>{}( Program() );
+        return std::hash<string_t>{}( Program() );
     }
 
     void IShaderProgram::Compile()

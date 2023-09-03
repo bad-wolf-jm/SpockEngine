@@ -47,7 +47,7 @@ namespace SE::Core
         bool x = true;
     };
 
-    MaterialSystem::MaterialSystem( Ref<IGraphicContext> aGraphicContext )
+    MaterialSystem::MaterialSystem( ref_t<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     {
         mViewParameters =
@@ -136,7 +136,7 @@ namespace SE::Core
             mShaderPunctualLights->Write(sPunctualLight{});
     }   
 
-    Material MaterialSystem::CreateMaterial( std::string const &aName )
+    Material MaterialSystem::CreateMaterial( string_t const &aName )
     {
         Material lNewMaterial = mMaterialRegistry.CreateEntity( aName );
         lNewMaterial.Add<sMaterialInfo>();
@@ -144,7 +144,7 @@ namespace SE::Core
         return lNewMaterial;
     }
 
-    Material MaterialSystem::BeginMaterial( std::string const &aName )
+    Material MaterialSystem::BeginMaterial( string_t const &aName )
     {
         auto lNewMaterial = CreateMaterial( aName );
         lNewMaterial.Add<sMaterialNotReady>();
@@ -184,7 +184,7 @@ namespace SE::Core
         return lHashValue;
     }
 
-    void MaterialSystem::AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
+    void MaterialSystem::AddDefinitions( ref_t<IShaderProgram> aShaderProgram, Material aMaterial )
     {
         DefineConstant( aShaderProgram, "__GLSL__" );
         DefineConstant( aShaderProgram, "VULKAN_SEMANTICS" );
@@ -223,21 +223,21 @@ namespace SE::Core
         // clang-format on
     }
 
-    std::string MaterialSystem::CreateShaderName( Material aMaterial, const char *aPrefix )
+    string_t MaterialSystem::CreateShaderName( Material aMaterial, const char *aPrefix )
     {
-        std::string lMateriaName = aMaterial.TryGet<sTag>( sTag{} ).mValue;
+        string_t lMateriaName = aMaterial.TryGet<sTag>( sTag{} ).mValue;
         if( !lMateriaName.empty() )
             return fmt::format( "{}_{}_{}", aPrefix, lMateriaName, GetMaterialHash( aMaterial ) );
         else
             return fmt::format( "{}_UNNAMED_{}", aPrefix, lMateriaName, GetMaterialHash( aMaterial ) );
     }
 
-    Ref<IShaderProgram> MaterialSystem::CreateVertexShader( Material const &aMaterial )
+    ref_t<IShaderProgram> MaterialSystem::CreateVertexShader( Material const &aMaterial )
     {
         if( mVertexShaders.find( GetMaterialHash( aMaterial ) ) != mVertexShaders.end() )
             return mVertexShaders[GetMaterialHash( aMaterial )];
 
-        std::string lShaderName = CreateShaderName( aMaterial, "vertex_shader" );
+        string_t lShaderName = CreateShaderName( aMaterial, "vertex_shader" );
         auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName );
         mVertexShaders[GetMaterialHash( aMaterial )] = lShader;
 
@@ -256,13 +256,13 @@ namespace SE::Core
         return lShader;
     }
 
-    Ref<IShaderProgram> MaterialSystem::CreateFragmentShader( Material const &aMaterial )
+    ref_t<IShaderProgram> MaterialSystem::CreateFragmentShader( Material const &aMaterial )
     {
 
         if( mFragmentShaders.find( GetMaterialHash( aMaterial ) ) != mFragmentShaders.end() )
             return mFragmentShaders[GetMaterialHash( aMaterial )];
 
-        std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
+        string_t lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
         auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName );
         mFragmentShaders[GetMaterialHash( aMaterial )] = lShader;
 
@@ -309,7 +309,7 @@ namespace SE::Core
         return lShader;
     }
 
-    Ref<IGraphicsPipeline> MaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass )
+    ref_t<IGraphicsPipeline> MaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, ref_t<IRenderContext> aRenderPass )
     {
         auto lVertexShader   = CreateVertexShader( aMaterial );
         auto lFragmentShader = CreateFragmentShader( aMaterial );
@@ -361,7 +361,7 @@ namespace SE::Core
         return lNewPipeline;
     }
 
-    int32_t MaterialSystem::AppendTextureData( Ref<ISampler2D> aTexture )
+    int32_t MaterialSystem::AppendTextureData( ref_t<ISampler2D> aTexture )
     {
         mTextureData.push_back( aTexture );
 
@@ -472,7 +472,7 @@ namespace SE::Core
         sMaterial lMaterialData;
         lBinaryDataFile.Retrieve( 0, lMaterialData );
 
-        std::vector<Ref<ISampler2D>> lTextures{};
+        std::vector<ref_t<ISampler2D>> lTextures{};
         for( uint32_t i = 0; i < lTextureCount; i++ )
         {
             auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
@@ -535,7 +535,7 @@ namespace SE::Core
         return lNewMaterial;
     }
 
-    void MaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
+    void MaterialSystem::ConfigureRenderContext( ref_t<IRenderContext> aRenderPass )
     {
         aRenderPass->Bind( mViewParametersDescriptor, VIEW_PARAMETERS_BIND_POINT );
         aRenderPass->Bind( mCameraParametersDescriptor, CAMERA_PARAMETERS_BIND_POINT );
@@ -567,17 +567,17 @@ namespace SE::Core
         return mMaterialIndexLookup[aMaterial];
     }
 
-    void MaterialSystem::SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID )
+    void MaterialSystem::SelectMaterialInstance( ref_t<IRenderContext> aRenderPass, Material aMaterialID )
     {
         aRenderPass->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, GetMaterialIndex( aMaterialID ) );
     }
 
-    void MaterialSystem::SetShadowMap( Ref<ISampler2D> aDirectionalShadowMap )
+    void MaterialSystem::SetShadowMap( ref_t<ISampler2D> aDirectionalShadowMap )
     {
         mDirectionalLightShadowMapDescriptor->Write( aDirectionalShadowMap, 0 );
     }
 
-    void MaterialSystem::SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps )
+    void MaterialSystem::SetShadowMap( std::vector<ref_t<ISamplerCubeMap>> aPunctualLightShadowMaps )
     {
         auto lDescriptorSize = math::max( (uint32_t)aPunctualLightShadowMaps.size(), 1u );
 

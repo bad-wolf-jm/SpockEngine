@@ -15,7 +15,7 @@ namespace SE::Core
         SetImage( aImagePath );
     }
 
-    UIBaseImage::UIBaseImage( Ref<ISampler2D> aImage, math::vec2 aSize )
+    UIBaseImage::UIBaseImage( ref_t<ISampler2D> aImage, math::vec2 aSize )
         : mImagePath{ "sampler://" }
         , mImage{ aImage }
         , mSize{ aSize.x, aSize.y }

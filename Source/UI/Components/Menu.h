@@ -10,11 +10,11 @@ namespace SE::Core
         UIMenuItem()                     = default;
         UIMenuItem( UIMenuItem const & ) = default;
 
-        UIMenuItem( std::string const &aText );
-        UIMenuItem( std::string const &aText, std::string const &aShortcut );
+        UIMenuItem( string_t const &aText );
+        UIMenuItem( string_t const &aText, string_t const &aShortcut );
 
-        void SetText( std::string const &aText );
-        void SetShortcut( std::string const &aShortcut );
+        void SetText( string_t const &aText );
+        void SetShortcut( string_t const &aShortcut );
         void SetTextColor( math::vec4 aColor );
 
         void OnTrigger( std::function<void()> aOnTrigger );
@@ -23,8 +23,8 @@ namespace SE::Core
         std::function<void()> mOnTrigger;
 
       protected:
-        std::string mText;
-        std::string mShortcut;
+        string_t mText;
+        string_t mShortcut;
         ImVec4      mTextColor;
 
       protected:
@@ -72,17 +72,17 @@ namespace SE::Core
       public:
         UIMenu()                 = default;
         UIMenu( UIMenu const & ) = default;
-        UIMenu( std::string const &aText );
+        UIMenu( string_t const &aText );
 
-        Ref<UIMenuItem> AddAction( std::string const &aText, std::string const &aShortcut );
-        Ref<UIMenu>     AddMenu( std::string const &aText );
-        Ref<UIMenuItem> AddSeparator();
+        ref_t<UIMenuItem> AddAction( string_t const &aText, string_t const &aShortcut );
+        ref_t<UIMenu>     AddMenu( string_t const &aText );
+        ref_t<UIMenuItem> AddSeparator();
 
         void Update();
 
       private:
-        UIMenuItem *AddActionRaw( std::string const &aText, std::string const &aShortcut );
-        UIMenu     *AddMenuRaw( std::string const &aText );
+        UIMenuItem *AddActionRaw( string_t const &aText, string_t const &aShortcut );
+        UIMenu     *AddMenuRaw( string_t const &aText );
         UIMenuItem *AddSeparatorRaw();
 
       protected:

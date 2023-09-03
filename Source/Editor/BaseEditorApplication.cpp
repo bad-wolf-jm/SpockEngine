@@ -171,7 +171,7 @@ namespace SE::Editor
             // math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->mView.CameraPosition ) );
     }
 
-    void BaseEditorApplication::Init( std::string aAppClass, fs::path aConfigurationPath )
+    void BaseEditorApplication::Init( string_t aAppClass, fs::path aConfigurationPath )
     {
         Init();
 

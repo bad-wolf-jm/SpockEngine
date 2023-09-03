@@ -39,13 +39,13 @@ namespace SE::Core
         aMesh.mIndices.push_back( mKnownVertices[aIdx] );
     }
 
-    sImportedMaterial::sTextureReference ObjImporter::PackMetalRoughTexture( std::string const &aMetalTextureName,
-                                                                             std::string const &aRoughTextureName )
+    sImportedMaterial::sTextureReference ObjImporter::PackMetalRoughTexture( string_t const &aMetalTextureName,
+                                                                             string_t const &aRoughTextureName )
     {
         return sImportedMaterial::sTextureReference{};
     }
 
-    sImportedMaterial::sTextureReference ObjImporter::RetrieveTextureData( std::string const &aTextureName )
+    sImportedMaterial::sTextureReference ObjImporter::RetrieveTextureData( string_t const &aTextureName )
     {
         if( aTextureName.empty() )
             return sImportedMaterial::sTextureReference{};
@@ -80,7 +80,7 @@ namespace SE::Core
         std::vector<tinyobj::material_t> lObjMaterials;
 
         mModelDir                = aObjFile.parent_path();
-        std::string lErrorString = "";
+        string_t lErrorString = "";
         bool        lReadOK      = tinyobj::LoadObj( &mAttributes, &lObjShapes, &lObjMaterials, &lErrorString, &lErrorString,
                                                      aObjFile.string().c_str(), mModelDir.string().c_str(), true );
         if( !lReadOK )

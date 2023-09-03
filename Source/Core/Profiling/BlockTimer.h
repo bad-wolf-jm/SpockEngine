@@ -25,7 +25,7 @@ namespace SE::Core
     ///
     struct sProfilingEvent
     {
-        std::string mName = ""; //!< Name of the event
+        string_t mName = ""; //!< Name of the event
 
         int64_t mStart       = 0; //!< Start time
         int64_t mElapsedTime = 0; //!< Total event time
@@ -39,11 +39,11 @@ namespace SE::Core
     ///
     struct sProfilingSession
     {
-        std::string mName = ""; //!< Name of the session
+        string_t mName = ""; //!< Name of the session
 
         std::vector<sProfilingEvent> mEvents = {}; //!< List of events fired during the session
 
-        sProfilingSession( std::string const &aName )
+        sProfilingSession( string_t const &aName )
             : mName{ aName }
         {
         }
@@ -59,7 +59,7 @@ namespace SE::Core
         Instrumentor( const Instrumentor & ) = delete;
         Instrumentor( Instrumentor && )      = delete;
 
-        void BeginSession( const std::string &aName )
+        void BeginSession( const string_t &aName )
         {
             std::lock_guard lLock( mMutex );
 
@@ -69,7 +69,7 @@ namespace SE::Core
             mCurrentSession = New<sProfilingSession>( aName );
         }
 
-        Ref<sProfilingSession> EndSession()
+        ref_t<sProfilingSession> EndSession()
         {
             std::lock_guard lLock( mMutex );
 
@@ -104,7 +104,7 @@ namespace SE::Core
 
       private:
         std::mutex mMutex{};
-        Ref<sProfilingSession> mCurrentSession = nullptr;
+        ref_t<sProfilingSession> mCurrentSession = nullptr;
     };
 
     /// @brief BlockTimer
@@ -115,7 +115,7 @@ namespace SE::Core
     class BlockTimer
     {
       public:
-        BlockTimer( std::string aName )
+        BlockTimer( string_t aName )
         {
             mName           = aName;
             mStartTimePoint = std::chrono::high_resolution_clock::now();
@@ -132,7 +132,7 @@ namespace SE::Core
         }
 
       private:
-        std::string mName = "";
+        string_t mName = "";
         std::chrono::time_point<std::chrono::high_resolution_clock> mStartTimePoint;
     };
 

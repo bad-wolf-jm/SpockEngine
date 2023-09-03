@@ -32,9 +32,9 @@ namespace SE::Core
         }
     }
 
-    std::string ConfigurationWriter::GetString()
+    string_t ConfigurationWriter::GetString()
     {
-        return std::string( mOut.c_str() );
+        return string_t( mOut.c_str() );
     }
 
     void ConfigurationWriter::InlineRepresentation()
@@ -75,7 +75,7 @@ namespace SE::Core
         mOut << YAML::EndSeq;
     }
 
-    void ConfigurationWriter::Write( math::vec2 const &aVector, std::array<std::string, 2> const &aKeys )
+    void ConfigurationWriter::Write( math::vec2 const &aVector, std::array<string_t, 2> const &aKeys )
     {
         BeginMap( true );
         WriteKey( aKeys[0], aVector.x );
@@ -83,7 +83,7 @@ namespace SE::Core
         EndMap();
     }
 
-    void ConfigurationWriter::Write( math::vec3 const &aVector, std::array<std::string, 3> const &aKeys )
+    void ConfigurationWriter::Write( math::vec3 const &aVector, std::array<string_t, 3> const &aKeys )
     {
         BeginMap( true );
         WriteKey( aKeys[0], aVector.x );
@@ -92,7 +92,7 @@ namespace SE::Core
         EndMap();
     }
 
-    void ConfigurationWriter::Write( math::vec4 const &aVector, std::array<std::string, 4> const &aKeys )
+    void ConfigurationWriter::Write( math::vec4 const &aVector, std::array<string_t, 4> const &aKeys )
     {
         BeginMap( true );
         WriteKey( aKeys[0], aVector.x );
@@ -102,7 +102,7 @@ namespace SE::Core
         EndMap();
     }
 
-    void ConfigurationWriter::Write( math::quat const &aVector, std::array<std::string, 4> const &aKeys )
+    void ConfigurationWriter::Write( math::quat const &aVector, std::array<string_t, 4> const &aKeys )
     {
         BeginMap( true );
         WriteKey( aKeys[0], aVector.x );

@@ -3,7 +3,7 @@
 namespace SE::Core
 {
     // clang-format off
-    static std::unordered_map<std::string, std::string> gTypeTags = 
+    static std::unordered_map<string_t, string_t> gTypeTags = 
     {
         { typeid(sTag).name(),                        "TAG" },
         { typeid(sRelationshipComponent).name(),      "RELATIONSHIP" },
@@ -30,16 +30,16 @@ namespace SE::Core
     };
     // clang-format on
 
-    std::string const &GetTypeTag( std::string const &aTypeName )
+    string_t const &GetTypeTag( string_t const &aTypeName )
     {
         if( gTypeTags.find( aTypeName ) != gTypeTags.end() )
             return gTypeTags[aTypeName];
 
-        return std::move( std::string{ "VOID" } );
+        return std::move( string_t{ "VOID" } );
     }
 
     template <uint32_t N>
-    bool HasAll( YAML::Node const &aNode, std::array<std::string, N> const &aKeys )
+    bool HasAll( YAML::Node const &aNode, std::array<string_t, N> const &aKeys )
     {
         for( auto &lKey : aKeys )
         {
@@ -49,7 +49,7 @@ namespace SE::Core
         return true;
     }
 
-    math::vec2 Get( YAML::Node const &aNode, std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault )
+    math::vec2 Get( YAML::Node const &aNode, std::array<string_t, 2> const &aKeys, math::vec2 const &aDefault )
     {
         if( !HasAll( aNode, aKeys ) )
             return aDefault;
@@ -57,7 +57,7 @@ namespace SE::Core
         return math::vec2{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ) };
     }
 
-    math::vec3 Get( YAML::Node const &aNode, std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault )
+    math::vec3 Get( YAML::Node const &aNode, std::array<string_t, 3> const &aKeys, math::vec3 const &aDefault )
     {
         if( !HasAll( aNode, aKeys ) )
             return aDefault;
@@ -66,7 +66,7 @@ namespace SE::Core
                            Get( aNode[aKeys[2]], aDefault.z ) };
     }
 
-    math::vec4 Get( YAML::Node const &aNode, std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault )
+    math::vec4 Get( YAML::Node const &aNode, std::array<string_t, 4> const &aKeys, math::vec4 const &aDefault )
     {
         if( !HasAll( aNode, aKeys ) )
             return aDefault;
@@ -77,7 +77,7 @@ namespace SE::Core
 
     void ReadComponent( sTag &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mValue = Get<std::string>( aNode["mValue"], "" );
+        aComponent.mValue = Get<string_t>( aNode["mValue"], "" );
     }
 
     void ReadComponent( sCameraComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
@@ -94,14 +94,14 @@ namespace SE::Core
 
     void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mClassFullName = Get( aNode["mClassFullName"], std::string{ "" } );
+        aComponent.mClassFullName = Get( aNode["mClassFullName"], string_t{ "" } );
     }
 
     void ReadComponent( sAnimationChooser &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it )
         {
-            std::string lAnimationUUID = Get( *it, std::string{ "" } );
+            string_t lAnimationUUID = Get( *it, string_t{ "" } );
             Entity      lAnimationNode = aReadConext.mEntities[lAnimationUUID];
 
             aComponent.Animations.push_back( lAnimationNode );
@@ -121,7 +121,7 @@ namespace SE::Core
             auto &aInterpolationDataNode = *it;
 
             sAnimationChannel lNewChannel{};
-            std::string       lTargetNodeUUID = Get( aInterpolationDataNode["mTargetNode"], std::string{ "" } );
+            string_t       lTargetNodeUUID = Get( aInterpolationDataNode["mTargetNode"], string_t{ "" } );
 
             lNewChannel.mTargetNode = aReadConext.mEntities[lTargetNodeUUID];
             lNewChannel.mChannelID =
@@ -209,7 +209,7 @@ namespace SE::Core
         auto const &lBonesNode = aNode["Bones"];
         for( YAML::const_iterator it = lBonesNode.begin(); it != lBonesNode.end(); ++it )
         {
-            auto lUUID = Get( *it, std::string{ "" } );
+            auto lUUID = Get( *it, string_t{ "" } );
             if( lUUID.empty() )
                 return;
 
@@ -263,12 +263,12 @@ namespace SE::Core
 
     void ReadComponent( sLightComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        std::unordered_map<std::string, eLightType> lLightTypeLookup = { { "DIRECTIONAL", eLightType::DIRECTIONAL },
+        std::unordered_map<string_t, eLightType> lLightTypeLookup = { { "DIRECTIONAL", eLightType::DIRECTIONAL },
                                                                          { "SPOTLIGHT", eLightType::SPOTLIGHT },
                                                                          { "POINT_LIGHT", eLightType::POINT_LIGHT },
                                                                          { "", eLightType::POINT_LIGHT } };
 
-        aComponent.mType      = lLightTypeLookup[Get( aNode["mType"], std::string{ "" } )];
+        aComponent.mType      = lLightTypeLookup[Get( aNode["mType"], string_t{ "" } )];
         aComponent.mColor     = Get( aNode["mColor"], { "r", "g", "b" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
         aComponent.mIntensity = Get( aNode["mIntensity"], 0.0005f );
         aComponent.mCone      = Get( aNode["mCone"], 0.0f );
@@ -281,7 +281,7 @@ namespace SE::Core
         aComponent.mY               = Get( aNode["mY"], 0.0f );
         aComponent.mWidth           = Get( aNode["mWidth"], 0.0f );
         aComponent.mHeight          = Get( aNode["mHeight"], 0.0f );
-        aComponent.mClassFullName   = Get( aNode["mClassFullName"], std::string{ "" } );
+        aComponent.mClassFullName   = Get( aNode["mClassFullName"], string_t{ "" } );
         aComponent.mFillColor       = Get( aNode["mFillColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
         aComponent.mBorderColor     = Get( aNode["mBorderColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
         aComponent.mBorderThickness = Get( aNode["mBorderThickness"], 1.0f );
@@ -292,7 +292,7 @@ namespace SE::Core
     template <typename _Ty>
     void WriteTypeTag( ConfigurationWriter &aOut )
     {
-        auto lInternalTypeName = std::string( typeid( _Ty ).name() );
+        auto lInternalTypeName = string_t( typeid( _Ty ).name() );
         if( gTypeTags.find( lInternalTypeName ) != gTypeTags.end() )
             aOut.WriteKey( gTypeTags[lInternalTypeName] );
     }
@@ -391,7 +391,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, std::string const &aMeshPath )
+    void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, string_t const &aMeshPath )
     {
         WriteTypeTag<sStaticMeshComponent>( aOut );
         aOut.BeginMap( true );
@@ -477,7 +477,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, std::string const &aMaterialPath )
+    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, string_t const &aMaterialPath )
     {
         WriteTypeTag<sMaterialComponent>( aOut );
         aOut.BeginMap( true );
@@ -529,7 +529,7 @@ namespace SE::Core
         WriteTypeTag<sLightComponent>( aOut );
         aOut.BeginMap( true );
         {
-            std::unordered_map<eLightType, std::string> lLightTypeLookup = { { eLightType::DIRECTIONAL, "DIRECTIONAL" },
+            std::unordered_map<eLightType, string_t> lLightTypeLookup = { { eLightType::DIRECTIONAL, "DIRECTIONAL" },
                                                                              { eLightType::SPOTLIGHT, "SPOTLIGHT" },
                                                                              { eLightType::POINT_LIGHT, "POINT_LIGHT" } };
 

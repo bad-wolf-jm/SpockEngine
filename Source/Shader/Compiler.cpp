@@ -14,12 +14,12 @@ namespace SE::Graphics
 
     static std::tuple<char *, size_t> ReadFile( const char *header_name )
     {
-        std::string lHeaderPath = "";
+        string_t lHeaderPath = "";
         for( auto const &lIncludeFolder : gShaderIncludePath )
         {
-            if( fs::exists( lIncludeFolder / std::string( header_name ) ) )
+            if( fs::exists( lIncludeFolder / string_t( header_name ) ) )
             {
-                lHeaderPath = ( lIncludeFolder / std::string( header_name ) ).string();
+                lHeaderPath = ( lIncludeFolder / string_t( header_name ) ).string();
 
                 break;
             }
@@ -70,7 +70,7 @@ namespace SE::Graphics
         return 0;
     }
 
-    void Compile( eShaderStageTypeFlags aShaderStage, std::string const &aCode, std::vector<uint32_t> &aOutput )
+    void Compile( eShaderStageTypeFlags aShaderStage, string_t const &aCode, std::vector<uint32_t> &aOutput )
     {
         glslang_input_t lInputDescription{};
         lInputDescription.language = GLSLANG_SOURCE_GLSL;

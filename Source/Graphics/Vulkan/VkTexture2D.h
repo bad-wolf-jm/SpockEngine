@@ -25,28 +25,28 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+        VkTexture2D( ref_t<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
+        VkTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
             : VkTexture2D( aGraphicContext, aTextureData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        VkTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
+        VkTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
-        VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+        VkTexture2D( ref_t<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                      VkImage aExternalImage );
 
         /** @brief */
         ~VkTexture2D();
 
         void GetPixelData( TextureData2D &mTextureData );
-        void SetPixelData( Ref<IGraphicBuffer> a_Buffer );
+        void SetPixelData( ref_t<IGraphicBuffer> a_Buffer );
         void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:

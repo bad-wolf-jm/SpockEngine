@@ -16,8 +16,8 @@
 namespace SE::Core
 {
 
-    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
-                          std::string &aImGuiConfigPath, UIConfiguration const &aConfig )
+    UIContext::UIContext( ref_t<SE::Core::IWindow> aWindow, ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
+                          string_t &aImGuiConfigPath, UIConfiguration const &aConfig )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {
@@ -213,7 +213,7 @@ namespace SE::Core
         }
     }
 
-    void UIContext::EndFrame( Ref<IRenderContext> aRenderContext )
+    void UIContext::EndFrame( ref_t<IRenderContext> aRenderContext )
     {
         PopFont();
         ImGui::Render();
@@ -223,7 +223,7 @@ namespace SE::Core
         RenderPlatformWindows();
     }
 
-    ImageHandle UIContext::CreateTextureHandle( Ref<ISampler2D> aTexture )
+    ImageHandle UIContext::CreateTextureHandle( ref_t<ISampler2D> aTexture )
     {
         return ImageHandle{ AddTexture( aTexture ) };
     }
@@ -244,9 +244,9 @@ namespace SE::Core
         ImGui::PopFont();
     }
 
-    Ref<IDescriptorSet> UIContext::AddTexture( Ref<ISampler2D> aTexture )
+    ref_t<IDescriptorSet> UIContext::AddTexture( ref_t<ISampler2D> aTexture )
     {
-        Ref<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate( 1 );
+        ref_t<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate( 1 );
         lDescriptorSet->Write( aTexture, 0 );
 
         return lDescriptorSet;

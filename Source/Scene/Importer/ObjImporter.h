@@ -48,18 +48,18 @@ namespace SE::Core
 
       private:
         // int AddVertex( const tinyobj::index_t &aIdx );
-        int LoadTexture( const std::string &aInFileName, const std::string &aModelPath );
+        int LoadTexture( const string_t &aInFileName, const string_t &aModelPath );
 
       private:
         fs::path mModelDir;
 
         tinyobj::attrib_t mAttributes;
 
-        std::unordered_map<std::string, uint32_t> mKnownTextures;
+        std::unordered_map<string_t, uint32_t> mKnownTextures;
         std::map<tinyobj::index_t, uint32_t>      mKnownVertices;
         std::vector<tinyobj::shape_t>             mShapes;
 
-        std::unordered_map<std::string, uint32_t> mTextureLookup;
+        std::unordered_map<string_t, uint32_t> mTextureLookup;
         std::unordered_map<int, uint32_t>         mMaterialIDLookup;
 
         std::vector<math::vec3> mVertexData;
@@ -68,8 +68,8 @@ namespace SE::Core
 
       private:
         void                                 AddVertex( sImportedMesh &aMesh, const tinyobj::index_t &aIdx );
-        sImportedMaterial::sTextureReference RetrieveTextureData( std::string const &aTextureName );
-        sImportedMaterial::sTextureReference PackMetalRoughTexture( std::string const &aMetalTextureName,
-                                                                    std::string const &aRoughTextureName );
+        sImportedMaterial::sTextureReference RetrieveTextureData( string_t const &aTextureName );
+        sImportedMaterial::sTextureReference PackMetalRoughTexture( string_t const &aMetalTextureName,
+                                                                    string_t const &aRoughTextureName );
     };
 } // namespace SE::Core

@@ -41,7 +41,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    Scene::Scene( Ref<IGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI )
+    Scene::Scene( ref_t<IGraphicContext> aGraphicContext, ref_t<SE::Core::UIContext> aUI )
         : mGraphicContext{ aGraphicContext }
     {
         mMaterialSystem = New<MaterialSystem>( mGraphicContext );
@@ -79,7 +79,7 @@ namespace SE::Core
             aDestination.AddOrReplace<_Component>( aSource.Get<_Component>() );
     }
 
-    Scene::Scene( Ref<Scene> aSource )
+    Scene::Scene( ref_t<Scene> aSource )
     {
         mGraphicContext = aSource->mGraphicContext;
         // mMaterialSystem    = aSource->mMaterialSystem;
@@ -89,8 +89,8 @@ namespace SE::Core
         InitializeRayTracing();
         ConnectSignalHandlers();
 
-        std::unordered_map<std::string, Entity> lSourceEntities{};
-        std::unordered_map<std::string, Entity> lClonedEntities{};
+        std::unordered_map<string_t, Entity> lSourceEntities{};
+        std::unordered_map<string_t, Entity> lClonedEntities{};
 
         aSource->ForEach<sUUID>(
             [&]( auto aEntity, auto &aUUID )
@@ -292,7 +292,7 @@ namespace SE::Core
         return mat4( 1.0f );
     }
 
-    Scene::Element Scene::Create( std::string a_Name, Element a_Parent )
+    Scene::Element Scene::Create( string_t a_Name, Element a_Parent )
     {
         return mRegistry.CreateEntity( a_Parent, a_Name );
     }
@@ -302,7 +302,7 @@ namespace SE::Core
         return mRegistry.CreateEntity();
     }
 
-    Scene::Element Scene::CreateEntity( std::string a_Name )
+    Scene::Element Scene::CreateEntity( string_t a_Name )
     {
         return mRegistry.CreateEntity( a_Name );
     }
@@ -358,7 +358,7 @@ namespace SE::Core
         // clang-format on
     }
 
-    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform )
+    Scene::Element Scene::LoadModel( ref_t<sImportedModel> aModelData, mat4 aTransform )
     {
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
@@ -387,17 +387,17 @@ namespace SE::Core
         auto lRootNode = YAML::LoadFile( aScenarioPath.string() );
 
         sReadContext                                 lReadContext{};
-        std::unordered_map<std::string, std::string> lParentEntityLUT{};
+        std::unordered_map<string_t, string_t> lParentEntityLUT{};
 
         auto &lSceneRoot = lRootNode["scene"];
         auto &lNodesRoot = lSceneRoot["nodes"];
 
-        std::vector<std::tuple<std::string, sStaticMeshComponent, std::string>> lBufferLoadQueue{};
+        std::vector<std::tuple<string_t, sStaticMeshComponent, string_t>> lBufferLoadQueue{};
 
-        std::map<std::string, std::set<std::string>> lMaterialLoadQueue{};
+        std::map<string_t, std::set<string_t>> lMaterialLoadQueue{};
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
-            auto const &lKey                 = it->first.as<std::string>();
+            auto const &lKey                 = it->first.as<string_t>();
             auto       &lEntityConfiguration = it->second;
 
             auto lEntity = mRegistry.CreateEntity( sUUID( lKey ) );
@@ -409,7 +409,7 @@ namespace SE::Core
             {
                 if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
                 {
-                    auto lParentUUIDStr = Get( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"], std::string{ "" } );
+                    auto lParentUUIDStr = Get( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"], string_t{ "" } );
 
                     auto lParentUUID       = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
                     lParentEntityLUT[lKey] = lParentUUIDStr;
@@ -421,16 +421,16 @@ namespace SE::Core
                 auto &[lEntityID, lComponent, lBufferID] = lBufferLoadQueue.emplace_back();
 
                 lEntityID = lKey;
-                lBufferID = Get( lEntityConfiguration[TypeTag<sStaticMeshComponent>()]["mMeshData"], std::string{ "" } );
+                lBufferID = Get( lEntityConfiguration[TypeTag<sStaticMeshComponent>()]["mMeshData"], string_t{ "" } );
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sStaticMeshComponent>()], lReadContext );
             }
 
             if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
             {
-                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
+                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"], string_t{ "" } );
 
                 if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
-                    lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ lKey } );
+                    lMaterialLoadQueue.emplace( lMaterialID, std::set<string_t>{ lKey } );
                 else
                     lMaterialLoadQueue[lMaterialID].emplace( lKey );
             }
@@ -553,7 +553,7 @@ namespace SE::Core
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
-            auto const &lKey                 = it->first.as<std::string>();
+            auto const &lKey                 = it->first.as<string_t>();
             auto       &lEntityConfiguration = it->second;
 
             auto &lEntity = lReadContext.mEntities[lKey];
@@ -567,7 +567,7 @@ namespace SE::Core
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
-            auto const &lKey                 = it->first.as<std::string>();
+            auto const &lKey                 = it->first.as<string_t>();
             auto       &lEntityConfiguration = it->second;
 
             auto &lEntity = lReadContext.mEntities[lKey];
@@ -585,7 +585,7 @@ namespace SE::Core
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
-            auto const &lKey                 = it->first.as<std::string>();
+            auto const &lKey                 = it->first.as<string_t>();
             auto       &lEntityConfiguration = it->second;
 
             auto &lEntity = lReadContext.mEntities[lKey];
@@ -603,7 +603,7 @@ namespace SE::Core
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
-            auto const &lKey                 = it->first.as<std::string>();
+            auto const &lKey                 = it->first.as<string_t>();
             auto       &lEntityConfiguration = it->second;
 
             auto &lEntity = lReadContext.mEntities[lKey];
@@ -621,20 +621,20 @@ namespace SE::Core
 
         mEditorView = ReadMatrix( lSceneRoot["editor_view"] );
 
-        auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
+        auto lRootNodeUUIDStr = Get( lSceneRoot["root"], string_t{ "" } );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
         Root                  = lReadContext.mEntities[lRootNodeUUIDStr];
         SE::Logging::Info( "Created root", lRootNodeUUIDStr );
 
-        auto lEnvironmentNodeUUID = Get( lSceneRoot["environment"], std::string{ "" } );
+        auto lEnvironmentNodeUUID = Get( lSceneRoot["environment"], string_t{ "" } );
         Environment               = lReadContext.mEntities[lEnvironmentNodeUUID];
         SE::Logging::Info( "Created environment", lEnvironmentNodeUUID );
 
-        auto lCurrentCameraUUID = Get( lSceneRoot["current_camera"], std::string{ "" } );
+        auto lCurrentCameraUUID = Get( lSceneRoot["current_camera"], string_t{ "" } );
         CurrentCamera           = lReadContext.mEntities[lCurrentCameraUUID];
         SE::Logging::Info( "Created camera", lCurrentCameraUUID );
 
-        auto lDefaultCameraUUID = Get( lSceneRoot["default_camera"], std::string{ "" } );
+        auto lDefaultCameraUUID = Get( lSceneRoot["default_camera"], string_t{ "" } );
         DefaultCamera           = lReadContext.mEntities[lDefaultCameraUUID];
         SE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
@@ -643,13 +643,13 @@ namespace SE::Core
         RebuildAccelerationStructure();
     }
 
-    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform, std::string a_Name )
+    Scene::Element Scene::LoadModel( ref_t<sImportedModel> aModelData, mat4 aTransform, string_t a_Name )
     {
         SE::Logging::Info( "Loading model" );
         auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
-        std::vector<Ref<ISampler2D>> lTextures{};
+        std::vector<ref_t<ISampler2D>> lTextures{};
         for( auto &lTexture : aModelData->mTextures )
         {
             auto lNewInteropTexture = CreateTexture2D( mGraphicContext, *lTexture.mTexture, 1, false, false, true );
@@ -853,7 +853,7 @@ namespace SE::Core
         auto &lRTComponent = aElement.Add<sRayTracingTargetComponent>();
     }
 
-    void Scene::AttachScript( Element aElement, std::string aClassName )
+    void Scene::AttachScript( Element aElement, string_t aClassName )
     {
         auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
     }
@@ -1213,8 +1213,8 @@ namespace SE::Core
 
     static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
                            std::vector<sImportedAnimationSampler>       &lInterpolationData,
-                           std::unordered_map<std::string, std::string> &aMaterialMap,
-                           std::unordered_map<std::string, std::string> &aMeshDataMap )
+                           std::unordered_map<string_t, string_t> &aMaterialMap,
+                           std::unordered_map<string_t, string_t> &aMeshDataMap )
     {
         lOut.WriteKey( aUUID.mValue.str() );
         lOut.BeginMap();
@@ -1318,16 +1318,16 @@ namespace SE::Core
         if( !fs::exists( aPath / "Animations" ) )
             fs::create_directories( aPath / "Animations" );
 
-        std::unordered_map<std::string, std::string> lMaterialList{};
+        std::unordered_map<string_t, string_t> lMaterialList{};
         {
             auto &lMaterials = mMaterialSystem->GetMaterialData();
 
             for( auto &lMaterial : lMaterials )
             {
                 BinaryAsset lBinaryDataFile{};
-                std::string lMaterialFileName = fmt::format( "{}.material", lMaterial.Get<sTag>().mValue );
+                string_t lMaterialFileName = fmt::format( "{}.material", lMaterial.Get<sTag>().mValue );
 
-                auto lRetrieveAndPackageTexture = [&]( Ref<ISampler2D> aTexture )
+                auto lRetrieveAndPackageTexture = [&]( ref_t<ISampler2D> aTexture )
                 {
                     sTextureSamplingInfo lSamplingInfo = aTexture->mSpec;
                     TextureData2D        lTextureData;
@@ -1415,19 +1415,19 @@ namespace SE::Core
         }
 
         // clang-format off
-        std::unordered_map<std::string, std::string> lMaterialMap{};
+        std::unordered_map<string_t, string_t> lMaterialMap{};
         ForEach<sMaterialComponent>( [&]( auto aEntity, auto &aComponent )
         { 
             lMaterialMap[aEntity.Get<sUUID>().mValue.str()] = lMaterialList[aComponent.mMaterialID.Get<sUUID>().mValue.str()]; 
         } );
         // clang-format on
 
-        std::unordered_map<std::string, std::string> lMeshPathDB{};
+        std::unordered_map<string_t, string_t> lMeshPathDB{};
         ForEach<sStaticMeshComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 BinaryAsset lBinaryDataFile{};
-                std::string lSerializedMeshName = fmt::format( "{}.mesh", aEntity.Get<sUUID>().mValue.str() );
+                string_t lSerializedMeshName = fmt::format( "{}.mesh", aEntity.Get<sUUID>().mValue.str() );
 
                 auto lVertexData = aComponent.mVertexBuffer->Fetch<VertexData>();
                 auto lIndexData  = aComponent.mIndexBuffer->Fetch<uint32_t>();

@@ -3,12 +3,12 @@
 
 namespace SE::Core
 {
-    UIButton::UIButton( std::string const &aText )
+    UIButton::UIButton( string_t const &aText )
         : UILabel{ aText }
     {
     }
 
-    UIButton::UIButton( std::string const &aText, std::function<void()> aOnClick )
+    UIButton::UIButton( string_t const &aText, std::function<void()> aOnClick )
         : UILabel{ aText }
         , mOnClick{ aOnClick }
     {
@@ -26,7 +26,7 @@ namespace SE::Core
         mOnClick = aOnClick;
     }
 
-    void UIButton::SetText( std::string const &aText )
+    void UIButton::SetText( string_t const &aText )
     {
         UILabel::SetText( aText );
     }

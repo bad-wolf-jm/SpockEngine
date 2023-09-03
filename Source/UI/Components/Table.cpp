@@ -4,7 +4,7 @@
 
 namespace SE::Core
 {
-    sTableColumn::sTableColumn( std::string aHeader, float aInitialSize )
+    sTableColumn::sTableColumn( string_t aHeader, float aInitialSize )
         : mHeader{ aHeader }
         , mInitialSize{ aInitialSize }
     {
@@ -55,7 +55,7 @@ namespace SE::Core
         mRowHeight = aRowHeight;
     }
 
-    void UITable::AddColumn( Ref<sTableColumn> aColumn )
+    void UITable::AddColumn( ref_t<sTableColumn> aColumn )
     {
         mColumns.push_back( aColumn.get() );
     }
@@ -239,7 +239,7 @@ namespace SE::Core
             lSelf->mDisplayedRowIndices = DotNetRuntime::AsVector<int>( static_cast<MonoObject *>( aValue ) );
     }
 
-    sFloat64Column::sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )
+    sFloat64Column::sFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat )
         : sTableColumn{ aHeader, aInitialSize }
         , mFormat{ aFormat }
         , mNaNFormat{ aNaNFormat }
@@ -253,7 +253,7 @@ namespace SE::Core
 
     void sFloat64Column::Render( int aRow, ImVec2 aSize )
     {
-        std::string lText;
+        string_t lText;
         if( std::isnan( mData[aRow] ) )
             lText = fmt::format( mNaNFormat, mData[aRow] );
         else
@@ -318,7 +318,7 @@ namespace SE::Core
         lSelf->mData = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
-    sUint32Column::sUint32Column( std::string aHeader, float aInitialSize )
+    sUint32Column::sUint32Column( string_t aHeader, float aInitialSize )
         : sTableColumn{ aHeader, aInitialSize }
     {
     }
@@ -330,7 +330,7 @@ namespace SE::Core
 
     void sUint32Column::Render( int aRow, ImVec2 aSize )
     {
-        std::string lText     = fmt::format( "{}", mData[aRow] );
+        string_t lText     = fmt::format( "{}", mData[aRow] );
         auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
         ImVec2 lPrevPos = ImGui::GetCursorPos();
@@ -388,7 +388,7 @@ namespace SE::Core
         lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
     }
 
-    sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
+    sStringColumn::sStringColumn( string_t aHeader, float aInitialSize )
         : sTableColumn{ aHeader, aInitialSize }
     {
     }

@@ -26,9 +26,9 @@ struct Material
         float specular  = 0.0f;
         float r, g, b;
     } params;
-    std::string name;
+    string_t name;
     Material(){};
-    Material( std::string n, glm::vec3 c )
+    Material( string_t n, glm::vec3 c )
         : name( n )
     {
         params.r = c.r;
@@ -99,8 +99,8 @@ class VulkanExample : public VulkanExampleBase
     std::vector<Material> materials;
     int32_t               materialIndex = 0;
 
-    std::vector<std::string> materialNames;
-    std::vector<std::string> objectNames;
+    std::vector<string_t> materialNames;
+    std::vector<string_t> objectNames;
 
     VulkanExample()
         : VulkanExampleBase( ENABLE_VALIDATION )
@@ -253,7 +253,7 @@ class VulkanExample : public VulkanExampleBase
         // Skybox
         models.skybox.loadFromFile( getAssetPath() + "models/cube.gltf", vulkanDevice, queue, glTFLoadingFlags );
         // Objects
-        std::vector<std::string> filenames = { "sphere.gltf", "teapot.gltf", "torusknot.gltf", "venus.gltf" };
+        std::vector<string_t> filenames = { "sphere.gltf", "teapot.gltf", "torusknot.gltf", "venus.gltf" };
         models.objects.resize( filenames.size() );
         for( size_t i = 0; i < filenames.size(); i++ )
         {

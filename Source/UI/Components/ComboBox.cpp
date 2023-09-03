@@ -3,7 +3,7 @@
 
 namespace SE::Core
 {
-    UIComboBox::UIComboBox( std::vector<std::string> const &aItems )
+    UIComboBox::UIComboBox( std::vector<string_t> const &aItems )
         : mItems{ aItems } {};
 
     ImVec2 UIComboBox::RequiredSize()
@@ -29,7 +29,7 @@ namespace SE::Core
         mOnChange = aOnChange;
     }
 
-    void UIComboBox::SetItemList( std::vector<std::string> aItems )
+    void UIComboBox::SetItemList( std::vector<string_t> aItems )
     {
         mItems = aItems;
     }
@@ -86,7 +86,7 @@ namespace SE::Core
 
     void *UIComboBox::UIComboBox_CreateWithItems( void *aItems )
     {
-        std::vector<std::string> lItemVector;
+        std::vector<string_t> lItemVector;
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
             lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
@@ -118,7 +118,7 @@ namespace SE::Core
     {
         auto lInstance = static_cast<UIComboBox *>( aInstance );
 
-        std::vector<std::string> lItemVector;
+        std::vector<string_t> lItemVector;
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
             lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 

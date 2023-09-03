@@ -28,7 +28,7 @@ namespace SE::Graphics
         OptixTraversableHandle mOptixObject = 0;
 
         OptixScene() = default;
-        OptixScene( Ref<OptixDeviceContextObject> aRayTracingContext );
+        OptixScene( ref_t<OptixDeviceContextObject> aRayTracingContext );
 
         ~OptixScene() { mAccelerationStructureBuffer.Dispose(); };
 
@@ -53,7 +53,7 @@ namespace SE::Graphics
         GPUMemory &GetBuffer() { return mAccelerationStructureBuffer; };
 
       private:
-        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
+        ref_t<OptixDeviceContextObject> mRayTracingContext = nullptr;
 
         std::vector<OptixBuildInput> mTriangleInput = {};
         std::vector<uint32_t>        mInputFlags    = {};

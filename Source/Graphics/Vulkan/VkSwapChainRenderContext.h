@@ -13,7 +13,7 @@ namespace SE::Graphics
     {
       public:
         VkSwapChainRenderContext() = default;
-        VkSwapChainRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget );
+        VkSwapChainRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget );
 
         ~VkSwapChainRenderContext() = default;
 

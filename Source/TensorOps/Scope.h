@@ -50,7 +50,7 @@ namespace SE::TensorOps
         ///
         /// @returns The parent scope for method chaining/
         ///
-        Scope &WithOpName( const std::string &aName );
+        Scope &WithOpName( const string_t &aName );
 
         /// @brief Create a node in the database
         ///
@@ -62,7 +62,7 @@ namespace SE::TensorOps
         OpNode CreateNode();
 
         /// @brief Retrieve a node by name
-        OpNode operator[]( std::string const &aNodeName );
+        OpNode operator[]( string_t const &aNodeName );
 
         /// @brief Clears the node registry, and resets the memory pool
         void Reset();
@@ -84,8 +84,8 @@ namespace SE::TensorOps
 
       private:
         SE::Core::EntityCollection mNodesRegistry{};     //!< Underlying node database
-        std::optional<std::string> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
-        std::unordered_map<std::string, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
+        std::optional<string_t> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
+        std::unordered_map<string_t, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };
 
     /// @brief Create a constant @ref MultiTensor initialized with the given constant

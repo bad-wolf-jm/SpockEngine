@@ -160,12 +160,12 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sStaticMeshComponent
     {
-        std::string mName = "";
+        string_t mName = "";
 
         ePrimitiveTopology  mPrimitive         = ePrimitiveTopology::TRIANGLES;
-        Ref<IGraphicBuffer> mVertexBuffer      = nullptr;
-        Ref<IGraphicBuffer> mIndexBuffer       = nullptr;
-        Ref<IGraphicBuffer> mTransformedBuffer = nullptr;
+        ref_t<IGraphicBuffer> mVertexBuffer      = nullptr;
+        ref_t<IGraphicBuffer> mIndexBuffer       = nullptr;
+        ref_t<IGraphicBuffer> mTransformedBuffer = nullptr;
         uint32_t            mVertexOffset      = 0;
         uint32_t            mVertexCount       = 0;
         uint32_t            mIndexOffset       = 0;

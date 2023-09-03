@@ -7,6 +7,7 @@
 
 #include "Class.h"
 #include "Typedefs.h"
+#include "Core/String.h"
 
 namespace SE::Core
 {
@@ -19,15 +20,15 @@ namespace SE::Core
         static void Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath );
         static void Shutdown();
 
-        static void AddAppAssemblyPath( const std::filesystem::path &aFilepath, std::string const &aCategory );
+        static void AddAppAssemblyPath( const std::filesystem::path &aFilepath, string_t const &aCategory );
         static void ReloadAssemblies();
 
         // static uint32_t CountAssemblies();
         // static void     GetAssemblies( std::vector<fs::path> &lOut );
         // static bool     AssembliesNeedReloading();
 
-        static MonoString *NewString( std::string const &aString );
-        static std::string NewString( MonoString *aString );
+        static MonoString *NewString( string_t const &aString );
+        static string_t NewString( MonoString *aString );
 
         template <typename _Ty>
         static std::vector<_Ty> AsVector( MonoObject *aObject )
@@ -46,12 +47,12 @@ namespace SE::Core
             return lVector;
         }
 
-        static DotNetClass &GetClassType( const std::string &aClassName );
+        static DotNetClass &GetClassType( const string_t &aClassName );
 
-        static MonoType *GetCoreTypeFromName( std::string &aName );
+        static MonoType *GetCoreTypeFromName( string_t &aName );
 
-        // static std::vector<std::string>            GetClassNames();
-        // static std::map<std::string, DotNetClass> &GetClasses();
+        // static std::vector<string_t>            GetClassNames();
+        // static std::map<string_t, DotNetClass> &GetClasses();
 
       private:
         static void RegisterComponentTypes();

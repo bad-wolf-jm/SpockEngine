@@ -5,7 +5,7 @@
 namespace SE::Graphics
 {
 
-    IRenderContext::IRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget )
+    IRenderContext::IRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget )
         : mGraphicContext{ aGraphicContext }
         , mRenderTarget{ aRenderTarget }
     {
@@ -48,19 +48,19 @@ namespace SE::Graphics
             InternalDrawNonIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
-    void IRenderContext::Bind( Ref<IGraphicsPipeline> aGraphicPipeline )
+    void IRenderContext::Bind( ref_t<IGraphicsPipeline> aGraphicPipeline )
     {
         mGraphicsPipeline = aGraphicPipeline;
     }
 
-    void IRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
+    void IRenderContext::Bind( ref_t<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
     {
         mVertexBuffer = aVertexBuffer;
 
         mHasIndex = false;
     }
 
-    void IRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
+    void IRenderContext::Bind( ref_t<IGraphicBuffer> aVertexBuffer, ref_t<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
     {
         mVertexBuffer = aVertexBuffer;
         mIndexBuffer  = aIndexBuffer;

@@ -10,9 +10,9 @@ namespace SE::Core
         UIForm()                       = default;
         UIForm( UIForm const &UIForm ) = default;
 
-        UIForm( std::string const &aTitle );
+        UIForm( string_t const &aTitle );
 
-        void SetTitle( std::string const &aText );
+        void SetTitle( string_t const &aText );
         void SetContent( UIComponent *aContent );
         void SetSize( float aWidth, float aHeight );
 
@@ -27,7 +27,7 @@ namespace SE::Core
         static void  UIForm_SetSize( void *aInstance, float aWidth, float aHeight );
 
       protected:
-        std::string  mTitle;
+        string_t  mTitle;
         UIComponent *mContent = nullptr;
 
         float mWidth         = 0.0f;

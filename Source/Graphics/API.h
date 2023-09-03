@@ -19,16 +19,16 @@ namespace SE::Graphics
 
     void SetShaderCacheFolder( fs::path aPath );
 
-    Ref<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount );
+    ref_t<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount );
 
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
                                       bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
                                       bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
     template <typename _Ty>
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType,
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
     {
         return CreateBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
@@ -36,7 +36,7 @@ namespace SE::Graphics
     }
 
     template <typename _Ty>
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType,
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
     {
         return CreateBuffer( aGraphicContext, (uint8_t *)aData, aSize * sizeof( _Ty ), aType, aIsHostVisible, aIsGraphicsOnly,
@@ -44,43 +44,43 @@ namespace SE::Graphics
     }
 
     template <>
-    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
+    ref_t<IGraphicBuffer> CreateBuffer( ref_t<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
-    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
+    ref_t<ITexture2D> CreateTexture2D( ref_t<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
                                      uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                                      bool aIsTransferDestination );
 
-    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData );
+    ref_t<ITexture2D> CreateTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData );
 
-    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
+    ref_t<ITexture2D> CreateTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
-    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData, uint32_t aLayer,
+    ref_t<ISampler2D> CreateSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData, uint32_t aLayer,
                                      sTextureSamplingInfo const &aSamplingSpec );
 
-    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
+    ref_t<ISampler2D> CreateSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData,
                                      sTextureSamplingInfo const &aSamplingSpec );
 
-    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
+    ref_t<ISampler2D> CreateSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData );
 
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
+    ref_t<ISamplerCubeMap> CreateSamplerCubeMap( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData,
                                                sTextureSamplingInfo const &aSamplingSpec );
 
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
+    ref_t<ISamplerCubeMap> CreateSamplerCubeMap( ref_t<IGraphicContext> aGraphicContext, ref_t<ITexture2D> aTextureData );
 
-    Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+    ref_t<IGraphicsPipeline> CreateGraphicsPipeline( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
                                                    ePrimitiveTopology aTopology );
 
-    Ref<ISwapChain>    CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
-    Ref<IRenderTarget> CreateRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const &aSpec );
+    ref_t<ISwapChain>    CreateSwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow );
+    ref_t<IRenderTarget> CreateRenderTarget( ref_t<IGraphicContext> aGraphicContext, sRenderTargetDescription const &aSpec );
 
-    Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow );
-    Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow );
+    ref_t<IRenderContext> CreateRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<ISwapChain> aWindow );
+    ref_t<IRenderContext> CreateRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aWindow );
 
-    Ref<IDescriptorSetLayout> CreateDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false,
+    ref_t<IDescriptorSetLayout> CreateDescriptorSetLayout( ref_t<IGraphicContext> aGraphicContext, bool aUnbounded = false,
                                                          uint32_t aCount = 1 );
 
-    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                                             std::string const &aName );
+    ref_t<IShaderProgram> CreateShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                             string_t const &aName );
 } // namespace SE::Graphics

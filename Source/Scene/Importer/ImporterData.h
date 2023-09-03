@@ -22,10 +22,10 @@ namespace SE::Core
 
     struct sImportedTexture
     {
-        std::string mName = "";
+        string_t mName = "";
 
-        Ref<TextureData2D>    mTexture = nullptr;
-        Ref<TextureSampler2D> mSampler = nullptr;
+        ref_t<TextureData2D>    mTexture = nullptr;
+        ref_t<TextureSampler2D> mSampler = nullptr;
     };
 
     struct sImportedMaterial
@@ -49,7 +49,7 @@ namespace SE::Core
             uint32_t UVChannel = 0;
         };
 
-        std::string mName = "";
+        string_t mName = "";
 
         struct
         {
@@ -106,7 +106,7 @@ namespace SE::Core
 
     struct sImportedAnimation
     {
-        std::string                            mName     = "";
+        string_t                            mName     = "";
         std::vector<sImportedAnimationSampler> mSamplers = {};
         std::vector<sImportedAnimationChannel> mChannels = {};
         float                                  mStart    = std::numeric_limits<float>::max();
@@ -115,7 +115,7 @@ namespace SE::Core
 
     struct sImportedSkin
     {
-        std::string           mName                = "";
+        string_t           mName                = "";
         uint32_t              mSkeletonRootNodeID  = 0;
         std::vector<uint32_t> mJointNodeID         = {};
         std::vector<mat4>     mInverseBindMatrices = {};
@@ -123,7 +123,7 @@ namespace SE::Core
 
     struct sImportedMesh
     {
-        std::string mName = "";
+        string_t mName = "";
 
         Graphics::ePrimitiveTopology mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
 
@@ -139,7 +139,7 @@ namespace SE::Core
 
     struct sImportedNode
     {
-        std::string           mName      = "";
+        string_t           mName      = "";
         uint32_t              mParentID  = std::numeric_limits<uint32_t>::max();
         uint32_t              mSkinID    = std::numeric_limits<uint32_t>::max();
         mat4                  mTransform = mat4( 1.0f );

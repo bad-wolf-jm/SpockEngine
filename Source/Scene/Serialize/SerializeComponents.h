@@ -16,8 +16,8 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    using EntityMap = std::unordered_map<std::string, Entity>;
-    using BufferMap = std::unordered_map<std::string, Ref<VkGpuBuffer>>;
+    using EntityMap = std::unordered_map<string_t, Entity>;
+    using BufferMap = std::unordered_map<string_t, ref_t<VkGpuBuffer>>;
 
     struct sReadContext
     {
@@ -25,19 +25,19 @@ namespace SE::Core
         BufferMap mBuffers;
     };
 
-    std::string const &GetTypeTag( std::string const &aTypeName );
+    string_t const &GetTypeTag( string_t const &aTypeName );
 
     template <typename _Ty>
     bool HasTypeTag( YAML::Node const &aNode )
     {
-        auto lInternalTypeName = std::string( typeid( _Ty ).name() );
+        auto lInternalTypeName = string_t( typeid( _Ty ).name() );
         return static_cast<bool>( aNode[GetTypeTag( lInternalTypeName )] );
     }
 
     template <typename _Ty>
-    std::string TypeTag()
+    string_t TypeTag()
     {
-        auto lInternalTypeName = std::string( typeid( _Ty ).name() );
+        auto lInternalTypeName = string_t( typeid( _Ty ).name() );
         return ( GetTypeTag( lInternalTypeName ) );
     }
 
@@ -52,9 +52,9 @@ namespace SE::Core
         return aNode.as<_Ty>();
     }
 
-    math::vec2 Get( YAML::Node const &aNode, std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault );
-    math::vec3 Get( YAML::Node const &aNode, std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault );
-    math::vec4 Get( YAML::Node const &aNode, std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault );
+    math::vec2 Get( YAML::Node const &aNode, std::array<string_t, 2> const &aKeys, math::vec2 const &aDefault );
+    math::vec3 Get( YAML::Node const &aNode, std::array<string_t, 3> const &aKeys, math::vec3 const &aDefault );
+    math::vec4 Get( YAML::Node const &aNode, std::array<string_t, 4> const &aKeys, math::vec4 const &aDefault );
 
     void ReadComponent( sTag &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sCameraComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
@@ -86,7 +86,7 @@ namespace SE::Core
     void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAnimatedTransformComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sNodeTransformComponent const &aComponent );
-    void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, std::string const &aMeshPath );
+    void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, string_t const &aMeshPath );
     // void WriteComponent( ConfigurationWriter &aOut, sParticleSystemComponent const &aComponent );
     // void WriteComponent( ConfigurationWriter &aOut, sParticleShaderComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sSkeletonComponent const &aComponent );
@@ -94,7 +94,7 @@ namespace SE::Core
     void WriteComponent( ConfigurationWriter &aOut, sWireframeMeshComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sBoundingBoxComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sRayTracingTargetComponent const &aComponent );
-    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, std::string const &aMaterialPath );
+    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, string_t const &aMaterialPath );
     // void WriteComponent( ConfigurationWriter &aOut, sMaterialShaderComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAmbientLightingComponent const &aComponent );

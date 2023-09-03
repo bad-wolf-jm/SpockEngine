@@ -7,7 +7,7 @@ namespace SE::Core
 {
     struct UIWorkspaceDocument : public UIComponent
     {
-        std::string mName;
+        string_t mName;
 
         bool mOpen      = true;
         bool mOpenPrev  = true;
@@ -73,7 +73,7 @@ namespace SE::Core
         ~UIWorkspace() = default;
 
         void Add( UIWorkspaceDocument *aDocument );
-        void Add( Ref<UIWorkspaceDocument> aDocument );
+        void Add( ref_t<UIWorkspaceDocument> aDocument );
 
         std::function<void( std::vector<UIWorkspaceDocument *> )> mOnCloseDocuments;
 
@@ -81,8 +81,8 @@ namespace SE::Core
         std::vector<UIWorkspaceDocument *> mDocuments;
         std::vector<UIWorkspaceDocument *> mCloseQueue;
 
-        std::vector<Ref<UIWorkspaceDocument>> mDocumentRefs;
-        std::vector<Ref<UIWorkspaceDocument>> mCloseQueueRefs;
+        std::vector<ref_t<UIWorkspaceDocument>> mDocumentRefs;
+        std::vector<ref_t<UIWorkspaceDocument>> mCloseQueueRefs;
 
       protected:
         void PushStyles();

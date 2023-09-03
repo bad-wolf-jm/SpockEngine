@@ -16,18 +16,18 @@ namespace SE::Editor
     class Slider
     {
       public:
-        std::string ID = "";
+        string_t ID = "";
 
         _SliderType MinValue{};
         _SliderType MaxValue{};
         _SliderType CurrentValue{};
 
-        std::string Format = "";
+        string_t Format = "";
 
         bool Changed = false;
 
         Slider() = default;
-        Slider( std::string a_ID )
+        Slider( string_t a_ID )
             : ID{ a_ID }
         {
         }
@@ -39,16 +39,16 @@ namespace SE::Editor
     class TextureCombo
     {
       public:
-        std::string          ID            = "";
+        string_t          ID            = "";
         uint32_t             CurrentItem   = 0;
         float                ThumbnailSize = 50.0f;
         bool                 Changed       = false;
         UI::ComboBox<Entity> Dropdown;
-        Ref<Scene>           g_World = nullptr;
+        ref_t<Scene>           g_World = nullptr;
 
       public:
         TextureCombo() = default;
-        TextureCombo( std::string a_ID )
+        TextureCombo( string_t a_ID )
             : ID{ a_ID }
             , Dropdown{ UI::ComboBox<Entity>( a_ID ) } {};
 
@@ -85,11 +85,11 @@ namespace SE::Editor
     class PropertyEditor
     {
       public:
-        std::string       Label;
+        string_t       Label;
         float             LabelWidth;
         _ValueChooserType ValueChooser;
 
-        PropertyEditor( std::string ID ) { ValueChooser = _ValueChooserType( ID ); }
+        PropertyEditor( string_t ID ) { ValueChooser = _ValueChooserType( ID ); }
 
         template <typename... _ArgTypes>
         void Display( _ArgTypes... a_ArgList )
@@ -107,14 +107,14 @@ namespace SE::Editor
     class MaterialTextureChooser
     {
       public:
-        std::string  ID = "";
+        string_t  ID = "";
         TextureCombo Dropdown;
         float        ThumbnailSize = 56.0f;
         bool         Changed       = false;
 
       public:
         MaterialTextureChooser() = default;
-        MaterialTextureChooser( std::string a_ID )
+        MaterialTextureChooser( string_t a_ID )
             : Dropdown{ TextureCombo( a_ID ) } {};
 
         ~MaterialTextureChooser() = default;
@@ -219,14 +219,14 @@ namespace SE::Editor
                           std::min( ElementToEdit.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
             {
-                ElementToEdit.Get<sTag>().mValue = std::string( buf );
+                ElementToEdit.Get<sTag>().mValue = string_t( buf );
             }
         }
         else
         {
             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
             {
-                ElementToEdit.Add<sTag>( std::string( buf ) );
+                ElementToEdit.Add<sTag>( string_t( buf ) );
             }
         }
 

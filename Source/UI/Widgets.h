@@ -30,12 +30,12 @@ namespace SE::Core::UI
 
     void BulletText( const char *a_Text );
 
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue,
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue,
                  uint16_t *a_CurrentValue );
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue,
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue,
                  uint32_t *a_CurrentValue );
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, float a_MinValue, float a_MaxValue, float *a_CurrentValue );
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, int32_t a_MinValue, int32_t a_MaxValue, int32_t *a_CurrentValue );
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, float a_MinValue, float a_MaxValue, float *a_CurrentValue );
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, int32_t a_MinValue, int32_t a_MaxValue, int32_t *a_CurrentValue );
 
     void Checkbox( const char *label, bool *a_Value );
 
@@ -73,16 +73,16 @@ namespace SE::Core::UI
     class ComboBox
     {
       public:
-        std::string              ID          = "";
+        string_t              ID          = "";
         uint32_t                 CurrentItem = 0;
         std::vector<_Ty>         Values      = {};
-        std::vector<std::string> Labels      = {};
+        std::vector<string_t> Labels      = {};
         math::vec2               Size        = { 100.0f, 30.0f };
         bool                     Changed     = false;
 
       public:
         ComboBox() = default;
-        ComboBox( std::string a_ID )
+        ComboBox( string_t a_ID )
             : ID{ a_ID } {};
 
         _Ty GetValue()
@@ -118,7 +118,7 @@ namespace SE::Core::UI
     };
 
     template <typename T>
-    static bool DragFloat( const std::string label, T &value, int label_width, float step, float min, float max )
+    static bool DragFloat( const string_t label, T &value, int label_width, float step, float min, float max )
     {
         char buf[128];
         ImFormatString( buf, IM_ARRAYSIZE( buf ), "##%s", label.c_str() );
@@ -146,7 +146,7 @@ namespace SE::Core::UI
     }
 
     template <typename T>
-    static bool DragUInt( const std::string label, T &value, int label_width, float step, uint32_t min, uint32_t max )
+    static bool DragUInt( const string_t label, T &value, int label_width, float step, uint32_t min, uint32_t max )
     {
         char buf[128];
         ImFormatString( buf, IM_ARRAYSIZE( buf ), "##%s", label.c_str() );
@@ -175,12 +175,12 @@ namespace SE::Core::UI
         return changed;
     }
 
-    bool ColorChooser( const std::string label, int label_width, math::vec4 &color );
-    bool ColorChooser( const std::string label, int label_width, math::vec3 &color );
+    bool ColorChooser( const string_t label, int label_width, math::vec4 &color );
+    bool ColorChooser( const string_t label, int label_width, math::vec3 &color );
 
-    bool VectorComponentEditor( const std::string &a_Label, math::vec3 &values, float a_ResetValue, float a_ColumnWidth );
-    bool VectorComponentEditor( const std::string &label, math::vec4 &values, float resetValue, float columnWidth );
-    bool VectorComponentEditor( const std::string &a_Label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
+    bool VectorComponentEditor( const string_t &a_Label, math::vec3 &values, float a_ResetValue, float a_ColumnWidth );
+    bool VectorComponentEditor( const string_t &label, math::vec4 &values, float resetValue, float columnWidth );
+    bool VectorComponentEditor( const string_t &a_Label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
                                 float a_YMin, float a_YMax, float a_YStep, float a_ResetValue, float a_ColumnWidth );
 
 } // namespace SE::Core::UI

@@ -8,6 +8,7 @@
 
 #include "Instance.h"
 #include "Typedefs.h"
+#include "Core/String.h"
 
 namespace fs = std::filesystem;
 
@@ -18,15 +19,15 @@ namespace SE::Core
       public:
         DotNetClass() = default;
         DotNetClass( MonoType *aMonoClass );
-        DotNetClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage, fs::path const &aDllPPath,
+        DotNetClass( const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage, fs::path const &aDllPPath,
                      bool aIsNested = false );
-        DotNetClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+        DotNetClass( MonoClass *aClass, const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage,
                      fs::path const &aDllPPath, bool aIsNested = false );
 
-        Ref<DotNetInstance> DoInstantiate();
+        ref_t<DotNetInstance> DoInstantiate();
 
         template <typename... _ArgTypes>
-        Ref<DotNetInstance> Instantiate( _ArgTypes *...aArgs )
+        ref_t<DotNetInstance> Instantiate( _ArgTypes *...aArgs )
         {
             auto lNewInstance = DoInstantiate();
 
@@ -45,7 +46,7 @@ namespace SE::Core
         }
 
         template <typename... _ArgTypes>
-        MonoObject *CallMethod( const std::string &aName, _ArgTypes... aArgs )
+        MonoObject *CallMethod( const string_t &aName, _ArgTypes... aArgs )
         {
             if constexpr( sizeof...( _ArgTypes ) == 0 )
             {
@@ -59,14 +60,14 @@ namespace SE::Core
             }
         }
 
-        MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
+        MonoMethod *GetMethod( const string_t &aName, int aParameterCount );
         MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters );
-        MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
+        MonoObject *InvokeMethod( const string_t &aName, int aParameterCount, void **aParameters = nullptr );
 
-        const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
+        const std::map<string_t, sScriptField> &GetFields() const { return mFields; }
 
         MonoClass       *Class() { return mMonoClass; }
-        sScriptProperty &GetProperty( std::string const &aName )
+        sScriptProperty &GetProperty( string_t const &aName )
         {
             if( mProperties.find( aName ) != mProperties.end() )
                 return mProperties[aName];
@@ -74,7 +75,7 @@ namespace SE::Core
                 return sScriptProperty{ "", nullptr };
         }
         
-        std::string &FullName() { return mClassFullName; }
+        string_t &FullName() { return mClassFullName; }
 
         std::vector<DotNetClass *> &DerivedClasses() { return mDerived; }
         DotNetClass                *ParentClass() { return mParent; }
@@ -86,12 +87,12 @@ namespace SE::Core
         DotNetClass               *mParent;
         std::vector<DotNetClass *> mDerived;
 
-        std::string mClassNamespace;
-        std::string mClassName;
-        std::string mClassFullName;
+        string_t mClassNamespace;
+        string_t mClassName;
+        string_t mClassFullName;
 
-        std::map<std::string, sScriptField>    mFields;
-        std::map<std::string, sScriptProperty> mProperties;
+        std::map<string_t, sScriptField>    mFields;
+        std::map<string_t, sScriptProperty> mProperties;
 
         MonoClass *mMonoClass = nullptr;
         bool       mIsCore    = false;

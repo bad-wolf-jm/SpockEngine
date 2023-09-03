@@ -100,7 +100,7 @@ namespace SE::Core::UI
 
     void Text( const char *a_Text ) { ImGui::Text( a_Text ); }
 
-    void Text( std::string a_Text ) { Text( a_Text.c_str() ); }
+    void Text( string_t a_Text ) { Text( a_Text.c_str() ); }
 
     void SameLine() { ImGui::SameLine(); }
 

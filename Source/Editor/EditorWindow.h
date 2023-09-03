@@ -30,8 +30,8 @@ namespace SE::Editor
 
     struct MenuItem
     {
-        std::string           Icon  = "";
-        std::string           Title = "MENU_TITLE";
+        string_t           Icon  = "";
+        string_t           Title = "MENU_TITLE";
         std::function<bool()> Action;
     };
 
@@ -62,24 +62,24 @@ namespace SE::Editor
         };
 
       public:
-        std::string ApplicationIcon = "";
-        std::string ApplicationName = "";
-        std::string DocumentName    = "";
+        string_t ApplicationIcon = "";
+        string_t ApplicationName = "";
+        string_t DocumentName    = "";
 
         fs::path mMaterialsPath = "";
         fs::path mModelsPath    = "";
 
-        Ref<Engine>        mEngineLoop   = nullptr;
-        Ref<Scene>         World         = nullptr;
-        Ref<Scene>         ActiveWorld   = nullptr;
-        Ref<SceneRenderer> WorldRenderer = nullptr;
+        ref_t<Engine>        mEngineLoop   = nullptr;
+        ref_t<Scene>         World         = nullptr;
+        ref_t<Scene>         ActiveWorld   = nullptr;
+        ref_t<SceneRenderer> WorldRenderer = nullptr;
 
-        // Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
+        // ref_t<ForwardSceneRenderer> WorldRenderer = nullptr;
         Entity Sensor{};
         Entity ActiveSensor{};
 
         PropertyPanelID     CurrentPropertyPanel = PropertyPanelID::NONE;
-        Ref<DotNetInstance> mApplicationInstance = nullptr;
+        ref_t<DotNetInstance> mApplicationInstance = nullptr;
 
       public:
         float HeaderHeight       = 31.0f;
@@ -92,7 +92,7 @@ namespace SE::Editor
 
       public:
         EditorWindow() = default;
-        EditorWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
+        EditorWindow( ref_t<IGraphicContext> aGraphicContext, ref_t<UIContext> mUIOverlay );
 
         ~EditorWindow() = default;
 
@@ -101,7 +101,7 @@ namespace SE::Editor
         math::ivec2 GetWorkspaceAreaSize();
         math::ivec2 GetNewWorkspaceAreaSize();
 
-        EditorWindow &AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action );
+        EditorWindow &AddMenuItem( string_t l_Icon, string_t l_Title, std::function<bool()> l_Action );
 
         void ClearScene();
         void LoadScenario( fs::path aPath );
@@ -120,9 +120,9 @@ namespace SE::Editor
         void ConfigureUI();
 
       private:
-        Ref<IGraphicContext> mGraphicContext;
+        ref_t<IGraphicContext> mGraphicContext;
 
-        Ref<UIContext> mUIOverlay;
+        ref_t<UIContext> mUIOverlay;
 
         std::vector<MenuItem> m_MainMenuItems;
 
@@ -132,14 +132,14 @@ namespace SE::Editor
 
         math::ivec2     m_WorkspaceAreaSize    = { 0, 0 };
         math::ivec2     m_NewWorkspaceAreaSize = { 0, 0 };
-        Ref<ISampler2D> m_PlayIcon;
+        ref_t<ISampler2D> m_PlayIcon;
         ImageHandle     m_PlayIconHandle;
-        Ref<ISampler2D> m_PauseIcon;
+        ref_t<ISampler2D> m_PauseIcon;
         ImageHandle     m_PauseIconHandle;
-        Ref<ISampler2D> m_CameraIcon;
+        ref_t<ISampler2D> m_CameraIcon;
         ImageHandle     m_CameraIconHandle;
 
-        Ref<ISampler2D> m_DefaultTextureImage;
+        ref_t<ISampler2D> m_DefaultTextureImage;
         ImageHandle     m_DefaultTextureImageHandle;
 
         SimulationState mState         = SimulationState::EDIT;

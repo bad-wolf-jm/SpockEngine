@@ -40,10 +40,10 @@ namespace SE::Core
     GlTFImporter::GlTFImporter( fs::path aPath )
     {
         tinygltf::TinyGLTF lGltfContext;
-        std::string        lError;
-        std::string        lWarning;
+        string_t        lError;
+        string_t        lWarning;
 
-        std::string lExtension = aPath.extension().string();
+        string_t lExtension = aPath.extension().string();
 
         bool lFileLoaded = false;
         if( lExtension == ".glb" )
@@ -94,7 +94,7 @@ namespace SE::Core
         }
     }
 
-    void GlTFImporter::CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
+    void GlTFImporter::CreateTexture( uint32_t aTextureIndex, string_t aName, tinygltf::Image const &aGltfimage,
                                       sTextureSamplingInfo const &aTextureSamplingInfo )
     {
         sImageData lImageData{};
@@ -152,7 +152,7 @@ namespace SE::Core
         }
     }
 
-    sImportedMaterial::sTextureReference GlTFImporter::RetrieveTextureData( tinygltf::Material &aMaterial, std::string aName )
+    sImportedMaterial::sTextureReference GlTFImporter::RetrieveTextureData( tinygltf::Material &aMaterial, string_t aName )
     {
         if( aMaterial.values.find( aName ) != aMaterial.values.end() )
         {
@@ -166,7 +166,7 @@ namespace SE::Core
     }
 
     sImportedMaterial::sTextureReference GlTFImporter::RetrieveAdditionalTextureData( tinygltf::Material &aMaterial,
-                                                                                      std::string         aName )
+                                                                                      string_t         aName )
     {
         if( aMaterial.additionalValues.find( aName ) != aMaterial.additionalValues.end() )
         {
@@ -179,7 +179,7 @@ namespace SE::Core
         return sImportedMaterial::sTextureReference{};
     }
 
-    math::vec4 GlTFImporter::RetrieveVec4( tinygltf::Material &aMaterial, std::string aName, math::vec4 aDefault )
+    math::vec4 GlTFImporter::RetrieveVec4( tinygltf::Material &aMaterial, string_t aName, math::vec4 aDefault )
     {
         if( aMaterial.values.find( aName ) != aMaterial.values.end() )
         {
@@ -190,7 +190,7 @@ namespace SE::Core
     }
 
     std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> GlTFImporter::RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive,
-                                                                                             std::string                aName )
+                                                                                             string_t                aName )
     {
         if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
         {

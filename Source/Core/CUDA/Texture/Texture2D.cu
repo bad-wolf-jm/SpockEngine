@@ -53,7 +53,7 @@ namespace SE::Cuda
         DestroyExternalMemory( &mExternalMemoryHandle );
     }
 
-    TextureSampler2D::TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
+    TextureSampler2D::TextureSampler2D( ref_t<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
         : mTexture{ aTexture }
         , mSpec{ aSamplingSpec }
     {

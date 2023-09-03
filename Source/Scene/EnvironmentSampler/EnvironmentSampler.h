@@ -61,23 +61,23 @@ namespace SE::SensorModel::Dev
     class WorldSampler
     {
       public:
-        WorldSampler( Ref<OptixDeviceContextObject> a_RayTracingContext );
+        WorldSampler( ref_t<OptixDeviceContextObject> a_RayTracingContext );
         ~WorldSampler() = default;
 
-        void Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
+        void Sample( math::mat4 a_SensorTransform, ref_t<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
                      MultiTensor &a_Intensities, MultiTensor &a_SamplePoints );
 
       private:
-        void BuildShaderBindingTable( Ref<Scene> a_Scene );
+        void BuildShaderBindingTable( ref_t<Scene> a_Scene );
 
       private:
         CUcontext mCudaContext;
         CUstream  mCudaStream;
 
-        Ref<OptixDeviceContextObject>      mRayTracingContext  = nullptr;
-        Ref<OptixModuleObject>             mRayTracingModule   = nullptr;
-        Ref<OptixPipelineObject>           mRayTracingPipeline = nullptr;
-        Ref<OptixShaderBindingTableObject> mSBT                = nullptr;
+        ref_t<OptixDeviceContextObject>      mRayTracingContext  = nullptr;
+        ref_t<OptixModuleObject>             mRayTracingModule   = nullptr;
+        ref_t<OptixPipelineObject>           mRayTracingPipeline = nullptr;
+        ref_t<OptixShaderBindingTableObject> mSBT                = nullptr;
 
         GPUMemory mRaygenRecordsBuffer;
         GPUMemory mMissRecordsBuffer;

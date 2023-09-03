@@ -13,7 +13,7 @@ namespace SE::Graphics
     {
       public:
         VkRenderContext() = default;
-        VkRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget );
+        VkRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget );
 
         ~VkRenderContext() = default;
 

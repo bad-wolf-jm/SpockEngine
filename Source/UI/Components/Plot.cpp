@@ -26,7 +26,7 @@ namespace SE::Core
     {
     }
 
-    void UIPlot::Add( Ref<sPlotData> aPlot )
+    void UIPlot::Add( ref_t<sPlotData> aPlot )
     {
         mElements.push_back( aPlot.get() );
     };

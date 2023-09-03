@@ -7,5 +7,5 @@
 
 namespace SE::Graphics
 {
-    void Compile( eShaderStageTypeFlags aShaderStage, std::string const &aCode, std::vector<uint32_t> &aOutput );
+    void Compile( eShaderStageTypeFlags aShaderStage, string_t const &aCode, std::vector<uint32_t> &aOutput );
 } // namespace SE::Graphics

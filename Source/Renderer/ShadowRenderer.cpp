@@ -13,7 +13,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    ShadowMeshRenderer::ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo )
+    ShadowMeshRenderer::ShadowMeshRenderer( ref_t<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -58,7 +58,7 @@ namespace SE::Core
         mCameraBuffer->Write( aView );
     }
 
-    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
+    OmniShadowMeshRenderer::OmniShadowMeshRenderer( ref_t<IGraphicContext>                aGraphicContext,
                                                     ShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
@@ -105,7 +105,7 @@ namespace SE::Core
         mPipeline->Build();
     }
 
-    Ref<IDescriptorSet> OmniShadowMeshRenderer::AllocateDescriptors()
+    ref_t<IDescriptorSet> OmniShadowMeshRenderer::AllocateDescriptors()
     {
         return mCameraSetLayout->Allocate();
     }
@@ -146,7 +146,7 @@ namespace SE::Core
         return lViewMatrix;
     }
 
-    ShadowSceneRenderer::ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext )
+    ShadowSceneRenderer::ShadowSceneRenderer( ref_t<IGraphicContext> aGraphicContext )
         : BaseSceneRenderer( aGraphicContext, eColorFormat::UNDEFINED, 1 )
     {
         auto lDirectionalShadowMaps        = NewRenderTarget( 1024, 1024 );
@@ -175,7 +175,7 @@ namespace SE::Core
     {
     }
 
-    Ref<IRenderTarget> ShadowSceneRenderer::NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    ref_t<IRenderTarget> ShadowSceneRenderer::NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -199,7 +199,7 @@ namespace SE::Core
         mPointLights = aPointLights;
     }
 
-    void ShadowSceneRenderer::Update( Ref<Scene> aWorld )
+    void ShadowSceneRenderer::Update( ref_t<Scene> aWorld )
     {
         BaseSceneRenderer::Update( aWorld );
 
@@ -297,9 +297,9 @@ namespace SE::Core
         }
     }
 
-    void ShadowSceneRenderer::RenderPunctualShadowMap( vec3 aLightPosition, std::array<Ref<IRenderContext>, 6> aContext,
-                                                       std::array<Ref<IGraphicBuffer>, 6> const &aUniforms,
-                                                       std::array<Ref<IDescriptorSet>, 6> const &aDescriptors )
+    void ShadowSceneRenderer::RenderPunctualShadowMap( vec3 aLightPosition, std::array<ref_t<IRenderContext>, 6> aContext,
+                                                       std::array<ref_t<IGraphicBuffer>, 6> const &aUniforms,
+                                                       std::array<ref_t<IDescriptorSet>, 6> const &aDescriptors )
     {
         mat4 lProjection    = Perspective( radians( 90.0f ), 1.0f, .2f, 1000.0f );
         mOmniView.mLightPos = vec4( aLightPosition, 0.0f );
@@ -314,8 +314,8 @@ namespace SE::Core
         }
     }
 
-    void ShadowSceneRenderer::RenderCubeFace( mat4 viewMatrix, mat4 lProjection, Ref<IRenderContext> lContext,
-                                              Ref<IDescriptorSet> aDescriptors )
+    void ShadowSceneRenderer::RenderCubeFace( mat4 viewMatrix, mat4 lProjection, ref_t<IRenderContext> lContext,
+                                              ref_t<IDescriptorSet> aDescriptors )
     {
         lContext->BeginRender();
         lContext->Bind( mOmniRenderPipeline->Pipeline() );
@@ -335,7 +335,7 @@ namespace SE::Core
         lContext->EndRender();
     }
 
-    Ref<ITexture2D> ShadowSceneRenderer::GetOutputImage()
+    ref_t<ITexture2D> ShadowSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );

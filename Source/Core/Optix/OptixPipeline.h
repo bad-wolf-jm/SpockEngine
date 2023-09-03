@@ -24,15 +24,15 @@ namespace SE::Graphics
 
         OptixPipelineObject() = default;
         OptixPipelineObject( OptixPipelineLinkOptions aPipelineLinkOptions, OptixPipelineCompileOptions aPipelineCompileOptions,
-                             std::vector<Ref<OptixProgramGroupObject>> aProgramGroups, Ref<OptixDeviceContextObject> aRTContext );
+                             std::vector<ref_t<OptixProgramGroupObject>> aProgramGroups, ref_t<OptixDeviceContextObject> aRTContext );
 
         void Launch( CUstream aStream, RawPointer aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
-                     Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions );
+                     ref_t<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions );
 
         ~OptixPipelineObject();
 
       private:
-        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
+        ref_t<OptixDeviceContextObject> mRayTracingContext = nullptr;
     };
 
 } // namespace SE::Graphics

@@ -12,7 +12,7 @@ namespace SE::Core
     {
     }
 
-    void UIProgressBar::SetText( std::string const &aText )
+    void UIProgressBar::SetText( string_t const &aText )
     {
         mText = aText;
     }

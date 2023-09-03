@@ -6,6 +6,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include "String.h"
 
 template <class T, typename std::underlying_type<T>::type fullValue>
 class EnumSet

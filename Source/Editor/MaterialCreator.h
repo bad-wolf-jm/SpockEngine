@@ -15,7 +15,7 @@ namespace SE::Editor
 
       public:
         MaterialCreator() = default;
-        MaterialCreator( std::string a_Title, math::vec2 a_Size );
+        MaterialCreator( string_t a_Title, math::vec2 a_Size );
         ~MaterialCreator() = default;
 
         void WindowContent();

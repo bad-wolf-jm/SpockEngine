@@ -12,7 +12,7 @@
 #include <fstream>
 #include <vector>
 #include <filesystem>
-
+#include "String.h"
 
 
 /**
@@ -22,6 +22,7 @@
  */
 namespace SE::Logging
 {
+    using namespace SE::Core;
     namespace fs = std::filesystem;
     enum class LogLevel : uint8_t
     {
@@ -35,10 +36,10 @@ namespace SE::Logging
     {
         LogLevel Level;
         uint64_t Timestamp;
-        std::string Message;
+        string_t Message;
     };
 
-    void _Log( LogLevel a_Level, std::string a_Message );
+    void _Log( LogLevel a_Level, string_t a_Message );
     std::vector<LogMessage> &GetLogMessages();
 
     /** @brief Information level log entry.
@@ -46,9 +47,9 @@ namespace SE::Logging
      * @param aString  Template string
      * @param aArgList Arguments to be passed to the templated string.
      */
-    template <typename... ArgTypes> void Info( std::string aString, ArgTypes &&...aArgList )
+    template <typename... ArgTypes> void Info( string_t aString, ArgTypes &&...aArgList )
     {
-        std::string s = fmt::format( aString, std::forward<ArgTypes>( aArgList )... );
+        string_t s = fmt::format( aString, std::forward<ArgTypes>( aArgList )... );
         _Log(LogLevel::INFO, s);
         fmt::print( "[ INFO ] {}\n", s );
         LogLine(fmt::format( "[ INFO ] {}\n", s ));
@@ -59,16 +60,16 @@ namespace SE::Logging
      * @param aString  Template string
      * @param aArgList Arguments to be passed to the templated string.
      */
-    template <typename... ArgTypes> void Error( std::string aString, ArgTypes &&...aArgList )
+    template <typename... ArgTypes> void Error( string_t aString, ArgTypes &&...aArgList )
     {
-        std::string s = fmt::format( aString, std::forward<ArgTypes>( aArgList )... );
+        string_t s = fmt::format( aString, std::forward<ArgTypes>( aArgList )... );
         _Log(LogLevel::ERR, s);
         fmt::print( "[ ERROR ] {}\n", s );
         LogLine(fmt::format( "[ ERROR ] {}\n", s ));
     }
 
-    void LogToFile(std::string const &aFilePath);
-    void LogLine(std::string const &aLine);
+    void LogToFile(string_t const &aFilePath);
+    void LogLine(string_t const &aLine);
     void SetLogOutputFile( fs::path aFilePath );
 
 } // namespace SE::Logging

@@ -5,7 +5,7 @@
 
 namespace SE::Graphics
 {
-    VkSwapChain::VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
+    VkSwapChain::VkSwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow )
         : ISwapChain( aGraphicContext, aWindow )
         , mViewportClient{ aWindow }
     {

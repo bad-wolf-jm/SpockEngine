@@ -19,7 +19,7 @@ namespace SE::Core
 
         void SetIcon(UIImage* aImage);
         void SetIndicator(UIComponent* aImage);
-        void SetText( std::string const &aText );
+        void SetText( string_t const &aText );
         void SetTextColor( math::vec4 aColor );
 
         virtual std::vector<UITreeViewNode*> const& Children();
@@ -31,10 +31,10 @@ namespace SE::Core
 
         UIImage* mIcon = nullptr;
 
-        Ref<UIStackLayout> mImage  = nullptr;
-        Ref<UIStackLayout> mIndicator = nullptr;
-        Ref<UILabel>       mText   = nullptr;
-        Ref<UIBoxLayout>   mLayout = nullptr;
+        ref_t<UIStackLayout> mImage  = nullptr;
+        ref_t<UIStackLayout> mIndicator = nullptr;
+        ref_t<UILabel>       mText   = nullptr;
+        ref_t<UIBoxLayout>   mLayout = nullptr;
 
         UITreeView* mTreeView;
         UITreeViewNode *mParent;

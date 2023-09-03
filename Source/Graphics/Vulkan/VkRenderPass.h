@@ -21,10 +21,10 @@ namespace SE::Graphics
 
         VkRenderPassObject()                       = default;
         VkRenderPassObject( VkRenderPassObject & ) = default;
-        VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
+        VkRenderPassObject( ref_t<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
                             std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
 
-        VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+        VkRenderPassObject( ref_t<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                             bool aIsPresented, math::vec4 aClearColor );
 
         ~VkRenderPassObject();
@@ -50,7 +50,7 @@ namespace SE::Graphics
         }
 
       protected:
-        Ref<VkGraphicContext>     mContext              = nullptr;
+        ref_t<VkGraphicContext>     mContext              = nullptr;
         std::vector<VkClearValue> mClearValues          = {};
         uint32_t                  mColorAttachmentCount = 0;
     };

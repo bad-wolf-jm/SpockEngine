@@ -3,7 +3,7 @@
 namespace SE::Graphics
 {
 
-    OptixScene::OptixScene( Ref<OptixDeviceContextObject> a_RTContext )
+    OptixScene::OptixScene( ref_t<OptixDeviceContextObject> a_RTContext )
         : mRayTracingContext{ a_RTContext }
     {
     }

@@ -143,7 +143,7 @@ namespace SE::Core::UI
         }
     }
 
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue,
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue,
                  uint16_t *a_CurrentValue )
     {
         bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_U16, a_CurrentValue, &a_MinValue, &a_MaxValue,
@@ -152,7 +152,7 @@ namespace SE::Core::UI
         return changed;
     }
 
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue,
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue,
                  uint32_t *a_CurrentValue )
     {
         bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_U32, a_CurrentValue, &a_MinValue, &a_MaxValue,
@@ -161,7 +161,7 @@ namespace SE::Core::UI
         return changed;
     }
 
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, int32_t a_MinValue, int32_t a_MaxValue, int32_t *a_CurrentValue )
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, int32_t a_MinValue, int32_t a_MaxValue, int32_t *a_CurrentValue )
     {
         bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_S32, a_CurrentValue, &a_MinValue, &a_MaxValue,
                                             a_DisplayTemplate, 1.0f );
@@ -169,7 +169,7 @@ namespace SE::Core::UI
         return changed;
     }
 
-    bool Slider( std::string a_Title, const char *a_DisplayTemplate, float a_MinValue, float a_MaxValue, float *a_CurrentValue )
+    bool Slider( string_t a_Title, const char *a_DisplayTemplate, float a_MinValue, float a_MaxValue, float *a_CurrentValue )
     {
         bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_Float, a_CurrentValue, &a_MinValue, &a_MaxValue,
                                             a_DisplayTemplate, 0 );
@@ -212,7 +212,7 @@ namespace SE::Core::UI
             .Contains( ImGui::GetIO().MousePos );
     }
 
-    bool ColorChooser( const std::string label, int label_width, math::vec4 &color )
+    bool ColorChooser( const string_t label, int label_width, math::vec4 &color )
     {
 
         ImGuiColorEditFlags misc_flags = 0;
@@ -301,7 +301,7 @@ namespace SE::Core::UI
         return true;
     }
 
-    bool ColorChooser( const std::string label, int label_width, math::vec3 &color )
+    bool ColorChooser( const string_t label, int label_width, math::vec3 &color )
     {
         math::vec4 l_Color = math::vec4( color, 1.0f );
         bool       x       = ColorChooser( label, label_width, l_Color );
@@ -309,7 +309,7 @@ namespace SE::Core::UI
         return x;
     }
 
-    bool VectorComponentEditor( const std::string &label, math::vec3 &values, float resetValue, float columnWidth )
+    bool VectorComponentEditor( const string_t &label, math::vec3 &values, float resetValue, float columnWidth )
     {
         bool     Changed      = false;
         ImGuiIO &io           = ImGui::GetIO();
@@ -387,7 +387,7 @@ namespace SE::Core::UI
         return Changed;
     }
 
-    bool VectorComponentEditor( const std::string &label, math::vec4 &values, float resetValue, float columnWidth )
+    bool VectorComponentEditor( const string_t &label, math::vec4 &values, float resetValue, float columnWidth )
     {
         bool     Changed      = false;
         ImGuiIO &io           = ImGui::GetIO();
@@ -482,7 +482,7 @@ namespace SE::Core::UI
         return Changed;
     }
 
-    bool VectorComponentEditor( const std::string &label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
+    bool VectorComponentEditor( const string_t &label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
                                 float a_YMin, float a_YMax, float a_YStep, float resetValue, float columnWidth )
     {
         bool     Changed      = false;

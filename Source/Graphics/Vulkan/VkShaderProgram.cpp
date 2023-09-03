@@ -10,8 +10,8 @@
 
 namespace SE::Graphics
 {
-    VkShaderProgram::VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                                      std::string const &aName, fs::path const &aCacheRoot )
+    VkShaderProgram::VkShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                      string_t const &aName, fs::path const &aCacheRoot )
         : IShaderProgram( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot )
     {
     }

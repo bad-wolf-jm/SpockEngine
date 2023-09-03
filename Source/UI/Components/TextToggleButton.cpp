@@ -3,12 +3,12 @@
 
 namespace SE::Core
 {
-    UITextToggleButton::UITextToggleButton( std::string const &aText )
+    UITextToggleButton::UITextToggleButton( string_t const &aText )
         : UILabel{ aText }
     {
     }
 
-    UITextToggleButton::UITextToggleButton( std::string const &aText, std::function<bool( bool )> aOnChange )
+    UITextToggleButton::UITextToggleButton( string_t const &aText, std::function<bool( bool )> aOnChange )
         : UILabel{ aText }
         , mOnClicked{ aOnChange }
     {
@@ -39,7 +39,7 @@ namespace SE::Core
         mActivated = aValue;
     }
 
-    // void UITextToggleButton::SetText( std::string const &aText ) { UILabel::SetText( aText ); }
+    // void UITextToggleButton::SetText( string_t const &aText ) { UILabel::SetText( aText ); }
 
     void UITextToggleButton::SetActiveColor( math::vec4 const &aColor )
     {

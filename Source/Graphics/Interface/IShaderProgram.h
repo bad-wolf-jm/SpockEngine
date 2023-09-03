@@ -17,16 +17,16 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                        std::string const &aName );
-        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                        std::string const &aName, fs::path const &aCacheRoot );
+        IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                        string_t const &aName );
+        IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                        string_t const &aName, fs::path const &aCacheRoot );
 
         /** @brief */
         ~IShaderProgram() = default;
 
         template <typename _GCSubtype>
-        Ref<_GCSubtype> GraphicContext()
+        ref_t<_GCSubtype> GraphicContext()
         {
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
@@ -40,34 +40,34 @@ namespace SE::Graphics
             mVersion = aVersion;
         }
 
-        void AddCode( std::string const &aCode );
+        void AddCode( string_t const &aCode );
         void AddCode( std::vector<uint8_t> const &aCode );
         void AddFile( fs::path const &aPath );
 
         template <typename _Ty>
-        void Define( std::string const &aConstant, _Ty const &aValue )
+        void Define( string_t const &aConstant, _Ty const &aValue )
         {
             AddCode( fmt::format( "#define {} {}", aConstant, aValue ) );
         }
 
-        std::string  Program();
+        string_t  Program();
         void         Compile();
         virtual void DoCompile()    = 0;
         virtual void BuildProgram() = 0;
-        std::string  Hash();
+        string_t  Hash();
         size_t       HashNum();
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
 
-        std::vector<std::string> mCodeBlocks;
+        std::vector<string_t> mCodeBlocks;
         std::vector<uint32_t>    mCompiledByteCode;
 
-        std::string mProgram{};
+        string_t mProgram{};
 
         int                   mVersion;
-        std::string           mName;
-        std::string           mCacheFileName;
+        string_t           mName;
+        string_t           mCacheFileName;
         fs::path              mCacheRoot;
         eShaderStageTypeFlags mShaderType;
     };

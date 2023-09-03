@@ -7,7 +7,7 @@ namespace SE::Core
 {
     struct sTableColumn
     {
-        std::string mHeader;
+        string_t mHeader;
         float       mInitialSize = 10.0f;
 
         std::vector<uint32_t>      mBackgroundColor;
@@ -15,7 +15,7 @@ namespace SE::Core
         std::vector<UIComponent *> mToolTip;
 
         sTableColumn() = default;
-        sTableColumn( std::string aHeader, float aInitialSize );
+        sTableColumn( string_t aHeader, float aInitialSize );
 
         ~sTableColumn() = default;
 
@@ -30,13 +30,13 @@ namespace SE::Core
 
     struct sFloat64Column : public sTableColumn
     {
-        std::string mFormat;
-        std::string mNaNFormat;
+        string_t mFormat;
+        string_t mNaNFormat;
 
         std::vector<double> mData;
 
         sFloat64Column() = default;
-        sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat );
+        sFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
         ~sFloat64Column() = default;
 
         uint32_t Size();
@@ -56,7 +56,7 @@ namespace SE::Core
         std::vector<uint32_t> mData;
 
         sUint32Column() = default;
-        sUint32Column( std::string aHeader, float aInitialSize );
+        sUint32Column( string_t aHeader, float aInitialSize );
         ~sUint32Column() = default;
 
         uint32_t Size();
@@ -73,10 +73,10 @@ namespace SE::Core
 
     struct sStringColumn : public sTableColumn
     {
-        std::vector<std::string> mData;
+        std::vector<string_t> mData;
 
         sStringColumn() = default;
-        sStringColumn( std::string aHeader, float aInitialSize );
+        sStringColumn( string_t aHeader, float aInitialSize );
         ~sStringColumn() = default;
 
         uint32_t Size();
@@ -96,7 +96,7 @@ namespace SE::Core
       public:
         UITable() = default;
 
-        void AddColumn( Ref<sTableColumn> aColumn );
+        void AddColumn( ref_t<sTableColumn> aColumn );
         void AddColumn( sTableColumn *aColumn );
         void SetRowHeight( float aRowHeight );
 

@@ -14,7 +14,7 @@
 
 namespace SE::Core
 {
-    UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport )
+    UIWindow::UIWindow( ref_t<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport )
         : mViewport{ aViewport }
         , mGraphicContext{ aGraphicContext }
     {
@@ -28,7 +28,7 @@ namespace SE::Core
         mIndexBuffer  = CreateBuffer( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
-    UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext )
+    UIWindow::UIWindow( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext )
         : mWindow{ nullptr }
         , mGraphicContext{ aGraphicContext }
         , mRenderContext{ aRenderContext }
@@ -79,7 +79,7 @@ namespace SE::Core
         mUIRenderPipeline->Build();
     }
 
-    void UIWindow::SetupRenderState( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData )
+    void UIWindow::SetupRenderState( ref_t<IRenderContext> aRenderContext, ImDrawData *aDrawData )
     {
         SE_PROFILE_FUNCTION();
 
@@ -100,7 +100,7 @@ namespace SE::Core
         aRenderContext->PushConstants( { eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, lT );
     }
 
-    void UIWindow::Render( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData )
+    void UIWindow::Render( ref_t<IRenderContext> aRenderContext, ImDrawData *aDrawData )
     {
         SE_PROFILE_FUNCTION();
 
@@ -146,7 +146,7 @@ namespace SE::Core
         }
     }
 
-    void UIWindow::Render( Ref<IRenderContext> aRenderContext, ImDrawList const *aDrawList, int aVertexOffset, int aIndexOffset,
+    void UIWindow::Render( ref_t<IRenderContext> aRenderContext, ImDrawList const *aDrawList, int aVertexOffset, int aIndexOffset,
                            int aFbWidth, int aFbHeight, ImVec2 aPosition, ImVec2 aScale )
     {
         ImVec4 lOffset = ImVec4{ aPosition.x, aPosition.y, aPosition.x, aPosition.y };

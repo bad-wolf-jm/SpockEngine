@@ -61,7 +61,7 @@ namespace SE::Editor
             !aNode.Has<LockComponent>() )
         {
             auto        lPos   = UI::GetCurrentCursorPosition();
-            std::string lLabel = fmt::format( "{}##node_foo_{}", aNode.Get<sTag>().mValue.c_str(), (uint32_t)aNode );
+            string_t lLabel = fmt::format( "{}##node_foo_{}", aNode.Get<sTag>().mValue.c_str(), (uint32_t)aNode );
 
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
@@ -106,8 +106,8 @@ namespace SE::Editor
         else
         {
             auto lPos = UI::GetCurrentCursorPosition();
-            // std::string lLabel = fmt::format( "##leaf_foo_{}", (uint32_t)a_Node );
-            std::string lLabel = fmt::format( "{}##node_foo_{}", aNode.Get<sTag>().mValue.c_str(), (uint32_t)aNode );
+            // string_t lLabel = fmt::format( "##leaf_foo_{}", (uint32_t)a_Node );
+            string_t lLabel = fmt::format( "{}##node_foo_{}", aNode.Get<sTag>().mValue.c_str(), (uint32_t)aNode );
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );

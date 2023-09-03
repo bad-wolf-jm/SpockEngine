@@ -73,12 +73,12 @@ namespace SE::Core
         }
 
         template <>
-        std::string Read()
+        string_t Read()
         {
             auto lStrLen = Read<uint32_t>();
             auto lBuffer = Read<char>( lStrLen );
 
-            return std::string( lBuffer.data(), lStrLen );
+            return string_t( lBuffer.data(), lStrLen );
         }
 
         /// @brief Read `aCount` elements of type _Ty from the file, and return a vector containing them
@@ -111,7 +111,7 @@ namespace SE::Core
         void Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
         void Package( sMaterial const &aMaterialData );
         void Package( sImportedAnimationSampler const &aMaterialData );
-        void Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler );
+        void Package( ref_t<TextureData2D> aData, ref_t<TextureSampler2D> aSampler );
         void Package( sImportedTexture const &aData );
 
       private:

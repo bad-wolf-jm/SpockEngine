@@ -22,12 +22,12 @@ namespace SE::Graphics
       public:
         /** @brief */
         ICommandBuffer(  ) = default;
-        ICommandBuffer( Ref<IGraphicContext> aGraphicContext );
+        ICommandBuffer( ref_t<IGraphicContext> aGraphicContext );
 
         /** @brief */
         ~ICommandBuffer() = default;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
     };
 } // namespace SE::Graphics

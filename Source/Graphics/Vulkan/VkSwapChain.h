@@ -12,7 +12,7 @@ namespace SE::Graphics
     class VkSwapChain : public ISwapChain
     {
       public:
-        VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+        VkSwapChain( ref_t<IGraphicContext> aGraphicContext, ref_t<IWindow> aWindow );
         ~VkSwapChain();
 
         bool                            BeginRender();
@@ -31,16 +31,16 @@ namespace SE::Graphics
         {
             return mRenderTargets[mCurrentImage]->GetFramebuffer();
         }
-        Ref<IRenderPass> GetRenderPass()
+        ref_t<IRenderPass> GetRenderPass()
         {
             return mRenderTargets[0]->GetRenderPass();
         }
-        Ref<ICommandBuffer> GetCommandBuffer()
+        ref_t<ICommandBuffer> GetCommandBuffer()
         {
             return mCommandBufferObject[mCurrentImage];
         }
 
-        // Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
+        // ref_t<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
 
         VkSemaphore GetImageAvailableSemaphore( uint32_t i )
         {
@@ -58,16 +58,16 @@ namespace SE::Graphics
       private:
         void RecreateSwapChain();
 
-        Ref<IWindow> mViewportClient = nullptr;
+        ref_t<IWindow> mViewportClient = nullptr;
 
       private:
         VkSurfaceKHR                             mVkSurface                = VK_NULL_HANDLE;
         VkSwapchainKHR                           mVkObject                 = VK_NULL_HANDLE;
-        std::vector<Ref<VkRenderTarget>>         mRenderTargets            = {};
+        std::vector<ref_t<VkRenderTarget>>         mRenderTargets            = {};
         std::vector<VkSemaphore>                 mImageAvailableSemaphores = {};
         std::vector<VkSemaphore>                 mRenderFinishedSemaphores = {};
         std::vector<VkFence>                     mInFlightFences           = {};
-        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject      = {};
+        std::vector<ref_t<sVkCommandBufferObject>> mCommandBufferObject      = {};
 
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;

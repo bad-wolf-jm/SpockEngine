@@ -13,7 +13,7 @@ namespace SE::Core
       public:
         UIImage() = default;
         UIImage( fs::path const &aImagePath, math::vec2 aSize );
-        UIImage( Ref<ISampler2D> aImage, math::vec2 aSize );
+        UIImage( ref_t<ISampler2D> aImage, math::vec2 aSize );
 
       private:
         ImVec2 RequiredSize();

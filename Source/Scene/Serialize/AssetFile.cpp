@@ -142,7 +142,7 @@ namespace SE::Core
         mTotalPacketSize += lPacketSize;
     }
 
-    void BinaryAsset::Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler )
+    void BinaryAsset::Package( ref_t<TextureData2D> aData, ref_t<TextureSampler2D> aSampler )
     {
         if( aData != nullptr )
         {
@@ -237,7 +237,7 @@ namespace SE::Core
     void BinaryAsset::Package( sMaterial const &aMaterialData )
     {
         uint32_t lHeaderSize = sizeof( uint32_t );
-        uint32_t lPacketSize = sizeof( sMaterial ) - sizeof( std::string ) + ( sizeof( uint32_t ) + aMaterialData.mName.size() );
+        uint32_t lPacketSize = sizeof( sMaterial ) - sizeof( string_t ) + ( sizeof( uint32_t ) + aMaterialData.mName.size() );
 
         mPackets.emplace_back( lPacketSize );
 
@@ -311,7 +311,7 @@ namespace SE::Core
 
         Seek( lAssetIndex.mByteStart );
 
-        aMaterialData.mName              = Read<std::string>();
+        aMaterialData.mName              = Read<string_t>();
         aMaterialData.mID                = Read<uint32_t>();
         aMaterialData.mType              = Read<eMaterialType>();
         aMaterialData.mLineWidth         = Read<float>();

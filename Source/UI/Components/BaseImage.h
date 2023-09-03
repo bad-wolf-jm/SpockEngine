@@ -14,7 +14,7 @@ namespace SE::Core
         UIBaseImage() = default;
 
         UIBaseImage( fs::path const &aImagePath, math::vec2 aSize );
-        UIBaseImage( Ref<ISampler2D> aImage, math::vec2 aSize );
+        UIBaseImage( ref_t<ISampler2D> aImage, math::vec2 aSize );
 
         void SetImage( fs::path const &aImagePath );
 
@@ -36,7 +36,7 @@ namespace SE::Core
       protected:
         fs::path mImagePath;
 
-        Ref<ISampler2D> mImage;
+        ref_t<ISampler2D> mImage;
         ImageHandle     mHandle;
 
         ImVec2 mSize{};

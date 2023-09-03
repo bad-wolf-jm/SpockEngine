@@ -5,7 +5,7 @@
 
 namespace SE::Core
 {
-    UILabel::UILabel( std::string const &aText )
+    UILabel::UILabel( string_t const &aText )
         : mText{ aText }
     {
     }
@@ -17,7 +17,7 @@ namespace SE::Core
     {
     }
 
-    void UILabel::SetText( std::string const &aText )
+    void UILabel::SetText( string_t const &aText )
     {
         mText = aText;
     }

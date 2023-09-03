@@ -66,7 +66,7 @@ namespace SE::Graphics
 
     struct sAttachmentResource
     {
-        Ref<ITexture2D> mTexture = nullptr;
+        ref_t<ITexture2D> mTexture = nullptr;
         eCubeFace       mFace    = eCubeFace::POSITIVE_X;
     };
 
@@ -77,37 +77,37 @@ namespace SE::Graphics
 
         IRenderTarget() = default;
 
-        IRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
+        IRenderTarget( ref_t<IGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
 
         ~IRenderTarget() = default;
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<ITexture2D> aFramebufferImage );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            ref_t<ITexture2D> aFramebufferImage );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<ITexture2D> aFramebufferImage, eCubeFace aFace );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            ref_t<ITexture2D> aFramebufferImage, eCubeFace aFace );
 
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+        void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-                            Ref<ITexture2D> aFramebufferImage );
+                            ref_t<ITexture2D> aFramebufferImage );
 
         virtual void             Finalize();
-        virtual Ref<IRenderPass> GetRenderPass();
+        virtual ref_t<IRenderPass> GetRenderPass();
 
         virtual bool BeginRender();
         virtual void EndRender();
         virtual void Present();
 
-        Ref<ITexture2D> GetAttachment( std::string const &aKey );
+        ref_t<ITexture2D> GetAttachment( string_t const &aKey );
         uint32_t        GetColorAttachmentCount()
         {
             return mColorAttachmentCount;
         }
 
         template <typename _GCSubtype>
-        Ref<_GCSubtype> GraphicContext()
+        ref_t<_GCSubtype> GraphicContext()
         {
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
@@ -117,18 +117,18 @@ namespace SE::Graphics
             return mImageCount;
         }
 
-        virtual Ref<ICommandBuffer> GetCommandBuffer() = 0;
+        virtual ref_t<ICommandBuffer> GetCommandBuffer() = 0;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
+        ref_t<IGraphicContext> mGraphicContext = nullptr;
 
         uint32_t mSampleCount = 1;
         uint32_t mImageCount  = 1;
 
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
-        std::vector<std::string>            mAttachmentIDs  = {};
+        std::vector<string_t>            mAttachmentIDs  = {};
 
-        std::unordered_map<std::string, sAttachmentResource> mAttachments = {};
+        std::unordered_map<string_t, sAttachmentResource> mAttachments = {};
 
         uint32_t mColorAttachmentCount = 0;
     };

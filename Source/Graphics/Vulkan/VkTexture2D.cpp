@@ -15,7 +15,7 @@
 namespace SE::Graphics
 {
     /** @brief */
-    VkTexture2D::VkTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
+    VkTexture2D::VkTexture2D( ref_t<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITexture2D( aGraphicContext, aTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
@@ -35,7 +35,7 @@ namespace SE::Graphics
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
-    VkTexture2D::VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( ref_t<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                               bool aIsTransferDestination )
         : ITexture2D( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
@@ -50,7 +50,7 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
     }
 
-    VkTexture2D::VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( ref_t<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               VkImage aExternalImage )
         : ITexture2D( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
@@ -137,9 +137,9 @@ namespace SE::Graphics
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
     }
 
-    void VkTexture2D::SetPixelData( Ref<IGraphicBuffer> aBuffer )
+    void VkTexture2D::SetPixelData( ref_t<IGraphicBuffer> aBuffer )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
+        ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
         std::vector<sImageRegion> lBufferCopyRegions;
@@ -176,7 +176,7 @@ namespace SE::Graphics
 
     void VkTexture2D::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
+        ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
         lCommandBufferObject->End();
@@ -208,7 +208,7 @@ namespace SE::Graphics
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
-        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
+        ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         lCommandBufferObject->End();

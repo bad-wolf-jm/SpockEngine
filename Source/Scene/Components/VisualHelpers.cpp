@@ -36,7 +36,7 @@ namespace SE::Core::EntityComponentSystem::Components
         }
     }
 
-    void CubeMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void CubeMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         math::mat4 lScalingTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ SideLength, SideLength, SideLength } );
         SE::Core::Primitives::VertexBufferData lCube           = SE::Core::Primitives::CreateCube();
@@ -46,7 +46,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, lCube.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void ConeMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void ConeMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Cone = SE::Core::Primitives::CreateWireframeCone( Divisions, Segments );
 
@@ -54,7 +54,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Cone.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void ArrowMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void ArrowMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Shaft          = SE::Core::Primitives::CreateCylinder( 3, Segments );
         math::mat4                             l_ShaftTransform = math::Translation( math::vec3{ 0.0f, 0.46f, 0.0f } ) *
@@ -85,7 +85,7 @@ namespace SE::Core::EntityComponentSystem::Components
             New<VkGpuBuffer>( a_GraphicContext, l_ArrowMeshData.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void CircleMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void CircleMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Circle = SE::Core::Primitives::CreateCircle( Segments );
 
@@ -96,7 +96,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Circle.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void PyramidMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void PyramidMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Pyramid = SE::Core::Primitives::CreateWireframePyramid( 64, 64 );
 
@@ -104,7 +104,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void SurfaceMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void SurfaceMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Plane = SE::Core::Primitives::CreatePlane( math::ivec2{ 32, 32 } );
         std::vector<SimpleVertexData>          l_PlaneVertexData =
@@ -114,7 +114,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Plane.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void SpotlightHelperComponent::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void SpotlightHelperComponent::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         Origin.UpdateMesh( a_GraphicContext );
 
@@ -128,7 +128,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Spot.Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Spot.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void FieldOfViewHelperComponent::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
+    void FieldOfViewHelperComponent::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Pyramid = SE::Core::Primitives::CreateWireframePyramid( 64, 64 );
 

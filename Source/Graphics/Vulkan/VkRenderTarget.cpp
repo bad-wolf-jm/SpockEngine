@@ -2,7 +2,7 @@
 
 namespace SE::Graphics
 {
-    VkRenderTarget::VkRenderTarget( Ref<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
+    VkRenderTarget::VkRenderTarget( ref_t<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
         : IRenderTarget( aGraphicContext, aRenderTargetDescription )
     {
     }
@@ -37,7 +37,7 @@ namespace SE::Graphics
         return lValues;
     }
 
-    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
+    void VkRenderTarget::AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
     {
         sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
@@ -53,19 +53,19 @@ namespace SE::Graphics
         IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, lNewAttachment );
     }
 
-    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                                        Ref<VkTexture2D> aFramebufferImage )
+    void VkRenderTarget::AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                                        ref_t<VkTexture2D> aFramebufferImage )
     {
         IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage );
     }
 
-    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                                        Ref<VkTexture2D> aFramebufferImage, eCubeFace aFace )
+    void VkRenderTarget::AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                                        ref_t<VkTexture2D> aFramebufferImage, eCubeFace aFace )
     {
         IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, aFace );
     }
 
-    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+    void VkRenderTarget::AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                         math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
                                         eAttachmentStoreOp eStoreOp )
     {
@@ -81,9 +81,9 @@ namespace SE::Graphics
         AddAttachment( aAttachmentID, lCreateInfo );
     }
 
-    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+    void VkRenderTarget::AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                         math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                        eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage )
+                                        eAttachmentStoreOp eStoreOp, ref_t<VkTexture2D> aFramebufferImage )
     {
         IRenderTarget::AddAttachment( aAttachmentID, aType, aFormat, aClearColor, aIsSampled, aIsPresented, aLoadOp, eStoreOp,
                                       aFramebufferImage );
@@ -151,9 +151,9 @@ namespace SE::Graphics
         }
     }
 
-    Ref<VkRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
+    ref_t<VkRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
     {
-        Ref<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>( GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED,
+        ref_t<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>( GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED,
                                                                           mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
         std::vector<VkAttachmentDescription> lAttachmentDescriptions{};
@@ -217,7 +217,7 @@ namespace SE::Graphics
         return lNewRenderPass;
     }
 
-    Ref<VkTexture2D> VkRenderTarget::GetAttachment( std::string const &aKey )
+    ref_t<VkTexture2D> VkRenderTarget::GetAttachment( string_t const &aKey )
     {
         //
         return std::static_pointer_cast<VkTexture2D>( mAttachments[aKey].mTexture );

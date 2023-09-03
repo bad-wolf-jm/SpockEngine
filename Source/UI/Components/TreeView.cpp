@@ -68,7 +68,7 @@ namespace SE::Core
         mIndicator->mIsVisible = !( aIcon == nullptr );
     }
 
-    void UITreeViewNode::SetText( std::string const &aText )
+    void UITreeViewNode::SetText( string_t const &aText )
     {
         mText->SetText( aText );
     }

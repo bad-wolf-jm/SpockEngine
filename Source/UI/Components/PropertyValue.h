@@ -15,23 +15,23 @@ namespace SE::Core
         UIPropertyValue()  = default;
         ~UIPropertyValue() = default;
 
-        UIPropertyValue( std::string aName );
-        UIPropertyValue( std::string aName, eBoxLayoutOrientation aOrientation );
+        UIPropertyValue( string_t aName );
+        UIPropertyValue( string_t aName, eBoxLayoutOrientation aOrientation );
 
-        void SetValue( std::string aValue );
+        void SetValue( string_t aValue );
         void SetValueFont( FontFamilyFlags aFont );
         void SetNameFont( FontFamilyFlags aFont );
 
         template <typename... _Ty>
-        void SetValue( std::string aFormat, _Ty &&...aArgList )
+        void SetValue( string_t aFormat, _Ty &&...aArgList )
         {
-            std::string lValue = fmt::format( aFormat, std::forward<_Ty>( aArgList )... );
+            string_t lValue = fmt::format( aFormat, std::forward<_Ty>( aArgList )... );
             SetValue( lValue );
         }
 
       protected:
-        Ref<UILabel> mName;
-        Ref<UILabel> mValue;
+        ref_t<UILabel> mName;
+        ref_t<UILabel> mValue;
 
       public:
         static void *UIPropertyValue_Create();

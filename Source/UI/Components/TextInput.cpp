@@ -4,7 +4,7 @@
 
 namespace SE::Core
 {
-    UITextInput::UITextInput( std::string const &aHintText )
+    UITextInput::UITextInput( string_t const &aHintText )
         : mHintText{ aHintText }
     {
     }
@@ -16,16 +16,16 @@ namespace SE::Core
     {
     }
 
-    void UITextInput::OnTextChanged( std::function<void( std::string )> aOnTextChanged )
+    void UITextInput::OnTextChanged( std::function<void( string_t )> aOnTextChanged )
     {
         mOnTextChanged = aOnTextChanged;
     }
 
-    std::string &UITextInput::GetText()
+    string_t &UITextInput::GetText()
     {
         return mBuffer;
     }
-    void UITextInput::SetHintText( std::string const &aHintText )
+    void UITextInput::SetHintText( string_t const &aHintText )
     {
         mHintText = aHintText;
     }
@@ -133,7 +133,7 @@ namespace SE::Core
         lInstance->mOnTextChangedDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnTextChanged(
-            [lInstance, lDelegate]( std::string aText )
+            [lInstance, lDelegate]( string_t aText )
             {
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );

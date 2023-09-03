@@ -22,13 +22,13 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, uint32_t aLayer, sTextureSamplingInfo const &aSamplingSpec );
-        VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
+        VkSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<VkTexture2D> aTextureData, uint32_t aLayer, sTextureSamplingInfo const &aSamplingSpec );
+        VkSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~VkSampler2D();
 
-        Ref<ITexture2D> GetTexture() { return mTextureData; }
+        ref_t<ITexture2D> GetTexture() { return mTextureData; }
         VkImageView     GetImageView() { return mVkImageView; }
         VkSampler       GetSampler() { return mVkImageSampler; }
 

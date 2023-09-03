@@ -2,7 +2,7 @@
 
 namespace SE::Graphics
 {
-    IGraphicsPipeline::IGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+    IGraphicsPipeline::IGraphicsPipeline( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
                                           ePrimitiveTopology aTopology )
         : mGraphicContext{ aGraphicContext }
         , mRenderContext{ aRenderContext }
@@ -27,19 +27,19 @@ namespace SE::Graphics
         mPushConstants.push_back( sPushConstantRange{ aShaderStage, aOffset, aSize } );
     }
 
-    // void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint )
+    // void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, string_t aEntryPoint )
     // {
     //     mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
     // }
 
-    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, Ref<IShaderProgram> aProgram, std::string aEntryPoint )
+    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, ref_t<IShaderProgram> aProgram, string_t aEntryPoint )
     {
         mShaderStages.push_back( sShaderData{ aShaderType, aProgram, aEntryPoint } );
     }
 
-    void IGraphicsPipeline::AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }
+    void IGraphicsPipeline::AddDescriptorSet( ref_t<IDescriptorSetLayout> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }
 
-    void IGraphicsPipeline::AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
+    void IGraphicsPipeline::AddInput( string_t aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
                                       bool aInstanced )
     {
         auto &lInputDescription = ( aInstanced ? mInstancedInputLayout.emplace_back() : mInputLayout.emplace_back() );
@@ -79,7 +79,7 @@ namespace SE::Graphics
     };
 
 
-    sBufferLayoutElement::sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding,
+    sBufferLayoutElement::sBufferLayoutElement( const string_t &aName, eBufferDataType aType, uint32_t aBinding,
                                                 uint32_t aLocation )
         : mName( aName )
         , mType( aType )

@@ -22,14 +22,14 @@ namespace SE::Graphics
         VkGpuBuffer()                = default;
         VkGpuBuffer( VkGpuBuffer & ) = default;
 
-        VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+        VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                      bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
-        VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+        VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                      bool aIsTransferDestination, size_t aSize );
 
         template <typename _Ty>
-        VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType, bool aIsHostVisible,
+        VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : VkGpuBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            aIsTransferDestination )
@@ -37,7 +37,7 @@ namespace SE::Graphics
         }
 
         template <typename _Ty>
-        VkGpuBuffer( Ref<VkGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType, bool aIsHostVisible,
+        VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : VkGpuBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
                            aSize * sizeof( _Ty ) )
@@ -57,11 +57,11 @@ namespace SE::Graphics
 
         void Allocate( size_t aSizeInBytes );
         void Resize( size_t aNewSizeInBytes );
-        void Copy( Ref<IGraphicBuffer> aSource, size_t aOffset );
+        void Copy( ref_t<IGraphicBuffer> aSource, size_t aOffset );
         void DoUpload( void *aData, size_t aSize, size_t aOffset );
 
       private:
-        Ref<VkGraphicContext> mVkGraphicContext;
+        ref_t<VkGraphicContext> mVkGraphicContext;
 
         VkDeviceSize         mSizeAligned          = 0;
         cudaExternalMemory_t mExternalMemoryHandle = 0;

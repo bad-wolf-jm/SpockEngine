@@ -6,7 +6,7 @@ namespace SE::Core
 {
     using namespace SE::Graphics;
 
-    CoordinateGridRenderer::CoordinateGridRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext )
+    CoordinateGridRenderer::CoordinateGridRenderer( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext )
         : mGraphicContext( aGraphicContext )
     {
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
@@ -51,7 +51,7 @@ namespace SE::Core
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 
-    void CoordinateGridRenderer::Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext )
+    void CoordinateGridRenderer::Render( math::mat4 aProjection, math::mat4 aView, ref_t<IRenderContext> aRenderContext )
     {
         CameraViewUniforms lView{ aView, aProjection };
 

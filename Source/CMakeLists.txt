@@ -11,6 +11,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
+    Core/Vector.cpp
+    Core/String.cpp
 
     Core/Entity/EditComponent.cpp
 

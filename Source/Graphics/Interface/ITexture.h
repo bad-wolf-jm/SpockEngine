@@ -24,7 +24,7 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        ITexture( Ref<IGraphicContext> aGraphicContext, eTextureType aType, sTextureCreateInfo &aTextureImageDescription,
+        ITexture( ref_t<IGraphicContext> aGraphicContext, eTextureType aType, sTextureCreateInfo &aTextureImageDescription,
                   uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                   bool aIsTransferDestination );
 

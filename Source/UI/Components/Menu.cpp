@@ -3,12 +3,12 @@
 #include "DotNet/Runtime.h"
 namespace SE::Core
 {
-    UIMenuItem::UIMenuItem( std::string const &aText )
+    UIMenuItem::UIMenuItem( string_t const &aText )
         : mText{ aText }
     {
     }
 
-    UIMenuItem::UIMenuItem( std::string const &aText, std::string const &aShortcut )
+    UIMenuItem::UIMenuItem( string_t const &aText, string_t const &aShortcut )
         : mText{ aText }
         , mShortcut{ aShortcut }
     {
@@ -21,11 +21,11 @@ namespace SE::Core
     {
     }
 
-    void UIMenuItem::SetText( std::string const &aText )
+    void UIMenuItem::SetText( string_t const &aText )
     {
         mText = aText;
     }
-    void UIMenuItem::SetShortcut( std::string const &aShortcut )
+    void UIMenuItem::SetShortcut( string_t const &aShortcut )
     {
         mShortcut = aShortcut;
     }
@@ -171,7 +171,7 @@ namespace SE::Core
         delete static_cast<UIMenuSeparator *>( aInstance );
     }
 
-    UIMenu::UIMenu( std::string const &aText )
+    UIMenu::UIMenu( string_t const &aText )
         : UIMenuItem( aText )
     {
     }
@@ -209,7 +209,7 @@ namespace SE::Core
             ImGui::PopStyleColor();
     }
 
-    UIMenuItem *UIMenu::AddActionRaw( std::string const &aText, std::string const &aShortcut )
+    UIMenuItem *UIMenu::AddActionRaw( string_t const &aText, string_t const &aShortcut )
     {
         UIMenuItem *lNewItem = new UIMenuItem( aText, aShortcut );
         mActions.push_back( lNewItem );
@@ -217,7 +217,7 @@ namespace SE::Core
         return lNewItem;
     }
 
-    UIMenu *UIMenu::AddMenuRaw( std::string const &aText )
+    UIMenu *UIMenu::AddMenuRaw( string_t const &aText )
     {
         UIMenu *lNewItem = new UIMenu( aText );
         mActions.push_back( lNewItem );
@@ -233,23 +233,23 @@ namespace SE::Core
         return lNewItem;
     }
 
-    Ref<UIMenuItem> UIMenu::AddAction( std::string const &aText, std::string const &aShortcut )
+    ref_t<UIMenuItem> UIMenu::AddAction( string_t const &aText, string_t const &aShortcut )
     {
-        Ref<UIMenuItem> lNewItem( AddActionRaw( aText, aShortcut ) );
+        ref_t<UIMenuItem> lNewItem( AddActionRaw( aText, aShortcut ) );
 
         return lNewItem;
     }
 
-    Ref<UIMenu> UIMenu::AddMenu( std::string const &aText )
+    ref_t<UIMenu> UIMenu::AddMenu( string_t const &aText )
     {
-        Ref<UIMenu> lNewItem( AddMenuRaw( aText ) );
+        ref_t<UIMenu> lNewItem( AddMenuRaw( aText ) );
 
         return lNewItem;
     }
 
-    Ref<UIMenuItem> UIMenu::AddSeparator()
+    ref_t<UIMenuItem> UIMenu::AddSeparator()
     {
-        Ref<UIMenuItem> lNewItem( AddSeparatorRaw() );
+        ref_t<UIMenuItem> lNewItem( AddSeparatorRaw() );
 
         return lNewItem;
     }

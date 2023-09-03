@@ -51,13 +51,13 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    VkSampler2D::VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
+    VkSampler2D::VkSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<VkTexture2D> aTextureData,
                               sTextureSamplingInfo const &aSamplingSpec )
         : VkSampler2D( aGraphicContext, aTextureData, 0, aSamplingSpec )
     {
     }
 
-    VkSampler2D::VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, uint32_t aLayer,
+    VkSampler2D::VkSampler2D( ref_t<IGraphicContext> aGraphicContext, ref_t<VkTexture2D> aTextureData, uint32_t aLayer,
                               sTextureSamplingInfo const &aSamplingSpec )
         : ISampler2D( aGraphicContext, aTextureData, aSamplingSpec )
     {

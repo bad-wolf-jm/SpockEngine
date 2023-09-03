@@ -25,16 +25,16 @@ namespace SE::Graphics
     class IDescriptorSetLayout
     {
       public:
-        IDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 0 );
+        IDescriptorSetLayout( ref_t<IGraphicContext> aGraphicContext, bool aIsUnbounded = false, uint32_t aDescriptorCount = 0 );
         ~IDescriptorSetLayout() = default;
 
         void         AddBinding( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages );
         virtual void Build() = 0;
 
-        virtual Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount = 1 ) = 0;
+        virtual ref_t<IDescriptorSet> Allocate( uint32_t aDescriptorCount = 1 ) = 0;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext{};
+        ref_t<IGraphicContext> mGraphicContext{};
 
         bool     mIsUnbounded     = false;
         uint32_t mDescriptorCount = 1;

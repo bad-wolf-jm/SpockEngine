@@ -12,21 +12,21 @@ namespace SE::Graphics
     {
       public:
         VkBaseRenderContext() = default;
-        VkBaseRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget );
+        VkBaseRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget );
 
         ~VkBaseRenderContext() = default;
 
-        Ref<IGraphicContext> GetGraphicContext()
+        ref_t<IGraphicContext> GetGraphicContext()
         {
             return mGraphicContext;
         };
 
         uint32_t           GetOutputImageCount();
-        Ref<IRenderTarget> GetRenderTarget()
+        ref_t<IRenderTarget> GetRenderTarget()
         {
             return mRenderTarget;
         }
-        Ref<IRenderPass> GetRenderPass()
+        ref_t<IRenderPass> GetRenderPass()
         {
             return Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass();
         }
@@ -34,11 +34,11 @@ namespace SE::Graphics
         bool BeginRender();
         bool EndRender();
 
-        void Bind( Ref<IGraphicsPipeline> aGraphicPipeline );
+        void Bind( ref_t<IGraphicsPipeline> aGraphicPipeline );
         void Bind( void *aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 );
-        void Bind( Ref<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 );
-        void Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint = 0 );
-        void Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint = 0 );
+        void Bind( ref_t<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 );
+        void Bind( ref_t<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint = 0 );
+        void Bind( ref_t<IGraphicBuffer> aVertexBuffer, ref_t<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint = 0 );
         void PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize );
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
         void SetScissor( math::ivec2 aOffset, math::uvec2 aSize );
@@ -51,10 +51,10 @@ namespace SE::Graphics
 
       protected:
         uint32_t                                 mCurrentCommandBuffer  = 0;
-        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject   = {};
-        Ref<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;
+        std::vector<ref_t<sVkCommandBufferObject>> mCommandBufferObject   = {};
+        ref_t<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;
 
-        Ref<sVkCommandBufferObject> GetCurrentCommandBuffer()
+        ref_t<sVkCommandBufferObject> GetCurrentCommandBuffer()
         {
             return Cast<sVkCommandBufferObject>( mRenderTarget->GetCommandBuffer() );
         }

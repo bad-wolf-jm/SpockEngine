@@ -28,7 +28,7 @@ namespace SE::Core::UI
 
     struct ImageHandle
     {
-        Ref<IDescriptorSet> Handle = nullptr;
+        ref_t<IDescriptorSet> Handle = nullptr;
 
         ImageHandle()                      = default;
         ImageHandle( const ImageHandle & ) = default;
@@ -37,10 +37,10 @@ namespace SE::Core::UI
     void GetStyleColor( ImGuiCol aColor, math::vec4 *aOut );
 
     void Text( const char *a_Text );
-    void Text( std::string a_Text );
+    void Text( string_t a_Text );
 
     template <typename... ArgTypes>
-    void Text( std::string a_String, ArgTypes &&...a_ArgList )
+    void Text( string_t a_String, ArgTypes &&...a_ArgList )
     {
         Text( fmt::format( a_String, std::forward<ArgTypes>( a_ArgList )... ) );
     }

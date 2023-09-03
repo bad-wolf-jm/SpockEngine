@@ -6,7 +6,7 @@
 namespace SE::Graphics
 {
 
-    VkRenderContext::VkRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aRenderTarget )
+    VkRenderContext::VkRenderContext( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderTarget> aRenderTarget )
         : VkBaseRenderContext( aGraphicContext, aRenderTarget )
     {
     }

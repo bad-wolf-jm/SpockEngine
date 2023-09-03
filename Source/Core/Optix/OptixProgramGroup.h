@@ -18,12 +18,12 @@ namespace SE::Graphics
 
         OptixProgramGroupObject() = default;
         OptixProgramGroupObject( OptixProgramGroupDesc aProgramGroupDescription, OptixProgramGroupOptions aProgramGroupOptions,
-                                 Ref<OptixDeviceContextObject> aRTContext );
+                                 ref_t<OptixDeviceContextObject> aRTContext );
 
         ~OptixProgramGroupObject();
 
       private:
-        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
+        ref_t<OptixDeviceContextObject> mRayTracingContext = nullptr;
     };
 
 } // namespace SE::Graphics

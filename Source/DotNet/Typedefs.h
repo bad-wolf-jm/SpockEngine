@@ -1,5 +1,6 @@
 #pragma once
 
+
 extern "C"
 {
     typedef struct _MonoClass      MonoClass;
@@ -34,15 +35,18 @@ extern "C"
     struct sScriptField
     {
         eScriptFieldType mType;
-        std::string      mName;
+        SE::Core::string_t         mName;
         MonoClassField  *mClassField;
     };
 
     struct sScriptProperty
     {
-        std::string   mName;
+        SE::Core::string_t      mName;
         MonoProperty *mProperty;
 
-        operator bool() { return mProperty != nullptr; }
+        operator bool()
+        {
+            return mProperty != nullptr;
+        }
     };
 }

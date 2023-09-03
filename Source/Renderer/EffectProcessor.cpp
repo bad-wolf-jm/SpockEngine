@@ -6,7 +6,7 @@ namespace SE::Core
 {
     using namespace SE::Graphics;
 
-    EffectProcessor::EffectProcessor( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+    EffectProcessor::EffectProcessor( ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
                                       EffectProcessorCreateInfo aCreateInfo )
         : mGraphicContext{ aGraphicContext }
         , Spec{ aCreateInfo }
@@ -28,7 +28,7 @@ namespace SE::Core
         mTextures = PipelineLayout->Allocate();
     }
 
-    void EffectProcessor::Render( Ref<ISampler2D> aImageSampler, Ref<IRenderContext> aRenderContext )
+    void EffectProcessor::Render( ref_t<ISampler2D> aImageSampler, ref_t<IRenderContext> aRenderContext )
     {
         mTextures->Write( aImageSampler, 0 );
 

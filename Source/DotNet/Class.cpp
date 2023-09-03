@@ -27,9 +27,9 @@ namespace SE::Core
 
     namespace
     {
-        std::map<std::string, sScriptField> GetClassFields( MonoClass *aMonoClass )
+        std::map<string_t, sScriptField> GetClassFields( MonoClass *aMonoClass )
         {
-            std::map<std::string, sScriptField> lFields{};
+            std::map<string_t, sScriptField> lFields{};
 
             if( !aMonoClass ) return lFields;
 
@@ -53,9 +53,9 @@ namespace SE::Core
             return lFields;
         }
 
-        std::map<std::string, sScriptProperty> GetClassProperties( MonoClass *aMonoClass )
+        std::map<string_t, sScriptProperty> GetClassProperties( MonoClass *aMonoClass )
         {
-            std::map<std::string, sScriptProperty> lProperties{};
+            std::map<string_t, sScriptProperty> lProperties{};
 
             if( !aMonoClass ) return lProperties;
 
@@ -81,7 +81,7 @@ namespace SE::Core
         }
     } // namespace
 
-    DotNetClass::DotNetClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+    DotNetClass::DotNetClass( const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage,
                               fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
@@ -94,7 +94,7 @@ namespace SE::Core
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
-    DotNetClass::DotNetClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+    DotNetClass::DotNetClass( MonoClass *aClass, const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage,
                               fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
@@ -114,14 +114,14 @@ namespace SE::Core
         mProperties = GetClassProperties( mMonoClass );
     }
 
-    Ref<DotNetInstance> DotNetClass::DoInstantiate()
+    ref_t<DotNetInstance> DotNetClass::DoInstantiate()
     {
         MonoObject *lInstance = DotNetRuntime::InstantiateClass( mMonoClass, mIsCore );
 
         return New<DotNetInstance>( this, mMonoClass, lInstance );
     }
 
-    MonoMethod *DotNetClass::GetMethod( const std::string &aName, int aParameterCount )
+    MonoMethod *DotNetClass::GetMethod( const string_t &aName, int aParameterCount )
     {
         MonoClass  *lClass  = mMonoClass;
         MonoMethod *lMethod = NULL;
@@ -145,7 +145,7 @@ namespace SE::Core
         return nullptr;
     }
 
-    MonoObject *DotNetClass::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
+    MonoObject *DotNetClass::InvokeMethod( const string_t &aName, int aParameterCount, void **aParameters )
     {
         auto lMethod = GetMethod( aName, aParameterCount );
 

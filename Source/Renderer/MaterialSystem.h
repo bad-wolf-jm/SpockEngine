@@ -54,7 +54,7 @@ namespace SE::Core
     template <typename _Ty>
     struct sTextureComponent
     {
-        using Tex2D = Ref<ISampler2D>;
+        using Tex2D = ref_t<ISampler2D>;
 
         _Ty mFactor{};
 
@@ -100,7 +100,7 @@ namespace SE::Core
 
     struct sVertexShader
     {
-        std::string mCode;
+        string_t mCode;
 
         sVertexShader()                        = default;
         sVertexShader( const sVertexShader & ) = default;
@@ -108,7 +108,7 @@ namespace SE::Core
 
     struct sFragmentShader
     {
-        std::string mCode;
+        string_t mCode;
 
         sFragmentShader()                          = default;
         sFragmentShader( const sFragmentShader & ) = default;
@@ -118,101 +118,101 @@ namespace SE::Core
     {
       public:
         MaterialSystem() = default;
-        MaterialSystem( Ref<IGraphicContext> aGraphicContext );
+        MaterialSystem( ref_t<IGraphicContext> aGraphicContext );
 
         ~MaterialSystem() = default;
 
-        Material CreateMaterial( std::string const &aName );
+        Material CreateMaterial( string_t const &aName );
         Material CreateMaterial( fs::path const &aMaterialPath );
-        Material BeginMaterial( std::string const &aName );
+        Material BeginMaterial( string_t const &aName );
         void     EndMaterial( Material const &aMaterial );
         size_t   GetMaterialHash( Material const &aMaterial );
 
-        int32_t AppendTextureData( Ref<ISampler2D> aTexture );
+        int32_t AppendTextureData( ref_t<ISampler2D> aTexture );
         void    UpdateMaterialData();
 
         std::vector<Material> GetMaterialData();
 
       private:
-        Ref<IGraphicContext> mGraphicContext;
+        ref_t<IGraphicContext> mGraphicContext;
 
         EntityCollection mMaterialRegistry;
 
-        std::vector<Ref<ISampler2D>> mTextureData;
+        std::vector<ref_t<ISampler2D>> mTextureData;
         std::vector<sShaderMaterial> mMaterialData;
         sDirectionalLight            mDirectionalLight;
         std::vector<sPunctualLight>  mPointLights;
 
-        std::map<size_t, Ref<IShaderProgram>> mVertexShaders;
-        std::map<size_t, Ref<IShaderProgram>> mFragmentShaders;
+        std::map<size_t, ref_t<IShaderProgram>> mVertexShaders;
+        std::map<size_t, ref_t<IShaderProgram>> mFragmentShaders;
 
-        Ref<IGraphicBuffer>       mViewParameters                 = nullptr;
-        Ref<IDescriptorSet>       mViewParametersDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mViewParametersDescriptorLayout = nullptr;
+        ref_t<IGraphicBuffer>       mViewParameters                 = nullptr;
+        ref_t<IDescriptorSet>       mViewParametersDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mViewParametersDescriptorLayout = nullptr;
 
-        Ref<IGraphicBuffer>       mCameraParameters                 = nullptr;
-        Ref<IDescriptorSet>       mCameraParametersDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mCameraParametersDescriptorLayout = nullptr;
+        ref_t<IGraphicBuffer>       mCameraParameters                 = nullptr;
+        ref_t<IDescriptorSet>       mCameraParametersDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mCameraParametersDescriptorLayout = nullptr;
 
-        Ref<IGraphicBuffer>       mShaderMaterials                 = nullptr;
-        Ref<IDescriptorSet>       mShaderMaterialsDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mShaderMaterialsDescriptorLayout = nullptr;
+        ref_t<IGraphicBuffer>       mShaderMaterials                 = nullptr;
+        ref_t<IDescriptorSet>       mShaderMaterialsDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mShaderMaterialsDescriptorLayout = nullptr;
 
-        Ref<IGraphicBuffer>       mShaderDirectionalLights           = nullptr;
-        Ref<IDescriptorSet>       mDirectionalLightsDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mDirectionalLightsDescriptorLayout = nullptr;
+        ref_t<IGraphicBuffer>       mShaderDirectionalLights           = nullptr;
+        ref_t<IDescriptorSet>       mDirectionalLightsDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mDirectionalLightsDescriptorLayout = nullptr;
 
-        Ref<IGraphicBuffer>       mShaderPunctualLights           = nullptr;
-        Ref<IDescriptorSet>       mPunctualLightsDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mPunctualLightsDescriptorLayout = nullptr;
+        ref_t<IGraphicBuffer>       mShaderPunctualLights           = nullptr;
+        ref_t<IDescriptorSet>       mPunctualLightsDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mPunctualLightsDescriptorLayout = nullptr;
 
         Cuda::GPUMemory           mMaterialCudaTextures{};
-        Ref<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
+        ref_t<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
 
-        Ref<ISampler2D>           mShaderDirectionalLightShadowMap           = nullptr;
-        Ref<IDescriptorSet>       mDirectionalLightShadowMapDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout> mDirectionalLightShadowMapDescriptorLayout = nullptr;
+        ref_t<ISampler2D>           mShaderDirectionalLightShadowMap           = nullptr;
+        ref_t<IDescriptorSet>       mDirectionalLightShadowMapDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout> mDirectionalLightShadowMapDescriptorLayout = nullptr;
 
-        std::vector<Ref<ISamplerCubeMap>> mPunctualLightShadowMaps                = {};
-        Ref<IDescriptorSet>               mPunctualLightShadowMapDescriptor       = nullptr;
-        Ref<IDescriptorSetLayout>         mPunctualLightShadowMapDescriptorLayout = nullptr;
+        std::vector<ref_t<ISamplerCubeMap>> mPunctualLightShadowMaps                = {};
+        ref_t<IDescriptorSet>               mPunctualLightShadowMapDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout>         mPunctualLightShadowMapDescriptorLayout = nullptr;
 
         std::unordered_map<Material, int32_t> mMaterialIndexLookup;
 
       public:
-        Ref<IShaderProgram>    CreateVertexShader( Material const &aMaterial );
-        Ref<IShaderProgram>    CreateFragmentShader( Material const &aMaterial );
-        Ref<IGraphicsPipeline> CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass );
+        ref_t<IShaderProgram>    CreateVertexShader( Material const &aMaterial );
+        ref_t<IShaderProgram>    CreateFragmentShader( Material const &aMaterial );
+        ref_t<IGraphicsPipeline> CreateGraphicsPipeline( Material const &aMaterial, ref_t<IRenderContext> aRenderPass );
 
-        Ref<IGraphicsPipeline> GetGraphicsPipeline( Material const &aMaterial );
+        ref_t<IGraphicsPipeline> GetGraphicsPipeline( Material const &aMaterial );
 
         void SetLights( sDirectionalLight const &aDirectionalLights );
         void SetLights( std::vector<sPunctualLight> const &aPointLights );
 
-        void SetShadowMap( Ref<ISampler2D> aDirectionalShadowMap );
-        void SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps );
+        void SetShadowMap( ref_t<ISampler2D> aDirectionalShadowMap );
+        void SetShadowMap( std::vector<ref_t<ISamplerCubeMap>> aPunctualLightShadowMaps );
 
-        void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
+        void ConfigureRenderContext( ref_t<IRenderContext> aRenderPass );
         void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );
         void SetCameraParameters( float aGamma, float aExposure, vec3 aCameraPosition );
-        void SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID );
+        void SelectMaterialInstance( ref_t<IRenderContext> aRenderPass, Material aMaterialID );
 
       private:
         template <typename _Ty>
-        void DefineConstantIfComponentIsPresent( Ref<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
+        void DefineConstantIfComponentIsPresent( ref_t<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
         {
             if( aMaterial.Has<_Ty>() )
                 aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
         }
 
-        void DefineConstant( Ref<IShaderProgram> aShaderProgram, const char *aName )
+        void DefineConstant( ref_t<IShaderProgram> aShaderProgram, const char *aName )
         {
             aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
         }
 
-        void        AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial );
-        std::string CreateShaderName( Material aMaterial, const char *aPrefix );
+        void        AddDefinitions( ref_t<IShaderProgram> aShaderProgram, Material aMaterial );
+        string_t CreateShaderName( Material aMaterial, const char *aPrefix );
 
         void    AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo );
         int32_t GetMaterialIndex( Material aMaterial );

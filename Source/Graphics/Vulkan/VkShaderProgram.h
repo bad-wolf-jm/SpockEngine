@@ -21,8 +21,8 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                         std::string const &aName, fs::path const &aCacheRoot );
+        VkShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                         string_t const &aName, fs::path const &aCacheRoot );
 
         /** @brief */
         ~VkShaderProgram() = default;
@@ -30,9 +30,9 @@ namespace SE::Graphics
         void DoCompile();
         void BuildProgram();
 
-        Ref<ShaderModule> GetShaderModule() { return mShaderModule; };
+        ref_t<ShaderModule> GetShaderModule() { return mShaderModule; };
 
       private:
-        Ref<ShaderModule> mShaderModule{};
+        ref_t<ShaderModule> mShaderModule{};
     };
 } // namespace SE::Graphics

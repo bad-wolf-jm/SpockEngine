@@ -21,7 +21,7 @@ namespace SE::TensorOps
         mPool = MemoryPool( aMemorySize );
     }
 
-    Scope &Scope::WithOpName( const std::string &aName )
+    Scope &Scope::WithOpName( const string_t &aName )
     {
         mName = aName;
         return *this;
@@ -44,7 +44,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Scope::operator[]( const std::string &aNodeName )
+    OpNode Scope::operator[]( const string_t &aNodeName )
     {
         if( mNamedNodes.find( aNodeName ) != mNamedNodes.end() )
             return mNamedNodes[aNodeName];

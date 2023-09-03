@@ -3,12 +3,12 @@
 #include "DotNet/Runtime.h"
 namespace SE::Core
 {
-    UIPropertyValue::UIPropertyValue( std::string aName )
+    UIPropertyValue::UIPropertyValue( string_t aName )
         : UIPropertyValue( aName, eBoxLayoutOrientation::HORIZONTAL )
     {
     }
 
-    UIPropertyValue::UIPropertyValue( std::string aName, eBoxLayoutOrientation aOrientation )
+    UIPropertyValue::UIPropertyValue( string_t aName, eBoxLayoutOrientation aOrientation )
         : UIBoxLayout( aOrientation )
     {
         mName  = New<UILabel>( aName );
@@ -26,7 +26,7 @@ namespace SE::Core
         }
     }
 
-    void UIPropertyValue::SetValue( std::string aValue )
+    void UIPropertyValue::SetValue( string_t aValue )
     {
         mValue->SetText( aValue );
     }

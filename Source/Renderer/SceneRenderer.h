@@ -21,8 +21,8 @@ namespace SE::Core
         Material mMaterialID = 0;
 
         // Buffer data
-        Ref<IGraphicBuffer> mVertexBuffer = nullptr;
-        Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
+        ref_t<IGraphicBuffer> mVertexBuffer = nullptr;
+        ref_t<IGraphicBuffer> mIndexBuffer  = nullptr;
         uint32_t            mVertexOffset = 0;
         uint32_t            mVertexCount  = 0;
         uint32_t            mIndexOffset  = 0;
@@ -42,7 +42,7 @@ namespace SE::Core
 
     struct sRenderQueue
     {
-        Ref<IGraphicsPipeline>       mPipeline;
+        ref_t<IGraphicsPipeline>       mPipeline;
         std::vector<sMeshRenderData> mMeshes;
     };
 
@@ -56,25 +56,25 @@ namespace SE::Core
 
       public:
         SceneRenderer() = default;
-        SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        SceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~SceneRenderer() = default;
 
-        Ref<ITexture2D> GetOutputImage();
+        ref_t<ITexture2D> GetOutputImage();
 
-        void Update( Ref<Scene> aWorld );
+        void Update( ref_t<Scene> aWorld );
         void Render();
 
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
-        Ref<IRenderTarget>          mGeometryRenderTarget   = nullptr;
-        Ref<IRenderContext>         mGeometryContext        = nullptr;
-        Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
-        Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
-        Ref<ISampler2D>             mFxaaSampler            = nullptr;
-        Ref<IRenderTarget>          mFxaaRenderTarget       = nullptr;
-        Ref<IRenderContext>         mFxaaContext            = nullptr;
+        ref_t<IRenderTarget>          mGeometryRenderTarget   = nullptr;
+        ref_t<IRenderContext>         mGeometryContext        = nullptr;
+        ref_t<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
+        ref_t<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
+        ref_t<ISampler2D>             mFxaaSampler            = nullptr;
+        ref_t<IRenderTarget>          mFxaaRenderTarget       = nullptr;
+        ref_t<IRenderContext>         mFxaaContext            = nullptr;
 
         std::map<size_t, sRenderQueue> mPipelines;
 

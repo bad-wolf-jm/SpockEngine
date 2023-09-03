@@ -34,27 +34,27 @@ namespace SE::Graphics
     class DescriptorSetLayout
     {
       public:
-        DescriptorSetLayout( Ref<VkGraphicContext> aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
+        DescriptorSetLayout( ref_t<VkGraphicContext> aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
                              bool aUnbounded = false );
         ~DescriptorSetLayout() = default;
 
         DescriptorSetLayoutCreateInfo Spec;
 
-        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mDescriptorSetLayoutObject; }
+        ref_t<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mDescriptorSetLayoutObject; }
 
         VkDescriptorSetLayout GetVkDescriptorSetLayout() { return mDescriptorSetLayoutObject->mVkObject; }
 
         operator VkDescriptorSetLayout() const { return mDescriptorSetLayoutObject->mVkObject; };
 
       private:
-        Ref<VkGraphicContext>             mGraphicContext{};
-        Ref<sVkDescriptorSetLayoutObject> mDescriptorSetLayoutObject = nullptr;
+        ref_t<VkGraphicContext>             mGraphicContext{};
+        ref_t<sVkDescriptorSetLayoutObject> mDescriptorSetLayoutObject = nullptr;
     };
 
     template <typename _BufType>
     struct DescriptorBufferInfo
     {
-        Ref<_BufType> Buffer        = nullptr;
+        ref_t<_BufType> Buffer        = nullptr;
         bool          DynamicOffset = false;
         uint32_t      Binding       = 0;
         uint32_t      Offset        = 0;
@@ -64,25 +64,25 @@ namespace SE::Graphics
     class DescriptorSet
     {
       public:
-        DescriptorSet( Ref<IGraphicsPipeline> aGraphicsPipeline, uint32_t aDescriptorCount = 0 );
-        DescriptorSet( Ref<VkGraphicContext> aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount = 0 );
+        DescriptorSet( ref_t<IGraphicsPipeline> aGraphicsPipeline, uint32_t aDescriptorCount = 0 );
+        DescriptorSet( ref_t<VkGraphicContext> aGraphicContext, ref_t<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount = 0 );
         ~DescriptorSet() = default;
 
-        void Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
-        void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
-        void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
+        void Write( ref_t<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
+        void Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding );
+        void Write( std::vector<ref_t<VkSampler2D>> aBuffer, uint32_t aBinding );
 
-        void Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding );
-        void Write( std::vector<Ref<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
+        void Write( ref_t<VkSamplerCubeMap> aBuffer, uint32_t aBinding );
+        void Write( std::vector<ref_t<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
 
         VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
 
-        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
+        ref_t<sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
 
       private:
-        Ref<VkGraphicContext>       mGraphicContext{};
-        Ref<DescriptorSetLayout>    mLayout              = nullptr;
-        Ref<sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
+        ref_t<VkGraphicContext>       mGraphicContext{};
+        ref_t<DescriptorSetLayout>    mLayout              = nullptr;
+        ref_t<sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
     };
 
 } // namespace SE::Graphics

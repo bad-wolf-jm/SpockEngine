@@ -13,7 +13,7 @@ namespace SE::Core
     using namespace SE::Core::Primitives;
     using namespace math;
 
-    SceneRenderer::SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    SceneRenderer::SceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
     }
@@ -78,7 +78,7 @@ namespace SE::Core
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
     }
 
-    void SceneRenderer::Update( Ref<Scene> aWorld )
+    void SceneRenderer::Update( ref_t<Scene> aWorld )
     {
         SE_PROFILE_FUNCTION();
 
@@ -192,7 +192,7 @@ namespace SE::Core
         mGeometryContext->EndRender();
     }
 
-    Ref<ITexture2D> SceneRenderer::GetOutputImage()
+    ref_t<ITexture2D> SceneRenderer::GetOutputImage()
     {
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
     }

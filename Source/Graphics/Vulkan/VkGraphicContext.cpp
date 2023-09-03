@@ -55,11 +55,11 @@ namespace SE::Graphics
             std::vector<VkLayerProperties> lAvailableLayers( lLayerCount );
             vkEnumerateInstanceLayerProperties( &lLayerCount, lAvailableLayers.data() );
 
-            std::set<std::string> lAvailableValidationLayers;
+            std::set<string_t> lAvailableValidationLayers;
             for( const auto &lLayer : lAvailableLayers )
                 lAvailableValidationLayers.emplace( lLayer.layerName );
 
-            std::set<std::string> lRequestedValidationLayers( aValidationLayers.begin(), aValidationLayers.end() );
+            std::set<string_t> lRequestedValidationLayers( aValidationLayers.begin(), aValidationLayers.end() );
 
             return IsSubset( lRequestedValidationLayers, lAvailableValidationLayers );
         }
@@ -89,9 +89,9 @@ namespace SE::Graphics
             std::vector<VkExtensionProperties> lAvailableExtensions( lExtensionCount );
             vkEnumerateDeviceExtensionProperties( aVkPhysicalDevice, nullptr, &lExtensionCount, lAvailableExtensions.data() );
 
-            std::set<std::string> lRequestedExtensionsSet( aRequestedExtensions.begin(), aRequestedExtensions.end() );
+            std::set<string_t> lRequestedExtensionsSet( aRequestedExtensions.begin(), aRequestedExtensions.end() );
 
-            std::set<std::string> lAvailableExtensionSet;
+            std::set<string_t> lAvailableExtensionSet;
             for( const auto &lExtension : lAvailableExtensions )
                 lAvailableExtensionSet.emplace( lExtension.extensionName );
 
@@ -553,7 +553,7 @@ namespace SE::Graphics
             vkDestroyInstance( mVkInstance, nullptr );
     }
 
-    VkSurfaceKHR VkGraphicContext::CreateVkSurface( Ref<IWindow> aWindow )
+    VkSurfaceKHR VkGraphicContext::CreateVkSurface( ref_t<IWindow> aWindow )
     {
         VkSurfaceKHR lNewSurface;
         VK_CHECK_RESULT( glfwCreateWindowSurface( mVkInstance, aWindow->GetGLFWWindow(), nullptr, &lNewSurface ) );

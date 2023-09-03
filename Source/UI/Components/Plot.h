@@ -19,7 +19,7 @@ namespace SE::Core
 
     struct sPlotAxisConfiguration
     {
-        std::string mTitle;
+        string_t mTitle;
         float       mMin = 0.0f;
         float       mMax = 0.0f;
 
@@ -32,7 +32,7 @@ namespace SE::Core
 
     struct sPlotData
     {
-        std::string mLegend;
+        string_t mLegend;
         math::vec4  mColor     = { 0.0f, 0.0f, 0.0f, -1.0f };
         float       mThickness = -1.0f;
 
@@ -163,13 +163,13 @@ namespace SE::Core
     struct sAxisTag : public sPlotData
     {
         double      mX;
-        std::string mText;
+        string_t mText;
         math::vec4  mColor;
         UIPlotAxis  mAxis = UIPlotAxis::X1;
 
         sAxisTag() = default;
 
-        sAxisTag( UIPlotAxis aAxis, double aX, std::string const &aText, math::vec4 aColor )
+        sAxisTag( UIPlotAxis aAxis, double aX, string_t const &aText, math::vec4 aColor )
             : mX{ aX }
             , mText{ aText }
             , mColor{ aColor }
@@ -195,7 +195,7 @@ namespace SE::Core
       public:
         UIPlot();
 
-        void Add( Ref<sPlotData> aPlot );
+        void Add( ref_t<sPlotData> aPlot );
         void Add( sPlotData *aPlot );
         void Clear();
 

@@ -475,7 +475,7 @@ namespace filewatch {
 			return directory;
 		}
 
-		void convert_wstring(const std::wstring& wstr, std::string& out)
+		void convert_wstring(const std::wstring& wstr, string_t& out)
 		{
 			int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
 			out.resize(size_needed, '\0');
