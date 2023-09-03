@@ -7,16 +7,9 @@ namespace SpockEngine
     {
         private bool mDerived = false;
 
-        public UISlider() : this(UISlider_Create(), false) { }
-        public UISlider(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UISlider() : this(Interop.UISlider_Create(), false) { }
+        public UISlider(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
-        ~UISlider() { if (!mDerived) UISlider_Destroy(mInstance); }
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UISlider_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISlider_Destroy(ulong aInstance);
+        ~UISlider() { if (!mDerived) Interop.UISlider_Destroy(mInstance); }
     }
 }

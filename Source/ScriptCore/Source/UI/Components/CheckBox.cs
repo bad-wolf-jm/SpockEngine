@@ -1,13 +1,14 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
     public class UICheckBox : UIComponent
     {
-        public UICheckBox() : base(UICheckBox_Create()) { }
+        public UICheckBox() : base(Interop.UICheckBox_Create()) { }
 
-        ~UICheckBox() { UICheckBox_Destroy(mInstance); }
+        ~UICheckBox() { Interop.UICheckBox_Destroy(mInstance); }
 
 
         public delegate void OnClickDelegate();
@@ -15,29 +16,14 @@ namespace SpockEngine
         public void OnClick(OnClickDelegate aHandler)
         {
             onChanged = aHandler;
-            
-            UICheckBox_OnClick(mInstance, onChanged);
+
+            Interop.UICheckBox_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
 
         public bool IsChecked
         {
-            get { return UICheckBox_IsChecked(mInstance); }
-            set { UICheckBox_SetIsChecked(mInstance, value); }
+            get { return Interop.UICheckBox_IsChecked(mInstance); }
+            set { Interop.UICheckBox_SetIsChecked(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UICheckBox_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_OnClick(ulong aInstance, OnClickDelegate aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UICheckBox_IsChecked(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_SetIsChecked(ulong aInstance, bool aValue);
     }
 }

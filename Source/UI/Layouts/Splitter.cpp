@@ -39,6 +39,11 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight };
     }
 
+    void UISplitter::SetOrientation( eBoxLayoutOrientation aValue )
+    {
+        mOrientation = aValue;
+    }
+
     void UISplitter::SetItemSpacing( float aItemSpacing )
     {
         mItemSpacing = aItemSpacing;
@@ -138,47 +143,5 @@ namespace SE::Core
             ImGui::EndChild();
             ImGui::PopID();
         }
-    }
-
-    void *UISplitter::UISplitter_Create()
-    {
-        auto lNewLayout = new UISplitter();
-
-        return static_cast<void *>( lNewLayout );
-    }
-
-    void *UISplitter::UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
-    {
-        auto lNewLayout = new UISplitter( aOrientation );
-
-        return static_cast<void *>( lNewLayout );
-    }
-
-    void UISplitter::UISplitter_Destroy( void *aInstance )
-    {
-        delete static_cast<UISplitter *>( aInstance );
-    }
-
-    void UISplitter::UISplitter_Add1( void *aInstance, void *aChild )
-    {
-        auto lInstance = static_cast<UISplitter *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-
-        lInstance->Add1( lChild );
-    }
-
-    void UISplitter::UISplitter_Add2( void *aInstance, void *aChild )
-    {
-        auto lInstance = static_cast<UISplitter *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-
-        lInstance->Add2( lChild );
-    }
-
-    void UISplitter::UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing )
-    {
-        auto lInstance = static_cast<UISplitter *>( aInstance );
-
-        lInstance->SetItemSpacing( aItemSpacing );
     }
 } // namespace SE::Core

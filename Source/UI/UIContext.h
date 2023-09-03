@@ -28,12 +28,12 @@ namespace SE::Core
     {
         uint32_t mFontSize;
 
-        fs::path mMainFont;
-        fs::path mBoldFont;
-        fs::path mItalicFont;
-        fs::path mBoldItalicFont;
-        fs::path mMonoFont;
-        fs::path mIconFont;
+        path_t mMainFont;
+        path_t mBoldFont;
+        path_t mItalicFont;
+        path_t mBoldItalicFont;
+        path_t mMonoFont;
+        path_t mIconFont;
     };
 
     enum class FontFamilyFlags : int32_t
@@ -42,9 +42,10 @@ namespace SE::Core
         H1,
         H2,
         H3,
-        EM,
         HUGE,
         LARGE,
+        EM,
+        BOLD,
         NORMAL,
         SMALL,
         TINY,
@@ -54,45 +55,49 @@ namespace SE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aDevice, Ref<IRenderContext> aRenderContext,
-                   std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
+        UIContext( ref_t<SE::Core::IWindow> aWindow, ref_t<IGraphicContext> aDevice, ref_t<IRenderContext> aRenderContext,
+                   string_t &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 
         void BeginFrame();
-        void EndFrame( Ref<IRenderContext> aRenderContext );
+        void EndFrame( ref_t<IRenderContext> aRenderContext );
 
         void PushFontFamily( FontFamilyFlags aFamily );
         void PopFont();
 
         ImGuiIO &GetIO();
 
-        ImageHandle         CreateTextureHandle( Ref<ISampler2D> aTexture );
-        Ref<IDescriptorSet> AddTexture( Ref<ISampler2D> aTexture );
+        ImageHandle           CreateTextureHandle( ref_t<ISampler2D> aTexture );
+        ref_t<IDescriptorSet> AddTexture( ref_t<ISampler2D> aTexture );
 
-        Ref<IGraphicContext> GraphicContext()
+        ref_t<IGraphicContext> GraphicContext()
         {
             return mGraphicContext;
         }
 
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
-        std::string    mImGuiConfigPath;
+        string_t       mImGuiConfigPath;
 
         UIStyle mUIStyle;
 
-        Ref<IGraphicContext> mGraphicContext{};
+        ref_t<IGraphicContext> mGraphicContext{};
 
-        Ref<IDescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
-        Ref<IDescriptorSet>       mFontDescriptorSet     = nullptr;
+        ref_t<IDescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
+        ref_t<IDescriptorSet>       mFontDescriptorSet     = nullptr;
 
-        Ref<ISampler2D> mFontTexture = nullptr;
+        ref_t<ISampler2D> mFontTexture = nullptr;
 
         std::map<FontFamilyFlags, ImFont *> mFonts;
 
-        ImFont *LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize );
+        ImFont *LoadFont( path_t aFontName, path_t aIconFontName, uint32_t aFontSize );
+        ImFont *GetFont( FontFamilyFlags aFont )
+        {
+            return mFonts[aFont];
+        }
 
       private:
-        Ref<UIWindow> mMainWindow;
+        ref_t<UIWindow> mMainWindow;
 
         static void Renderer_CreateWindow( ImGuiViewport *vp );
         static void Renderer_DestroyWindow( ImGuiViewport *vp );

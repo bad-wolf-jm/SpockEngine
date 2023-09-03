@@ -18,6 +18,9 @@ set(DOTNET_SYSTEM_ASSEMBLIES
     System.Xml.Serialization.dll
     System.Xml.Linq.dll
     System.Management.dll
+    System.Reflection.dll
+    System.Runtime.dll
+    System.Runtime.Serialization.dll
 )
 
 
@@ -33,10 +36,10 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Colors.cs
     Source/ScriptProxy.cs
     Source/CppCalls.cs
+    Source/Interop.cs
     Source/Entity.cs
     Source/Component.cs
     Source/Utilities.cs
-    Source/TensorOps.cs
 
     Source/UI/Components/Component.cs
     Source/UI/Components/Button.cs
@@ -60,8 +63,13 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/TreeView.cs
     Source/UI/Components/ColorButton.cs
     Source/UI/Components/Slider.cs
+    Source/UI/Components/VectorInput.cs
+    Source/UI/Components/CodeEditor.cs
+    Source/UI/Components/Markdown.cs
 
     Source/UI/Widgets/FileTree.cs
+    Source/UI/Widgets/CheckboxWithLabel.cs
+    Source/UI/Widgets/ComboboxWithLabel.cs
 
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
@@ -78,9 +86,11 @@ add_library(${LIBRARY_NAME} SHARED
     Source/SEApplication.cs
 )
 
-set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
+set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK "net462")
+set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_SDK "Microsoft.NET.Sdk")
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
+set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_PACKAGE_REFERENCES Newtonsoft.Json_13.0.1 System.ValueTuple_4.5.0)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
     ${DOTNET_SYSTEM_ASSEMBLIES}
 )

@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Reflection;
+using System.Runtime;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +9,15 @@ namespace SpockEngine
 {
     public static class Utilities
     {
+        public static string CreateFolder(string[] aPathElements)
+        {
+            var lPath = Path.Combine(aPathElements);
+
+            if (!Directory.Exists(lPath)) Directory.CreateDirectory(lPath);
+
+            return lPath;
+        }
+
         public static IEnumerable<Type> GetAllDerivedTypes<T>(bool aIncludeAllAssemblies = true)
         {
             var lType = typeof(T);
@@ -38,7 +49,19 @@ namespace SpockEngine
             var lBaseType = typeof(T);
             TypeInfo lBaseTypeInfo = lBaseType.GetTypeInfo();
 
-            return aAssembly.DefinedTypes.Where(aType =>
+            IEnumerable<TypeInfo> lDefinedTypes;
+            try
+            {
+                lDefinedTypes = aAssembly.DefinedTypes;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                lDefinedTypes = new TypeInfo[0];
+            }
+
+            return lDefinedTypes.Where(aType =>
             {
                 if (lBaseTypeInfo.IsClass)
                     return aType.IsSubclassOf(lBaseType);
@@ -46,16 +69,6 @@ namespace SpockEngine
                 return lBaseTypeInfo.IsInterface && aType.ImplementedInterfaces.Contains(lBaseTypeInfo.AsType());
 
             }).Select(aType => aType.AsType());
-        }
-
-        public static T GetProperty<T>(object aObject, string aName)
-        {
-            if (aObject == null) return default(T);
-
-            var lObjectType = aObject.GetType();
-            var lProperty = lObjectType.GetProperty(aName);
-
-            return (T)lProperty.GetValue(aObject);
         }
     }
 }

@@ -14,85 +14,65 @@ namespace SpockEngine
     {
         private List<UIComponent> mItems = new List<UIComponent>();
         private bool mDerived = false;
-        public UIBoxLayout() { }
+        public UIBoxLayout() : this(Interop.UIBoxLayout_Create(), false) { }
 
-        public UIBoxLayout(ulong aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
+        public UIBoxLayout(IntPtr aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
 
-        public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this(UIBoxLayout_CreateWithOrientation(aOrientation), false) { }
+        public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this()
+        {
+            SetOrientation(aOrientation);
+        }
 
-        ~UIBoxLayout() { if (!mDerived) UIBoxLayout_Destroy(mInstance); }
+        ~UIBoxLayout() { if (!mDerived) Interop.UIBoxLayout_Destroy(mInstance); }
+
+        public void SetOrientation(eBoxLayoutOrientation aOrientation)
+        {
+            Interop.UIBoxLayout_SetOrientation(mInstance, aOrientation);
+        }
 
         public void SetItemSpacing(float aItemSpacing)
         {
-            UIBoxLayout_SetItemSpacing(mInstance, aItemSpacing);
+            Interop.UIBoxLayout_SetItemSpacing(mInstance, aItemSpacing);
         }
 
         public void Add(UIComponent aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
-            UIBoxLayout_AddAlignedNonFixed(mInstance, lInstance, aExpand, aFill, aHAlignment, aVAlignment);
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
+            Interop.UIBoxLayout_AddAlignedNonFixed(mInstance, lInstance, aExpand, aFill, aHAlignment, aVAlignment);
         }
 
         public void Add(UIComponent aChild, bool aExpand, bool aFill)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
-            UIBoxLayout_AddNonAlignedNonFixed(mInstance, lInstance, aExpand, aFill);
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
+            Interop.UIBoxLayout_AddNonAlignedNonFixed(mInstance, lInstance, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
-            UIBoxLayout_AddNonAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill);
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
+            Interop.UIBoxLayout_AddNonAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
-            UIBoxLayout_AddAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
+            Interop.UIBoxLayout_AddAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
         }
 
         public void AddSeparator()
         {
             mItems.Add(null);
-            UIBoxLayout_AddSeparator(mInstance);
+            Interop.UIBoxLayout_AddSeparator(mInstance);
         }
 
         public void Clear()
         {
             mItems.Clear();
-            UIBoxLayout_Clear(mInstance);
+            Interop.UIBoxLayout_Clear(mInstance);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddNonAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddNonAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddSeparator(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_SetItemSpacing(ulong aInstance, float aItemSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_Clear(ulong aInstance);
-
     }
 }

@@ -13,10 +13,10 @@ namespace SE::Core
       public:
         UIBaseImage() = default;
 
-        UIBaseImage( fs::path const &aImagePath, math::vec2 aSize );
-        UIBaseImage( Ref<ISampler2D> aImage, math::vec2 aSize );
+        UIBaseImage( path_t const &aImagePath, math::vec2 aSize );
+        UIBaseImage( ref_t<ISampler2D> aImage, math::vec2 aSize );
 
-        void SetImage( fs::path const &aImagePath );
+        void SetImage( path_t const &aImagePath );
 
         ImVec2 Size();
         void   SetSize( float aWidth, float aHeight );
@@ -34,14 +34,14 @@ namespace SE::Core
         ImTextureID TextureID();
 
       protected:
-        fs::path mImagePath;
+        path_t mImagePath;
 
-        Ref<ISampler2D> mImage;
-        ImageHandle     mHandle;
+        ref_t<ISampler2D> mImage;
+        ImageHandle       mHandle;
 
         ImVec2 mSize{};
-        ImVec2 mTopLeft{ 0.0f, 0.0f };
-        ImVec2 mBottomRight{ 1.0f, 1.0f };
+        ImVec2 mTopLeft{};
+        ImVec2 mBottomRight{};
         ImVec4 mTintColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 
       private:
@@ -50,20 +50,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UIBaseImage_Create();
-        static void *UIBaseImage_CreateWithPath( void *aText, math::vec2 aSize );
-        static void  UIBaseImage_Destroy( void *aInstance );
-        static void  UIBaseImage_SetImage( void *aInstance, void *aPath );
-
-        static void       UIBaseImage_SetSize( void *aInstance, math::vec2 aSize );
-        static math::vec2 UIBaseImage_GetSize( void *aInstance );
-        static void       UIBaseImage_SetTopLeft( void *aInstance, math::vec2 aTopLeft );
-        static math::vec2 UIBaseImage_GetTopLeft( void *aInstance );
-        static void       UIBaseImage_SetBottomRight( void *aInstance, math::vec2 aBottomRight );
-        static math::vec2 UIBaseImage_GetBottomRight( void *aInstance );
-        static void       UIBaseImage_SetTintColor( void *aInstance, math::vec4 aColor );
-        static math::vec4 UIBaseImage_GetTintColor( void *aInstance );
     };
 } // namespace SE::Core

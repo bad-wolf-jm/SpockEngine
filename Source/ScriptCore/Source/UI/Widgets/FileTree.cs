@@ -1,23 +1,30 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
     public class UIFileTree : UITreeView
     {
-        public UIFileTree() : base(UIFileTree_Create(), true) { }
+        public UIFileTree() : base(Interop.UIFileTree_Create(), true) { }
 
-        ~UIFileTree() { UIFileTree_Destroy(mInstance); }
+        ~UIFileTree() { Interop.UIFileTree_Destroy(mInstance); }
 
-        public void Add(string aText) { UIFileTree_Add(mInstance, aText); }
+        public void Add(string aText) { Interop.UIFileTree_Add(mInstance, aText); }
+        public void Remove(string aText) { Interop.UIFileTree_Remove(mInstance, aText); }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFileTree_Create();
+        public delegate void OnSelectedDelegate([MarshalAs(UnmanagedType.LPWStr)] string aPath);
+        OnSelectedDelegate onSelected;
+        public void OnSelected(OnSelectedDelegate aHandler)
+        {
+            onSelected = aHandler;
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFileTree_Destroy(ulong aInstance);
+            Interop.UIFileTree_OnSelected(mInstance, Marshal.GetFunctionPointerForDelegate(onSelected));
+        }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFileTree_Add(ulong aInstance, string aText);
+        public void Update()
+        {
+            Interop.UIFileTree_Update(mInstance);
+        }
     }
 }

@@ -9,22 +9,23 @@ namespace SE::Core
       public:
         UITextInput() = default;
 
-        UITextInput( std::string const &aHintText );
+        UITextInput( string_t const &aHintText );
 
-        void SetHintText( std::string const &aHintText );
+        void SetHintText( string_t const &aHintText );
         void SetTextColor( math::vec4 aColor );
 
-        std::string &GetText();
-        void         SetBuffersize( uint32_t aSize );
-        void         OnTextChanged( std::function<void( std::string aText )> aOnTextChanged );
+        void      SetText( string_t const &aText );
+        string_t &GetText();
+        void      SetBuffersize( uint32_t aSize );
+        void      OnTextChanged( std::function<void( string_t aText )> aOnTextChanged );
 
       protected:
-        std::string mHintText;
-        ImVec4      mTextColor;
-        uint32_t    mBufferSize = 0;
-        std::string mBuffer;
+        string_t mHintText;
+        ImVec4   mTextColor;
+        uint32_t mBufferSize = 0;
+        string_t mBuffer;
 
-        std::function<void( std::string aText )> mOnTextChanged;
+        std::function<void( string_t aText )> mOnTextChanged;
 
       protected:
         void PushStyles();
@@ -33,18 +34,8 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      private:
+      public:
         void *mOnTextChangedDelegate       = nullptr;
         int   mOnTextChangedDelegateHandle = -1;
-
-      public:
-        static void *UITextInput_Create();
-        static void *UITextInput_CreateWithText( void *aText );
-        static void  UITextInput_Destroy( void *aInstance );
-        static void *UITextInput_GetText( void *aInstance );
-        static void  UITextInput_SetHintText( void *aInstance, void *aText );
-        static void  UITextInput_SetTextColor( void *aInstance, math::vec4 *aTextColor );
-        static void  UITextInput_SetBufferSize( void *aInstance, uint32_t aNewSize );
-        static void  UITextInput_OnTextChanged( void *aInstance, void *aDelegate );
     };
 } // namespace SE::Core

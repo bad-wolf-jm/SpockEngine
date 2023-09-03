@@ -5,41 +5,32 @@
 #include "UI/Components/Label.h"
 #include "UI/Layouts/BoxLayout.h"
 
-#include "DotNet/Instance.h"
-
 namespace SE::Core
 {
     class UIPropertyValue : public UIBoxLayout
     {
       public:
-        UIPropertyValue()  = default;
+        UIPropertyValue();
         ~UIPropertyValue() = default;
 
-        UIPropertyValue( std::string aName );
-        UIPropertyValue( std::string aName, eBoxLayoutOrientation aOrientation );
+        UIPropertyValue( string_t aName );
+        UIPropertyValue( string_t aName, eBoxLayoutOrientation aOrientation );
 
-        void SetValue( std::string aValue );
+        void SetText( string_t aValue );
+        void SetOrientation( eBoxLayoutOrientation aValue );
+        void SetValue( string_t aValue );
         void SetValueFont( FontFamilyFlags aFont );
         void SetNameFont( FontFamilyFlags aFont );
 
         template <typename... _Ty>
-        void SetValue( std::string aFormat, _Ty &&...aArgList )
+        void SetValue( string_t aFormat, _Ty &&...aArgList )
         {
-            std::string lValue = fmt::format( aFormat, std::forward<_Ty>( aArgList )... );
+            string_t lValue = fmt::format( aFormat, std::forward<_Ty>( aArgList )... );
             SetValue( lValue );
         }
 
       protected:
-        Ref<UILabel> mName;
-        Ref<UILabel> mValue;
-
-      public:
-        static void *UIPropertyValue_Create();
-        static void *UIPropertyValue_CreateWithText( void *aText );
-        static void *UIPropertyValue_CreateWithTextAndOrientation( void *aText, eBoxLayoutOrientation aOrientation );
-        static void  UIPropertyValue_Destroy( void *aInstance );
-        static void  UIPropertyValue_SetValue( void *aInstance, void *aText );
-        static void  UIPropertyValue_SetValueFont( void *aInstance, FontFamilyFlags aFont );
-        static void  UIPropertyValue_SetNameFont( void *aInstance, FontFamilyFlags aFont );
+        ref_t<UILabel> mName;
+        ref_t<UILabel> mValue;
     };
 } // namespace SE::Core

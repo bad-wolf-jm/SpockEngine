@@ -1,39 +1,28 @@
 using System;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
     public class UIForm : UIComponent
     {
-        public UIForm() : this(UIForm_Create()) { }
+        public UIForm() : this(Interop.UIForm_Create()) { }
 
-        public UIForm(ulong aDerived) : base(aDerived) { }
+        public UIForm(IntPtr aDerived) : base(aDerived) { }
 
-        ~UIForm() { UIForm_Destroy(mInstance); }
+        ~UIForm() { Interop.UIForm_Destroy(mInstance); }
 
-        public void SetTitle(string aTitle) { UIForm_SetTitle(mInstance, aTitle); }
+        public void SetTitle(string aTitle) { Interop.UIForm_SetTitle(mInstance, aTitle); }
 
-        public void SetContent(UIComponent aContent) { UIForm_SetContent(mInstance, aContent.Instance); }
-        public void SetSize(float aWidth, float aHeight) { UIForm_SetSize(mInstance, aWidth, aHeight); }
+        UIComponent mContent;
+        public void SetContent(UIComponent aContent)
+        {
+            mContent = aContent;
+            Interop.UIForm_SetContent(mInstance, aContent.Instance);
+        }
+        
+        public void SetSize(float aWidth, float aHeight) { Interop.UIForm_SetSize(mInstance, aWidth, aHeight); }
 
-        public void Update() { UIForm_Update(mInstance); }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIForm_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_SetTitle(ulong aInstance, string aTitle);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_SetContent(ulong aInstance, ulong aContent);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_Update(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_SetSize(ulong aInstance, float aWidth, float aHeight);
+        public void Update() { Interop.UIForm_Update(mInstance); }
     }
 }

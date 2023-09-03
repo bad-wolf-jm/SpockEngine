@@ -13,10 +13,10 @@ namespace SE::Core
       public:
         UIImageButton() = default;
 
-        UIImageButton( fs::path const &aImagePath, math::vec2 aSize );
-        UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize );
-        UIImageButton( fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
-        UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick );
+        UIImageButton( path_t const &aImagePath, math::vec2 aSize );
+        UIImageButton( ref_t<ISampler2D> aImage, math::vec2 aSize );
+        UIImageButton( path_t const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
+        UIImageButton( ref_t<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick );
 
         void OnClick( std::function<void()> aOnClick );
 
@@ -29,15 +29,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      private:
-        void *mOnClickDelegate       = nullptr;
-        int   mOnClickDelegateHandle = -1;
-
-      public:
-        static void *UIImageButton_Create();
-        static void *UIImageButton_CreateWithPath( void *aText, math::vec2 *aSize );
-        static void  UIImageButton_Destroy( void *aInstance );
-        static void  UIImageButton_OnClick( void *aInstance, void *aDelegate );
     };
 } // namespace SE::Core

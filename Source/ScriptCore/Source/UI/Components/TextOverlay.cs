@@ -6,24 +6,13 @@ namespace SpockEngine
     public class UITextOverlay : UIComponent
     {
 
-        public UITextOverlay() : base(UITextOverlay_Create()) { }
-        public UITextOverlay(ulong aSelf) : base(aSelf) { }
+        public UITextOverlay() : base(Interop.UITextOverlay_Create()) { }
+        public UITextOverlay(IntPtr aSelf) : base(aSelf) { }
 
-        ~UITextOverlay() { UITextOverlay_Destroy(mInstance); }
+        ~UITextOverlay() { Interop.UITextOverlay_Destroy(mInstance); }
 
-        public void AddText(string aText) { UITextOverlay_AddText(mInstance, aText); }
-        public void Clear() { UITextOverlay_Clear(mInstance); }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextOverlay_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextOverlay_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextOverlay_AddText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextOverlay_Clear(ulong aInstance);
+        public void AddText(string aText) { Interop.UITextOverlay_AddText(mInstance, aText); }
+        public void AddText(byte[] aText, int aOffset, int aCount) { Interop.UITextOverlay_AddBytes(mInstance, aText, aOffset, aCount); }
+        public void Clear() { Interop.UITextOverlay_Clear(mInstance); }
     }
 }

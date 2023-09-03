@@ -41,6 +41,7 @@ namespace SE::Core
 
         ~UIBoxLayout() = default;
 
+        void SetOrientation( eBoxLayoutOrientation aValue );
         void SetItemSpacing( float aItemSpacing );
         void SetSimple( bool aSimple )
         {
@@ -65,28 +66,15 @@ namespace SE::Core
         ImVec2 RequiredSize();
 
       protected:
-        std::vector<BoxLayoutItem> mChildren;
-        eBoxLayoutOrientation      mOrientation;
-        float                      mItemSpacing = 0.0f;
-        bool                       mSimple      = false;
+        vector_t<BoxLayoutItem> mChildren;
+        eBoxLayoutOrientation   mOrientation = eBoxLayoutOrientation::HORIZONTAL;
+        float                   mItemSpacing = 0.0f;
+        bool                    mSimple      = false;
 
       protected:
         void PushStyles();
         void PopStyles();
 
         void DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
-        static void  UIBoxLayout_Destroy( void *aInstance );
-        static void  UIBoxLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
-                                                     eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
-        static void  UIBoxLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill );
-        static void  UIBoxLayout_AddAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill,
-                                                  eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
-        static void  UIBoxLayout_AddNonAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill );
-        static void  UIBoxLayout_AddSeparator( void *aInstance );
-        static void  UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing );
-        static void  UIBoxLayout_Clear( void *aInstance );
     };
 } // namespace SE::Core

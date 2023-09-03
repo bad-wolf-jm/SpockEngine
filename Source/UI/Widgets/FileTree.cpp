@@ -2,24 +2,24 @@
 
 #include <filesystem>
 
-#include "DotNet/Runtime.h"
-
 #include "imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
 namespace SE::Core
 {
-    Ref<UIImage> mOpenFolder  = nullptr;
-    Ref<UIImage> mCloseFolder = nullptr;
-    Ref<UIImage> mDefaultFile = nullptr;
+    ref_t<UIImage> mOpenFolder  = nullptr;
+    ref_t<UIImage> mCloseFolder = nullptr;
+    ref_t<UIImage> mDefaultFile = nullptr;
 
-    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, std::string const &aName )
+    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, path_t const &aPath, string_t const &aName )
         : UITreeViewNode( aTreeView, aParent )
         , mPath{ aPath }
         , mName{ aName }
     {
         SetText( aName );
+
+        mFullPath = mPath / mName;
 
         if( !aName.substr( 0, 1 ).compare( "." ) || !aName.substr( 0, 2 ).compare( "__" ) )
             SetTextColor( math::vec4{ 0.15, 0.15, 0.15, 1.0 } );
@@ -30,13 +30,10 @@ namespace SE::Core
 
     bool UIFileTreeNode::IsLeaf()
     {
-        if( mParent == nullptr )
-            return false;
-
         return fs::is_regular_file( mPath / mName );
     }
 
-    std::vector<UITreeViewNode *> const &UIFileTreeNode::Children()
+    vector_t<UITreeViewNode *> const &UIFileTreeNode::Children()
     {
         auto const &lFullPath = mPath / mName;
         if( ( mChildren.size() == 0 ) && fs::is_directory( lFullPath ) )
@@ -44,7 +41,7 @@ namespace SE::Core
             fs::directory_iterator lIterator;
 
             lIterator = fs::directory_iterator( lFullPath );
-            std::vector<fs::path> lFolders;
+            vector_t<path_t> lFolders;
             std::copy_if( fs::begin( lIterator ), fs::end( lIterator ), std::back_inserter( lFolders ),
                           [&]( auto const &aPath ) { return fs::is_directory( aPath ); } );
             std::sort( lFolders.begin(), lFolders.end(),
@@ -52,7 +49,7 @@ namespace SE::Core
                        { return s1.filename().string().compare( s2.filename().string() ) <= 0; } );
 
             lIterator = fs::directory_iterator( lFullPath );
-            std::vector<fs::path> lFiles;
+            vector_t<path_t> lFiles;
             std::copy_if( fs::begin( lIterator ), fs::end( lIterator ), std::back_inserter( lFiles ),
                           [&]( auto const &aPath ) { return fs::is_regular_file( aPath ); } );
             std::sort( lFiles.begin(), lFiles.end(),
@@ -69,12 +66,32 @@ namespace SE::Core
         return UITreeViewNode::Children();
     }
 
-    UIFileTreeNode *UIFileTreeNode::Add( fs::path const &aPath )
+    UIFileTreeNode *UIFileTreeNode::Add( path_t const &aPath )
     {
         auto lNewChild = new UIFileTreeNode( (UIFileTree *)mTreeView, this, aPath.parent_path(), aPath.filename().string() );
+        lNewChild->OnSelected( [&]( UITreeViewNode *a ) { ( (UIFileTree *)mTreeView )->HandleOnSelected( (UIFileTreeNode *)a ); } );
         mChildren.push_back( lNewChild );
 
         return lNewChild;
+    }
+
+    void UIFileTreeNode::Remove( path_t const &aPath )
+    {
+        UIFileTreeNode *lChild = nullptr;
+        for( auto const &lX : mChildren )
+        {
+            if( ( (UIFileTreeNode *)lX )->mPath == aPath )
+            {
+                lChild = (UIFileTreeNode *)lX;
+                break;
+            }
+        }
+
+        vector_t<UITreeViewNode *> lRemainingChildren;
+        std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lRemainingChildren ),
+                      [&]( auto *x ) { return x == lChild; } );
+
+        mChildren = std::move( lRemainingChildren );
     }
 
     UIFileTree::UIFileTree()
@@ -84,31 +101,30 @@ namespace SE::Core
         mRoot = new UIFileTreeNode( this, nullptr, "", "" );
 
         if( mDefaultFile == nullptr )
-            mDefaultFile = New<UIImage>( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
+            mDefaultFile = New<UIImage>( "D:\\Work\\Git\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
     }
 
-    UIFileTreeNode *UIFileTree::Add( fs::path const &aPath )
+    UIFileTreeNode *UIFileTree::Add( path_t const &aPath )
     {
-        return ( (UIFileTreeNode *)mRoot )->Add( aPath );
-    }
+        UIFileTreeNode *lNewNode = ( (UIFileTreeNode *)mRoot )->Add( aPath );
 
-    void *UIFileTree::UIFileTree_Create()
+        return lNewNode;
+    }
+    
+    void UIFileTree::Remove( path_t const &aPath )
     {
-        auto lNewLabel = new UIFileTree();
-
-        return static_cast<void *>( lNewLabel );
+        ( (UIFileTreeNode *)mRoot )->Remove( aPath );
     }
 
-    void UIFileTree::UIFileTree_Destroy( void *aInstance )
+    void UIFileTree::OnSelected( std::function<void( path_t const &aPath )> aOnSelected )
     {
-        delete static_cast<UIFileTree *>( aInstance );
+        mOnSelected = aOnSelected;
     }
 
-    void *UIFileTree::UIFileTree_Add( void *aInstance, void *aPath )
+    void UIFileTree::HandleOnSelected( UIFileTreeNode *a )
     {
-        auto lInstance = static_cast<UIFileTree *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
-
-        return static_cast<void *>( lInstance->Add( lString ) );
+        if( mOnSelected )
+            mOnSelected( a->GetPath() );
     }
+
 } // namespace SE::Core

@@ -5,40 +5,30 @@ namespace SpockEngine
 {
     public class UIPropertyValue : UIBoxLayout
     {
-        public UIPropertyValue() : base(UIPropertyValue_Create(), true) { }
+        public UIPropertyValue() : base(Interop.UIPropertyValue_Create(), true) { }
 
-        public UIPropertyValue(string aText) : base(UIPropertyValue_CreateWithText(aText), true) { }
+        public UIPropertyValue(string aText) : this()
+        {
+            SetText(aText);
+            SetOrientation(eBoxLayoutOrientation.HORIZONTAL);
+        }
 
-        public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : base(UIPropertyValue_CreateWithTextAndOrientation(aText, aOrientation), true) { }
+        public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : this()
+        {
+            SetText(aText);
+            SetOrientation(aOrientation);
+        }
 
-        ~UIPropertyValue() { UIPropertyValue_Destroy(mInstance); }
+        ~UIPropertyValue() { Interop.UIPropertyValue_Destroy(mInstance); }
 
-        public void SetValue(string aText) { UIPropertyValue_SetValue(mInstance, aText); }
+        public void SetText(string aText) { Interop.UIPropertyValue_SetText(mInstance, aText); }
+        
+        public void SetOrientation(eBoxLayoutOrientation aOrientation) { Interop.UIPropertyValue_SetOrientation(mInstance, aOrientation); }
 
-        public void SetValueFont(eFontFamily aFont) { UIPropertyValue_SetValueFont(mInstance, aFont); }
+        public void SetValue(string aText) { Interop.UIPropertyValue_SetValue(mInstance, aText); }
 
-        public void SetNameFont(eFontFamily aFont) { UIPropertyValue_SetNameFont(mInstance, aFont); }
+        public void SetValueFont(eFontFamily aFont) { Interop.UIPropertyValue_SetValueFont(mInstance, aFont); }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPropertyValue_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPropertyValue_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPropertyValue_CreateWithTextAndOrientation(string aText, eBoxLayoutOrientation aOrientation);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_SetValue(ulong aInstance, string aText);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_SetValueFont(ulong aInstance, eFontFamily aFont);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_SetNameFont(ulong aInstance, eFontFamily aFont);
+        public void SetNameFont(eFontFamily aFont) { Interop.UIPropertyValue_SetNameFont(mInstance, aFont); }
     }
 }

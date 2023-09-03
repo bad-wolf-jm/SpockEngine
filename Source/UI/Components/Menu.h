@@ -10,11 +10,11 @@ namespace SE::Core
         UIMenuItem()                     = default;
         UIMenuItem( UIMenuItem const & ) = default;
 
-        UIMenuItem( std::string const &aText );
-        UIMenuItem( std::string const &aText, std::string const &aShortcut );
+        UIMenuItem( string_t const &aText );
+        UIMenuItem( string_t const &aText, string_t const &aShortcut );
 
-        void SetText( std::string const &aText );
-        void SetShortcut( std::string const &aShortcut );
+        void SetText( string_t const &aText );
+        void SetShortcut( string_t const &aShortcut );
         void SetTextColor( math::vec4 aColor );
 
         void OnTrigger( std::function<void()> aOnTrigger );
@@ -23,9 +23,9 @@ namespace SE::Core
         std::function<void()> mOnTrigger;
 
       protected:
-        std::string mText;
-        std::string mShortcut;
-        ImVec4      mTextColor;
+        string_t mText;
+        string_t mShortcut;
+        ImVec4   mTextColor;
 
       protected:
         void PushStyles();
@@ -33,20 +33,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      private:
-        void *mOnTriggerDelegate       = nullptr;
-        int   mOnTriggerDelegateHandle = -1;
-
-      public:
-        static void *UIMenuItem_Create();
-        static void *UIMenuItem_CreateWithText( void *aText );
-        static void *UIMenuItem_CreateWithTextAndShortcut( void *aText, void *aShortcut );
-        static void  UIMenuItem_Destroy( void *aInstance );
-        static void  UIMenuItem_SetText( void *aInstance, void *aText );
-        static void  UIMenuItem_SetShortcut( void *aInstance, void *aShortcut );
-        static void  UIMenuItem_SetTextColor( void *aInstance, math::vec4 *aTextColor );
-        static void  UIMenuItem_OnTrigger( void *aInstance, void *aDelegate );
     };
 
     class UIMenuSeparator : public UIMenuItem
@@ -61,10 +47,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UIMenuSeparator_Create();
-        static void  UIMenuSeparator_Destroy( void *aInstance );
     };
 
     class UIMenu : public UIMenuItem
@@ -72,21 +54,21 @@ namespace SE::Core
       public:
         UIMenu()                 = default;
         UIMenu( UIMenu const & ) = default;
-        UIMenu( std::string const &aText );
+        UIMenu( string_t const &aText );
 
-        Ref<UIMenuItem> AddAction( std::string const &aText, std::string const &aShortcut );
-        Ref<UIMenu>     AddMenu( std::string const &aText );
-        Ref<UIMenuItem> AddSeparator();
+        ref_t<UIMenuItem> AddAction( string_t const &aText, string_t const &aShortcut );
+        ref_t<UIMenu>     AddMenu( string_t const &aText );
+        ref_t<UIMenuItem> AddSeparator();
 
         void Update();
 
-      private:
-        UIMenuItem *AddActionRaw( std::string const &aText, std::string const &aShortcut );
-        UIMenu     *AddMenuRaw( std::string const &aText );
+      public:
+        UIMenuItem *AddActionRaw( string_t const &aText, string_t const &aShortcut );
+        UIMenu     *AddMenuRaw( string_t const &aText );
         UIMenuItem *AddSeparatorRaw();
 
       protected:
-        std::vector<UIMenuItem *> mActions;
+        vector_t<UIMenuItem *> mActions;
 
       protected:
         void PushStyles();
@@ -94,14 +76,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UIMenu_Create();
-        static void *UIMenu_CreateWithText( void *aText );
-        static void  UIMenu_Destroy( void *aInstance );
-        static void *UIMenu_AddAction( void *aInstance, void *aText, void *aShortcut );
-        static void *UIMenu_AddMenu( void *aInstance, void *aText );
-        static void *UIMenu_AddSeparator( void *aInstance );
-        static void  UIMenu_Update( void *aInstance );
     };
 } // namespace SE::Core

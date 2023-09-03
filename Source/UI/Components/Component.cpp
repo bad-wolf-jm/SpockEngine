@@ -136,6 +136,7 @@ namespace SE::Core
         ImVec2 lContentPosition = aPosition + GetContentOffset();
 
         DrawContent( lContentPosition, lContentSize );
+
         if( ImGui::IsItemHovered() && ( mTooltip != nullptr ) )
         {
             ImGui::BeginTooltip();
@@ -156,92 +157,4 @@ namespace SE::Core
     {
         return ImGui::IsItemHovered();
     }
-
-    void UIComponent::UIComponent_SetIsVisible( void *aSelf, bool aIsVisible )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->mIsVisible = aIsVisible;
-    }
-
-    void UIComponent::UIComponent_SetIsEnabled( void *aSelf, bool aIsEnabled )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->mIsEnabled = aIsEnabled;
-    }
-
-    void UIComponent::UIComponent_SetAllowDragDrop( void *aSelf, bool aAllowDragDrop )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->mAllowDragDrop = aAllowDragDrop;
-    }
-
-    void UIComponent::UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetPadding( aPaddingAll );
-    }
-
-    void UIComponent::UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetPadding( aPaddingTopBottom, aPaddingLeftRight );
-    }
-
-    void UIComponent::UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
-                                                        float aPaddingRight )
-
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetPadding( aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight );
-    }
-
-    void UIComponent::UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetAlignment( aHAlignment, aVAlignment );
-    }
-
-    void UIComponent::UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetHorizontalAlignment( aAlignment );
-    }
-
-    void UIComponent::UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetVerticalAlignment( aAlignment );
-    }
-
-    void UIComponent::UIComponent_SetBackgroundColor( void *aSelf, math::vec4 aColor )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetBackgroundColor( aColor );
-    }
-
-    void UIComponent::UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont )
-    {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetFont( aFont );
-    }
-
-    void UIComponent::UIComponent_SetTooltip( void *aSelf, void *aTooltip )
-    {
-        auto lSelf    = static_cast<UIComponent *>( aSelf );
-        auto lTooltip = static_cast<UIComponent *>( aTooltip );
-
-        lSelf->SetTooltip( lTooltip );
-    }
-
 } // namespace SE::Core

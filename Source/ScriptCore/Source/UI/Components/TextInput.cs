@@ -1,67 +1,48 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
     public class UITextInput : UIComponent
     {
-        public UITextInput() : base(UITextInput_Create()) { }
+        public UITextInput() : base(Interop.UITextInput_Create()) { }
 
-        public UITextInput(string aText) : base(UITextInput_CreateWithText(aText)) { }
+        public UITextInput(string aText) : this()
+        {
+            Text = aText;
+        }
 
-        ~UITextInput() { UITextInput_Destroy(mInstance); }
+        ~UITextInput() { Interop.UITextInput_Destroy(mInstance); }
 
         public string Text
         {
-            get { return UITextInput_GetText(mInstance); }
+            set { Interop.UITextInput_SetText(mInstance, value); }
+            get { return Interop.UITextInput_GetText(mInstance); }
         }
 
         public void SetTextColor(Math.vec4 aColor)
         {
-            UITextInput_SetTextColor(mInstance, aColor);
+            Interop.UITextInput_SetTextColor(mInstance, aColor);
         }
 
         public void SetHintText(string aText)
         {
-            UITextInput_SetHintText(mInstance, aText);
+            Interop.UITextInput_SetHintText(mInstance, aText);
         }
 
         public void SetBufferSize(uint aSize)
         {
-            UITextInput_SetBufferSize(mInstance, aSize);
+            Interop.UITextInput_SetBufferSize(mInstance, aSize);
         }
 
-        public delegate bool OnChangeDelegate(string aValue);
+        public delegate bool OnChangeDelegate([MarshalAs(UnmanagedType.LPWStr)] string aValue);
         OnChangeDelegate onChanged;
         public void OnTextChanged(OnChangeDelegate aHandler)
         {
             onChanged = aHandler;
 
-            UITextInput_OnTextChanged(mInstance, onChanged);
+            Interop.UITextInput_OnTextChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextInput_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextInput_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static string UITextInput_GetText(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_OnTextChanged(ulong aInstance, OnChangeDelegate aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetHintText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetBufferSize(ulong aInstance, uint aSize);
     }
 }

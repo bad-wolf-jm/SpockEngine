@@ -7,16 +7,9 @@ namespace SpockEngine
     {
         private bool mDerived = false;
 
-        public UIColorButton() : this(UIColorButton_Create(), false) { }
-        public UIColorButton(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UIColorButton() : this(Interop.UIColorButton_Create(), false) { }
+        public UIColorButton(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
-        ~UIColorButton() { if (!mDerived) UIColorButton_Destroy(mInstance); }
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIColorButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIColorButton_Destroy(ulong aInstance);
+        ~UIColorButton() { if (!mDerived) Interop.UIColorButton_Destroy(mInstance); }
     }
 }
