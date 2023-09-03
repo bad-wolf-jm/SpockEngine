@@ -24,7 +24,7 @@ namespace SE::Core
         if( mFileSize < sizeof( sFileMagic ) )
             throw std::runtime_error( "Wrong file type!!!" );
 
-        vec_t<uint8_t> lMagic = Read<uint8_t>( sizeof( sFileMagic ) );
+        vector_t<uint8_t> lMagic = Read<uint8_t>( sizeof( sFileMagic ) );
         if( memcmp( lMagic.data(), sFileMagic, sizeof( sFileMagic ) != 0 ) )
             throw std::runtime_error( "Magic value does not match!!!" );
 
@@ -193,7 +193,7 @@ namespace SE::Core
         return { lTextureData, lSampler };
     }
 
-    void BinaryAsset::Package( vec_t<VertexData> const &aVertexData, vec_t<uint32_t> const &aIndexData )
+    void BinaryAsset::Package( vector_t<VertexData> const &aVertexData, vector_t<uint32_t> const &aIndexData )
     {
         uint32_t lHeaderSize = 2 * sizeof( uint32_t );
         uint32_t lPacketSize = aVertexData.size() * sizeof( VertexData ) + aIndexData.size() * sizeof( uint32_t ) + lHeaderSize;
@@ -219,7 +219,7 @@ namespace SE::Core
         mTotalPacketSize += lPacketSize;
     }
 
-    void BinaryAsset::Retrieve( uint32_t aIndex, vec_t<VertexData> &aVertexData, vec_t<uint32_t> &aIndexData )
+    void BinaryAsset::Retrieve( uint32_t aIndex, vector_t<VertexData> &aVertexData, vector_t<uint32_t> &aIndexData )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
         if( lAssetIndex.mType != eAssetType::MESH_DATA )

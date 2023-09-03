@@ -133,14 +133,14 @@ namespace SE::Core
             return mDirectionalShadowMapSampler;
         }
 
-        vec_t<ref_t<ISamplerCubeMap>> &GetPointLightShadowMapSamplers()
+        vector_t<ref_t<ISamplerCubeMap>> &GetPointLightShadowMapSamplers()
         {
             return mPointLightShadowMapSamplers;
         }
 
         void SetLights( sDirectionalLight const &aDirectionalLights );
 
-        void SetLights( vec_t<sPunctualLight> const &aPointLights );
+        void SetLights( vector_t<sPunctualLight> const &aPointLights );
 
       private:
         void RenderPunctualShadowMap( vec3 aLightPosition, std::array<ref_t<IRenderContext>, 6> aContext,
@@ -155,10 +155,10 @@ namespace SE::Core
         ref_t<IDescriptorSet>     mDirectionalShadowSceneDescriptor     = nullptr;
         ref_t<ShadowMeshRenderer> mRenderPipeline                       = nullptr;
 
-        vec_t<std::array<ref_t<IRenderContext>, 6>> mPointLightsShadowMapRenderContext    = {};
-        vec_t<ref_t<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
-        vec_t<std::array<ref_t<IGraphicBuffer>, 6>> mPointLightsShadowCameraUniformBuffer = {};
-        vec_t<std::array<ref_t<IDescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
+        vector_t<std::array<ref_t<IRenderContext>, 6>> mPointLightsShadowMapRenderContext    = {};
+        vector_t<ref_t<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
+        vector_t<std::array<ref_t<IGraphicBuffer>, 6>> mPointLightsShadowCameraUniformBuffer = {};
+        vector_t<std::array<ref_t<IDescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
         ref_t<OmniShadowMeshRenderer>                     mOmniRenderPipeline                   = nullptr;
 
         ref_t<IRenderTarget>  mGeometryRenderTarget = nullptr;
@@ -178,7 +178,7 @@ namespace SE::Core
         ref_t<IDescriptorSet>       mShadowMapDescriptorSet    = nullptr;
 
         sDirectionalLight           mDirectionalLight;
-        vec_t<sPunctualLight> mPointLights;
+        vector_t<sPunctualLight> mPointLights;
     };
 
 } // namespace SE::Core

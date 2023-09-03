@@ -11,6 +11,7 @@
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
+#include "Core/Vector.h"
 
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"
@@ -20,6 +21,7 @@
 
 namespace SE::TensorOps
 {
+    using namespace SE::Core;
 
     using MultiTensor  = SE::Cuda::MultiTensor;
     using MemoryBuffer = SE::Cuda::MemoryBuffer;
@@ -118,7 +120,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     struct sVectorValueComponent
     {
-        vec_t<_Ty> mValue = {}; //!< Values to upload
+        vector_t<_Ty> mValue = {}; //!< Values to upload
 
         sVectorValueComponent()                                = default;
         sVectorValueComponent( const sVectorValueComponent & ) = default;
@@ -163,10 +165,10 @@ namespace SE::TensorOps
     ///
     struct sOperandComponent
     {
-        vec_t<OpNode> mOperands = {}; //!< List of entities that have to be run before the current entity.
+        vector_t<OpNode> mOperands = {}; //!< List of entities that have to be run before the current entity.
 
         sOperandComponent() = default;
-        sOperandComponent( vec_t<OpNode> const &aOpNodes )
+        sOperandComponent( vector_t<OpNode> const &aOpNodes )
         {
             mOperands = aOpNodes;
         };
@@ -352,16 +354,16 @@ namespace SE::TensorOps
     ///
     struct sVectorInitializerComponent
     {
-        vec_t<ScalarValue> mValue = {}; //!< Vector of values
+        vector_t<ScalarValue> mValue = {}; //!< Vector of values
         MemoryBuffer             mData;       //!< GPU representation of the data of values
 
         sVectorInitializerComponent() = default;
 
         template <typename _Ty>
-        sVectorInitializerComponent( vec_t<_Ty> const &aValues )
+        sVectorInitializerComponent( vector_t<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
-            mValue               = vec_t<ScalarValue>( lVectorSize );
+            mValue               = vector_t<ScalarValue>( lVectorSize );
 
             for( uint32_t i = 0; i < lVectorSize; i++ )
             {
@@ -381,15 +383,15 @@ namespace SE::TensorOps
 
     struct sDataInitializerComponent
     {
-        vec_t<ScalarValue> mValue = {}; //!< Vector of values
+        vector_t<ScalarValue> mValue = {}; //!< Vector of values
 
         sDataInitializerComponent() = default;
 
         template <typename _Ty>
-        sDataInitializerComponent( vec_t<_Ty> const &aValues )
+        sDataInitializerComponent( vector_t<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
-            mValue               = vec_t<ScalarValue>( lVectorSize );
+            mValue               = vector_t<ScalarValue>( lVectorSize );
 
             for( uint32_t i = 0; i < lVectorSize; i++ )
             {

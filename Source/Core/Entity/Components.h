@@ -14,14 +14,17 @@
 #include <string>
 
 #include "Core/Math/Types.h"
+#include "Core/Vector.h"
 
 #include "Entity.h"
-#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 #ifdef LITTLEENDIAN
 #    undef LITTLEENDIAN
 #endif
 #include <uuid_v4.h>
+
+#include "Core/String.h"
 
 using namespace math;
 namespace SE::Core
@@ -64,7 +67,7 @@ namespace SE::Core
         struct sRelationship
         {
             Internal::Entity<ParentType>              mParent{ entt::null, nullptr };
-            vec_t<Internal::Entity<ParentType>> mChildren = {};
+            vector_t<Internal::Entity<ParentType>> mChildren = {};
 
             sRelationship()                        = default;
             sRelationship( const sRelationship & ) = default;
@@ -133,175 +136,175 @@ namespace SE::Core
             }
         };
 
-        template <typename ParentType>
-        struct sMonoActor
-        {
-            string_t mClassFullName = "";
+        // template <typename ParentType>
+        // struct sMonoActor
+        // {
+        //     string_t mClassFullName = "";
 
-            DotNetClass         mClass;
-            ref_t<DotNetInstance> mInstance;
-            ref_t<DotNetInstance> mEntityInstance;
+        //     DotNetClass         mClass;
+        //     ref_t<DotNetInstance> mInstance;
+        //     ref_t<DotNetInstance> mEntityInstance;
 
-            sMonoActor()                     = default;
-            sMonoActor( const sMonoActor & ) = default;
+        //     sMonoActor()                     = default;
+        //     sMonoActor( const sMonoActor & ) = default;
 
-            ~sMonoActor() = default;
+        //     ~sMonoActor() = default;
 
-            sMonoActor( const string_t &aClassFullName )
-                : mClassFullName{ aClassFullName }
+        //     sMonoActor( const string_t &aClassFullName )
+        //         : mClassFullName{ aClassFullName }
 
-            {
-                size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
-                string_t lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
-                string_t lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
+        //     {
+        //         size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
+        //         string_t lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
+        //         string_t lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
-                mClass = DotNetRuntime::GetClassType( mClassFullName );
-            }
+        //         mClass = DotNetRuntime::GetClassType( mClassFullName );
+        //     }
 
-            template <typename T>
-            T &Get()
-            {
-                return mEntity.Get<T>();
-            }
+        //     template <typename T>
+        //     T &Get()
+        //     {
+        //         return mEntity.Get<T>();
+        //     }
 
-            void Initialize( Internal::Entity<ParentType> aEntity )
-            {
-                mEntity = aEntity;
+        //     void Initialize( Internal::Entity<ParentType> aEntity )
+        //     {
+        //         mEntity = aEntity;
 
-                // Create Mono side entity object
-                auto lEntityID    = static_cast<uint32_t>( mEntity );
-                auto lRegistryID  = (size_t)mEntity.GetRegistry();
-                auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
-                mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
+        //         // Create Mono side entity object
+        //         auto lEntityID    = static_cast<uint32_t>( mEntity );
+        //         auto lRegistryID  = (size_t)mEntity.GetRegistry();
+        //         auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
+        //         mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
-                if( mClassFullName.empty() ) return;
+        //         if( mClassFullName.empty() ) return;
 
-                size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
-                string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
-                string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+        //         size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+        //         string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+        //         string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
-                mClass = DotNetRuntime::GetClassType( mClassFullName );
+        //         mClass = DotNetRuntime::GetClassType( mClassFullName );
 
-                // Instantiate the Mono actor class with the entity object as parameter
-                mInstance = mClass.Instantiate();
-                mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
-            }
+        //         // Instantiate the Mono actor class with the entity object as parameter
+        //         mInstance = mClass.Instantiate();
+        //         mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
+        //     }
 
-            void OnBeginScenario() { mInstance->InvokeMethod( "BeginScenario", 0, nullptr ); }
+        //     void OnBeginScenario() { mInstance->InvokeMethod( "BeginScenario", 0, nullptr ); }
 
-            void OnEndScenario() { mInstance->InvokeMethod( "EndScenario", 0, nullptr ); }
+        //     void OnEndScenario() { mInstance->InvokeMethod( "EndScenario", 0, nullptr ); }
 
-            void OnTick( Timestep ts )
-            {
-                float lTs = ts.GetMilliseconds();
-                mInstance->CallMethod( "Tick", &lTs );
-            }
+        //     void OnTick( Timestep ts )
+        //     {
+        //         float lTs = ts.GetMilliseconds();
+        //         mInstance->CallMethod( "Tick", &lTs );
+        //     }
 
-            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+        //     Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
 
-          private:
-            Internal::Entity<ParentType> mEntity;
+        //   private:
+        //     Internal::Entity<ParentType> mEntity;
 
-            // DotNetMehod mOnUpdate{};
-        };
+        //     // DotNetMehod mOnUpdate{};
+        // };
 
-        template <typename ParentType>
-        struct sMonoUIComponent
-        {
-            float mX               = 0.0f;
-            float mY               = 0.0f;
-            float mWidth           = 100.0f;
-            float mHeight          = 100.0f;
-            vec4  mFillColor       = { 0.0f, 0.0f, 0.0f, 0.5f };
-            vec4  mBorderColor     = { 1.0f, 1.0f, 1.0f, 0.75f };
-            float mBorderThickness = 2.0f;
-            float mRounding        = 5.0f;
+        // template <typename ParentType>
+        // struct sMonoUIComponent
+        // {
+        //     float mX               = 0.0f;
+        //     float mY               = 0.0f;
+        //     float mWidth           = 100.0f;
+        //     float mHeight          = 100.0f;
+        //     vec4  mFillColor       = { 0.0f, 0.0f, 0.0f, 0.5f };
+        //     vec4  mBorderColor     = { 1.0f, 1.0f, 1.0f, 0.75f };
+        //     float mBorderThickness = 2.0f;
+        //     float mRounding        = 5.0f;
 
-            bool mDisplayInEditor = true;
-            bool mPreview         = true;
+        //     bool mDisplayInEditor = true;
+        //     bool mPreview         = true;
 
-            string_t             mClassFullName = "";
-            DotNetClass         mClass;
-            ref_t<DotNetInstance> mInstance;
-            ref_t<DotNetInstance> mPreviewInstance;
-            ref_t<DotNetInstance> mEntityInstance;
+        //     string_t             mClassFullName = "";
+        //     DotNetClass         mClass;
+        //     ref_t<DotNetInstance> mInstance;
+        //     ref_t<DotNetInstance> mPreviewInstance;
+        //     ref_t<DotNetInstance> mEntityInstance;
 
-            sMonoUIComponent()                           = default;
-            sMonoUIComponent( const sMonoUIComponent & ) = default;
+        //     sMonoUIComponent()                           = default;
+        //     sMonoUIComponent( const sMonoUIComponent & ) = default;
 
-            ~sMonoUIComponent() = default;
+        //     ~sMonoUIComponent() = default;
 
-            sMonoUIComponent( const string_t &aClassFullName )
-                : mClassFullName{ aClassFullName }
+        //     sMonoUIComponent( const string_t &aClassFullName )
+        //         : mClassFullName{ aClassFullName }
 
-            {
-            }
+        //     {
+        //     }
 
-            template <typename T>
-            T &Get()
-            {
-                return mEntity.Get<T>();
-            }
+        //     template <typename T>
+        //     T &Get()
+        //     {
+        //         return mEntity.Get<T>();
+        //     }
 
-            void Initialize( Internal::Entity<ParentType> aEntity )
-            {
-                mEntity           = aEntity;
-                auto lEntityID    = static_cast<uint32_t>( mEntity );
-                auto lRegistryID  = (size_t)mEntity.GetRegistry();
-                auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
-                mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
+        //     void Initialize( Internal::Entity<ParentType> aEntity )
+        //     {
+        //         mEntity           = aEntity;
+        //         auto lEntityID    = static_cast<uint32_t>( mEntity );
+        //         auto lRegistryID  = (size_t)mEntity.GetRegistry();
+        //         auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
+        //         mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
-                if( mClassFullName.empty() ) return;
+        //         if( mClassFullName.empty() ) return;
 
-                size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
-                string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
-                string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+        //         size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+        //         string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+        //         string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
-                mClass = DotNetRuntime::GetClassType( mClassFullName );
+        //         mClass = DotNetRuntime::GetClassType( mClassFullName );
 
-                if( mDisplayInEditor && mPreview )
-                {
-                    mPreviewInstance = mClass.Instantiate();
-                    mPreviewInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
-                }
-            }
+        //         if( mDisplayInEditor && mPreview )
+        //         {
+        //             mPreviewInstance = mClass.Instantiate();
+        //             mPreviewInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
+        //         }
+        //     }
 
-            void OnBeginScenario()
-            {
-                // Instantiate the Mono actor class with the entity object as parameter
-                if( mClassFullName.empty() ) return;
+        //     void OnBeginScenario()
+        //     {
+        //         // Instantiate the Mono actor class with the entity object as parameter
+        //         if( mClassFullName.empty() ) return;
 
-                mInstance = mClass.Instantiate();
+        //         mInstance = mClass.Instantiate();
 
-                mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
-                mInstance->InvokeMethod( "BeginScenario", 0, nullptr );
-            }
+        //         mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
+        //         mInstance->InvokeMethod( "BeginScenario", 0, nullptr );
+        //     }
 
-            void OnEndScenario()
-            {
-                mInstance->InvokeMethod( "EndScenario", 0, nullptr );
-                mInstance = DotNetInstance{};
-            }
+        //     void OnEndScenario()
+        //     {
+        //         mInstance->InvokeMethod( "EndScenario", 0, nullptr );
+        //         mInstance = DotNetInstance{};
+        //     }
 
-            void OnUpdate( Timestep ts )
-            {
-                float lTs = ts.GetMilliseconds();
-                if( mInstance ) mInstance->CallMethod( "DrawContent", &lTs );
-            }
+        //     void OnUpdate( Timestep ts )
+        //     {
+        //         float lTs = ts.GetMilliseconds();
+        //         if( mInstance ) mInstance->CallMethod( "DrawContent", &lTs );
+        //     }
 
-            void OnPreviewUpdate( Timestep ts )
-            {
-                float lTs = ts.GetMilliseconds();
-                if( mPreviewInstance ) mPreviewInstance->CallMethod( "DrawPreviewContent", &lTs );
-            }
+        //     void OnPreviewUpdate( Timestep ts )
+        //     {
+        //         float lTs = ts.GetMilliseconds();
+        //         if( mPreviewInstance ) mPreviewInstance->CallMethod( "DrawPreviewContent", &lTs );
+        //     }
 
-            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+        //     Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
 
-          private:
-            Internal::Entity<ParentType> mEntity;
+        //   private:
+        //     Internal::Entity<ParentType> mEntity;
 
-            // DotNetMehod mOnUpdate{};
-        };
+        //     // DotNetMehod mOnUpdate{};
+        // };
 
     } // namespace Internal
 } // namespace SE::Core

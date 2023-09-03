@@ -24,19 +24,19 @@ namespace SE::Graphics
     }
 
     void IShaderProgram::AddCode( string_t const &aCode ) { mCodeBlocks.push_back( aCode ); }
-    void IShaderProgram::AddCode( vec_t<uint8_t> const &aCode )
+    void IShaderProgram::AddCode( vector_t<uint8_t> const &aCode )
     {
         mCodeBlocks.push_back( string_t( aCode.begin(), aCode.end() ) );
     }
 
-    static vec_t<char> ReadFile( const fs::path &filename )
+    static vector_t<char> ReadFile( const fs::path &filename )
     {
         std::ifstream lFileObject( filename, std::ios::ate | std::ios::binary );
 
         if( !lFileObject.is_open() ) throw std::runtime_error( "failed to open file!" );
 
         size_t            lFileSize = (size_t)lFileObject.tellg();
-        vec_t<char> lBuffer( lFileSize );
+        vector_t<char> lBuffer( lFileSize );
 
         lFileObject.seekg( 0 );
         lFileObject.read( lBuffer.data(), lFileSize );
@@ -87,7 +87,7 @@ namespace SE::Graphics
         if( !( mCacheRoot.empty() ) && fs::exists( mCacheRoot / mCacheFileName ) )
         {
             auto lShaderCode  = ReadFile( mCacheRoot / mCacheFileName );
-            mCompiledByteCode = vec_t<uint32_t>( lShaderCode.size() / sizeof( uint32_t ) );
+            mCompiledByteCode = vector_t<uint32_t>( lShaderCode.size() / sizeof( uint32_t ) );
 
             std::memcpy( mCompiledByteCode.data(), lShaderCode.data(), lShaderCode.size() );
         }

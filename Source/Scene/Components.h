@@ -20,7 +20,7 @@
 
 #include "Primitives/Primitives.h"
 
-#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 #include "Core/Profiling/BlockTimer.h"
 
@@ -74,7 +74,7 @@ namespace SE::Core::EntityComponentSystem::Components
         uint32_t CurrentTick    = 0;
         float    CurrentTime    = 0.0f;
 
-        vec_t<sAnimationChannel> mChannels = {};
+        vector_t<sAnimationChannel> mChannels = {};
 
         sAnimationComponent()                              = default;
         sAnimationComponent( const sAnimationComponent & ) = default;
@@ -82,7 +82,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sAnimationChooser
     {
-        vec_t<Entity> Animations = {};
+        vector_t<Entity> Animations = {};
 
         sAnimationChooser()                            = default;
         sAnimationChooser( const sAnimationChooser & ) = default;
@@ -178,9 +178,9 @@ namespace SE::Core::EntityComponentSystem::Components
     struct sSkeletonComponent
     {
         uint32_t            BoneCount;
-        vec_t<Entity> Bones;
-        vec_t<mat4>   InverseBindMatrices;
-        vec_t<mat4>   JointMatrices;
+        vector_t<Entity> Bones;
+        vector_t<mat4>   InverseBindMatrices;
+        vector_t<mat4>   JointMatrices;
 
         sSkeletonComponent()                             = default;
         sSkeletonComponent( const sSkeletonComponent & ) = default;

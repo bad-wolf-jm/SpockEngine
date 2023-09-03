@@ -87,7 +87,7 @@ namespace SE::Editor
 
         Entity m_SensorEntity{};
 
-        ref_t<DotNetInstance> mApplicationInstance = nullptr;
+        // ref_t<DotNetInstance> mApplicationInstance = nullptr;
     };
 
 } // namespace SE::Editor

@@ -18,7 +18,7 @@ namespace SE::Core
 
       private:
         tinygltf::Model                        mGltfModel;
-        vec_t<sTextureSamplingInfo>      mTextureSamplers  = {};
+        vector_t<sTextureSamplingInfo>      mTextureSamplers  = {};
         std::unordered_map<uint32_t, uint32_t> mTextureIDLookup  = {};
         std::unordered_map<uint32_t, uint32_t> mMaterialIDLookup = {};
         std::unordered_map<uint32_t, uint32_t> mNodeIDLookup     = {};
@@ -45,7 +45,7 @@ namespace SE::Core
         math::vec4 RetrieveVec4( tinygltf::Material &aMaterial, string_t aName, math::vec4 aDefault );
 
         template <typename _Ty>
-        void RetrievePrimitiveAttribute( const tinygltf::Primitive &aPrimitive, string_t aName, vec_t<_Ty> &aOutput )
+        void RetrievePrimitiveAttribute( const tinygltf::Primitive &aPrimitive, string_t aName, vector_t<_Ty> &aOutput )
         {
             if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
             {

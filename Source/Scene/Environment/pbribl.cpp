@@ -54,7 +54,7 @@ class VulkanExample : public VulkanExampleBase
     struct Meshes
     {
         vkglTF::Model              skybox;
-        vec_t<vkglTF::Model> objects;
+        vector_t<vkglTF::Model> objects;
         int32_t                    objectIndex = 0;
     } models;
 
@@ -96,11 +96,11 @@ class VulkanExample : public VulkanExampleBase
     VkDescriptorSetLayout descriptorSetLayout;
 
     // Default materials to select from
-    vec_t<Material> materials;
+    vector_t<Material> materials;
     int32_t               materialIndex = 0;
 
-    vec_t<string_t> materialNames;
-    vec_t<string_t> objectNames;
+    vector_t<string_t> materialNames;
+    vector_t<string_t> objectNames;
 
     VulkanExample()
         : VulkanExampleBase( ENABLE_VALIDATION )
@@ -253,7 +253,7 @@ class VulkanExample : public VulkanExampleBase
         // Skybox
         models.skybox.loadFromFile( getAssetPath() + "models/cube.gltf", vulkanDevice, queue, glTFLoadingFlags );
         // Objects
-        vec_t<string_t> filenames = { "sphere.gltf", "teapot.gltf", "torusknot.gltf", "venus.gltf" };
+        vector_t<string_t> filenames = { "sphere.gltf", "teapot.gltf", "torusknot.gltf", "venus.gltf" };
         models.objects.resize( filenames.size() );
         for( size_t i = 0; i < filenames.size(); i++ )
         {
@@ -267,14 +267,14 @@ class VulkanExample : public VulkanExampleBase
     void setupDescriptors()
     {
         // Descriptor Pool
-        vec_t<VkDescriptorPoolSize> poolSizes = {
+        vector_t<VkDescriptorPoolSize> poolSizes = {
             vks::initializers::descriptorPoolSize( VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 4 ),
             vks::initializers::descriptorPoolSize( VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 6 ) };
         VkDescriptorPoolCreateInfo descriptorPoolInfo = vks::initializers::descriptorPoolCreateInfo( poolSizes, 2 );
         VK_CHECK_RESULT( vkCreateDescriptorPool( device, &descriptorPoolInfo, nullptr, &descriptorPool ) );
 
         // Descriptor set layout
-        vec_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {
+        vector_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {
             vks::initializers::descriptorSetLayoutBinding( VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0 ),
             vks::initializers::descriptorSetLayoutBinding( VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1 ),
@@ -294,7 +294,7 @@ class VulkanExample : public VulkanExampleBase
 
         // Objects
         VK_CHECK_RESULT( vkAllocateDescriptorSets( device, &allocInfo, &descriptorSets.object ) );
-        vec_t<VkWriteDescriptorSet> writeDescriptorSets = {
+        vector_t<VkWriteDescriptorSet> writeDescriptorSets = {
             vks::initializers::writeDescriptorSet( descriptorSets.object, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0,
                                                    &uniformBuffers.object.descriptor ),
             vks::initializers::writeDescriptorSet( descriptorSets.object, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1,
@@ -343,13 +343,13 @@ class VulkanExample : public VulkanExampleBase
         VkPipelineMultisampleStateCreateInfo multisampleState =
             vks::initializers::pipelineMultisampleStateCreateInfo( VK_SAMPLE_COUNT_1_BIT );
 
-        vec_t<VkDynamicState>      dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+        vector_t<VkDynamicState>      dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
         VkPipelineDynamicStateCreateInfo dynamicState = vks::initializers::pipelineDynamicStateCreateInfo( dynamicStateEnables );
 
         // Pipeline layout
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = vks::initializers::pipelineLayoutCreateInfo( &descriptorSetLayout, 1 );
         // Push constant ranges
-        vec_t<VkPushConstantRange> pushConstantRanges = {
+        vector_t<VkPushConstantRange> pushConstantRanges = {
             vks::initializers::pushConstantRange( VK_SHADER_STAGE_VERTEX_BIT, sizeof( glm::vec3 ), 0 ),
             vks::initializers::pushConstantRange( VK_SHADER_STAGE_FRAGMENT_BIT, sizeof( Material::PushBlock ), sizeof( glm::vec3 ) ),
         };
@@ -503,12 +503,12 @@ class VulkanExample : public VulkanExampleBase
 
         // Descriptors
         VkDescriptorSetLayout                     descriptorsetlayout;
-        vec_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {};
+        vector_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {};
         VkDescriptorSetLayoutCreateInfo descriptorsetlayoutCI = vks::initializers::descriptorSetLayoutCreateInfo( setLayoutBindings );
         VK_CHECK_RESULT( vkCreateDescriptorSetLayout( device, &descriptorsetlayoutCI, nullptr, &descriptorsetlayout ) );
 
         // Descriptor Pool
-        vec_t<VkDescriptorPoolSize> poolSizes = {
+        vector_t<VkDescriptorPoolSize> poolSizes = {
             vks::initializers::descriptorPoolSize( VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 ) };
         VkDescriptorPoolCreateInfo descriptorPoolCI = vks::initializers::descriptorPoolCreateInfo( poolSizes, 2 );
         VkDescriptorPool           descriptorpool;
@@ -539,7 +539,7 @@ class VulkanExample : public VulkanExampleBase
         VkPipelineViewportStateCreateInfo    viewportState = vks::initializers::pipelineViewportStateCreateInfo( 1, 1 );
         VkPipelineMultisampleStateCreateInfo multisampleState =
             vks::initializers::pipelineMultisampleStateCreateInfo( VK_SAMPLE_COUNT_1_BIT );
-        vec_t<VkDynamicState>          dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+        vector_t<VkDynamicState>          dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
         VkPipelineDynamicStateCreateInfo     dynamicState = vks::initializers::pipelineDynamicStateCreateInfo( dynamicStateEnables );
         VkPipelineVertexInputStateCreateInfo emptyInputState = vks::initializers::pipelineVertexInputStateCreateInfo();
         std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages;
@@ -769,7 +769,7 @@ class VulkanExample : public VulkanExampleBase
 
         // Descriptors
         VkDescriptorSetLayout                     descriptorsetlayout;
-        vec_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {
+        vector_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {
             vks::initializers::descriptorSetLayoutBinding( VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT,
                                                            0 ),
         };
@@ -777,7 +777,7 @@ class VulkanExample : public VulkanExampleBase
         VK_CHECK_RESULT( vkCreateDescriptorSetLayout( device, &descriptorsetlayoutCI, nullptr, &descriptorsetlayout ) );
 
         // Descriptor Pool
-        vec_t<VkDescriptorPoolSize> poolSizes = {
+        vector_t<VkDescriptorPoolSize> poolSizes = {
             vks::initializers::descriptorPoolSize( VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 ) };
         VkDescriptorPoolCreateInfo descriptorPoolCI = vks::initializers::descriptorPoolCreateInfo( poolSizes, 2 );
         VkDescriptorPool           descriptorpool;
@@ -802,7 +802,7 @@ class VulkanExample : public VulkanExampleBase
         } pushBlock;
 
         VkPipelineLayout                 pipelinelayout;
-        vec_t<VkPushConstantRange> pushConstantRanges = {
+        vector_t<VkPushConstantRange> pushConstantRanges = {
             vks::initializers::pushConstantRange( VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, sizeof( PushBlock ), 0 ),
         };
         VkPipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo( &descriptorsetlayout, 1 );
@@ -824,7 +824,7 @@ class VulkanExample : public VulkanExampleBase
         VkPipelineViewportStateCreateInfo    viewportState = vks::initializers::pipelineViewportStateCreateInfo( 1, 1 );
         VkPipelineMultisampleStateCreateInfo multisampleState =
             vks::initializers::pipelineMultisampleStateCreateInfo( VK_SAMPLE_COUNT_1_BIT );
-        vec_t<VkDynamicState>      dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+        vector_t<VkDynamicState>      dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
         VkPipelineDynamicStateCreateInfo dynamicState = vks::initializers::pipelineDynamicStateCreateInfo( dynamicStateEnables );
         std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages;
 
@@ -861,7 +861,7 @@ class VulkanExample : public VulkanExampleBase
         renderPassBeginInfo.clearValueCount          = 1;
         renderPassBeginInfo.pClearValues             = clearValues;
 
-        vec_t<glm::mat4> matrices = {
+        vector_t<glm::mat4> matrices = {
             // POSITIVE_X
             glm::rotate( glm::rotate( glm::mat4( 1.0f ), glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
                          glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) ),
@@ -1142,7 +1142,7 @@ class VulkanExample : public VulkanExampleBase
 
         // Descriptors
         VkDescriptorSetLayout                     descriptorsetlayout;
-        vec_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {
+        vector_t<VkDescriptorSetLayoutBinding> setLayoutBindings = {
             vks::initializers::descriptorSetLayoutBinding( VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT,
                                                            0 ),
         };
@@ -1150,7 +1150,7 @@ class VulkanExample : public VulkanExampleBase
         VK_CHECK_RESULT( vkCreateDescriptorSetLayout( device, &descriptorsetlayoutCI, nullptr, &descriptorsetlayout ) );
 
         // Descriptor Pool
-        vec_t<VkDescriptorPoolSize> poolSizes = {
+        vector_t<VkDescriptorPoolSize> poolSizes = {
             vks::initializers::descriptorPoolSize( VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 ) };
         VkDescriptorPoolCreateInfo descriptorPoolCI = vks::initializers::descriptorPoolCreateInfo( poolSizes, 2 );
         VkDescriptorPool           descriptorpool;
@@ -1174,7 +1174,7 @@ class VulkanExample : public VulkanExampleBase
         } pushBlock;
 
         VkPipelineLayout                 pipelinelayout;
-        vec_t<VkPushConstantRange> pushConstantRanges = {
+        vector_t<VkPushConstantRange> pushConstantRanges = {
             vks::initializers::pushConstantRange( VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, sizeof( PushBlock ), 0 ),
         };
         VkPipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo( &descriptorsetlayout, 1 );
@@ -1196,7 +1196,7 @@ class VulkanExample : public VulkanExampleBase
         VkPipelineViewportStateCreateInfo    viewportState = vks::initializers::pipelineViewportStateCreateInfo( 1, 1 );
         VkPipelineMultisampleStateCreateInfo multisampleState =
             vks::initializers::pipelineMultisampleStateCreateInfo( VK_SAMPLE_COUNT_1_BIT );
-        vec_t<VkDynamicState>      dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+        vector_t<VkDynamicState>      dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
         VkPipelineDynamicStateCreateInfo dynamicState = vks::initializers::pipelineDynamicStateCreateInfo( dynamicStateEnables );
         std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages;
 
@@ -1233,7 +1233,7 @@ class VulkanExample : public VulkanExampleBase
         renderPassBeginInfo.clearValueCount          = 1;
         renderPassBeginInfo.pClearValues             = clearValues;
 
-        vec_t<glm::mat4> matrices = {
+        vector_t<glm::mat4> matrices = {
             // POSITIVE_X
             glm::rotate( glm::rotate( glm::mat4( 1.0f ), glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
                          glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) ),

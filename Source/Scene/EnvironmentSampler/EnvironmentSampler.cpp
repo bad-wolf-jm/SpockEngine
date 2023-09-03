@@ -25,16 +25,16 @@ namespace SE::SensorModel::Dev
         mSBT = New<OptixShaderBindingTableObject>();
 
         // build raygen records
-        vec_t<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->mRayGenProgramGroups );
+        vector_t<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->mRayGenProgramGroups );
         mRaygenRecordsBuffer                      = GPUMemory::Create( lRaygenRecords );
         mSBT->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
         // build miss records
-        vec_t<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->mMissProgramGroups );
+        vector_t<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->mMissProgramGroups );
         mMissRecordsBuffer                    = GPUMemory::Create( lMissRecords );
         mSBT->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(), mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
-        vec_t<sHitgroupRecord> lHitgroupRecords;
+        vector_t<sHitgroupRecord> lHitgroupRecords;
         a_Scene->ForEach<SE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
                          SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto &l_Component, auto &aMeshComponent )

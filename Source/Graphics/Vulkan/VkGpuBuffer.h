@@ -29,7 +29,7 @@ namespace SE::Graphics
                      bool aIsTransferDestination, size_t aSize );
 
         template <typename _Ty>
-        VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, vec_t<_Ty> aData, eBufferType aType, bool aIsHostVisible,
+        VkGpuBuffer( ref_t<VkGraphicContext> aGraphicContext, vector_t<_Ty> aData, eBufferType aType, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : VkGpuBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            aIsTransferDestination )

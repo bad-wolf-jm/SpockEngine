@@ -14,6 +14,7 @@
 
 #include "../ScalarTypes.h"
 #include "Core/Logging.h"
+#include "Core/Vector.h"
 
 #define DISPATCH_BY_TYPE( type, target_fname, args ) \
     do                                               \
@@ -131,13 +132,13 @@ inline void __CURAND_ASSERT( curandStatus_t err, const char *file, const int lin
 
 namespace SE::TensorOps::Private
 {
-
+    using namespace SE::Core;
     constexpr uint32_t ThreadsPerBlock = 1024;
 
     template <typename _Type>
-    vec_t<_Type> Resolve( vec_t<ScalarValue> const &aValue )
+    vector_t<_Type> Resolve( vector_t<ScalarValue> const &aValue )
     {
-        vec_t<_Type> lValue( aValue.size() );
+        vector_t<_Type> lValue( aValue.size() );
         for( uint32_t i = 0; i < aValue.size(); i++ )
         {
             lValue[i] = std::get<_Type>( aValue[i] );

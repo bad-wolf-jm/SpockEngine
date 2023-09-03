@@ -3,6 +3,9 @@
 #include <string>
 
 #include <Core/Math/Types.h>
+#include <Core/String.h>
+
+using namespace SE::Core;
 
 class PopupWindow
 {

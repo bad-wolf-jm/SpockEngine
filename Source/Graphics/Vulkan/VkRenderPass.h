@@ -21,8 +21,8 @@ namespace SE::Graphics
 
         VkRenderPassObject()                       = default;
         VkRenderPassObject( VkRenderPassObject & ) = default;
-        VkRenderPassObject( ref_t<VkGraphicContext> aContext, vec_t<VkAttachmentDescription> aAttachments,
-                            vec_t<VkSubpassDescription> aSubpasses, vec_t<VkSubpassDependency> aSubpassDependencies );
+        VkRenderPassObject( ref_t<VkGraphicContext> aContext, vector_t<VkAttachmentDescription> aAttachments,
+                            vector_t<VkSubpassDescription> aSubpasses, vector_t<VkSubpassDependency> aSubpassDependencies );
 
         VkRenderPassObject( ref_t<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                             bool aIsPresented, math::vec4 aClearColor );
@@ -35,12 +35,12 @@ namespace SE::Graphics
         VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, bool aIsSampled,
                                                  VkAttachmentLoadOp aAttachmentLoadOp, VkAttachmentStoreOp aAttachmentStoreOp );
 
-        vec_t<VkClearValue> GetClearValues();
+        vector_t<VkClearValue> GetClearValues();
 
-        vec_t<VkSubpassDependency> DefaultSubpassDependencies();
+        vector_t<VkSubpassDependency> DefaultSubpassDependencies();
 
-        void CreateUnderlyingRenderpass( vec_t<VkAttachmentDescription> aAttachments,
-                                         vec_t<VkAttachmentReference>   aAttachmentReferences,
+        void CreateUnderlyingRenderpass( vector_t<VkAttachmentDescription> aAttachments,
+                                         vector_t<VkAttachmentReference>   aAttachmentReferences,
                                          VkAttachmentReference               *aDepthAttachmentReference,
                                          VkAttachmentReference               *aResolveAttachmentReference );
 
@@ -51,7 +51,7 @@ namespace SE::Graphics
 
       protected:
         ref_t<VkGraphicContext>     mContext              = nullptr;
-        vec_t<VkClearValue> mClearValues          = {};
+        vector_t<VkClearValue> mClearValues          = {};
         uint32_t                  mColorAttachmentCount = 0;
     };
 

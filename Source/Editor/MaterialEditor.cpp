@@ -61,7 +61,7 @@ namespace SE::Editor
 
             if( g_World == nullptr ) return;
 
-            vec_t<Entity> Textures = { Entity{} };
+            vector_t<Entity> Textures = { Entity{} };
             uint32_t            n        = 1;
             g_World->ForEach<TextureComponent>(
                 [&]( auto a_Entity, auto &a_Component )

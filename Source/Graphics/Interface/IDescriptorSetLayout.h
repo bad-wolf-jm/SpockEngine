@@ -39,7 +39,7 @@ namespace SE::Graphics
         bool     mIsUnbounded     = false;
         uint32_t mDescriptorCount = 1;
 
-        vec_t<sDescriptorBindingInfo> mDescriptors = {};
+        vector_t<sDescriptorBindingInfo> mDescriptors = {};
     };
 
 } // namespace SE::Graphics

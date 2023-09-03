@@ -46,7 +46,7 @@ namespace SE::Core
             if( !lData ) return sImageData{};
 
             lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
-            lImageData.mPixelData = vec_t<uint8_t>( (uint8_t*)lData, ((uint8_t*)lData )+ ( lWidth * lHeight * sizeof( float ) ) );
+            lImageData.mPixelData = vector_t<uint8_t>( (uint8_t*)lData, ((uint8_t*)lData )+ ( lWidth * lHeight * sizeof( float ) ) );
         }
         else
         {
@@ -57,7 +57,7 @@ namespace SE::Core
             if( !lData ) return sImageData{};
 
             lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
-            lImageData.mPixelData = vec_t<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
+            lImageData.mPixelData = vector_t<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
         }
 
         lImageData.mWidth    = static_cast<size_t>( lWidth );
@@ -260,9 +260,9 @@ namespace SE::Core
         }
     }
 
-    vec_t<char> TextureData::Serialize() const
+    vector_t<char> TextureData::Serialize() const
     {
-        vec_t<char> lData;
+        vector_t<char> lData;
         gli::save_ktx( mInternalTexture, lData );
 
         return lData;
@@ -305,7 +305,7 @@ namespace SE::Core
 
     sImageData TextureData2D::GetImageData()
     {
-        vec_t<uint8_t> lImageData( (uint8_t*)mInternalTexture2d.data(), ((uint8_t*)mInternalTexture2d.data()) + mInternalTexture2d.size() );
+        vector_t<uint8_t> lImageData( (uint8_t*)mInternalTexture2d.data(), ((uint8_t*)mInternalTexture2d.data()) + mInternalTexture2d.size() );
         return { mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), mInternalTexture2d.size(),
                  std::move( lImageData ) };
     }
@@ -343,7 +343,7 @@ namespace SE::Core
         mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( vec_t<uint8_t> aKTXData, uint32_t aSize )
+    TextureDataCubeMap::TextureDataCubeMap( vector_t<uint8_t> aKTXData, uint32_t aSize )
         : TextureData( (const char*)aKTXData.data(), aSize )
     {
         mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );

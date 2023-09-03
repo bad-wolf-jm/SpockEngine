@@ -27,9 +27,9 @@ namespace SE::Graphics
         }
 
         template <typename _RecordType>
-        vec_t<_RecordType> NewRecordType( vec_t<ref_t<SE::Graphics::OptixProgramGroupObject>> aProgramGroup )
+        vector_t<_RecordType> NewRecordType( vector_t<ref_t<SE::Graphics::OptixProgramGroupObject>> aProgramGroup )
         {
-            vec_t<_RecordType> lNewRecordTypes;
+            vector_t<_RecordType> lNewRecordTypes;
             for( int i = 0; i < aProgramGroup.size(); i++ )
             {
                 _RecordType rec = NewRecordType<_RecordType>( aProgramGroup[i] );

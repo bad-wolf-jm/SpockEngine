@@ -14,6 +14,7 @@
 
 #include "Components.h"
 #include "Entity.h"
+#include "Core/String.h"
 // #include "ScriptableEntity.h"
 
 #include <unordered_map>
@@ -38,7 +39,7 @@ namespace SE::Core
         struct SignalHandler
         {
             // entt::sigh<void( Internal::Entity<EntityRegistry *>, _ComponentType & )> Signal;
-            vec_t<std::function<void( EntityType, _ComponentType & )>> mHandlers;
+            vector_t<std::function<void( EntityType, _ComponentType & )>> mHandlers;
 
             SignalHandler()                        = default;
             SignalHandler( const SignalHandler & ) = default;
@@ -360,9 +361,9 @@ namespace SE::Core
     /// @brief Instanciated component type bound to this registry
     using sRelationshipComponent = Internal::sRelationship<EntityCollection *>;
 
-    using sActorComponent = Internal::sMonoActor<EntityCollection *>;
+    // using sActorComponent = Internal::sMonoActor<EntityCollection *>;
 
-    using sUIComponent = Internal::sMonoUIComponent<EntityCollection *>;
+    // using sUIComponent = Internal::sMonoUIComponent<EntityCollection *>;
 
     /// @brief
     template <typename _Ty>

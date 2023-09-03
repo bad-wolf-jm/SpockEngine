@@ -22,7 +22,7 @@ namespace SE::Graphics
 
         sVkShaderModuleObject()                          = default;
         sVkShaderModuleObject( sVkShaderModuleObject & ) = default;
-        sVkShaderModuleObject( ref_t<VkGraphicContext> mContext, vec_t<uint32_t> aByteCode );
+        sVkShaderModuleObject( ref_t<VkGraphicContext> mContext, vector_t<uint32_t> aByteCode );
 
         ~sVkShaderModuleObject();
 
@@ -36,7 +36,7 @@ namespace SE::Graphics
 
         sVkDescriptorSetLayoutObject()                                 = default;
         sVkDescriptorSetLayoutObject( sVkDescriptorSetLayoutObject & ) = default;
-        sVkDescriptorSetLayoutObject( ref_t<VkGraphicContext> mContext, vec_t<VkDescriptorSetLayoutBinding> aBindings,
+        sVkDescriptorSetLayoutObject( ref_t<VkGraphicContext> mContext, vector_t<VkDescriptorSetLayoutBinding> aBindings,
                                       bool aUnbounded );
 
         ~sVkDescriptorSetLayoutObject();
@@ -61,7 +61,7 @@ namespace SE::Graphics
          */
         ShaderModule( ref_t<VkGraphicContext> mContext, string_t aFilePaths, eShaderStageTypeFlags aShaderType );
 
-        ShaderModule( ref_t<VkGraphicContext> mContext, vec_t<uint32_t> aShaderCode, eShaderStageTypeFlags aShaderType );
+        ShaderModule( ref_t<VkGraphicContext> mContext, vector_t<uint32_t> aShaderCode, eShaderStageTypeFlags aShaderType );
 
         ~ShaderModule() = default;
 
@@ -89,9 +89,9 @@ namespace SE::Graphics
     {
         struct sImageBindInfo
         {
-            vec_t<VkSampler>   mSampler   = {};
-            vec_t<VkImageView> mImageView = {};
-            vec_t<bool>        mIsDepth   = {};
+            vector_t<VkSampler>   mSampler   = {};
+            vector_t<VkImageView> mImageView = {};
+            vector_t<bool>        mIsDepth   = {};
             uint32_t                 mBinding   = 0;
         };
 
@@ -128,7 +128,7 @@ namespace SE::Graphics
         sVkDescriptorPoolObject()                            = default;
         sVkDescriptorPoolObject( sVkDescriptorPoolObject & ) = default;
         sVkDescriptorPoolObject( ref_t<VkGraphicContext> mContext, uint32_t aDescriptorSetCount,
-                                 vec_t<VkDescriptorPoolSize> aPoolSizes );
+                                 vector_t<VkDescriptorPoolSize> aPoolSizes );
 
         ref_t<sVkDescriptorSetObject> Allocate( ref_t<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount = 0 );
 
@@ -144,8 +144,8 @@ namespace SE::Graphics
 
         sVkPipelineLayoutObject()                            = default;
         sVkPipelineLayoutObject( sVkPipelineLayoutObject & ) = default;
-        sVkPipelineLayoutObject( ref_t<VkGraphicContext> aContext, vec_t<ref_t<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
-                                 vec_t<sPushConstantRange> aPushConstantRanges );
+        sVkPipelineLayoutObject( ref_t<VkGraphicContext> aContext, vector_t<ref_t<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
+                                 vector_t<sPushConstantRange> aPushConstantRanges );
 
         ~sVkPipelineLayoutObject();
 
@@ -165,10 +165,10 @@ namespace SE::Graphics
 
         sVkPipelineObject()                      = default;
         sVkPipelineObject( sVkPipelineObject & ) = default;
-        sVkPipelineObject( ref_t<VkGraphicContext> aContext, uint8_t aSampleCount, vec_t<sBufferLayoutElement> aVertexBufferLayout,
-                           vec_t<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
+        sVkPipelineObject( ref_t<VkGraphicContext> aContext, uint8_t aSampleCount, vector_t<sBufferLayoutElement> aVertexBufferLayout,
+                           vector_t<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
                            eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
-                           vec_t<sShader> aShaderStages, ref_t<sVkPipelineLayoutObject> aPipelineLayout,
+                           vector_t<sShader> aShaderStages, ref_t<sVkPipelineLayoutObject> aPipelineLayout,
                            ref_t<VkRenderPassObject> aRenderPass );
 
         ~sVkPipelineObject();
@@ -176,10 +176,10 @@ namespace SE::Graphics
       private:
         ref_t<VkGraphicContext> mContext = nullptr;
 
-        void Compile( vec_t<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
-                      VkVertexInputBindingDescription &o_Binding, vec_t<VkVertexInputAttributeDescription> &o_Attributes,
+        void Compile( vector_t<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
+                      VkVertexInputBindingDescription &o_Binding, vector_t<VkVertexInputAttributeDescription> &o_Attributes,
                       bool aInstanced );
 
-        uint32_t CalculateOffsetsAndStride( vec_t<sBufferLayoutElement> &aVertexBufferLayout );
+        uint32_t CalculateOffsetsAndStride( vector_t<sBufferLayoutElement> &aVertexBufferLayout );
     };
 } // namespace SE::Graphics

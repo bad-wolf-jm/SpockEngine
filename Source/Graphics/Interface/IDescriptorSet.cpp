@@ -14,6 +14,6 @@ namespace SE::Graphics
     {
     }
 
-    void IDescriptorSet::Write( ref_t<ISampler2D> aBuffer, uint32_t aBinding ) { Write( vec_t{ aBuffer }, aBinding ); }
-    void IDescriptorSet::Write( ref_t<ISamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( vec_t{ aBuffer }, aBinding ); }
+    void IDescriptorSet::Write( ref_t<ISampler2D> aBuffer, uint32_t aBinding ) { Write( vector_t<ref_t<ISampler2D>>{ aBuffer }, aBinding ); }
+    void IDescriptorSet::Write( ref_t<ISamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( vector_t<ref_t<ISamplerCubeMap>>{ aBuffer }, aBinding ); }
 } // namespace SE::Graphics

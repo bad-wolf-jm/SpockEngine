@@ -105,7 +105,7 @@ namespace SE::Cuda::Internal
         /// @param aOffset The offset at which to copy the array.
         ///
         template <typename _Ty>
-        void Upload( vec_t<_Ty> &aArray, uint32_t aOffset ) const
+        void Upload( vector_t<_Ty> &aArray, uint32_t aOffset ) const
         {
             if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
                 throw std::runtime_error(
@@ -117,7 +117,7 @@ namespace SE::Cuda::Internal
         }
 
         template <typename _Ty>
-        void Upload( vec_t<_Ty> const &aArray, uint32_t aOffset ) const
+        void Upload( vector_t<_Ty> const &aArray, uint32_t aOffset ) const
         {
             if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
                 throw std::runtime_error(
@@ -136,22 +136,22 @@ namespace SE::Cuda::Internal
         /// @param aArray Array of data to upload to the device
         ///
         template <typename _Ty>
-        void Upload( vec_t<_Ty> &aArray )
+        void Upload( vector_t<_Ty> &aArray )
         {
             Upload<_Ty>( aArray, 0 );
         }
         template <typename _Ty>
-        void Upload( vec_t<_Ty> &aArray ) const
+        void Upload( vector_t<_Ty> &aArray ) const
         {
             Upload<_Ty>( aArray, 0 );
         }
         template <typename _Ty>
-        void Upload( vec_t<_Ty> const &aArray )
+        void Upload( vector_t<_Ty> const &aArray )
         {
             Upload<_Ty>( aArray, 0 );
         }
         template <typename _Ty>
-        void Upload( vec_t<_Ty> const &aArray ) const
+        void Upload( vector_t<_Ty> const &aArray ) const
         {
             Upload<_Ty>( aArray, 0 );
         }
@@ -208,22 +208,22 @@ namespace SE::Cuda::Internal
 
         /// @brief Downloads data from the device.
         ///
-        /// Downloads the contents of the device buffer into a newly allocated `vec_t` appropriate size and type.
+        /// Downloads the contents of the device buffer into a newly allocated `vector_t` appropriate size and type.
         ///
         /// @exception  std::runtime_error If trying to fetch more data than there is space available
         ///
         /// @param aOffset Where the fetch starts
         /// @param aSize   Size of the buffer to fetch, in bytes
         ///
-        /// @return newly allocated `vec_t` containing the data.
+        /// @return newly allocated `vector_t` containing the data.
         ///
         template <typename _Ty>
-        vec_t<_Ty> Fetch( size_t aOffset, size_t aSize ) const
+        vector_t<_Ty> Fetch( size_t aOffset, size_t aSize ) const
         {
             if( ( aSize + aOffset ) * sizeof( _Ty ) > Size() )
                 throw std::runtime_error(
                     fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", aSize, Size() ).c_str() );
-            vec_t<_Ty> lHostArray( aSize );
+            vector_t<_Ty> lHostArray( aSize );
             MemCopyDeviceToHost( reinterpret_cast<void *>( lHostArray.data() ), reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ),
                                  aSize * sizeof( _Ty ) );
             return lHostArray;
@@ -235,10 +235,10 @@ namespace SE::Cuda::Internal
         ///
         /// @exception  std::runtime_error If trying to fetch more data than there is space available
         ///
-        /// @return newly allocated `vec_t` containing the data.
+        /// @return newly allocated `vector_t` containing the data.
         ///
         template <typename _Ty>
-        vec_t<_Ty> Fetch() const
+        vector_t<_Ty> Fetch() const
         {
             return Fetch<_Ty>( mSize / sizeof( _Ty ) );
         }
@@ -251,10 +251,10 @@ namespace SE::Cuda::Internal
         ///
         /// @param aSize   Size of the buffer to fetch, in bytes
         ///
-        /// @return newly allocated `vec_t` containing the data.
+        /// @return newly allocated `vector_t` containing the data.
         ///
         template <typename _Ty>
-        vec_t<_Ty> Fetch( size_t aSize ) const
+        vector_t<_Ty> Fetch( size_t aSize ) const
         {
             return Fetch<_Ty>( 0, aSize );
         }

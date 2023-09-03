@@ -89,7 +89,7 @@ namespace SE::Core
 
         bool                        lFoundDirectionalLight = false;
         sDirectionalLight           lDirectionalLight{};
-        vec_t<sPunctualLight> lPointLights;
+        vector_t<sPunctualLight> lPointLights;
 
         // clang-format off
         const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };

@@ -354,9 +354,9 @@ namespace SE::Core
     {
         mRows.clear();
 
-        vec_t<UITreeViewNode *> lStack;
+        vector_t<UITreeViewNode *> lStack;
 
-        auto lRootChildren = vec_t( mRoot->Children().begin(), mRoot->Children().end() );
+        auto lRootChildren = vector_t<UITreeViewNode *>( mRoot->Children().begin(), mRoot->Children().end() );
         std::reverse( lRootChildren.begin(), lRootChildren.end() );
         for( auto *lNode : lRootChildren )
             lStack.push_back( lNode );
@@ -369,7 +369,7 @@ namespace SE::Core
 
             if( !lNode->IsLeaf() && lNode->IsOpen() )
             {
-                auto lChildren = vec_t( lNode->Children().begin(), lNode->Children().end() );
+                auto lChildren = vector_t<UITreeViewNode *>( lNode->Children().begin(), lNode->Children().end() );
                 std::reverse( lChildren.begin(), lChildren.end() );
 
                 for( auto *lChild : lChildren )

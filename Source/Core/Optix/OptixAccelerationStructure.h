@@ -55,14 +55,14 @@ namespace SE::Graphics
       private:
         ref_t<OptixDeviceContextObject> mRayTracingContext = nullptr;
 
-        vec_t<OptixBuildInput> mTriangleInput = {};
-        vec_t<uint32_t>        mInputFlags    = {};
+        vector_t<OptixBuildInput> mTriangleInput = {};
+        vector_t<uint32_t>        mInputFlags    = {};
 
-        vec_t<RawPointer> mVertexBuffers = {};
-        vec_t<int32_t>    mVertexCounts  = {};
-        vec_t<int32_t>    mVertexStrides = {};
-        vec_t<RawPointer> mIndexBuffers  = {};
-        vec_t<int32_t>    mIndexCounts   = {};
+        vector_t<RawPointer> mVertexBuffers = {};
+        vector_t<int32_t>    mVertexCounts  = {};
+        vector_t<int32_t>    mVertexStrides = {};
+        vector_t<RawPointer> mIndexBuffers  = {};
+        vector_t<int32_t>    mIndexCounts   = {};
 
         GPUMemory mAccelerationStructureBuffer;
     };

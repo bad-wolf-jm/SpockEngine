@@ -13,6 +13,9 @@
 #include <vector>
 #include <filesystem>
 
+#include "String.h"
+#include "Vector.h"
+
 
 
 /**
@@ -23,6 +26,8 @@
 namespace SE::Logging
 {
     namespace fs = std::filesystem;
+    using namespace SE::Core;
+
     enum class LogLevel : uint8_t
     {
         DEBUG   = 1,
@@ -39,7 +44,7 @@ namespace SE::Logging
     };
 
     void _Log( LogLevel a_Level, string_t a_Message );
-    vec_t<LogMessage> &GetLogMessages();
+    vector_t<LogMessage> &GetLogMessages();
 
     /** @brief Information level log entry.
      *

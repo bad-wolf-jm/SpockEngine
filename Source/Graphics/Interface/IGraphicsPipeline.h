@@ -99,10 +99,10 @@ namespace SE::Graphics
         bool                   mDepthTestEnable  = false;
         eDepthCompareOperation mDepthComparison  = eDepthCompareOperation::ALWAYS;
 
-        vec_t<sShaderData>               mShaderStages         = {};
-        vec_t<sBufferLayoutElement>      mInputLayout          = {};
-        vec_t<sBufferLayoutElement>      mInstancedInputLayout = {};
-        vec_t<sPushConstantRange>        mPushConstants        = {};
-        vec_t<ref_t<IDescriptorSetLayout>> mDescriptorSets       = {};
+        vector_t<sShaderData>               mShaderStages         = {};
+        vector_t<sBufferLayoutElement>      mInputLayout          = {};
+        vector_t<sBufferLayoutElement>      mInstancedInputLayout = {};
+        vector_t<sPushConstantRange>        mPushConstants        = {};
+        vector_t<ref_t<IDescriptorSetLayout>> mDescriptorSets       = {};
     };
 } // namespace SE::Graphics

@@ -41,7 +41,7 @@ namespace SE::Core
     {
         string_t mName = ""; //!< Name of the session
 
-        vec_t<sProfilingEvent> mEvents = {}; //!< List of events fired during the session
+        vector_t<sProfilingEvent> mEvents = {}; //!< List of events fired during the session
 
         sProfilingSession( string_t const &aName )
             : mName{ aName }

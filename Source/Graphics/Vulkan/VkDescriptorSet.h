@@ -37,8 +37,8 @@ namespace SE::Graphics
         }
 
         void Write( ref_t<IGraphicBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
-        void Write( vec_t<ref_t<ISampler2D>> aBuffer, uint32_t aBinding );
-        void Write( vec_t<ref_t<ISamplerCubeMap>> aBuffer, uint32_t aBinding );
+        void Write( vector_t<ref_t<ISampler2D>> aBuffer, uint32_t aBinding );
+        void Write( vector_t<ref_t<ISamplerCubeMap>> aBuffer, uint32_t aBinding );
 
         void Build();
 

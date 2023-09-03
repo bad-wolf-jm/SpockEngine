@@ -131,17 +131,17 @@ namespace SE::Core
         int32_t AppendTextureData( ref_t<ISampler2D> aTexture );
         void    UpdateMaterialData();
 
-        vec_t<Material> GetMaterialData();
+        vector_t<Material> GetMaterialData();
 
       private:
         ref_t<IGraphicContext> mGraphicContext;
 
         EntityCollection mMaterialRegistry;
 
-        vec_t<ref_t<ISampler2D>> mTextureData;
-        vec_t<sShaderMaterial> mMaterialData;
+        vector_t<ref_t<ISampler2D>> mTextureData;
+        vector_t<sShaderMaterial> mMaterialData;
         sDirectionalLight            mDirectionalLight;
-        vec_t<sPunctualLight>  mPointLights;
+        vector_t<sPunctualLight>  mPointLights;
 
         std::map<size_t, ref_t<IShaderProgram>> mVertexShaders;
         std::map<size_t, ref_t<IShaderProgram>> mFragmentShaders;
@@ -174,7 +174,7 @@ namespace SE::Core
         ref_t<IDescriptorSet>       mDirectionalLightShadowMapDescriptor       = nullptr;
         ref_t<IDescriptorSetLayout> mDirectionalLightShadowMapDescriptorLayout = nullptr;
 
-        vec_t<ref_t<ISamplerCubeMap>> mPunctualLightShadowMaps                = {};
+        vector_t<ref_t<ISamplerCubeMap>> mPunctualLightShadowMaps                = {};
         ref_t<IDescriptorSet>               mPunctualLightShadowMapDescriptor       = nullptr;
         ref_t<IDescriptorSetLayout>         mPunctualLightShadowMapDescriptorLayout = nullptr;
 
@@ -188,10 +188,10 @@ namespace SE::Core
         ref_t<IGraphicsPipeline> GetGraphicsPipeline( Material const &aMaterial );
 
         void SetLights( sDirectionalLight const &aDirectionalLights );
-        void SetLights( vec_t<sPunctualLight> const &aPointLights );
+        void SetLights( vector_t<sPunctualLight> const &aPointLights );
 
         void SetShadowMap( ref_t<ISampler2D> aDirectionalShadowMap );
-        void SetShadowMap( vec_t<ref_t<ISamplerCubeMap>> aPunctualLightShadowMaps );
+        void SetShadowMap( vector_t<ref_t<ISamplerCubeMap>> aPunctualLightShadowMaps );
 
         void ConfigureRenderContext( ref_t<IRenderContext> aRenderPass );
         void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );

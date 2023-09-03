@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Core/Math/Types.h"
+#include "Core/String.h"
 #include "yaml-cpp/yaml.h"
 #include <filesystem>
 #include <functional>

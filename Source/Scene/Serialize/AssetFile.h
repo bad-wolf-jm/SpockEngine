@@ -83,9 +83,9 @@ namespace SE::Core
 
         /// @brief Read `aCount` elements of type _Ty from the file, and return a vector containing them
         template <typename _Ty>
-        vec_t<_Ty> Read( size_t aCount )
+        vector_t<_Ty> Read( size_t aCount )
         {
-            vec_t<_Ty> lBuffer( aCount );
+            vector_t<_Ty> lBuffer( aCount );
             mFileStream.read( (char *)lBuffer.data(), aCount * sizeof( _Ty ) );
 
             return lBuffer;
@@ -103,12 +103,12 @@ namespace SE::Core
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
         void                                        Retrieve( uint32_t aIndex, TextureData2D &aData, TextureSampler2D &aSampler );
-        void Retrieve( uint32_t aIndex, vec_t<VertexData> &aVertexData, vec_t<uint32_t> &aIndexData );
+        void Retrieve( uint32_t aIndex, vector_t<VertexData> &aVertexData, vector_t<uint32_t> &aIndexData );
         void Retrieve( uint32_t aIndex, sMaterial &aMaterialData );
         void Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData );
 
         void Package( Core::TextureData2D const &aData, sTextureSamplingInfo const &aSampler );
-        void Package( vec_t<VertexData> const &aVertexData, vec_t<uint32_t> const &aIndexData );
+        void Package( vector_t<VertexData> const &aVertexData, vector_t<uint32_t> const &aIndexData );
         void Package( sMaterial const &aMaterialData );
         void Package( sImportedAnimationSampler const &aMaterialData );
         void Package( ref_t<TextureData2D> aData, ref_t<TextureSampler2D> aSampler );
@@ -121,8 +121,8 @@ namespace SE::Core
         size_t        mFileSize = 0;
 
         uint32_t                       mAssetCount = 0;
-        vec_t<sAssetIndex>       mAssetIndex{};
-        vec_t<vec_t<char>> mPackets{};
+        vector_t<sAssetIndex>       mAssetIndex{};
+        vector_t<vector_t<char>> mPackets{};
         uint32_t                       mTotalPacketSize = 0;
     };
 

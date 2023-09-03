@@ -11,7 +11,7 @@
 
 namespace SE::Cuda
 {
-    sTensorShape::sTensorShape( vec_t<vec_t<uint32_t>> const &aShape, size_t aElementSize )
+    sTensorShape::sTensorShape( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize )
     {
         if( aShape.size() == 0 ) return;
 
@@ -28,7 +28,7 @@ namespace SE::Cuda
         UpdateMetadata();
     }
 
-    sTensorShape::sTensorShape( vec_t<uint32_t> const &aShape, size_t aElementSize )
+    sTensorShape::sTensorShape( vector_t<uint32_t> const &aShape, size_t aElementSize )
     {
         if( aShape.size() == 0 ) return;
 
@@ -57,7 +57,7 @@ namespace SE::Cuda
         {
             auto &lDim = mShape[lDimIdx];
 
-            mStrides[lDimIdx]            = vec_t<uint32_t>( mRank );
+            mStrides[lDimIdx]            = vector_t<uint32_t>( mRank );
             mStrides[lDimIdx][mRank - 1] = 1;
 
             uint32_t lSize = mElementSize;
@@ -77,9 +77,9 @@ namespace SE::Cuda
         mByteSize = lCurrentOffset;
     }
 
-    vec_t<uint32_t> const sTensorShape::GetDimension( int32_t i ) const
+    vector_t<uint32_t> const sTensorShape::GetDimension( int32_t i ) const
     {
-        vec_t<uint32_t> lDimension;
+        vector_t<uint32_t> lDimension;
 
         if( i >= 0 )
         {
@@ -99,7 +99,7 @@ namespace SE::Cuda
         return lDimension;
     }
 
-    void sTensorShape::InsertDimension( int32_t aPosition, vec_t<uint32_t> aDimension )
+    void sTensorShape::InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension )
     {
         if( aDimension.size() != CountLayers() )
             throw std::out_of_range(
@@ -118,7 +118,7 @@ namespace SE::Cuda
     {
         if( aToDimension <= 0 ) aToDimension += mRank;
 
-        vec_t<vec_t<uint32_t>> lNewShape( CountLayers() );
+        vector_t<vector_t<uint32_t>> lNewShape( CountLayers() );
 
         for( uint32_t i = 0; i < CountLayers(); i++ )
         {
@@ -139,7 +139,7 @@ namespace SE::Cuda
 
         if( aToDimension < 0 ) aToDimension += mRank;
 
-        vec_t<vec_t<uint32_t>> lNewShape( CountLayers() );
+        vector_t<vector_t<uint32_t>> lNewShape( CountLayers() );
 
         for( uint32_t i = 0; i < CountLayers(); i++ )
             lNewShape[i].insert( lNewShape[i].end(), mShape[i].begin(), mShape[i].begin() + aToDimension );
@@ -161,7 +161,7 @@ namespace SE::Cuda
 
     void sTensorShape::SyncDeviceData()
     {
-        vec_t<uint32_t> lDimensions( mLayerCount * mRank );
+        vector_t<uint32_t> lDimensions( mLayerCount * mRank );
         uint32_t              k = 0;
         for( uint32_t i = 0; i < mLayerCount; i++ )
         {

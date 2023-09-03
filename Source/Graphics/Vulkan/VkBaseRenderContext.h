@@ -51,7 +51,7 @@ namespace SE::Graphics
 
       protected:
         uint32_t                                 mCurrentCommandBuffer  = 0;
-        vec_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject   = {};
+        vector_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject   = {};
         ref_t<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;
 
         ref_t<sVkCommandBufferObject> GetCurrentCommandBuffer()

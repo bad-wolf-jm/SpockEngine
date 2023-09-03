@@ -16,6 +16,7 @@
 
 #include "ColorFormat.h"
 #include "TextureTypes.h"
+#include "Core/Vector.h"
 
 namespace fs = std::filesystem;
 
@@ -81,7 +82,7 @@ namespace SE::Core
 
         void SaveTo( fs::path const &aImagePath );
 
-        vec_t<char> Serialize() const;
+        vector_t<char> Serialize() const;
 
       private:
         // Common initialization for all constructor versions.
@@ -183,8 +184,8 @@ namespace SE::Core
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aKTXImagePath );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
-        TextureDataCubeMap( vec_t<uint8_t> aKTXData, uint32_t aSize );
-        TextureDataCubeMap( std::array<vec_t<uint8_t>, 6> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( vector_t<uint8_t> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( std::array<vector_t<uint8_t>, 6> aKTXData, uint32_t aSize );
 
         sCubeMapImageData GetImageData();
 

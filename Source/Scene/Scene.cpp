@@ -131,14 +131,14 @@ namespace SE::Core
             CopyComponent<sLightComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBehaviourComponent>( lEntity, lClonedEntity );
-            if( ( lEntity.Has<sActorComponent>() ) )
-            {
-                auto &lNewScriptComponent = lClonedEntity.AddOrReplace<sActorComponent>( lEntity.Get<sActorComponent>() );
+            // if( ( lEntity.Has<sActorComponent>() ) )
+            // {
+            //     auto &lNewScriptComponent = lClonedEntity.AddOrReplace<sActorComponent>( lEntity.Get<sActorComponent>() );
 
-                lNewScriptComponent.Initialize( lClonedEntity );
-            }
+            //     lNewScriptComponent.Initialize( lClonedEntity );
+            // }
 
-            CopyComponent<sUIComponent>( lEntity, lClonedEntity );
+            // CopyComponent<sUIComponent>( lEntity, lClonedEntity );
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -338,23 +338,23 @@ namespace SE::Core
     void Scene::ConnectSignalHandlers()
     {
         // clang-format off
-        mRegistry.OnComponentAdded<sActorComponent>( 
-            [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentAdded<sActorComponent>( 
+        //     [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
 
-        mRegistry.OnComponentUpdated<sActorComponent>( 
-            [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentUpdated<sActorComponent>( 
+        //     [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
 
-        mRegistry.OnComponentAdded<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentAdded<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
 
-        mRegistry.OnComponentUpdated<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentUpdated<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
         // clang-format on
     }
 
@@ -372,7 +372,7 @@ namespace SE::Core
 
         auto lScenarioRoot = aScenarioPath.parent_path();
 
-        vec_t<sImportedAnimationSampler> lInterpolationData;
+        vector_t<sImportedAnimationSampler> lInterpolationData;
         {
             BinaryAsset lBinaryDataFile( lScenarioRoot / "Animations" / "BinaryData.bin" );
 
@@ -392,7 +392,7 @@ namespace SE::Core
         auto &lSceneRoot = lRootNode["scene"];
         auto &lNodesRoot = lSceneRoot["nodes"];
 
-        vec_t<std::tuple<string_t, sStaticMeshComponent, string_t>> lBufferLoadQueue{};
+        vector_t<std::tuple<string_t, sStaticMeshComponent, string_t>> lBufferLoadQueue{};
 
         std::map<string_t, std::set<string_t>> lMaterialLoadQueue{};
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
@@ -491,20 +491,20 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sLightComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sActorComponent>();
+            // if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
+            // {
+            //     auto &lComponent = lEntity.Add<sActorComponent>();
 
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
-            }
+            //     ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
+            // }
 
-            if( HasTypeTag<sUIComponent>( lEntityConfiguration ) )
-            {
-                sUIComponent lComponent{};
+            // if( HasTypeTag<sUIComponent>( lEntityConfiguration ) )
+            // {
+            //     sUIComponent lComponent{};
 
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sUIComponent>()], lReadContext );
-                lEntity.Add<sUIComponent>( lComponent );
-            }
+            //     ReadComponent( lComponent, lEntityConfiguration[TypeTag<sUIComponent>()], lReadContext );
+            //     lEntity.Add<sUIComponent>( lComponent );
+            // }
         }
 
         std::mutex lMaterialSystemLock;
@@ -536,8 +536,8 @@ namespace SE::Core
 
             BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
 
-            vec_t<VertexData> lVertexBuffer;
-            vec_t<uint32_t>   lIndexBuffer;
+            vector_t<VertexData> lVertexBuffer;
+            vector_t<uint32_t>   lIndexBuffer;
             lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
 
             lComponent.mVertexBuffer =
@@ -649,7 +649,7 @@ namespace SE::Core
         auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
-        vec_t<ref_t<ISampler2D>> lTextures{};
+        vector_t<ref_t<ISampler2D>> lTextures{};
         for( auto &lTexture : aModelData->mTextures )
         {
             auto lNewInteropTexture = CreateTexture2D( mGraphicContext, *lTexture.mTexture, 1, false, false, true );
@@ -659,7 +659,7 @@ namespace SE::Core
             SE::Logging::Info( "Created texture: [{}]", lTexture.mName );
         }
 
-        vec_t<Material> lMaterialIds = {};
+        vector_t<Material> lMaterialIds = {};
         for( auto &lMaterial : aModelData->mMaterials )
         {
             auto lNewMaterial = mMaterialSystem->BeginMaterial( lMaterial.mName );
@@ -717,18 +717,18 @@ namespace SE::Core
         }
         mMaterialSystem->UpdateMaterialData();
         
-        vec_t<Element>    lMeshes           = {};
+        vector_t<Element>    lMeshes           = {};
         uint32_t                lVertexBufferSize = 0;
         uint32_t                lIndexBufferSize  = 0;
-        vec_t<VertexData> lVertexData       = {};
-        vec_t<uint32_t>   lIndexData        = {};
+        vector_t<VertexData> lVertexData       = {};
+        vector_t<uint32_t>   lIndexData        = {};
         for( auto &lMesh : aModelData->mMeshes )
         {
             sStaticMeshComponent lMeshComponent{};
             lMeshComponent.mName      = lMesh.mName;
             lMeshComponent.mPrimitive = lMesh.mPrimitive;
 
-            vec_t<VertexData> lVertices( lMesh.mPositions.size() );
+            vector_t<VertexData> lVertices( lMesh.mPositions.size() );
             for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
             {
                 lVertices[i].Position    = lMesh.mPositions[i];
@@ -758,7 +758,7 @@ namespace SE::Core
             lMeshes.push_back( lMeshEntity );
         }
 
-        vec_t<Element> lNodes = {};
+        vector_t<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )
         {
             auto lNodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
@@ -793,7 +793,7 @@ namespace SE::Core
 
                 sSkeletonComponent lNodeSkeleton{};
 
-                vec_t<Element> lJointNodes = {};
+                vector_t<Element> lJointNodes = {};
                 for( uint32_t i = 0; i < lSkin.mJointNodeID.size(); i++ )
                 {
                     lNodeSkeleton.Bones.push_back( lNodes[lSkin.mJointNodeID[i]] );
@@ -855,7 +855,7 @@ namespace SE::Core
 
     void Scene::AttachScript( Element aElement, string_t aClassName )
     {
-        auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
+        // auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
     }
 
     void Scene::BeginScenario()
@@ -879,8 +879,8 @@ namespace SE::Core
                 }
             } );
 
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
-        ForEach<sUIComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
+        // ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
+        // ForEach<sUIComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -906,7 +906,7 @@ namespace SE::Core
             } );
 
         // Destroy Lua scripts
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnEndScenario(); } );
+        // ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnEndScenario(); } );
 
         mState = eSceneState::EDITING;
     }
@@ -987,7 +987,7 @@ namespace SE::Core
                         aComponent.ControllerInstance->OnTick( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
+            // ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
 
             // Update animations
             ForEach<sAnimationChooser>( [=]( auto aEntity, auto &aComponent ) { UpdateAnimation( aComponent.Animations[0], ts ); } );
@@ -1003,42 +1003,42 @@ namespace SE::Core
                 } );
         }
 
-        ForEach<sUIComponent>(
-            [=]( auto aEntity, auto &aComponent )
-            {
-                if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor )
-                    return;
+        // ForEach<sUIComponent>(
+        //     [=]( auto aEntity, auto &aComponent )
+        //     {
+        //         if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor )
+        //             return;
 
-                static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        //         static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
-                ImVec2 lPosition = ImVec2{ aComponent.mX, aComponent.mY } + ImVec2{ mViewportPosition.x, mViewportPosition.y };
+        //         ImVec2 lPosition = ImVec2{ aComponent.mX, aComponent.mY } + ImVec2{ mViewportPosition.x, mViewportPosition.y };
 
-                ImGui::SetNextWindowPos( lPosition, ImGuiCond_Always );
-                ImGui::SetNextWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight }, ImGuiCond_Always );
+        //         ImGui::SetNextWindowPos( lPosition, ImGuiCond_Always );
+        //         ImGui::SetNextWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight }, ImGuiCond_Always );
 
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, aComponent.mBorderThickness );
+        //         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
+        //         ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, aComponent.mBorderThickness );
 
-                auto &lFillColor = aComponent.mFillColor;
-                ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ lFillColor.x, lFillColor.y, lFillColor.z, lFillColor.w } );
+        //         auto &lFillColor = aComponent.mFillColor;
+        //         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ lFillColor.x, lFillColor.y, lFillColor.z, lFillColor.w } );
 
-                auto &lBorderColor = aComponent.mBorderColor;
-                ImGui::PushStyleColor( ImGuiCol_Border, ImVec4{ lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w } );
+        //         auto &lBorderColor = aComponent.mBorderColor;
+        //         ImGui::PushStyleColor( ImGuiCol_Border, ImVec4{ lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w } );
 
-                auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
-                if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
-                {
-                    // If the scene is in a running state, call the scripted function to populate the window
-                    // and interact with it.
-                    if( mState == eSceneState::RUNNING )
-                        aComponent.OnUpdate( ts );
-                    else if( aComponent.mPreview )
-                        aComponent.OnPreviewUpdate( ts );
-                }
-                ImGui::End();
-                ImGui::PopStyleColor( 2 );
-                ImGui::PopStyleVar( 2 );
-            } );
+        //         auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
+        //         if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
+        //         {
+        //             // If the scene is in a running state, call the scripted function to populate the window
+        //             // and interact with it.
+        //             if( mState == eSceneState::RUNNING )
+        //                 aComponent.OnUpdate( ts );
+        //             else if( aComponent.mPreview )
+        //                 aComponent.OnPreviewUpdate( ts );
+        //         }
+        //         ImGui::End();
+        //         ImGui::PopStyleColor( 2 );
+        //         ImGui::PopStyleVar( 2 );
+        //     } );
 
         mTransformCache.clear();
         ForEach<sUUID, sNodeTransformComponent>(
@@ -1079,12 +1079,12 @@ namespace SE::Core
 
         // Update the transformed vertex buffer for static meshies
         {
-            vec_t<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
-            vec_t<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            vec_t<uint32_t> lVertexOffsets{};
-            vec_t<uint32_t> lVertexCounts{};
-            vec_t<mat4>     lObjectToWorldTransforms{};
+            vector_t<uint32_t> lVertexOffsets{};
+            vector_t<uint32_t> lVertexCounts{};
+            vector_t<mat4>     lObjectToWorldTransforms{};
             uint32_t              lMaxVertexCount = 0;
             ForEach<sUUID, sStaticMeshComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh )
@@ -1116,14 +1116,14 @@ namespace SE::Core
 
         // Update the transformed vertex buffer for animated meshies
         {
-            vec_t<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
-            vec_t<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            vec_t<uint32_t> lVertexOffsets{};
-            vec_t<uint32_t> lVertexCounts{};
-            vec_t<mat4>     lObjectToWorldTransforms{};
-            vec_t<mat4>     lJointTransforms{};
-            vec_t<uint32_t> lJointOffsets{};
+            vector_t<uint32_t> lVertexOffsets{};
+            vector_t<uint32_t> lVertexCounts{};
+            vector_t<mat4>     lObjectToWorldTransforms{};
+            vector_t<mat4>     lJointTransforms{};
+            vector_t<uint32_t> lJointOffsets{};
             uint32_t              lMaxVertexCount = 0;
             ForEach<sUUID, sStaticMeshComponent, sSkeletonComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh, auto &aSkeleton )
@@ -1212,7 +1212,7 @@ namespace SE::Core
     }
 
     static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
-                           vec_t<sImportedAnimationSampler>       &lInterpolationData,
+                           vector_t<sImportedAnimationSampler>       &lInterpolationData,
                            std::unordered_map<string_t, string_t> &aMaterialMap,
                            std::unordered_map<string_t, string_t> &aMeshDataMap )
     {
@@ -1229,8 +1229,8 @@ namespace SE::Core
                 WriteComponent( lOut, aEntity.Get<sCameraComponent>() );
             if( aEntity.Has<sAnimationChooser>() )
                 WriteComponent( lOut, aEntity.Get<sAnimationChooser>() );
-            if( aEntity.Has<sActorComponent>() )
-                WriteComponent( lOut, aEntity.Get<sActorComponent>() );
+            // if( aEntity.Has<sActorComponent>() )
+                // WriteComponent( lOut, aEntity.Get<sActorComponent>() );
 
             if( aEntity.Has<sAnimationComponent>() )
             {
@@ -1295,8 +1295,8 @@ namespace SE::Core
             if( aEntity.Has<sLightComponent>() )
                 WriteComponent( lOut, aEntity.Get<sLightComponent>() );
 
-            if( aEntity.Has<sUIComponent>() )
-                WriteComponent( lOut, aEntity.Get<sUIComponent>() );
+            // if( aEntity.Has<sUIComponent>() )
+            //     WriteComponent( lOut, aEntity.Get<sUIComponent>() );
         }
         lOut.EndMap();
     }
@@ -1438,7 +1438,7 @@ namespace SE::Core
 
         auto lOut = ConfigurationWriter( aPath / "SceneDefinition.yaml" );
 
-        vec_t<sImportedAnimationSampler> lInterpolationData;
+        vector_t<sImportedAnimationSampler> lInterpolationData;
         lOut.BeginMap();
         lOut.WriteKey( "scene" );
         {

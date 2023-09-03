@@ -47,8 +47,23 @@ namespace SE::Core
 
         mUIRenderPipeline->SetCulling( eFaceCulling::NONE );
 
-        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\ui_shader.vert.spv" ), "main" );
-        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\ui_shader.frag.spv" ), "main" );
+        auto lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader" );
+        lVertexShader->AddCode( "#define __GLSL__" );
+        lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lVertexShader->AddCode( "#define IMGUI_VERTEX_SHADER" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ImGui.hpp" );
+        lVertexShader->Compile();
+        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+
+        auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "ui_fragment_shader" );
+        lFragmentShader->AddCode( "#define __GLSL__" );
+        lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lFragmentShader->AddCode( "#define IMGUI_FRAGMENT_SHADER" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ImGui.hpp" );
+        lFragmentShader->Compile();
+        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
         mUIRenderPipeline->AddInput( "Position", eBufferDataType::VEC2, 0, 0 );
         mUIRenderPipeline->AddInput( "TextureCoords", eBufferDataType::VEC2, 0, 1 );
@@ -150,7 +165,6 @@ namespace SE::Core
 
             if( lClipRect.x < 0.0f )
                 lClipRect.x = 0.0f;
-                
             if( lClipRect.y < 0.0f )
                 lClipRect.y = 0.0f;
 

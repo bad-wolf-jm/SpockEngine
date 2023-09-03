@@ -8,7 +8,7 @@ cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/
 message(STATUS ${SHADER_EMBEDDED_FILES})
 
 add_library(LTSimulationEngineRuntime STATIC
-    Core/File.cpp
+    # Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
 
@@ -29,12 +29,16 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/CUDA/Texture/TextureCubeMap.cu
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
+    Core/String.cpp
+    Core/Vector.cpp
 
     Engine/Engine.cpp
 
     Shader/Compiler.cpp
     
     UI/UI.cpp
+    UI/Widgets.cpp
+    UI/TreeNode.cpp
     
     UI/Components/Component.cpp
     UI/Components/Button.cpp
@@ -135,12 +139,12 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp
 
-    Editor/PopupWindow.cpp
-    Editor/EditorWindow.cpp
-    Editor/ContentBrowser.cpp
-    Editor/BaseEditorApplication.cpp
-    Editor/SceneHierarchyPanel.cpp
-    Editor/SceneElementEditor.cpp
+    # Editor/PopupWindow.cpp
+    # Editor/EditorWindow.cpp
+    # Editor/ContentBrowser.cpp
+    # Editor/BaseEditorApplication.cpp
+    # Editor/SceneHierarchyPanel.cpp
+    # Editor/SceneElementEditor.cpp
 
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
@@ -199,7 +203,18 @@ target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
 
 
-add_executable( SE_Run WIN32 Launch/EditorMain.cpp )
+add_executable( SE_Run WIN32 
+    Core/File.cpp     
+    
+    Launch/EditorMain.cpp 
+    
+    Editor/PopupWindow.cpp
+    Editor/EditorWindow.cpp
+    Editor/ContentBrowser.cpp
+    Editor/BaseEditorApplication.cpp
+    Editor/SceneHierarchyPanel.cpp
+    Editor/SceneElementEditor.cpp
+)
 target_include_directories(SE_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
 target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)

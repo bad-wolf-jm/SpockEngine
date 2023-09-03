@@ -10,7 +10,7 @@
 
 namespace SE::Graphics
 {
-    static vec_t<fs::path> gShaderIncludePath = {};
+    static vector_t<fs::path> gShaderIncludePath = {};
 
     static std::tuple<char *, size_t> ReadFile( const char *header_name )
     {
@@ -34,7 +34,7 @@ namespace SE::Graphics
             throw std::runtime_error( "failed to open file!" );
 
         size_t            lFileSize = (size_t)lFileObject.tellg();
-        vec_t<char> lBuffer( lFileSize );
+        vector_t<char> lBuffer( lFileSize );
 
         lFileObject.seekg( 0 );
         lFileObject.read( lBuffer.data(), lFileSize );
@@ -70,7 +70,7 @@ namespace SE::Graphics
         return 0;
     }
 
-    void Compile( eShaderStageTypeFlags aShaderStage, string_t const &aCode, vec_t<uint32_t> &aOutput )
+    void Compile( eShaderStageTypeFlags aShaderStage, string_t const &aCode, vector_t<uint32_t> &aOutput )
     {
         glslang_input_t lInputDescription{};
         lInputDescription.language = GLSLANG_SOURCE_GLSL;

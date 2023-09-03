@@ -90,4 +90,67 @@ namespace SE::Core::UI
         style.ScrollbarRounding = 2;
         style.GrabRounding      = 3;
     }
+
+        void GetStyleColor( ImGuiCol aColor, math::vec4 *aOut )
+    {
+        auto const &lColor = ImGui::GetStyleColorVec4( aColor );
+
+        *aOut = math::vec4{ lColor.x, lColor.y, lColor.z, lColor.w };
+    }
+
+    void Text( const char *a_Text ) { ImGui::Text( a_Text ); }
+
+    void Text( string_t a_Text ) { Text( a_Text.c_str() ); }
+
+    void SameLine() { ImGui::SameLine(); }
+
+    void SameLine( float spacing ) { ImGui::SameLine( 0.0f, spacing ); }
+
+    math::vec2 GetCurrentCursorPosition()
+    {
+        ImVec2 l_CursorPosition = ImGui::GetCursorPos();
+
+        return math::vec2{ l_CursorPosition.x, l_CursorPosition.y };
+    }
+
+    math::vec2 GetCurrentCursorScreenPosition()
+    {
+        ImVec2 l_CursorPosition = ImGui::GetCursorScreenPos();
+        return math::vec2{ l_CursorPosition.x, l_CursorPosition.y };
+    }
+
+    math::ivec2 GetAvailableContentSpace()
+    {
+        ImVec2 l_ViewportPanelSize = ImGui::GetContentRegionAvail();
+
+        return math::ivec2{ (int32_t)l_ViewportPanelSize.x, (int32_t)l_ViewportPanelSize.y };
+    }
+
+    math::ivec2 GetRootWindowSize()
+    {
+        ImGuiViewport *viewport            = ImGui::GetMainViewport();
+        ImVec2         l_ViewportPanelSize = viewport->WorkSize;
+
+        return math::ivec2{ (int32_t)l_ViewportPanelSize.x, (int32_t)l_ViewportPanelSize.y };
+    }
+
+    math::ivec2 GetCurrentWindowPosition()
+    {
+        ImVec2 l_ViewportPanelSize = ImGui::GetWindowPos();
+        return math::ivec2{ (int32_t)l_ViewportPanelSize.x, (int32_t)l_ViewportPanelSize.y };
+    }
+
+    void SetCursorPosition( math::vec2 a_Position ) { SetCursorPosition( ImVec2{ a_Position.x, a_Position.y } ); }
+
+    void SetCursorPosition( ImVec2 a_Position ) { ImGui::SetCursorPos( a_Position ); }
+
+    void SetCursorPositionX( float a_Position ) { ImGui::SetCursorPosX( a_Position ); }
+
+    void SetCursorPositionY( float a_Position ) { ImGui::SetCursorPosY( a_Position ); }
+
+    void SetNextWindowPosition( math::vec2 a_Position ) { ImGui::SetNextWindowPos( { a_Position.x, a_Position.y } ); }
+
+    void SetNextWindowSize( math::vec2 a_Size ) { ImGui::SetNextWindowSize( { a_Size.x, a_Size.y } ); }
+
+
 } // namespace SE::Core::UI

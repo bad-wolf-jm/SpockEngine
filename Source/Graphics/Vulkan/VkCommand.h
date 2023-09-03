@@ -42,7 +42,7 @@ namespace SE::Graphics
         void Begin( VkCommandBufferUsageFlags aUsage );
 
         void BeginRenderPass( ref_t<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
-                              vec_t<VkClearValue> aClearValues );
+                              vector_t<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
@@ -66,11 +66,11 @@ namespace SE::Graphics
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
 
         void CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion );
-        void CopyBuffer( VkBuffer aSource, VkImage aDestination, vec_t<sImageRegion> aBufferRegions,
+        void CopyBuffer( VkBuffer aSource, VkImage aDestination, vector_t<sImageRegion> aBufferRegions,
                          sImageRegion const &aImageRegion );
 
         void CopyImage( VkImage aSource, sImageRegion const &aSourceRegion, VkImage aDestination, sImageRegion const &aDestRegion );
-        void CopyImage( VkImage aSource, VkBuffer aDestination, vec_t<sImageRegion> aImageRegions, uint32_t aBufferOffset );
+        void CopyImage( VkImage aSource, VkBuffer aDestination, vector_t<sImageRegion> aImageRegions, uint32_t aBufferOffset );
 
         template <typename T>
         void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue,
@@ -95,8 +95,8 @@ namespace SE::Graphics
 
       private:
         VkFence                           mSubmitFence              = nullptr;
-        vec_t<VkSemaphore>          mSubmitWaitSemaphores     = {};
-        vec_t<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
-        vec_t<VkSemaphore>          mSubmitSignalSemaphores   = {};
+        vector_t<VkSemaphore>          mSubmitWaitSemaphores     = {};
+        vector_t<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
+        vector_t<VkSemaphore>          mSubmitSignalSemaphores   = {};
     };
 } // namespace SE::Graphics

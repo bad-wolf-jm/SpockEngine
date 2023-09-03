@@ -19,7 +19,7 @@
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
-#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 #include "Scene/Importer/ObjImporter.h"
 
@@ -44,11 +44,11 @@ namespace SE::Editor
         mNewSceneRenderer->Update( mEditorWindow.ActiveWorld );
         // mNewSceneRenderer->SetView( mEditorWindow.ActiveWorld->mEditorView );
 
-        if( mApplicationInstance )
-        {
-            float lTs = ts.GetMilliseconds();
-            mApplicationInstance->CallMethod( "Update", &lTs );
-        }
+        // if( mApplicationInstance )
+        // {
+        //     float lTs = ts.GetMilliseconds();
+        //     mApplicationInstance->CallMethod( "Update", &lTs );
+        // }
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -175,19 +175,19 @@ namespace SE::Editor
     {
         Init();
 
-        static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
+        // static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
 
-        if( lApplicationType )
-        {
-            mApplicationInstance    = lApplicationType.Instantiate();
-            auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
-            mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
+        // if( lApplicationType )
+        // {
+        //     mApplicationInstance    = lApplicationType.Instantiate();
+        //     auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
+        //     mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
 
-            mEditorWindow.mApplicationInstance = mApplicationInstance;
-        }
-        else
-        {
-            SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
-        }
+        //     mEditorWindow.mApplicationInstance = mApplicationInstance;
+        // }
+        // else
+        // {
+        //     SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
+        // }
     }
 } // namespace SE::Editor

@@ -104,9 +104,9 @@ namespace SE::Core
         mPunctualLightShadowMapDescriptorLayout->Build();
     }
 
-    vec_t<Material> MaterialSystem::GetMaterialData()
+    vector_t<Material> MaterialSystem::GetMaterialData()
     {
-        vec_t<Material> lMaterials;
+        vector_t<Material> lMaterials;
         mMaterialRegistry.ForEach<sMaterialInfo>( [&]( auto aMaterial, auto const &aInfo ) { lMaterials.push_back( aMaterial ); } );
 
         return lMaterials;
@@ -118,7 +118,7 @@ namespace SE::Core
         mShaderDirectionalLights->Write( mDirectionalLight );
     }
 
-    void MaterialSystem::SetLights( vec_t<sPunctualLight> const &aPointLights )
+    void MaterialSystem::SetLights( vector_t<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
 
@@ -454,7 +454,7 @@ namespace SE::Core
         if( mMaterialCudaTextures.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureData.size() )
         {
             mMaterialCudaTextures.Dispose();
-            vec_t<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
+            vector_t<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
             for( auto const &lCudaTextureSampler : mTextureData )
                 lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
 
@@ -472,7 +472,7 @@ namespace SE::Core
         sMaterial lMaterialData;
         lBinaryDataFile.Retrieve( 0, lMaterialData );
 
-        vec_t<ref_t<ISampler2D>> lTextures{};
+        vector_t<ref_t<ISampler2D>> lTextures{};
         for( uint32_t i = 0; i < lTextureCount; i++ )
         {
             auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
@@ -577,7 +577,7 @@ namespace SE::Core
         mDirectionalLightShadowMapDescriptor->Write( aDirectionalShadowMap, 0 );
     }
 
-    void MaterialSystem::SetShadowMap( vec_t<ref_t<ISamplerCubeMap>> aPunctualLightShadowMaps )
+    void MaterialSystem::SetShadowMap( vector_t<ref_t<ISamplerCubeMap>> aPunctualLightShadowMaps )
     {
         auto lDescriptorSize = math::max( (uint32_t)aPunctualLightShadowMaps.size(), 1u );
 

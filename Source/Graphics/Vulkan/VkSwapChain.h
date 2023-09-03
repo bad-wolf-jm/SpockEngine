@@ -23,7 +23,7 @@ namespace SE::Graphics
             return mRenderTargets[0]->mSpec;
         }
 
-        vec_t<VkClearValue> GetClearValues()
+        vector_t<VkClearValue> GetClearValues()
         {
             return mRenderTargets[mCurrentImage]->GetClearValues();
         }
@@ -63,11 +63,11 @@ namespace SE::Graphics
       private:
         VkSurfaceKHR                             mVkSurface                = VK_NULL_HANDLE;
         VkSwapchainKHR                           mVkObject                 = VK_NULL_HANDLE;
-        vec_t<ref_t<VkRenderTarget>>         mRenderTargets            = {};
-        vec_t<VkSemaphore>                 mImageAvailableSemaphores = {};
-        vec_t<VkSemaphore>                 mRenderFinishedSemaphores = {};
-        vec_t<VkFence>                     mInFlightFences           = {};
-        vec_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject      = {};
+        vector_t<ref_t<VkRenderTarget>>         mRenderTargets            = {};
+        vector_t<VkSemaphore>                 mImageAvailableSemaphores = {};
+        vector_t<VkSemaphore>                 mRenderFinishedSemaphores = {};
+        vector_t<VkFence>                     mInFlightFences           = {};
+        vector_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject      = {};
 
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;

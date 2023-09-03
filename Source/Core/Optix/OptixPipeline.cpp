@@ -9,11 +9,11 @@ namespace SE::Graphics
 
     OptixPipelineObject::OptixPipelineObject( OptixPipelineLinkOptions                  aPipelineLinkOptions,
                                               OptixPipelineCompileOptions               aPipelineCompileOptions,
-                                              vec_t<ref_t<OptixProgramGroupObject>> aProgramGroups,
+                                              vector_t<ref_t<OptixProgramGroupObject>> aProgramGroups,
                                               ref_t<OptixDeviceContextObject>             aRayTracingContext )
         : mRayTracingContext{ aRayTracingContext }
     {
-        vec_t<OptixProgramGroup> lProgramGroups;
+        vector_t<OptixProgramGroup> lProgramGroups;
         for( auto pg : aProgramGroups ) lProgramGroups.push_back( pg->mOptixObject );
 
         char   lLogString[2048];

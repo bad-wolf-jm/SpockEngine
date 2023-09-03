@@ -28,7 +28,7 @@ namespace SE::Graphics
 
     struct DescriptorSetLayoutCreateInfo
     {
-        vec_t<DescriptorBindingInfo> Bindings;
+        vector_t<DescriptorBindingInfo> Bindings;
     };
 
     class DescriptorSetLayout
@@ -70,10 +70,10 @@ namespace SE::Graphics
 
         void Write( ref_t<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
         void Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding );
-        void Write( vec_t<ref_t<VkSampler2D>> aBuffer, uint32_t aBinding );
+        void Write( vector_t<ref_t<VkSampler2D>> aBuffer, uint32_t aBinding );
 
         void Write( ref_t<VkSamplerCubeMap> aBuffer, uint32_t aBinding );
-        void Write( vec_t<ref_t<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
+        void Write( vector_t<ref_t<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
 
         VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
 

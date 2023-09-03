@@ -105,7 +105,7 @@ namespace SE::Core
         if( aGltfimage.component == 3 )
         {
             lImageData.mByteSize  = aGltfimage.width * aGltfimage.height * 4;
-            lImageData.mPixelData = vec_t<uint8_t>( lImageData.mByteSize );
+            lImageData.mPixelData = vector_t<uint8_t>( lImageData.mByteSize );
 
             unsigned char       *rgba = lImageData.mPixelData.data();
             unsigned char const *rgb  = &aGltfimage.image[0];
@@ -121,7 +121,7 @@ namespace SE::Core
         }
         else
         {
-            lImageData.mPixelData = vec_t<uint8_t>( &aGltfimage.image[0], &aGltfimage.image[0] + aGltfimage.image.size() );
+            lImageData.mPixelData = vector_t<uint8_t>( &aGltfimage.image[0], &aGltfimage.image[0] + aGltfimage.image.size() );
             lImageData.mByteSize  = aGltfimage.image.size();
         }
 
@@ -335,21 +335,21 @@ namespace SE::Core
 
                 RetrievePrimitiveAttribute<math::vec3>( lPrimitive, "NORMAL", lNewImportedMesh.mNormals );
                 if( lNewImportedMesh.mNormals.size() == 0 )
-                    lNewImportedMesh.mNormals = vec_t<math::vec3>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mNormals = vector_t<math::vec3>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_0", lNewImportedMesh.mUV0 );
                 if( lNewImportedMesh.mUV0.size() == 0 )
-                    lNewImportedMesh.mUV0 = vec_t<math::vec2>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mUV0 = vector_t<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
                 if( lNewImportedMesh.mUV1.size() == 0 )
-                    lNewImportedMesh.mUV1 = vec_t<math::vec2>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mUV1 = vector_t<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec4>( lPrimitive, "WEIGHTS_0", lNewImportedMesh.mWeights );
                 if( lNewImportedMesh.mWeights.size() == 0 )
-                    lNewImportedMesh.mWeights = vec_t<math::vec4>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mWeights = vector_t<math::vec4>( lNewImportedMesh.mPositions.size() );
 
-                vec_t<uint8_t> lJointData;
+                vector_t<uint8_t> lJointData;
                 RetrievePrimitiveAttribute<uint8_t>( lPrimitive, "JOINTS_0", lJointData );
                 auto [lCount, lStride, lComponentType, lComponentSize] = RetrievePrimitiveCount( lPrimitive, "JOINTS_0" );
                 if( lCount > 0 )
@@ -361,10 +361,10 @@ namespace SE::Core
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
                     {
                         const uint16_t       *buf = reinterpret_cast<const uint16_t *>( lJointData.data() );
-                        vec_t<uint16_t> lJoints0( lCount * lComponentCount );
+                        vector_t<uint16_t> lJoints0( lCount * lComponentCount );
                         memcpy( lJoints0.data(), buf, lCount * lStride );
 
-                        vec_t<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
+                        vector_t<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
                         lNewImportedMesh.mJoints.resize( lCount );
 
                         for( uint32_t i = 0; i < lCount; i++ )
@@ -376,10 +376,10 @@ namespace SE::Core
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
                     {
                         const uint8_t       *buf = reinterpret_cast<const uint8_t *>( lJointData.data() );
-                        vec_t<uint8_t> lJoints0( lCount * lComponentCount );
+                        vector_t<uint8_t> lJoints0( lCount * lComponentCount );
                         memcpy( lJoints0.data(), buf, lCount * lStride );
 
-                        vec_t<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
+                        vector_t<uint32_t> lJoints1( lJoints0.begin(), lJoints0.end() );
                         lNewImportedMesh.mJoints.resize( lCount );
 
                         for( uint32_t i = 0; i < lCount; i++ )
@@ -396,7 +396,7 @@ namespace SE::Core
                 }
                 else
                 {
-                    lNewImportedMesh.mJoints = vec_t<math::uvec4>( lNewImportedMesh.mPositions.size() );
+                    lNewImportedMesh.mJoints = vector_t<math::uvec4>( lNewImportedMesh.mPositions.size() );
                 }
 
                 if( lPrimitive.indices > -1 )

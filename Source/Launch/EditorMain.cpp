@@ -2,6 +2,7 @@
 #ifdef APIENTRY
 #    undef APIENTRY
 #endif
+
 #include <chrono>
 #include <cstdlib>
 #include <shlobj.h>
@@ -25,7 +26,7 @@
 #include "Editor/BaseEditorApplication.h"
 #include "Shader/Compiler.h"
 
-#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;
@@ -276,23 +277,23 @@ int main( int argc, char **argv )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) )
             lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
-    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    // DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
     auto     lApplicationName              = lProgramArguments->get<string_t>( "--application" );
     fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
-        auto lApplicationAssembly =
-            fs::path( "D:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
-        if( fs::exists( lApplicationAssembly ) )
-            DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
+        // auto lApplicationAssembly =
+        //     fs::path( "D:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
+        // if( fs::exists( lApplicationAssembly ) )
+        //     DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigurationPath ) )
             SE::Logging::Info( "Application configuration file '{}' does not exist", lApplicationConfigurationPath.string() );
     }
 
-    DotNetRuntime::ReloadAssemblies();
+    // DotNetRuntime::ReloadAssemblies();
 
     SE::Editor::BaseEditorApplication lEditorApplication;
 
@@ -327,7 +328,7 @@ int main( int argc, char **argv )
 
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    DotNetRuntime::Shutdown();
+    // DotNetRuntime::Shutdown();
     SE::Core::Engine::Shutdown();
 
     return 0;

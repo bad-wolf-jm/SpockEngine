@@ -44,7 +44,7 @@ namespace SE::Graphics
     }
 
     void sVkCommandBufferObject::BeginRenderPass( ref_t<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
-                                                  vec_t<VkClearValue> aClearValues )
+                                                  vector_t<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -219,13 +219,13 @@ namespace SE::Graphics
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion,
                                              sImageRegion const &aImageRegion )
     {
-        CopyBuffer( aSource, aDestination, vec_t<sImageRegion>{ aBufferRegion }, aImageRegion );
+        CopyBuffer( aSource, aDestination, vector_t<sImageRegion>{ aBufferRegion }, aImageRegion );
     }
 
-    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, vec_t<sImageRegion> aBufferRegions,
+    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, vector_t<sImageRegion> aBufferRegions,
                                              sImageRegion const &aImageRegion )
     {
-        vec_t<VkBufferImageCopy> lBufferCopyRegions;
+        vector_t<VkBufferImageCopy> lBufferCopyRegions;
 
         for( auto const &lRegion : aBufferRegions )
         {
@@ -284,10 +284,10 @@ namespace SE::Graphics
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1, 1 );
     }
 
-    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, vec_t<sImageRegion> aImageRegions,
+    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, vector_t<sImageRegion> aImageRegions,
                                             uint32_t aBufferOffset )
     {
-        vec_t<VkBufferImageCopy> lBufferCopyRegions;
+        vector_t<VkBufferImageCopy> lBufferCopyRegions;
 
         for( auto const &lRegion : aImageRegions )
         {

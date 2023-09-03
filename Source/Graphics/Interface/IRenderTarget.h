@@ -125,8 +125,8 @@ namespace SE::Graphics
         uint32_t mSampleCount = 1;
         uint32_t mImageCount  = 1;
 
-        vec_t<sAttachmentDescription> mAttachmentInfo = {};
-        vec_t<string_t>            mAttachmentIDs  = {};
+        vector_t<sAttachmentDescription> mAttachmentInfo = {};
+        vector_t<string_t>            mAttachmentIDs  = {};
 
         std::unordered_map<string_t, sAttachmentResource> mAttachments = {};
 

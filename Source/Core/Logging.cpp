@@ -13,7 +13,7 @@ namespace SE::Logging
             gLogFile << aLine;
     }
 
-    static vec_t<LogMessage> sLogMessages = {};
+    static vector_t<LogMessage> sLogMessages = {};
 
     void _Log( LogLevel a_Level, string_t a_Message )
     {
@@ -24,7 +24,7 @@ namespace SE::Logging
         // sLogMessages.push_back( l_NewMessage );
     }
 
-    vec_t<LogMessage> &GetLogMessages() { return sLogMessages; }
+    vector_t<LogMessage> &GetLogMessages() { return sLogMessages; }
 
     void SetLogOutputFile( fs::path aFilePath ) {}
 

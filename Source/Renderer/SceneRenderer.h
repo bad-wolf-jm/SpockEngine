@@ -43,7 +43,7 @@ namespace SE::Core
     struct sRenderQueue
     {
         ref_t<IGraphicsPipeline>       mPipeline;
-        vec_t<sMeshRenderData> mMeshes;
+        vector_t<sMeshRenderData> mMeshes;
     };
 
     class SceneRenderer : public BaseSceneRenderer

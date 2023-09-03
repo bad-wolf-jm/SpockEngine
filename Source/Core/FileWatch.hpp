@@ -237,7 +237,7 @@ namespace filewatch {
 
 		std::condition_variable _cv;
 		std::mutex _callback_mutex;
-		vec_t<std::pair<StringType, Event>> _callback_information;
+		vector_t<std::pair<StringType, Event>> _callback_information;
 		std::thread _callback_thread;
 
 		std::promise<void> _running;
@@ -489,7 +489,7 @@ namespace filewatch {
 
 		void monitor_directory() 
 		{
-			vec_t<BYTE> buffer(_buffer_size);
+			vector_t<BYTE> buffer(_buffer_size);
 			DWORD bytes_returned = 0;
 			OVERLAPPED overlapped_buffer{ 0 };
 
@@ -503,7 +503,7 @@ namespace filewatch {
 			auto async_pending = false;
 			_running.set_value();
 			do {
-				vec_t<std::pair<StringType, Event>> parsed_information;
+				vector_t<std::pair<StringType, Event>> parsed_information;
 				ReadDirectoryChangesW(
 					_directory,
 					buffer.data(), static_cast<DWORD>(buffer.size()),
@@ -614,7 +614,7 @@ namespace filewatch {
 
 		void monitor_directory() 
 		{
-			vec_t<char> buffer(_buffer_size);
+			vector_t<char> buffer(_buffer_size);
 
 			_running.set_value();
 			while (_destory == false) 
@@ -623,7 +623,7 @@ namespace filewatch {
 				if (length > 0) 
 				{
 					int i = 0;
-					vec_t<std::pair<StringType, Event>> parsed_information;
+					vector_t<std::pair<StringType, Event>> parsed_information;
 					while (i < length) 
 					{
 						struct inotify_event *event = reinterpret_cast<struct inotify_event *>(&buffer[i]); // NOLINT
@@ -900,7 +900,7 @@ namespace filewatch {
                         Event event;
                   };
                   std::unordered_map<StringType, FileState> newSnapshot{};
-                  vec_t<EventInfo> events{};
+                  vector_t<EventInfo> events{};
 
                   for (auto& entry : _directory_snapshot) {
                         struct stat stat;

@@ -15,9 +15,9 @@ namespace SE::Graphics
             GraphicContext<VkGraphicContext>()->DestroyImageView( lImageView );
     }
 
-    vec_t<VkClearValue> VkRenderTarget::GetClearValues()
+    vector_t<VkClearValue> VkRenderTarget::GetClearValues()
     {
-        vec_t<VkClearValue> lValues;
+        vector_t<VkClearValue> lValues;
         for( auto const &lInfo : mAttachmentInfo )
         {
             if( ( lInfo.mType == eAttachmentType::COLOR ) || ( lInfo.mType == eAttachmentType::MSAA_RESOLVE ) )
@@ -91,7 +91,7 @@ namespace SE::Graphics
 
     void VkRenderTarget::Finalize()
     {
-        vec_t<sAttachmentResource> lAttachments{};
+        vector_t<sAttachmentResource> lAttachments{};
         for( auto const &lAttachmentID : mAttachmentIDs )
         {
             auto lAttachment = mAttachments[lAttachmentID];
@@ -156,8 +156,8 @@ namespace SE::Graphics
         ref_t<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>( GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED,
                                                                           mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
-        vec_t<VkAttachmentDescription> lAttachmentDescriptions{};
-        vec_t<VkAttachmentReference>   lColorAttachmentReferences{};
+        vector_t<VkAttachmentDescription> lAttachmentDescriptions{};
+        vector_t<VkAttachmentReference>   lColorAttachmentReferences{};
 
         VkAttachmentReference  lDepthAttachment{};
         VkAttachmentReference *lDepthAttachmentPtr = nullptr;
