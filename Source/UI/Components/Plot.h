@@ -52,8 +52,8 @@ namespace SE::Core
     template <typename _Ty>
     struct sXYPlot : public sPlotData
     {
-        std::vector<_Ty> mX;
-        std::vector<_Ty> mY;
+        vector_t<_Ty> mX;
+        vector_t<_Ty> mY;
         int32_t          mOffset = 0;
         int32_t          mStride = 1;
     };
@@ -80,11 +80,11 @@ namespace SE::Core
 
     struct sVLine : public sPlotData
     {
-        std::vector<double> mX;
+        vector_t<double> mX;
 
         sVLine() = default;
 
-        sVLine( std::vector<double> const &x )
+        sVLine( vector_t<double> const &x )
             : mX{ x }
         {
         }
@@ -98,11 +98,11 @@ namespace SE::Core
 
     struct sHLine : public sPlotData
     {
-        std::vector<double> mY;
+        vector_t<double> mY;
 
         sHLine() = default;
 
-        sHLine( std::vector<double> const &y )
+        sHLine( vector_t<double> const &y )
             : mY{ y }
         {
         }
@@ -204,7 +204,7 @@ namespace SE::Core
         std::array<sPlotAxisConfiguration, 6> mAxisConfiguration;
 
       protected:
-        std::vector<sPlotData *> mElements;
+        vector_t<sPlotData *> mElements;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
 

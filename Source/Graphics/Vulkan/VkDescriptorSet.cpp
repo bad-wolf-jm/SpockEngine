@@ -33,7 +33,7 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lBufferBindInfo );
     }
 
-    void VkDescriptorSetObject::Write( std::vector<ref_t<ISampler2D>> aWriteOperations, uint32_t aBinding )
+    void VkDescriptorSetObject::Write( vector_t<ref_t<ISampler2D>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 )
             return;
@@ -51,9 +51,9 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    // void VkDescriptorSetObject::Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+    // void VkDescriptorSetObject::Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( vector_t{ aBuffer }, aBinding ); }
 
-    void VkDescriptorSetObject::Write( std::vector<ref_t<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    void VkDescriptorSetObject::Write( vector_t<ref_t<ISamplerCubeMap>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 )
             return;

@@ -75,8 +75,8 @@ namespace SE::Core::UI
       public:
         string_t              ID          = "";
         uint32_t                 CurrentItem = 0;
-        std::vector<_Ty>         Values      = {};
-        std::vector<string_t> Labels      = {};
+        vector_t<_Ty>         Values      = {};
+        vector_t<string_t> Labels      = {};
         math::vec2               Size        = { 100.0f, 30.0f };
         bool                     Changed     = false;
 

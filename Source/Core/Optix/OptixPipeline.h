@@ -24,7 +24,7 @@ namespace SE::Graphics
 
         OptixPipelineObject() = default;
         OptixPipelineObject( OptixPipelineLinkOptions aPipelineLinkOptions, OptixPipelineCompileOptions aPipelineCompileOptions,
-                             std::vector<ref_t<OptixProgramGroupObject>> aProgramGroups, ref_t<OptixDeviceContextObject> aRTContext );
+                             vector_t<ref_t<OptixProgramGroupObject>> aProgramGroups, ref_t<OptixDeviceContextObject> aRTContext );
 
         void Launch( CUstream aStream, RawPointer aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
                      ref_t<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions );

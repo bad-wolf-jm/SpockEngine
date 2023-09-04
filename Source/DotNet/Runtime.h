@@ -24,20 +24,20 @@ namespace SE::Core
         static void ReloadAssemblies();
 
         // static uint32_t CountAssemblies();
-        // static void     GetAssemblies( std::vector<fs::path> &lOut );
+        // static void     GetAssemblies( vector_t<fs::path> &lOut );
         // static bool     AssembliesNeedReloading();
 
         static MonoString *NewString( string_t const &aString );
         static string_t NewString( MonoString *aString );
 
         template <typename _Ty>
-        static std::vector<_Ty> AsVector( MonoObject *aObject )
+        static vector_t<_Ty> AsVector( MonoObject *aObject )
         {
-            if( aObject == nullptr ) return std::vector<_Ty>( 0 );
+            if( aObject == nullptr ) return vector_t<_Ty>( 0 );
 
             uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
 
-            std::vector<_Ty> lVector( lArrayLength );
+            vector_t<_Ty> lVector( lArrayLength );
             for( uint32_t i = 0; i < lArrayLength; i++ )
             {
                 auto lElement = *( mono_array_addr( (MonoArray *)aObject, _Ty, i ) );
@@ -51,7 +51,7 @@ namespace SE::Core
 
         static MonoType *GetCoreTypeFromName( string_t &aName );
 
-        // static std::vector<string_t>            GetClassNames();
+        // static vector_t<string_t>            GetClassNames();
         // static std::map<string_t, DotNetClass> &GetClasses();
 
       private:

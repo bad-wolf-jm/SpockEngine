@@ -48,7 +48,7 @@ namespace SE::Core
         }
         else
         {
-            auto lDataPointer = lPixelData.as<std::vector<uint8_t>>();
+            auto lDataPointer = lPixelData.as<vector_t<uint8_t>>();
             for( uint32_t i = 0; i < lPixelDataSize; i++ )
             {
                 auto lPx                 = lDataPointer[i];
@@ -168,7 +168,7 @@ namespace SE::Core
             lDataTable["width"]        = lImageData.mWidth;
             lDataTable["height"]       = lImageData.mHeight;
 
-            auto lDataVector = std::vector<uint8_t>( lImageData.mByteSize );
+            auto lDataVector = vector_t<uint8_t>( lImageData.mByteSize );
             for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
                 lDataVector[i] = lImageData.mPixelData[i];
             lDataTable["pixel_data"] = lDataVector;
@@ -185,7 +185,7 @@ namespace SE::Core
             lDataTable["color_format"] = lImageData.mFormat;
             lDataTable["width"]        = lImageData.mWidth;
             lDataTable["height"]       = lImageData.mHeight;
-            auto lDataVector           = std::vector<uint8_t>( lImageData.mByteSize );
+            auto lDataVector           = vector_t<uint8_t>( lImageData.mByteSize );
             for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
                 lDataVector[i] = lImageData.mPixelData[i];
             lDataTable["pixel_data"] = lDataVector;

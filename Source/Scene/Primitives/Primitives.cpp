@@ -97,11 +97,11 @@ namespace SE::Core::Primitives
         const math::ivec2 faceCount   = subdivisions + math::ivec2{ 1 };
 
         VertexBufferData l_VertexData;
-        l_VertexData.Vertices = std::vector<SE::Core::VertexData>( vertexCount.x * vertexCount.y );
-        l_VertexData.Indices  = std::vector<uint32_t>( (uint32_t)faceCount.x * faceCount.y * 6 );
+        l_VertexData.Vertices = vector_t<SE::Core::VertexData>( vertexCount.x * vertexCount.y );
+        l_VertexData.Indices  = vector_t<uint32_t>( (uint32_t)faceCount.x * faceCount.y * 6 );
 
         /* Indices */
-        // std::vector<uint32_t> indexData{(uint32_t) faceCount.x * faceCount.y * 6};
+        // vector_t<uint32_t> indexData{(uint32_t) faceCount.x * faceCount.y * 6};
         std::size_t i = 0;
         for( int32_t y = 0; y != faceCount.y; ++y )
         {
@@ -143,9 +143,9 @@ namespace SE::Core::Primitives
         const math::ivec2 faceCount   = subdivisions + math::ivec2{ 1 };
 
         WireframeVertexBufferData l_VertexData;
-        l_VertexData.Vertices = std::vector<math::vec3>( vertexCount.x * vertexCount.y );
+        l_VertexData.Vertices = vector_t<math::vec3>( vertexCount.x * vertexCount.y );
         l_VertexData.Indices =
-            std::vector<uint32_t>( ( vertexCount.y * ( vertexCount.x - 1 ) * 2 + vertexCount.x * ( vertexCount.y - 1 ) * 2 ) );
+            vector_t<uint32_t>( ( vertexCount.y * ( vertexCount.x - 1 ) * 2 + vertexCount.x * ( vertexCount.y - 1 ) * 2 ) );
 
         std::size_t i = 0;
         for( int32_t y = 0; y != vertexCount.y; ++y )

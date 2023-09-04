@@ -759,8 +759,8 @@ namespace SE::Editor
         //     auto        lPath               = mModelsPath / lModelName / "Materials" / lSerializedMeshName;
 
         //     BinaryAsset                    lBinaryDataFile;
-        //     std::vector<sAssetIndex>       lAssetIndex{};
-        //     std::vector<std::vector<char>> lPackets{};
+        //     vector_t<sAssetIndex>       lAssetIndex{};
+        //     vector_t<vector_t<char>> lPackets{};
 
         //     sMaterial lNewMaterial{};
         //     lNewMaterial.mName                         = lMaterial.mName;
@@ -868,7 +868,7 @@ namespace SE::Editor
         //     string_t lSerializedMeshName = fmt::format( "{}.mesh", lMesh.mName );
         //     auto        lPath               = mModelsPath / lModelName / "Meshes" / lSerializedMeshName;
 
-        //     std::vector<VertexData> lVertices( lMesh.mPositions.size() );
+        //     vector_t<VertexData> lVertices( lMesh.mPositions.size() );
         //     for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
         //     {
         //         lVertices[i].Position    = lMesh.mPositions[i];

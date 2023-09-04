@@ -41,7 +41,7 @@ namespace SE::Graphics
         }
 
         void AddCode( string_t const &aCode );
-        void AddCode( std::vector<uint8_t> const &aCode );
+        void AddCode( vector_t<uint8_t> const &aCode );
         void AddFile( fs::path const &aPath );
 
         template <typename _Ty>
@@ -60,8 +60,8 @@ namespace SE::Graphics
       protected:
         ref_t<IGraphicContext> mGraphicContext = nullptr;
 
-        std::vector<string_t> mCodeBlocks;
-        std::vector<uint32_t>    mCompiledByteCode;
+        vector_t<string_t> mCodeBlocks;
+        vector_t<uint32_t>    mCompiledByteCode;
 
         string_t mProgram{};
 

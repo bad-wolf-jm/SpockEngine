@@ -22,7 +22,7 @@ namespace SE::Core
         void SetText( string_t const &aText );
         void SetTextColor( math::vec4 aColor );
 
-        virtual std::vector<UITreeViewNode*> const& Children();
+        virtual vector_t<UITreeViewNode*> const& Children();
 
         UITreeViewNode* Add();
 
@@ -38,7 +38,7 @@ namespace SE::Core
 
         UITreeView* mTreeView;
         UITreeViewNode *mParent;
-        std::vector<UITreeViewNode*> mChildren;
+        vector_t<UITreeViewNode*> mChildren;
 
       protected:
         void PushStyles();

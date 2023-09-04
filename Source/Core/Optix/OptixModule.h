@@ -33,9 +33,9 @@ namespace SE::Graphics
 
         ref_t<OptixPipelineObject> CreatePipeline();
 
-        std::vector<ref_t<OptixProgramGroupObject>> mRayGenProgramGroups = {};
-        std::vector<ref_t<OptixProgramGroupObject>> mHitProgramGroups    = {};
-        std::vector<ref_t<OptixProgramGroupObject>> mMissProgramGroups   = {};
+        vector_t<ref_t<OptixProgramGroupObject>> mRayGenProgramGroups = {};
+        vector_t<ref_t<OptixProgramGroupObject>> mHitProgramGroups    = {};
+        vector_t<ref_t<OptixProgramGroupObject>> mMissProgramGroups   = {};
 
       private:
         ref_t<OptixDeviceContextObject> mRayTracingContext = nullptr;

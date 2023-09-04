@@ -86,8 +86,8 @@ namespace SE::Core
         };
 
         Interpolation          mInterpolation = Interpolation::LINEAR;
-        std::vector<float>     mInputs        = {};
-        std::vector<glm::vec4> mOutputsVec4   = {};
+        vector_t<float>     mInputs        = {};
+        vector_t<glm::vec4> mOutputsVec4   = {};
     };
 
     struct sImportedAnimationChannel
@@ -107,8 +107,8 @@ namespace SE::Core
     struct sImportedAnimation
     {
         string_t                            mName     = "";
-        std::vector<sImportedAnimationSampler> mSamplers = {};
-        std::vector<sImportedAnimationChannel> mChannels = {};
+        vector_t<sImportedAnimationSampler> mSamplers = {};
+        vector_t<sImportedAnimationChannel> mChannels = {};
         float                                  mStart    = std::numeric_limits<float>::max();
         float                                  mEnd      = std::numeric_limits<float>::min();
     };
@@ -117,8 +117,8 @@ namespace SE::Core
     {
         string_t           mName                = "";
         uint32_t              mSkeletonRootNodeID  = 0;
-        std::vector<uint32_t> mJointNodeID         = {};
-        std::vector<mat4>     mInverseBindMatrices = {};
+        vector_t<uint32_t> mJointNodeID         = {};
+        vector_t<mat4>     mInverseBindMatrices = {};
     };
 
     struct sImportedMesh
@@ -128,13 +128,13 @@ namespace SE::Core
         Graphics::ePrimitiveTopology mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
 
         uint32_t              mMaterialID = 0;
-        std::vector<uint32_t> mIndices    = {};
-        std::vector<vec3>     mPositions  = {};
-        std::vector<vec3>     mNormals    = {};
-        std::vector<vec2>     mUV0        = {};
-        std::vector<vec2>     mUV1        = {};
-        std::vector<uvec4>    mJoints     = {};
-        std::vector<vec4>     mWeights    = {};
+        vector_t<uint32_t> mIndices    = {};
+        vector_t<vec3>     mPositions  = {};
+        vector_t<vec3>     mNormals    = {};
+        vector_t<vec2>     mUV0        = {};
+        vector_t<vec2>     mUV1        = {};
+        vector_t<uvec4>    mJoints     = {};
+        vector_t<vec4>     mWeights    = {};
     };
 
     struct sImportedNode
@@ -143,17 +143,17 @@ namespace SE::Core
         uint32_t              mParentID  = std::numeric_limits<uint32_t>::max();
         uint32_t              mSkinID    = std::numeric_limits<uint32_t>::max();
         mat4                  mTransform = mat4( 1.0f );
-        std::vector<uint32_t> mChildren  = {};
-        std::vector<uint32_t> mMeshes    = {};
+        vector_t<uint32_t> mChildren  = {};
+        vector_t<uint32_t> mMeshes    = {};
     };
 
     struct sImportedModel
     {
-        std::vector<sImportedTexture>   mTextures   = {};
-        std::vector<sImportedMaterial>  mMaterials  = {};
-        std::vector<sImportedAnimation> mAnimations = {};
-        std::vector<sImportedMesh>      mMeshes     = {};
-        std::vector<sImportedNode>      mNodes      = {};
-        std::vector<sImportedSkin>      mSkins      = {};
+        vector_t<sImportedTexture>   mTextures   = {};
+        vector_t<sImportedMaterial>  mMaterials  = {};
+        vector_t<sImportedAnimation> mAnimations = {};
+        vector_t<sImportedMesh>      mMeshes     = {};
+        vector_t<sImportedNode>      mNodes      = {};
+        vector_t<sImportedSkin>      mSkins      = {};
     };
 } // namespace SE::Core

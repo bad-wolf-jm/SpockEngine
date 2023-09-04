@@ -74,7 +74,7 @@ namespace SE::TensorOps
         ///
         /// This implies running all nodes used as inputs for the nodes to run.
         ///
-        void Run( std::vector<OpNode> const &aNode );
+        void Run( vector_t<OpNode> const &aNode );
 
         /// @brief Access the underlying nodes registry
         SE::Core::EntityCollection &GetNodesRegistry()
@@ -153,7 +153,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode VectorValue( Scope &aScope, std::vector<_Ty> const &aValue )
+    OpNode VectorValue( Scope &aScope, vector_t<_Ty> const &aValue )
     {
         auto l_NewEntity = aScope.CreateNode();
 
@@ -183,10 +183,10 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, std::vector<_Ty> const &aValue )
+    OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, vector_t<_Ty> const &aValue )
     {
         uint32_t                 lSize = aValue.size();
-        std::vector<ScalarValue> lValues( lSize );
+        vector_t<ScalarValue> lValues( lSize );
         for( uint32_t i = 0; i < lSize; i++ )
         {
             lValues[i] = aValue[i];

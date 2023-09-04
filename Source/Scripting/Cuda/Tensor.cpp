@@ -28,7 +28,7 @@ namespace SE::Core
 
                     return aSelf;
                 },
-                []( Cuda::MultiTensor &aSelf, std::vector<_Ty> &aValues )
+                []( Cuda::MultiTensor &aSelf, vector_t<_Ty> &aValues )
                 {
                     aSelf.Upload( aValues );
 
@@ -40,7 +40,7 @@ namespace SE::Core
 
                     return aSelf;
                 },
-                []( Cuda::MultiTensor &aSelf, std::vector<_Ty> &aValues, uint32_t aLayer )
+                []( Cuda::MultiTensor &aSelf, vector_t<_Ty> &aValues, uint32_t aLayer )
                 {
                     aSelf.Upload( aValues, aLayer );
 
@@ -63,12 +63,12 @@ namespace SE::Core
         lTensorShapeType[call_constructor] = factories(
             []( sol::table aInitializer, int32_t aElementSize )
             {
-                std::vector<std::vector<uint32_t>> lShape{};
+                vector_t<vector_t<uint32_t>> lShape{};
 
                 for (uint32_t i=0; i < aInitializer.size(); i++)
                 {
                     auto lLayer = aInitializer.get<sol::table>( i + 1 );
-                    lShape.push_back( std::vector<uint32_t>{} );
+                    lShape.push_back( vector_t<uint32_t>{} );
 
                     for (uint32_t j=0; j < lLayer.size(); j++)
                     {
@@ -162,10 +162,10 @@ namespace SE::Core
         // clang-format off
         lScopeType["run"] = overload(
             []( TensorOps::Scope &aSelf, TensorOps::OpNode &aNode ) { aSelf.Run( aNode ); },
-            []( TensorOps::Scope &aSelf, std::vector<TensorOps::OpNode> aNode ) { aSelf.Run( aNode ); },
+            []( TensorOps::Scope &aSelf, vector_t<TensorOps::OpNode> aNode ) { aSelf.Run( aNode ); },
             []( TensorOps::Scope &aSelf, sol::table aNode )
             {
-                std::vector<TensorOps::OpNode> lOpNodes{};
+                vector_t<TensorOps::OpNode> lOpNodes{};
 
                 for (uint32_t i=0; i < aNode.size(); i++)
                 {
@@ -232,32 +232,32 @@ namespace SE::Core
 
         // clang-format off
         lVectorInitializerComponent[call_constructor] = factories(
-            []( std::vector<float> value)    { return sVectorInitializerComponent{ value }; },
-            []( std::vector<double> value)   { return sVectorInitializerComponent{ value }; },
-            []( std::vector<uint8_t> value)  { return sVectorInitializerComponent{ value }; },
-            []( std::vector<uint16_t> value) { return sVectorInitializerComponent{ value }; },
-            []( std::vector<uint32_t> value) { return sVectorInitializerComponent{ value }; },
-            []( std::vector<uint64_t> value) { return sVectorInitializerComponent{ value }; },
-            []( std::vector<int8_t>  value)  { return sVectorInitializerComponent{ value }; },
-            []( std::vector<int16_t> value)  { return sVectorInitializerComponent{ value }; },
-            []( std::vector<int32_t> value)  { return sVectorInitializerComponent{ value }; },
-            []( std::vector<int64_t> value)  { return sVectorInitializerComponent{ value }; }
+            []( vector_t<float> value)    { return sVectorInitializerComponent{ value }; },
+            []( vector_t<double> value)   { return sVectorInitializerComponent{ value }; },
+            []( vector_t<uint8_t> value)  { return sVectorInitializerComponent{ value }; },
+            []( vector_t<uint16_t> value) { return sVectorInitializerComponent{ value }; },
+            []( vector_t<uint32_t> value) { return sVectorInitializerComponent{ value }; },
+            []( vector_t<uint64_t> value) { return sVectorInitializerComponent{ value }; },
+            []( vector_t<int8_t>  value)  { return sVectorInitializerComponent{ value }; },
+            []( vector_t<int16_t> value)  { return sVectorInitializerComponent{ value }; },
+            []( vector_t<int32_t> value)  { return sVectorInitializerComponent{ value }; },
+            []( vector_t<int64_t> value)  { return sVectorInitializerComponent{ value }; }
         );
         // clang-format on
 
         auto lDataInitializerComponent = lOpsModule.new_usertype<sDataInitializerComponent>( "sDataInitializerComponent" );
         // clang-format off
         lDataInitializerComponent[call_constructor] = factories(
-            []( std::vector<float> value)    { return sDataInitializerComponent{ value }; },
-            []( std::vector<double> value)   { return sDataInitializerComponent{ value }; },
-            []( std::vector<uint8_t> value)  { return sDataInitializerComponent{ value }; },
-            []( std::vector<uint16_t> value) { return sDataInitializerComponent{ value }; },
-            []( std::vector<uint32_t> value) { return sDataInitializerComponent{ value }; },
-            []( std::vector<uint64_t> value) { return sDataInitializerComponent{ value }; },
-            []( std::vector<int8_t>  value)  { return sDataInitializerComponent{ value }; },
-            []( std::vector<int16_t> value)  { return sDataInitializerComponent{ value }; },
-            []( std::vector<int32_t> value)  { return sDataInitializerComponent{ value }; },
-            []( std::vector<int64_t> value)  { return sDataInitializerComponent{ value }; }
+            []( vector_t<float> value)    { return sDataInitializerComponent{ value }; },
+            []( vector_t<double> value)   { return sDataInitializerComponent{ value }; },
+            []( vector_t<uint8_t> value)  { return sDataInitializerComponent{ value }; },
+            []( vector_t<uint16_t> value) { return sDataInitializerComponent{ value }; },
+            []( vector_t<uint32_t> value) { return sDataInitializerComponent{ value }; },
+            []( vector_t<uint64_t> value) { return sDataInitializerComponent{ value }; },
+            []( vector_t<int8_t>  value)  { return sDataInitializerComponent{ value }; },
+            []( vector_t<int16_t> value)  { return sDataInitializerComponent{ value }; },
+            []( vector_t<int32_t> value)  { return sDataInitializerComponent{ value }; },
+            []( vector_t<int64_t> value)  { return sDataInitializerComponent{ value }; }
         );
         // clang-format on
 

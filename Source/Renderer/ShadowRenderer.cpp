@@ -194,7 +194,7 @@ namespace SE::Core
         mDirectionalLight = aDirectionalLights;
     }
 
-    void ShadowSceneRenderer::SetLights( std::vector<sPunctualLight> const &aPointLights )
+    void ShadowSceneRenderer::SetLights( vector_t<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
     }

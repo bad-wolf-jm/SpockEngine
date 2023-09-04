@@ -122,7 +122,7 @@ namespace SE::Core
         auto     lGlobalPosition = ImGui::GetCursorScreenPos();
         uint32_t lExpandCount    = 0;
 
-        std::vector<BoxLayoutItem> lVisibleChildren;
+        vector_t<BoxLayoutItem> lVisibleChildren;
         std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lVisibleChildren ),
                       []( auto x ) { return ( x.mItem == nullptr ) || ( x.mItem->mIsVisible ); } );
 

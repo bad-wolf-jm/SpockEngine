@@ -65,7 +65,7 @@ using namespace SE::MonoInternalCalls;
 
 namespace SE::Core
 {
-    using PathList     = std::vector<fs::path>;
+    using PathList     = vector_t<fs::path>;
     using ClassMapping = std::map<string_t, DotNetClass>;
 
     struct sAssemblyData
@@ -78,7 +78,7 @@ namespace SE::Core
         bool          mNeedsReloading = false;
         bool          mFileExists     = false;
 
-        std::vector<string_t> mClasses{};
+        vector_t<string_t> mClasses{};
 
         std::shared_ptr<filewatch::FileWatch<string_t>> mWatcher{};
 
@@ -100,7 +100,7 @@ namespace SE::Core
         AssemblyMapping mAssemblies       = {};
         ClassMapping    mClasses          = {};
 
-        std::map<string_t, std::vector<sAssemblyData *>> mCategories;
+        std::map<string_t, vector_t<sAssemblyData *>> mCategories;
         HINSTANCE                                        mMonoPosixHelper;
     };
 
@@ -165,7 +165,7 @@ namespace SE::Core
             } );
 
         if( sRuntimeData->mCategories.find( aCategory ) == sRuntimeData->mCategories.end() )
-            sRuntimeData->mCategories[aCategory] = std::vector<sAssemblyData *>{};
+            sRuntimeData->mCategories[aCategory] = vector_t<sAssemblyData *>{};
         sRuntimeData->mCategories[aCategory].push_back( &sRuntimeData->mAssemblies[aFilepath] );
     }
 

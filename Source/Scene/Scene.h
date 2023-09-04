@@ -139,7 +139,7 @@ namespace SE::Core
         // Handle to the new version of the material system
         ref_t<MaterialSystem> mMaterialSystem = nullptr;
 
-        std::vector<sActorComponent> mActorComponents;
+        vector_t<sActorComponent> mActorComponents;
 
       protected:
         SE::Core::EntityCollection mRegistry;

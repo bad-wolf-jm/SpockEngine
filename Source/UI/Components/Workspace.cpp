@@ -261,7 +261,7 @@ namespace SE::Core
 
     void UIWorkspace::UpdateDocumentList()
     {
-        std::vector<UIWorkspaceDocument *> lOpenedDocuments;
+        vector_t<UIWorkspaceDocument *> lOpenedDocuments;
         std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( lOpenedDocuments ),
                       []( UIWorkspaceDocument *x ) { return x->mOpen; } );
 
@@ -303,7 +303,7 @@ namespace SE::Core
         lInstance->mCloseDocumentDelegate       = aDelegate;
         lInstance->mCloseDocumentDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
-        lInstance->mOnCloseDocuments = [lInstance, lDelegate]( std::vector<UIWorkspaceDocument *> aDocuments )
+        lInstance->mOnCloseDocuments = [lInstance, lDelegate]( vector_t<UIWorkspaceDocument *> aDocuments )
         {
             auto lDelegateClass = mono_object_get_class( lDelegate );
             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );

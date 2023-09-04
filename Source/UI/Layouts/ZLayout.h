@@ -42,7 +42,7 @@ namespace SE::Core
         ImVec2 RequiredSize();
 
       protected:
-        std::vector<ZLayoutItem> mChildren;
+        vector_t<ZLayoutItem> mChildren;
 
       protected:
         void PushStyles();

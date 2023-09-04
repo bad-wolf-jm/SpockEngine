@@ -14,9 +14,11 @@
 #include <string>
 
 #include "Core/Math/Types.h"
+#include "Core/String.h"
+#include "Core/Vector.h"
 
-#include "Entity.h"
 #include "DotNet/Runtime.h"
+#include "Entity.h"
 
 #ifdef LITTLEENDIAN
 #    undef LITTLEENDIAN
@@ -63,8 +65,8 @@ namespace SE::Core
         template <typename ParentType>
         struct sRelationship
         {
-            Internal::Entity<ParentType>              mParent{ entt::null, nullptr };
-            std::vector<Internal::Entity<ParentType>> mChildren = {};
+            Internal::Entity<ParentType>           mParent{ entt::null, nullptr };
+            vector_t<Internal::Entity<ParentType>> mChildren = {};
 
             sRelationship()                        = default;
             sRelationship( const sRelationship & ) = default;
@@ -76,7 +78,10 @@ namespace SE::Core
             Internal::Entity<ParentType> mJoinEntity{}; //!< Handle to the joined entity
 
             /// @brief Retrieves a reference to the joined component
-            _Ty &JoinedComponent() { return mJoinEntity.Get<_Ty>(); }
+            _Ty &JoinedComponent()
+            {
+                return mJoinEntity.Get<_Ty>();
+            }
 
             sJoin()                = default;
             sJoin( const sJoin & ) = default;
@@ -99,13 +104,25 @@ namespace SE::Core
                 return mEntity.Has<T>();
             }
 
-            virtual void Initialize( Internal::Entity<ParentType> aEntity ) { mEntity = aEntity; }
+            virtual void Initialize( Internal::Entity<ParentType> aEntity )
+            {
+                mEntity = aEntity;
+            }
 
-            virtual void OnBeginScenario() {}
-            virtual void OnEndScenario() {}
-            virtual void OnTick( Timestep ts ) {}
+            virtual void OnBeginScenario()
+            {
+            }
+            virtual void OnEndScenario()
+            {
+            }
+            virtual void OnTick( Timestep ts )
+            {
+            }
 
-            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+            Internal::Entity<ParentType> GetControlledEntity() const
+            {
+                return mEntity;
+            };
 
           private:
             Internal::Entity<ParentType> mEntity;
@@ -138,7 +155,7 @@ namespace SE::Core
         {
             string_t mClassFullName = "";
 
-            DotNetClass         mClass;
+            DotNetClass           mClass;
             ref_t<DotNetInstance> mInstance;
             ref_t<DotNetInstance> mEntityInstance;
 
@@ -151,7 +168,7 @@ namespace SE::Core
                 : mClassFullName{ aClassFullName }
 
             {
-                size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
+                size_t   lSeparatorPos   = aClassFullName.find_last_of( '.' );
                 string_t lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
                 string_t lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
@@ -174,9 +191,10 @@ namespace SE::Core
                 auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
                 mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
-                if( mClassFullName.empty() ) return;
+                if( mClassFullName.empty() )
+                    return;
 
-                size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+                size_t   lSeparatorPos   = mClassFullName.find_last_of( '.' );
                 string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
                 string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
@@ -187,9 +205,15 @@ namespace SE::Core
                 mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
             }
 
-            void OnBeginScenario() { mInstance->InvokeMethod( "BeginScenario", 0, nullptr ); }
+            void OnBeginScenario()
+            {
+                mInstance->InvokeMethod( "BeginScenario", 0, nullptr );
+            }
 
-            void OnEndScenario() { mInstance->InvokeMethod( "EndScenario", 0, nullptr ); }
+            void OnEndScenario()
+            {
+                mInstance->InvokeMethod( "EndScenario", 0, nullptr );
+            }
 
             void OnTick( Timestep ts )
             {
@@ -197,7 +221,10 @@ namespace SE::Core
                 mInstance->CallMethod( "Tick", &lTs );
             }
 
-            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+            Internal::Entity<ParentType> GetControlledEntity() const
+            {
+                return mEntity;
+            };
 
           private:
             Internal::Entity<ParentType> mEntity;
@@ -220,8 +247,8 @@ namespace SE::Core
             bool mDisplayInEditor = true;
             bool mPreview         = true;
 
-            string_t             mClassFullName = "";
-            DotNetClass         mClass;
+            string_t              mClassFullName = "";
+            DotNetClass           mClass;
             ref_t<DotNetInstance> mInstance;
             ref_t<DotNetInstance> mPreviewInstance;
             ref_t<DotNetInstance> mEntityInstance;
@@ -251,9 +278,10 @@ namespace SE::Core
                 auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
                 mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
-                if( mClassFullName.empty() ) return;
+                if( mClassFullName.empty() )
+                    return;
 
-                size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+                size_t   lSeparatorPos   = mClassFullName.find_last_of( '.' );
                 string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
                 string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
@@ -269,7 +297,8 @@ namespace SE::Core
             void OnBeginScenario()
             {
                 // Instantiate the Mono actor class with the entity object as parameter
-                if( mClassFullName.empty() ) return;
+                if( mClassFullName.empty() )
+                    return;
 
                 mInstance = mClass.Instantiate();
 
@@ -286,16 +315,21 @@ namespace SE::Core
             void OnUpdate( Timestep ts )
             {
                 float lTs = ts.GetMilliseconds();
-                if( mInstance ) mInstance->CallMethod( "DrawContent", &lTs );
+                if( mInstance )
+                    mInstance->CallMethod( "DrawContent", &lTs );
             }
 
             void OnPreviewUpdate( Timestep ts )
             {
                 float lTs = ts.GetMilliseconds();
-                if( mPreviewInstance ) mPreviewInstance->CallMethod( "DrawPreviewContent", &lTs );
+                if( mPreviewInstance )
+                    mPreviewInstance->CallMethod( "DrawPreviewContent", &lTs );
             }
 
-            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+            Internal::Entity<ParentType> GetControlledEntity() const
+            {
+                return mEntity;
+            };
 
           private:
             Internal::Entity<ParentType> mEntity;

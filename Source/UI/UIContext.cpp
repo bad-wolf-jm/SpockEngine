@@ -84,7 +84,7 @@ namespace SE::Core
         lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
         lImageData.mWidth     = static_cast<uint32_t>( lWidth );
         lImageData.mHeight    = static_cast<uint32_t>( lHeight );
-        lImageData.mPixelData = std::vector<uint8_t>( lFontPixelData, lFontPixelData + lUploadSize );
+        lImageData.mPixelData = vector_t<uint8_t>( lFontPixelData, lFontPixelData + lUploadSize );
         TextureData2D lTextureImage( lTextureCreateInfo, lImageData );
 
         sTextureSamplingInfo lSamplingInfo{};

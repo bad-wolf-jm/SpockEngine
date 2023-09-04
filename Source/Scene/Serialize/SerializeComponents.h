@@ -61,7 +61,7 @@ namespace SE::Core
     void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAnimationChooser &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAnimationComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext,
-                        std::vector<sImportedAnimationSampler> &aInterpolationData );
+                        vector_t<sImportedAnimationSampler> &aInterpolationData );
     void ReadComponent( sAnimatedTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sNodeTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sStaticMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );

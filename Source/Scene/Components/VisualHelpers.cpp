@@ -8,9 +8,9 @@
 namespace SE::Core::EntityComponentSystem::Components
 {
 
-    static std::vector<SimpleVertexData> ToSimpleVertex( std::vector<VertexData> a_Source, math::mat4 a_Transform )
+    static vector_t<SimpleVertexData> ToSimpleVertex( vector_t<VertexData> a_Source, math::mat4 a_Transform )
     {
-        std::vector<SimpleVertexData> l_Result( a_Source.size() );
+        vector_t<SimpleVertexData> l_Result( a_Source.size() );
         for( uint32_t i = 0; i < a_Source.size(); i++ )
         {
             l_Result[i].Position = math::vec3( a_Transform * math::vec4( a_Source[i].Position, 1.0f ) );
@@ -20,7 +20,7 @@ namespace SE::Core::EntityComponentSystem::Components
         return l_Result;
     }
 
-    static void ApplyTransform( std::vector<VertexData> &a_Source, math::mat4 a_Transform )
+    static void ApplyTransform( vector_t<VertexData> &a_Source, math::mat4 a_Transform )
     {
         for( uint32_t i = 0; i < a_Source.size(); i++ )
         {
@@ -28,7 +28,7 @@ namespace SE::Core::EntityComponentSystem::Components
         }
     }
 
-    static void ApplyTransform( std::vector<math::vec3> &a_Source, math::mat4 a_Transform )
+    static void ApplyTransform( vector_t<math::vec3> &a_Source, math::mat4 a_Transform )
     {
         for( uint32_t i = 0; i < a_Source.size(); i++ )
         {
@@ -40,7 +40,7 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         math::mat4 lScalingTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ SideLength, SideLength, SideLength } );
         SE::Core::Primitives::VertexBufferData lCube           = SE::Core::Primitives::CreateCube();
-        std::vector<SimpleVertexData>          lCubeVertexData = ToSimpleVertex( lCube.Vertices, lScalingTransform );
+        vector_t<SimpleVertexData>          lCubeVertexData = ToSimpleVertex( lCube.Vertices, lScalingTransform );
 
         Mesh.Vertices = New<VkGpuBuffer>( a_GraphicContext, lCubeVertexData, eBufferType::VERTEX_BUFFER, false, true, true, true );
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, lCube.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
@@ -78,7 +78,7 @@ namespace SE::Core::EntityComponentSystem::Components
         l_ArrowMeshData.Indices.insert( l_ArrowMeshData.Indices.end(), l_Shaft.Indices.begin(), l_Shaft.Indices.end() );
         l_ArrowMeshData.Indices.insert( l_ArrowMeshData.Indices.end(), l_Tip.Indices.begin(), l_Tip.Indices.end() );
 
-        std::vector<SimpleVertexData> l_ArrowVertexData = ToSimpleVertex( l_ArrowMeshData.Vertices, math::mat4( 1.0f ) );
+        vector_t<SimpleVertexData> l_ArrowVertexData = ToSimpleVertex( l_ArrowMeshData.Vertices, math::mat4( 1.0f ) );
 
         Mesh.Vertices = New<VkGpuBuffer>( a_GraphicContext, l_ArrowVertexData, eBufferType::VERTEX_BUFFER, false, true, true, true );
         Mesh.Indices =
@@ -107,7 +107,7 @@ namespace SE::Core::EntityComponentSystem::Components
     void SurfaceMeshData::UpdateMesh( ref_t<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Plane = SE::Core::Primitives::CreatePlane( math::ivec2{ 32, 32 } );
-        std::vector<SimpleVertexData>          l_PlaneVertexData =
+        vector_t<SimpleVertexData>          l_PlaneVertexData =
             ToSimpleVertex( l_Plane.Vertices, math::mat4( 1.0f ) ); //(l_Plane.Vertices.size());
 
         Mesh.Vertices = New<VkGpuBuffer>( a_GraphicContext, l_PlaneVertexData, eBufferType::VERTEX_BUFFER, false, true, true, true );
@@ -141,7 +141,7 @@ namespace SE::Core::EntityComponentSystem::Components
             New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
 
         SE::Core::Primitives::VertexBufferData l_Plane = SE::Core::Primitives::CreatePlane( math::ivec2{ 32, 32 } );
-        std::vector<SimpleVertexData>          l_PlaneVertexData( l_Plane.Vertices.size() );
+        vector_t<SimpleVertexData>          l_PlaneVertexData( l_Plane.Vertices.size() );
         for( uint32_t i = 0; i < l_Plane.Vertices.size(); i++ )
         {
             l_PlaneVertexData[i].Position = math::vec4( math::vec2( l_Plane.Vertices[i].Position ), -1.0f, 1.0f );

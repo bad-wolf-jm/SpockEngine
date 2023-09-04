@@ -71,8 +71,8 @@ namespace SE::Editor
         ImGui::Columns( columnCount, 0, false );
         ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
-        std::vector<fs::path> lFolderContent;
-        std::vector<fs::path> lFiles;
+        vector_t<fs::path> lFolderContent;
+        vector_t<fs::path> lFiles;
 
         for( auto &directoryEntry : std::filesystem::directory_iterator( mCurrentDirectory ) )
         {

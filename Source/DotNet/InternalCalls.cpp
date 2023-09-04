@@ -79,7 +79,7 @@ namespace SE::MonoInternalCalls
 
     size_t OpNode_NewTensorShape( MonoArray *aShape, uint32_t aRank, uint32_t aLayers, uint32_t aElementSize )
     {
-        std::vector<std::vector<uint32_t>> lShape{};
+        vector_t<vector_t<uint32_t>> lShape{};
 
         for( uint32_t i = 0; i < aLayers; i++ )
         {
@@ -118,7 +118,7 @@ namespace SE::MonoInternalCalls
     {
         uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( aDimension ) );
 
-        std::vector<uint32_t> lNewDimension{};
+        vector_t<uint32_t> lNewDimension{};
 
         for( uint32_t i = 0; i < lArrayLength; i++ )
         {
@@ -181,7 +181,7 @@ namespace SE::MonoInternalCalls
     template <typename _Ty>
     static inline uint32_t CreateConstantMultiTensor( Scope *aScope, sTensorShape *aShape, MonoArray *aObject )
     {
-        std::vector<_Ty> lLayerConstants( aShape->CountLayers() );
+        vector_t<_Ty> lLayerConstants( aShape->CountLayers() );
         for( uint32_t j = 0; j < aShape->CountLayers(); j++ ) lLayerConstants[j] = *( mono_array_addr( aObject, _Ty, j ) );
 
         auto lNode = MultiTensorValue( *aScope, sVectorInitializerComponent( lLayerConstants ), *aShape );
@@ -252,7 +252,7 @@ namespace SE::MonoInternalCalls
     template <typename _Ty>
     static inline uint32_t CreateDataMultiTensor( Scope *aScope, sTensorShape *aShape, MonoArray *aObject )
     {
-        std::vector<_Ty> lLayerConstants( aShape->CountLayers() );
+        vector_t<_Ty> lLayerConstants( aShape->CountLayers() );
         for( uint32_t j = 0; j < aShape->CountLayers(); j++ ) lLayerConstants[j] = *( mono_array_addr( aObject, _Ty, j ) );
 
         auto lNode = MultiTensorValue( *aScope, sDataInitializerComponent( lLayerConstants ), *aShape );
@@ -372,7 +372,7 @@ namespace SE::MonoInternalCalls
     static inline uint32_t CreateScalarValue( Scope *aScope, MonoArray *aObject )
     {
         uint32_t         aArrayLength = static_cast<uint32_t>( mono_array_length( aObject ) );
-        std::vector<_Ty> lScalarValues( aArrayLength );
+        vector_t<_Ty> lScalarValues( aArrayLength );
         for( uint32_t j = 0; j < aArrayLength; j++ ) lScalarValues[j] = *( mono_array_addr( aObject, _Ty, j ) );
 
         auto lNode = VectorValue( *aScope, lScalarValues );

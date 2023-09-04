@@ -57,14 +57,14 @@ namespace SE::Core
 
         std::unordered_map<string_t, uint32_t> mKnownTextures;
         std::map<tinyobj::index_t, uint32_t>      mKnownVertices;
-        std::vector<tinyobj::shape_t>             mShapes;
+        vector_t<tinyobj::shape_t>             mShapes;
 
         std::unordered_map<string_t, uint32_t> mTextureLookup;
         std::unordered_map<int, uint32_t>         mMaterialIDLookup;
 
-        std::vector<math::vec3> mVertexData;
-        std::vector<math::vec3> mNormalsData;
-        std::vector<math::vec2> mTexCoordData;
+        vector_t<math::vec3> mVertexData;
+        vector_t<math::vec3> mNormalsData;
+        vector_t<math::vec2> mTexCoordData;
 
       private:
         void                                 AddVertex( sImportedMesh &aMesh, const tinyobj::index_t &aIdx );

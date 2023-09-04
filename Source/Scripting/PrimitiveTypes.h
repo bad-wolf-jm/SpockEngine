@@ -26,7 +26,7 @@ namespace SE::Core
             {
                 std::uniform_real_distribution<_Ty> dist6( lMin, lMax );
                 auto gen = [&dist6, &rng]() { return dist6( rng ); };
-                std::vector<_Ty> lNewVector( aSize );
+                vector_t<_Ty> lNewVector( aSize );
                 std::generate( lNewVector.begin(), lNewVector.end(), gen );
 
                 return sol::make_reference( aScriptState, std::move( lNewVector ) );
@@ -35,7 +35,7 @@ namespace SE::Core
             {
                 std::uniform_int_distribution<_Ty> dist6( lMin, lMax );
                 auto gen = [&dist6, &rng]() { return dist6( rng ); };
-                std::vector<_Ty> lNewVector( aSize );
+                vector_t<_Ty> lNewVector( aSize );
                 std::generate( lNewVector.begin(), lNewVector.end(), gen );
 
                 return sol::make_reference( aScriptState, std::move( lNewVector ) );
@@ -44,13 +44,13 @@ namespace SE::Core
 
         template <typename _Ty> auto CreateVector0( uint32_t aSize, sol::this_state aScriptState )
         {
-            auto lNewVector = std::vector<_Ty>( aSize );
+            auto lNewVector = vector_t<_Ty>( aSize );
             return sol::make_reference( aScriptState, std::move( lNewVector ) );
         }
 
         template <typename _Ty> auto CreateVector1( uint32_t aSize, _Ty aFill, sol::this_state aScriptState )
         {
-            auto lNewVector = std::vector<_Ty>( aSize, aFill );
+            auto lNewVector = vector_t<_Ty>( aSize, aFill );
             return sol::make_reference( aScriptState, std::move( lNewVector ) );
         }
 
@@ -70,19 +70,19 @@ namespace SE::Core
 
         template <typename _Ty> void Upload0( Cuda::MultiTensor &aM, sol::table &aArray )
         {
-            auto &lArray = aArray.as<std::vector<_Ty>>();
+            auto &lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload<_Ty>( lArray );
         }
 
         template <typename _Ty> void Upload1( Cuda::MultiTensor &aM, sol::table &aArray, uint32_t aLayer )
         {
-            auto lArray = aArray.as<std::vector<_Ty>>();
+            auto lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload( lArray, aLayer, 0 );
         }
 
         template <typename _Ty> void Upload2( Cuda::MultiTensor &aM, sol::table &aArray, uint32_t aLayer, uint32_t aOffset )
         {
-            auto lArray = aArray.as<std::vector<_Ty>>();
+            auto lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload<_Ty>( lArray, aOffset );
         }
 

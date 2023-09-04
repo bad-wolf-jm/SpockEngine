@@ -86,7 +86,7 @@ namespace SE::Core
         UIMenuItem *AddSeparatorRaw();
 
       protected:
-        std::vector<UIMenuItem *> mActions;
+        vector_t<UIMenuItem *> mActions;
 
       protected:
         void PushStyles();

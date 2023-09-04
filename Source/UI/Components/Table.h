@@ -10,9 +10,9 @@ namespace SE::Core
         string_t mHeader;
         float       mInitialSize = 10.0f;
 
-        std::vector<uint32_t>      mBackgroundColor;
-        std::vector<uint32_t>      mForegroundColor;
-        std::vector<UIComponent *> mToolTip;
+        vector_t<uint32_t>      mBackgroundColor;
+        vector_t<uint32_t>      mForegroundColor;
+        vector_t<UIComponent *> mToolTip;
 
         sTableColumn() = default;
         sTableColumn( string_t aHeader, float aInitialSize );
@@ -33,7 +33,7 @@ namespace SE::Core
         string_t mFormat;
         string_t mNaNFormat;
 
-        std::vector<double> mData;
+        vector_t<double> mData;
 
         sFloat64Column() = default;
         sFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
@@ -53,7 +53,7 @@ namespace SE::Core
 
     struct sUint32Column : public sTableColumn
     {
-        std::vector<uint32_t> mData;
+        vector_t<uint32_t> mData;
 
         sUint32Column() = default;
         sUint32Column( string_t aHeader, float aInitialSize );
@@ -73,7 +73,7 @@ namespace SE::Core
 
     struct sStringColumn : public sTableColumn
     {
-        std::vector<string_t> mData;
+        vector_t<string_t> mData;
 
         sStringColumn() = default;
         sStringColumn( string_t aHeader, float aInitialSize );
@@ -102,11 +102,11 @@ namespace SE::Core
 
         void OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked );
 
-        std::vector<uint32_t>           mRowBackgroundColor;
-        std::optional<std::vector<int>> mDisplayedRowIndices;
+        vector_t<uint32_t>           mRowBackgroundColor;
+        std::optional<vector_t<int>> mDisplayedRowIndices;
 
       protected:
-        std::vector<sTableColumn *>     mColumns;
+        vector_t<sTableColumn *>     mColumns;
         std::function<void( uint32_t )> mOnRowClicked;
 
       protected:

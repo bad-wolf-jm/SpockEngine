@@ -16,7 +16,7 @@ namespace SE::Graphics
     {
         auto lDescriptorSet = mDescriptors;
 
-        std::vector<VkDescriptorSetLayoutBinding> lBindings{};
+        vector_t<VkDescriptorSetLayoutBinding> lBindings{};
 
         for( uint32_t j = 0; j < lDescriptorSet.size(); j++ )
         {

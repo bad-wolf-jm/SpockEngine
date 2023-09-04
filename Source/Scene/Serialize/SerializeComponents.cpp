@@ -110,10 +110,10 @@ namespace SE::Core
     }
 
     void ReadComponent( sAnimationComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext,
-                        std::vector<sImportedAnimationSampler> &aInterpolationData )
+                        vector_t<sImportedAnimationSampler> &aInterpolationData )
     {
         aComponent.Duration  = Get( aNode["Duration"], 0.0f );
-        aComponent.mChannels = std::vector<sAnimationChannel>{};
+        aComponent.mChannels = vector_t<sAnimationChannel>{};
 
         auto const &lChannels = aNode["mChannels"];
         for( YAML::const_iterator it = lChannels.begin(); it != lChannels.end(); ++it )
@@ -146,7 +146,7 @@ namespace SE::Core
 
     math::mat4 ReadMatrix( YAML::Node const &aNode )
     {
-        std::vector<float> lMatrixEntries{};
+        vector_t<float> lMatrixEntries{};
         for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it )
             lMatrixEntries.push_back( Get( *it, 0.0f ) );
         // aNode.ForEach( [&]( YAML::Node &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );

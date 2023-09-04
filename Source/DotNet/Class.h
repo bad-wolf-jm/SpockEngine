@@ -9,6 +9,7 @@
 #include "Instance.h"
 #include "Typedefs.h"
 #include "Core/String.h"
+#include "Core/Vector.h"
 
 namespace fs = std::filesystem;
 
@@ -77,7 +78,7 @@ namespace SE::Core
         
         string_t &FullName() { return mClassFullName; }
 
-        std::vector<DotNetClass *> &DerivedClasses() { return mDerived; }
+        vector_t<DotNetClass *> &DerivedClasses() { return mDerived; }
         DotNetClass                *ParentClass() { return mParent; }
 
         operator bool() const { return ( mMonoClass != nullptr ); }
@@ -85,7 +86,7 @@ namespace SE::Core
       private:
         fs::path                   mDllPath;
         DotNetClass               *mParent;
-        std::vector<DotNetClass *> mDerived;
+        vector_t<DotNetClass *> mDerived;
 
         string_t mClassNamespace;
         string_t mClassName;

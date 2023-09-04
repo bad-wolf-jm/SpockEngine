@@ -372,7 +372,7 @@ namespace SE::Core
 
         auto lScenarioRoot = aScenarioPath.parent_path();
 
-        std::vector<sImportedAnimationSampler> lInterpolationData;
+        vector_t<sImportedAnimationSampler> lInterpolationData;
         {
             BinaryAsset lBinaryDataFile( lScenarioRoot / "Animations" / "BinaryData.bin" );
 
@@ -392,7 +392,7 @@ namespace SE::Core
         auto &lSceneRoot = lRootNode["scene"];
         auto &lNodesRoot = lSceneRoot["nodes"];
 
-        std::vector<std::tuple<string_t, sStaticMeshComponent, string_t>> lBufferLoadQueue{};
+        vector_t<std::tuple<string_t, sStaticMeshComponent, string_t>> lBufferLoadQueue{};
 
         std::map<string_t, std::set<string_t>> lMaterialLoadQueue{};
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
@@ -536,8 +536,8 @@ namespace SE::Core
 
             BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
 
-            std::vector<VertexData> lVertexBuffer;
-            std::vector<uint32_t>   lIndexBuffer;
+            vector_t<VertexData> lVertexBuffer;
+            vector_t<uint32_t>   lIndexBuffer;
             lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
 
             lComponent.mVertexBuffer =
@@ -649,7 +649,7 @@ namespace SE::Core
         auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
-        std::vector<ref_t<ISampler2D>> lTextures{};
+        vector_t<ref_t<ISampler2D>> lTextures{};
         for( auto &lTexture : aModelData->mTextures )
         {
             auto lNewInteropTexture = CreateTexture2D( mGraphicContext, *lTexture.mTexture, 1, false, false, true );
@@ -659,7 +659,7 @@ namespace SE::Core
             SE::Logging::Info( "Created texture: [{}]", lTexture.mName );
         }
 
-        std::vector<Material> lMaterialIds = {};
+        vector_t<Material> lMaterialIds = {};
         for( auto &lMaterial : aModelData->mMaterials )
         {
             auto lNewMaterial = mMaterialSystem->BeginMaterial( lMaterial.mName );
@@ -717,18 +717,18 @@ namespace SE::Core
         }
         mMaterialSystem->UpdateMaterialData();
         
-        std::vector<Element>    lMeshes           = {};
+        vector_t<Element>    lMeshes           = {};
         uint32_t                lVertexBufferSize = 0;
         uint32_t                lIndexBufferSize  = 0;
-        std::vector<VertexData> lVertexData       = {};
-        std::vector<uint32_t>   lIndexData        = {};
+        vector_t<VertexData> lVertexData       = {};
+        vector_t<uint32_t>   lIndexData        = {};
         for( auto &lMesh : aModelData->mMeshes )
         {
             sStaticMeshComponent lMeshComponent{};
             lMeshComponent.mName      = lMesh.mName;
             lMeshComponent.mPrimitive = lMesh.mPrimitive;
 
-            std::vector<VertexData> lVertices( lMesh.mPositions.size() );
+            vector_t<VertexData> lVertices( lMesh.mPositions.size() );
             for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
             {
                 lVertices[i].Position    = lMesh.mPositions[i];
@@ -758,7 +758,7 @@ namespace SE::Core
             lMeshes.push_back( lMeshEntity );
         }
 
-        std::vector<Element> lNodes = {};
+        vector_t<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )
         {
             auto lNodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
@@ -793,7 +793,7 @@ namespace SE::Core
 
                 sSkeletonComponent lNodeSkeleton{};
 
-                std::vector<Element> lJointNodes = {};
+                vector_t<Element> lJointNodes = {};
                 for( uint32_t i = 0; i < lSkin.mJointNodeID.size(); i++ )
                 {
                     lNodeSkeleton.Bones.push_back( lNodes[lSkin.mJointNodeID[i]] );
@@ -1079,12 +1079,12 @@ namespace SE::Core
 
         // Update the transformed vertex buffer for static meshies
         {
-            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
-            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            std::vector<uint32_t> lVertexOffsets{};
-            std::vector<uint32_t> lVertexCounts{};
-            std::vector<mat4>     lObjectToWorldTransforms{};
+            vector_t<uint32_t> lVertexOffsets{};
+            vector_t<uint32_t> lVertexCounts{};
+            vector_t<mat4>     lObjectToWorldTransforms{};
             uint32_t              lMaxVertexCount = 0;
             ForEach<sUUID, sStaticMeshComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh )
@@ -1116,14 +1116,14 @@ namespace SE::Core
 
         // Update the transformed vertex buffer for animated meshies
         {
-            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
-            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
+            vector_t<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            std::vector<uint32_t> lVertexOffsets{};
-            std::vector<uint32_t> lVertexCounts{};
-            std::vector<mat4>     lObjectToWorldTransforms{};
-            std::vector<mat4>     lJointTransforms{};
-            std::vector<uint32_t> lJointOffsets{};
+            vector_t<uint32_t> lVertexOffsets{};
+            vector_t<uint32_t> lVertexCounts{};
+            vector_t<mat4>     lObjectToWorldTransforms{};
+            vector_t<mat4>     lJointTransforms{};
+            vector_t<uint32_t> lJointOffsets{};
             uint32_t              lMaxVertexCount = 0;
             ForEach<sUUID, sStaticMeshComponent, sSkeletonComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh, auto &aSkeleton )
@@ -1212,7 +1212,7 @@ namespace SE::Core
     }
 
     static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
-                           std::vector<sImportedAnimationSampler>       &lInterpolationData,
+                           vector_t<sImportedAnimationSampler>       &lInterpolationData,
                            std::unordered_map<string_t, string_t> &aMaterialMap,
                            std::unordered_map<string_t, string_t> &aMeshDataMap )
     {
@@ -1438,7 +1438,7 @@ namespace SE::Core
 
         auto lOut = ConfigurationWriter( aPath / "SceneDefinition.yaml" );
 
-        std::vector<sImportedAnimationSampler> lInterpolationData;
+        vector_t<sImportedAnimationSampler> lInterpolationData;
         lOut.BeginMap();
         lOut.WriteKey( "scene" );
         {

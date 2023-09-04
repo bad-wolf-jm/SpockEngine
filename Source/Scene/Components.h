@@ -74,7 +74,7 @@ namespace SE::Core::EntityComponentSystem::Components
         uint32_t CurrentTick    = 0;
         float    CurrentTime    = 0.0f;
 
-        std::vector<sAnimationChannel> mChannels = {};
+        vector_t<sAnimationChannel> mChannels = {};
 
         sAnimationComponent()                              = default;
         sAnimationComponent( const sAnimationComponent & ) = default;
@@ -82,7 +82,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sAnimationChooser
     {
-        std::vector<Entity> Animations = {};
+        vector_t<Entity> Animations = {};
 
         sAnimationChooser()                            = default;
         sAnimationChooser( const sAnimationChooser & ) = default;
@@ -178,9 +178,9 @@ namespace SE::Core::EntityComponentSystem::Components
     struct sSkeletonComponent
     {
         uint32_t            BoneCount;
-        std::vector<Entity> Bones;
-        std::vector<mat4>   InverseBindMatrices;
-        std::vector<mat4>   JointMatrices;
+        vector_t<Entity> Bones;
+        vector_t<mat4>   InverseBindMatrices;
+        vector_t<mat4>   JointMatrices;
 
         sSkeletonComponent()                             = default;
         sSkeletonComponent( const sSkeletonComponent & ) = default;

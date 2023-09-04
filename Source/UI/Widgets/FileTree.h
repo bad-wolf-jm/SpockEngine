@@ -20,7 +20,7 @@ namespace SE::Core
 
         UIFileTreeNode *Add( fs::path const &aPath );
 
-        std::vector<UITreeViewNode *> const &Children();
+        vector_t<UITreeViewNode *> const &Children();
 
       protected:
         fs::path    mPath;

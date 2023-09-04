@@ -37,7 +37,7 @@ namespace SE::Core
             []( sol::table aCreateInfo, sol::table aImageData ) {
                 return New<Cuda::Texture2D>( ParseCudaCreateInfo( aCreateInfo ), ParseImageData( aImageData ) );
             },
-            []( sol::table aCreateInfo, std::vector<uint8_t> aImageData ) {
+            []( sol::table aCreateInfo, vector_t<uint8_t> aImageData ) {
                 return New<Cuda::Texture2D>( ParseCudaCreateInfo( aCreateInfo ), aImageData );
             }
         );

@@ -52,42 +52,42 @@ namespace SE::Graphics
                                      VkFormat aImageFormat, VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
         void        DestroyImageView( VkImageView aImage );
 
-        VkRenderPass CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,
-                                       std::vector<VkSubpassDependency> aSubpassDependencies );
+        VkRenderPass CreateRenderPass( vector_t<VkAttachmentDescription> aAttachments, vector_t<VkSubpassDescription> aSubpasses,
+                                       vector_t<VkSubpassDependency> aSubpassDependencies );
         void         DestroyRenderPass( VkRenderPass aRenderPass );
 
-        VkFramebuffer CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
+        VkFramebuffer CreateFramebuffer( vector_t<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
                                          VkRenderPass aRenderPass );
         void          DestroyFramebuffer( VkFramebuffer aFramebuffer );
 
-        VkPipelineLayout CreatePipelineLayout( std::vector<VkDescriptorSetLayout> aDescriptorSetLayout,
-                                               std::vector<VkPushConstantRange>   aPushConstants );
+        VkPipelineLayout CreatePipelineLayout( vector_t<VkDescriptorSetLayout> aDescriptorSetLayout,
+                                               vector_t<VkPushConstantRange>   aPushConstants );
         void             DestroyPipelineLayout( VkPipelineLayout aPipelineLayout );
 
         VkPipeline CreatePipeline( VkGraphicsPipelineCreateInfo aCreateInfo );
         void       DestroyPipeline( VkPipeline aPipeline );
 
-        VkShaderModule CreateShaderModule( std::vector<uint32_t> aByteCode );
+        VkShaderModule CreateShaderModule( vector_t<uint32_t> aByteCode );
         void           DestroyShaderModule( VkShaderModule aShaderModule );
 
-        VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
+        VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, vector_t<VkDescriptorPoolSize> aPoolSizes );
         void             DestroyDescriptorPool( VkDescriptorPool aDescriptorPool );
         VkDescriptorSet  AllocateDescriptorSet( VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount = 0 );
         void             FreeDescriptorSet( VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
-        VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
+        VkDescriptorSetLayout CreateDescriptorSetLayout( vector_t<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
         void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
 
         std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain( VkExtent2D aSize, VkSurfaceKHR aSurface );
         void                                                       DestroySwapChain( VkSwapchainKHR aSwapchain );
-        std::vector<VkImage>                                       GetSwapChainImages( VkSwapchainKHR aSwapChain );
+        vector_t<VkImage>                                       GetSwapChainImages( VkSwapchainKHR aSwapChain );
 
         VkFence CreateFence();
         void    DestroyFence( VkFence aFence );
-        void    ResetFences( std::vector<VkFence> aFences );
+        void    ResetFences( vector_t<VkFence> aFences );
         void    ResetFence( VkFence aFence );
-        void    WaitForFences( std::vector<VkFence> aFences, uint64_t aTimeout );
-        void    WaitForFences( std::vector<VkFence> aFences );
+        void    WaitForFences( vector_t<VkFence> aFences, uint64_t aTimeout );
+        void    WaitForFences( vector_t<VkFence> aFences );
         void    WaitForFence( VkFence aFence, uint64_t aTimeout );
         void    WaitForFence( VkFence aFence );
 
@@ -115,7 +115,7 @@ namespace SE::Graphics
             vkUnmapMemory( mVkLogicalDevice, aMemory );
         }
 
-        std::vector<VkCommandBuffer> AllocateCommandBuffer( uint32_t aCount );
+        vector_t<VkCommandBuffer> AllocateCommandBuffer( uint32_t aCount );
         void                         DestroyCommandBuffer( VkCommandBuffer aBuffer );
 
         void BindMemory( VkBuffer aVkBufferObject, VkDeviceMemory aMemory );

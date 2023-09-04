@@ -44,15 +44,15 @@ namespace SE::Cuda
     ///
     struct sTensorShape
     {
-        std::vector<std::vector<uint32_t>> mShape         = {}; //!< Shape
-        std::vector<std::vector<uint32_t>> mStrides       = {}; //!< Strides
+        vector_t<vector_t<uint32_t>> mShape         = {}; //!< Shape
+        vector_t<vector_t<uint32_t>> mStrides       = {}; //!< Strides
         uint32_t                           mRank          = 0;  //!< Dimension of each element in the shape array
         uint32_t                           mLayerCount    = 0;  //!< Number of layers
         uint32_t                           mElementSize   = 0;  //!< Size, in bytes, of each element in the tensor
-        std::vector<uint32_t>              mMaxDimensions = {}; //!< Pointwise maximum of the elements in the shape vector
+        vector_t<uint32_t>              mMaxDimensions = {}; //!< Pointwise maximum of the elements in the shape vector
         uint32_t                           mMaxBufferSize = 0;  //!< Size, in bytes, of the largest tensor.
         size_t                             mByteSize      = 0;  //!< Size, in bytes, of the entire tensor
-        std::vector<sBufferSizeInfo>       mBufferSizes = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
+        vector_t<sBufferSizeInfo>       mBufferSizes = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
 
         struct
         {
@@ -72,7 +72,7 @@ namespace SE::Cuda
         /// @param aShape       Vector of individual tensor dimensions.  All elements of `aShape` should have the same size.
         /// @param aElementSize Size, in bytes, of individual tensor elements.
         ///
-        sTensorShape( std::vector<std::vector<uint32_t>> const &aShape, size_t aElementSize );
+        sTensorShape( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize );
 
         /// @brief Constructs a tensor shape of rank 1 from the data provided.
         ///
@@ -82,13 +82,13 @@ namespace SE::Cuda
         /// @param aShape       Vector of individual tensor dimensions.  All elements of `aShape` should have the same size.
         /// @param aElementSize Size, in bytes, of individual tensor elements.
         ///
-        sTensorShape( std::vector<uint32_t> const &aShape, size_t aElementSize );
+        sTensorShape( vector_t<uint32_t> const &aShape, size_t aElementSize );
 
         /** @brief Returns the number of layers in the sTensorShape*/
         size_t CountLayers() const { return mLayerCount; }
 
         /// @brief Retrieves the dimension of the i-th layer of the sTensorShape
-        std::vector<uint32_t> const &GetShapeForLayer( uint32_t i ) const
+        vector_t<uint32_t> const &GetShapeForLayer( uint32_t i ) const
         {
             if( i >= CountLayers() )
                 throw std::out_of_range(
@@ -98,7 +98,7 @@ namespace SE::Cuda
         }
 
         /// @brief Retrieves the stride of the i-th layer of the sTensorShape
-        std::vector<uint32_t> const &GetStridesForLayer( uint32_t i ) const
+        vector_t<uint32_t> const &GetStridesForLayer( uint32_t i ) const
         {
             if( i >= CountLayers() )
                 throw std::out_of_range(
@@ -137,7 +137,7 @@ namespace SE::Cuda
         ///
         /// @param i       Position of the dimension to retrieve.
         ///
-        std::vector<uint32_t> const GetDimension( int32_t i ) const;
+        vector_t<uint32_t> const GetDimension( int32_t i ) const;
 
         /// @brief Adds a new dimension at position `aPosition` to the sTensorShape
         ///
@@ -149,7 +149,7 @@ namespace SE::Cuda
         /// @param aPosition  Position at which ti insert the new dimension
         /// @param aDimension New dimension vector to insert .
         ///
-        void InsertDimension( int32_t aPosition, std::vector<uint32_t> aDimension );
+        void InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension );
 
         /// @brief Retrieves the size and offset, in bytes of the i-th layer of the sTensorShape
         sBufferSizeInfo const &GetBufferSize( uint32_t i ) const
@@ -193,9 +193,9 @@ namespace SE::Cuda
         }
 
         /// @brief Retrieves the size and offset vectors
-        std::vector<sBufferSizeInfo> GetTypedBufferSizes() const
+        vector_t<sBufferSizeInfo> GetTypedBufferSizes() const
         {
-            std::vector<sBufferSizeInfo> lReturn( mBufferSizes.begin(), mBufferSizes.end() );
+            vector_t<sBufferSizeInfo> lReturn( mBufferSizes.begin(), mBufferSizes.end() );
             for( auto &x : lReturn )
             {
                 x.mSize /= mElementSize;
@@ -306,7 +306,7 @@ namespace SE::Cuda
         /// @return New vector of type _Tx containing the data.
         ///
         template <typename _Tx>
-        std::vector<_Tx> FetchBufferAt( uint32_t i ) const
+        vector_t<_Tx> FetchBufferAt( uint32_t i ) const
         {
             auto &lBufferInfo = mShape.GetBufferSizeAs<_Tx>( i );
             return mMemoryBuffer.Fetch<_Tx>( lBufferInfo.mOffset, lBufferInfo.mSize );
@@ -324,7 +324,7 @@ namespace SE::Cuda
         /// @return New vector of type _Tx containing the data.
         ///
         template <typename _Tx>
-        std::vector<_Tx> FetchFlattened() const
+        vector_t<_Tx> FetchFlattened() const
         {
             return mMemoryBuffer.Fetch<_Tx>();
         }
@@ -338,7 +338,7 @@ namespace SE::Cuda
         /// @param aArray Data to upload
         ///
         template <typename _Tx>
-        void Upload( std::vector<_Tx> const &aArray ) const
+        void Upload( vector_t<_Tx> const &aArray ) const
         {
             mMemoryBuffer.Upload<_Tx>( aArray );
         }
@@ -354,7 +354,7 @@ namespace SE::Cuda
         /// @param aOffset Offset into the layer, in `_Ty`
         ///
         template <typename _Tx>
-        void Upload( std::vector<_Tx> const &aArray, uint32_t aLayer, uint32_t aOffset ) const
+        void Upload( vector_t<_Tx> const &aArray, uint32_t aLayer, uint32_t aOffset ) const
         {
             BufferAt( aLayer ).Upload<_Tx>( aArray, aOffset );
         }
@@ -370,7 +370,7 @@ namespace SE::Cuda
         /// @param aLayer  Layer into which the data should be copied
         ///
         template <typename _Tx>
-        void Upload( std::vector<_Tx> const &aArray, uint32_t aLayer ) const
+        void Upload( vector_t<_Tx> const &aArray, uint32_t aLayer ) const
         {
             Upload( aArray, aLayer, 0 );
         }

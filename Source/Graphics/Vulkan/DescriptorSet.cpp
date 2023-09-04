@@ -37,7 +37,7 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lBufferBindInfo );
     }
 
-    void DescriptorSet::Write( std::vector<ref_t<VkSampler2D>> aWriteOperations, uint32_t aBinding )
+    void DescriptorSet::Write( vector_t<ref_t<VkSampler2D>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 ) return;
 
@@ -52,9 +52,9 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    void DescriptorSet::Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+    void DescriptorSet::Write( ref_t<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( vector_t{ aBuffer }, aBinding ); }
 
-    void DescriptorSet::Write( std::vector<ref_t<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    void DescriptorSet::Write( vector_t<ref_t<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
     {
         if( aWriteOperations.size() == 0 ) return;
 
@@ -69,7 +69,7 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-    void DescriptorSet::Write( ref_t<VkSamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+    void DescriptorSet::Write( ref_t<VkSamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( vector_t{ aBuffer }, aBinding ); }
 
     DescriptorBindingInfo::operator VkDescriptorSetLayoutBinding() const
     {
@@ -101,7 +101,7 @@ namespace SE::Graphics
         : mGraphicContext{ aGraphicContext }
         , Spec( aCreateInfo )
     {
-        std::vector<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
+        vector_t<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
 
         for( uint32_t i = 0; i < aCreateInfo.Bindings.size(); i++ )
         {

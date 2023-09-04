@@ -124,7 +124,7 @@ namespace SE::Editor
 
         ref_t<UIContext> mUIOverlay;
 
-        std::vector<MenuItem> m_MainMenuItems;
+        vector_t<MenuItem> m_MainMenuItems;
 
         uint32_t m_FrameCounter = 0;
         float    m_FpsTimer     = 0.0f;
@@ -154,6 +154,6 @@ namespace SE::Editor
         ImageHandle m_SceneViewport_deferred{};
         ImageHandle m_SceneViewport_new{};
 
-        std::vector<uint8_t> mTestTile;
+        vector_t<uint8_t> mTestTile;
     };
 } // namespace SE::Editor

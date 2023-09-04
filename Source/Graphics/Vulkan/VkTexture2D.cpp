@@ -142,7 +142,7 @@ namespace SE::Graphics
         ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
+        vector_t<sImageRegion> lBufferCopyRegions;
         uint32_t                  lOffset = 0;
 
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
@@ -189,7 +189,7 @@ namespace SE::Graphics
         uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
         VkGpuBuffer lStagingBuffer( GraphicContext<VkGraphicContext>(), eBufferType::UNKNOWN, true, false, false, true, lByteSize );
 
-        std::vector<sImageRegion> lBufferCopyRegions;
+        vector_t<sImageRegion> lBufferCopyRegions;
         uint32_t                  lBufferByteOffset = 0;
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
@@ -223,7 +223,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
+        lImageDataStruct.mPixelData = vector_t<uint8_t>( lPixelData, lPixelData + lByteSize );
 
         aTextureData = TextureData2D( mSpec, lImageDataStruct );
     }

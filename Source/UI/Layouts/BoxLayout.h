@@ -65,7 +65,7 @@ namespace SE::Core
         ImVec2 RequiredSize();
 
       protected:
-        std::vector<BoxLayoutItem> mChildren;
+        vector_t<BoxLayoutItem> mChildren;
         eBoxLayoutOrientation      mOrientation;
         float                      mItemSpacing = 0.0f;
         bool                       mSimple      = false;

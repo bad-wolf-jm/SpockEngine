@@ -12,7 +12,7 @@
 namespace SE::Graphics
 {
 
-    sVkShaderModuleObject::sVkShaderModuleObject( ref_t<VkGraphicContext> aContext, std::vector<uint32_t> aByteCode )
+    sVkShaderModuleObject::sVkShaderModuleObject( ref_t<VkGraphicContext> aContext, vector_t<uint32_t> aByteCode )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateShaderModule( aByteCode );
@@ -23,7 +23,7 @@ namespace SE::Graphics
         mContext->DestroyShaderModule( mVkObject );
     }
 
-    static std::vector<char> ReadFile( const string_t &filename )
+    static vector_t<char> ReadFile( const string_t &filename )
     {
         std::ifstream lFileObject( filename, std::ios::ate | std::ios::binary );
 
@@ -31,7 +31,7 @@ namespace SE::Graphics
             throw std::runtime_error( "failed to open file!" );
 
         size_t            lFileSize = (size_t)lFileObject.tellg();
-        std::vector<char> lBuffer( lFileSize );
+        vector_t<char> lBuffer( lFileSize );
 
         lFileObject.seekg( 0 );
         lFileObject.read( lBuffer.data(), lFileSize );
@@ -40,10 +40,10 @@ namespace SE::Graphics
         return lBuffer;
     }
 
-    static std::vector<uint32_t> LoadShaderModuleBytecode( string_t aFilePaths )
+    static vector_t<uint32_t> LoadShaderModuleBytecode( string_t aFilePaths )
     {
         auto lCode     = ReadFile( aFilePaths );
-        auto lBytecode = std::vector<uint32_t>( lCode.size() / 4 );
+        auto lBytecode = vector_t<uint32_t>( lCode.size() / 4 );
         std::memcpy( lBytecode.data(), lCode.data(), lCode.size() );
         return lBytecode;
     }
@@ -53,7 +53,7 @@ namespace SE::Graphics
         return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" );
     }
 
-    static std::vector<uint32_t> CompileShaderSources( string_t FilePaths, eShaderStageTypeFlags aShaderType )
+    static vector_t<uint32_t> CompileShaderSources( string_t FilePaths, eShaderStageTypeFlags aShaderType )
     {
         SE::Logging::Info( "Compiling shader: '{}'", FilePaths );
 
@@ -63,7 +63,7 @@ namespace SE::Graphics
         auto        lProgram       = ReadFile( FilePaths );
         string_t lProgramString = string_t( lProgram.begin(), lProgram.end() );
 
-        std::vector<uint32_t> lByteCode( 0 );
+        vector_t<uint32_t> lByteCode( 0 );
         Compile( aShaderType, lProgramString, lByteCode );
 
         return lByteCode;
@@ -72,7 +72,7 @@ namespace SE::Graphics
     ShaderModule::ShaderModule( ref_t<VkGraphicContext> mContext, string_t FilePaths, eShaderStageTypeFlags aShaderType )
         : Type{ aShaderType }
     {
-        std::vector<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );
+        vector_t<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );
         mShaderModuleObject             = New<sVkShaderModuleObject>( mContext, lByteCode );
     }
 
@@ -115,7 +115,7 @@ namespace SE::Graphics
     }
 
     sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( ref_t<VkGraphicContext>                     aContext,
-                                                                std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
+                                                                vector_t<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateDescriptorSetLayout( aBindings, aUnbounded );
@@ -175,7 +175,7 @@ namespace SE::Graphics
     void sVkDescriptorSetObject::Write( sImageBindInfo aImages )
     {
         VkWriteDescriptorSet               lWriteDSOps;
-        std::vector<VkDescriptorImageInfo> lWriteBufferInfo;
+        vector_t<VkDescriptorImageInfo> lWriteBufferInfo;
 
         for( uint32_t j = 0; j < aImages.mSampler.size(); j++ )
         {
@@ -201,7 +201,7 @@ namespace SE::Graphics
     }
 
     sVkDescriptorPoolObject::sVkDescriptorPoolObject( ref_t<VkGraphicContext> aContext, uint32_t aDescriptorSetCount,
-                                                      std::vector<VkDescriptorPoolSize> aPoolSizes )
+                                                      vector_t<VkDescriptorPoolSize> aPoolSizes )
         : mContext{ aContext }
     {
     }
@@ -219,16 +219,16 @@ namespace SE::Graphics
     }
 
     sVkPipelineLayoutObject::sVkPipelineLayoutObject( ref_t<VkGraphicContext>                          aContext,
-                                                      std::vector<ref_t<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
-                                                      std::vector<sPushConstantRange>                aPushConstantRanges )
+                                                      vector_t<ref_t<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
+                                                      vector_t<sPushConstantRange>                aPushConstantRanges )
         : mContext{ aContext }
     {
 
-        std::vector<VkDescriptorSetLayout> lDescriptorSetLayouts( aDescriptorSetLayout.size() );
+        vector_t<VkDescriptorSetLayout> lDescriptorSetLayouts( aDescriptorSetLayout.size() );
         for( uint32_t i = 0; i < aDescriptorSetLayout.size(); i++ )
             lDescriptorSetLayouts[i] = aDescriptorSetLayout[i]->mVkObject;
 
-        std::vector<VkPushConstantRange> lPushConstantRanges( aPushConstantRanges.size() );
+        vector_t<VkPushConstantRange> lPushConstantRanges( aPushConstantRanges.size() );
         for( uint32_t i = 0; i < aPushConstantRanges.size(); i++ )
         {
             VkPushConstantRange lPushConstant;
@@ -316,7 +316,7 @@ namespace SE::Graphics
         }
     }
 
-    uint32_t sVkPipelineObject::CalculateOffsetsAndStride( std::vector<sBufferLayoutElement> &aVertexBufferLayout )
+    uint32_t sVkPipelineObject::CalculateOffsetsAndStride( vector_t<sBufferLayoutElement> &aVertexBufferLayout )
     {
         uint32_t lStride = 0;
 
@@ -331,9 +331,9 @@ namespace SE::Graphics
         return lStride;
     }
 
-    void sVkPipelineObject::Compile( std::vector<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
+    void sVkPipelineObject::Compile( vector_t<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
                                      VkVertexInputBindingDescription                &aBindingDesc,
-                                     std::vector<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
+                                     vector_t<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
     {
         aBindingDesc.binding   = aBinding;
         aBindingDesc.stride    = aStride;
@@ -409,10 +409,10 @@ namespace SE::Graphics
     }
 
     sVkPipelineObject::sVkPipelineObject( ref_t<VkGraphicContext> aContext, uint8_t aSampleCount,
-                                          std::vector<sBufferLayoutElement> aVertexBufferLayout,
-                                          std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
+                                          vector_t<sBufferLayoutElement> aVertexBufferLayout,
+                                          vector_t<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
                                           eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
-                                          std::vector<sShader> aShaderStages, ref_t<sVkPipelineLayoutObject> aPipelineLayout,
+                                          vector_t<sShader> aShaderStages, ref_t<sVkPipelineLayoutObject> aPipelineLayout,
                                           ref_t<VkRenderPassObject> aRenderPass )
         : mContext{ aContext }
     {
@@ -433,12 +433,12 @@ namespace SE::Graphics
 
         uint32_t                                       lStride0 = CalculateOffsetsAndStride( aVertexBufferLayout );
         VkVertexInputBindingDescription                lBindings;
-        std::vector<VkVertexInputAttributeDescription> lAttributes;
+        vector_t<VkVertexInputAttributeDescription> lAttributes;
         Compile( aVertexBufferLayout, 0, lStride0, lBindings, lAttributes, false );
 
         uint32_t                                       lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
         VkVertexInputBindingDescription                lInstanceBindings;
-        std::vector<VkVertexInputAttributeDescription> lInstancedttributes;
+        vector_t<VkVertexInputAttributeDescription> lInstancedttributes;
         Compile( aInstanceBufferLayout, 1, lStride1, lInstanceBindings, lInstancedttributes, true );
 
         if( lAttributes.size() != 0 )
@@ -484,7 +484,7 @@ namespace SE::Graphics
         lColorBlendAttachment.dstAlphaBlendFactor = Convert( aBlending.mDestAlphaFactor );
         lColorBlendAttachment.alphaBlendOp        = Convert( aBlending.mAlphaBlendOperation );
 
-        std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
+        vector_t<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
                                                                             lColorBlendAttachment );
 
         VkPipelineColorBlendStateCreateInfo lColorBlendingInfo{};
@@ -624,7 +624,7 @@ namespace SE::Graphics
         lDepthStencilInfo.pNext                 = nullptr;
         aCreateInfo.pDepthStencilState          = &lDepthStencilInfo;
 
-        std::vector<VkPipelineShaderStageCreateInfo> lShaderStages( aShaderStages.size() );
+        vector_t<VkPipelineShaderStageCreateInfo> lShaderStages( aShaderStages.size() );
         for( uint32_t i = 0; i < aShaderStages.size(); i++ )
         {
             lShaderStages[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

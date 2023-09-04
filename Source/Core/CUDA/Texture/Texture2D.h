@@ -65,7 +65,7 @@ namespace SE::Cuda
          * @param aSpec Texture specification
          * @param aData Texture data
          */
-        Texture2D( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
+        Texture2D( sTextureCreateInfo &aSpec, vector_t<uint8_t> aData );
 
         /** @brief Constructor
          *

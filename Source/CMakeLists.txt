@@ -122,6 +122,17 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Serialize/AssetFile.cpp
     Scene/Serialize/SerializeComponents.cpp
     
+    # Scripting/ScriptingEngine.cpp
+    # Scripting/Core/Texture.cpp
+    # Scripting/Core/Vector.cpp
+    # Scripting/Entities/EntityRegistry.cpp
+    # Scripting/Cuda/Tensor.cpp
+    # Scripting/Cuda/Texture.cpp
+    # Scripting/Math/VectorTypes.cpp
+    # Scripting/Math/MatrixTypes.cpp
+    # Scripting/SensorModel.cpp
+    # Scripting/ArrayTypes.cpp
+
     Renderer/ASceneRenderer.cpp
     Renderer/SceneRenderer.cpp
     Renderer/MaterialSystem.cpp

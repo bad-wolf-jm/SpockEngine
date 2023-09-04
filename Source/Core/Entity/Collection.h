@@ -38,7 +38,7 @@ namespace SE::Core
         struct SignalHandler
         {
             // entt::sigh<void( Internal::Entity<EntityRegistry *>, _ComponentType & )> Signal;
-            std::vector<std::function<void( EntityType, _ComponentType & )>> mHandlers;
+            vector_t<std::function<void( EntityType, _ComponentType & )>> mHandlers;
 
             SignalHandler()                        = default;
             SignalHandler( const SignalHandler & ) = default;

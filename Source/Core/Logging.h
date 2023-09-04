@@ -13,6 +13,7 @@
 #include <vector>
 #include <filesystem>
 #include "String.h"
+#include "Vector.h"
 
 
 /**
@@ -40,7 +41,7 @@ namespace SE::Logging
     };
 
     void _Log( LogLevel a_Level, string_t a_Message );
-    std::vector<LogMessage> &GetLogMessages();
+    vector_t<LogMessage> &GetLogMessages();
 
     /** @brief Information level log entry.
      *

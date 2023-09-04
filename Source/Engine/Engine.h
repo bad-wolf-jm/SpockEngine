@@ -140,7 +140,7 @@ namespace SE::Core
       private:
         static std::unique_ptr<Engine> mUniqueInstance;
 
-        std::vector<std::function<void()>> mMainThreadQueue;
+        vector_t<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
 
         ref_t<SE::Core::IWindow>             mViewportClient;

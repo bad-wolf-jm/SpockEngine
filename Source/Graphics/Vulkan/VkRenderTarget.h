@@ -55,7 +55,7 @@ namespace SE::Graphics
         virtual void EndRender();
         virtual void Present();
 
-        virtual std::vector<VkClearValue> GetClearValues();
+        virtual vector_t<VkClearValue> GetClearValues();
         virtual VkFramebuffer             GetFramebuffer();
         virtual VkSemaphore               GetImageAvailableSemaphore( uint32_t i );
         virtual VkSemaphore               GetRenderFinishedSemaphore( uint32_t i );
@@ -72,12 +72,12 @@ namespace SE::Graphics
 
         void InitializeCommandBuffers();
 
-        std::vector<VkClearValue> mClearValues      = {};
+        vector_t<VkClearValue> mClearValues      = {};
         ref_t<VkRenderPassObject>   mRenderPassObject = nullptr;
 
-        std::vector<ref_t<sVkCommandBufferObject>> mCommandBufferObject = {};
+        vector_t<ref_t<sVkCommandBufferObject>> mCommandBufferObject = {};
 
         VkFramebuffer            mVkFramebuffer = VK_NULL_HANDLE;
-        std::vector<VkImageView> mVkImageViews  = {};
+        vector_t<VkImageView> mVkImageViews  = {};
     };
 } // namespace SE::Graphics

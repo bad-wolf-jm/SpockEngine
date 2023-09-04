@@ -76,8 +76,8 @@ namespace SE::Core
 
     ObjImporter::ObjImporter( const fs::path &aObjFile )
     {
-        std::vector<tinyobj::shape_t>    lObjShapes;
-        std::vector<tinyobj::material_t> lObjMaterials;
+        vector_t<tinyobj::shape_t>    lObjShapes;
+        vector_t<tinyobj::material_t> lObjMaterials;
 
         mModelDir                = aObjFile.parent_path();
         string_t lErrorString = "";

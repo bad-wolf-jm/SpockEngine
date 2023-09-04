@@ -78,7 +78,7 @@ namespace SE::Graphics
 
     ref_t<OptixPipelineObject> OptixModuleObject::CreatePipeline()
     {
-        std::vector<ref_t<OptixProgramGroupObject>> lProgramGroups;
+        vector_t<ref_t<OptixProgramGroupObject>> lProgramGroups;
         for( auto pg : mRayGenProgramGroups ) lProgramGroups.push_back( pg );
         for( auto pg : mHitProgramGroups ) lProgramGroups.push_back( pg );
         for( auto pg : mMissProgramGroups ) lProgramGroups.push_back( pg );
