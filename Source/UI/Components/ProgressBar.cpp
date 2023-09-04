@@ -1,8 +1,6 @@
 #include "ProgressBar.h"
 #include "Engine/Engine.h"
 
-#include "DotNet/Runtime.h"
-
 namespace SE::Core
 {
     void UIProgressBar::PushStyles()
@@ -60,53 +58,4 @@ namespace SE::Core
         if( lTextColorSet )
             ImGui::PopStyleColor();
     }
-
-    void *UIProgressBar::UIProgressBar_Create()
-    {
-        auto lNewLabel = new UIProgressBar();
-
-        return static_cast<void *>( lNewLabel );
-    }
-
-    void UIProgressBar::UIProgressBar_Destroy( void *aInstance )
-    {
-        delete static_cast<UIProgressBar *>( aInstance );
-    }
-
-    void UIProgressBar::UIProgressBar_SetProgressValue( void *aInstance, float aValue )
-    {
-        auto lInstance = static_cast<UIProgressBar *>( aInstance );
-
-        lInstance->SetProgressValue( aValue );
-    }
-
-    void UIProgressBar::UIProgressBar_SetProgressColor( void *aInstance, math::vec4 aTextColor )
-    {
-        auto lInstance = static_cast<UIProgressBar *>( aInstance );
-
-        lInstance->SetProgressColor( aTextColor );
-    }
-
-    void UIProgressBar::UIProgressBar_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIProgressBar *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-
-        lInstance->SetText( lString );
-    }
-
-    void UIProgressBar::UIProgressBar_SetTextColor( void *aInstance, math::vec4 aTextColor )
-    {
-        auto lInstance = static_cast<UIProgressBar *>( aInstance );
-
-        lInstance->SetTextColor( aTextColor );
-    }
-
-    void UIProgressBar::UIProgressBar_SetThickness( void *aInstance, float aValue )
-    {
-        auto lInstance = static_cast<UIProgressBar *>( aInstance );
-
-        lInstance->SetThickness( aValue );
-    }
-
 } // namespace SE::Core

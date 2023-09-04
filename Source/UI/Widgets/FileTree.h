@@ -16,15 +16,21 @@ namespace SE::Core
     {
       public:
         UIFileTreeNode() = default;
-        UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, string_t const &aName );
+        UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, path_t const &aPath, string_t const &aName );
 
-        UIFileTreeNode *Add( fs::path const &aPath );
+        UIFileTreeNode *Add( path_t const &aPath );
+        void            Remove( path_t const &aPath );
 
         vector_t<UITreeViewNode *> const &Children();
+        path_t const                     &GetPath()
+        {
+            return mFullPath;
+        }
 
       protected:
-        fs::path    mPath;
+        path_t   mPath;
         string_t mName;
+        path_t   mFullPath;
 
         bool IsLeaf();
     };
@@ -34,12 +40,15 @@ namespace SE::Core
       public:
         UIFileTree();
 
-        UIFileTreeNode *Add( fs::path const &aPath );
+        UIFileTreeNode *Add( path_t const &aPath );
+        void            Remove( path_t const &aPath );
 
-      public:
-        static void *UIFileTree_Create();
-        static void  UIFileTree_Destroy( void *aInstance );
-        static void *UIFileTree_Add( void *aInstance, void *aPath );
+        void OnSelected( std::function<void( path_t const &aPath )> aOnSelected );
+
+      protected:
+        std::function<void( path_t const &aPath )> mOnSelected;
+
+        void HandleOnSelected( UIFileTreeNode *a );
 
         friend class UIFileTreeNode;
     };

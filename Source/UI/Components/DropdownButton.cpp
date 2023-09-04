@@ -1,6 +1,5 @@
 #include "DropdownButton.h"
 
-#include "DotNet/Runtime.h"
 namespace SE::Core
 {
     UIDropdownButton::UIDropdownButton()
@@ -17,35 +16,19 @@ namespace SE::Core
         mImage->mIsVisible = false;
     }
 
-    void UIDropdownButton::PushStyles()
-    {
-    }
-    void UIDropdownButton::PopStyles()
-    {
-    }
+    void UIDropdownButton::PushStyles() {}
+    void UIDropdownButton::PopStyles() {}
 
-    ImVec2 UIDropdownButton::RequiredSize()
-    {
-        return mLayout->RequiredSize();
-    }
+    ImVec2 UIDropdownButton::RequiredSize() { return mLayout->RequiredSize(); }
 
-    void UIDropdownButton::SetContent( UIComponent *aContent )
-    {
-        mContent = aContent;
-    }
-    void UIDropdownButton::SetContentSize( math::vec2 aSize )
-    {
-        mContentSize = ImVec2{ aSize.x, aSize.y };
-    }
+    void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
+    void UIDropdownButton::SetContentSize( math::vec2 aSize ) { mContentSize = ImVec2{ aSize.x, aSize.y }; }
     void UIDropdownButton::SetText( string_t aText )
     {
         mText->SetText( aText );
         mText->mIsVisible = !( aText.empty() );
     }
-    void UIDropdownButton::SetTextColor( math::vec4 aColor )
-    {
-        mText->SetTextColor( aColor );
-    }
+    void UIDropdownButton::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
     void UIDropdownButton::SetImage( UIBaseImage *aValue )
     {
         mImage->Add( aValue, "IMAGE" );
@@ -54,8 +37,7 @@ namespace SE::Core
 
     void UIDropdownButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        if( !mIsVisible )
-            return;
+        if( !mIsVisible ) return;
 
         ImGuiWindow *window = ImGui::GetCurrentWindow();
 
@@ -69,8 +51,7 @@ namespace SE::Core
         bool hovered, held;
         bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
 
-        if( lPressed )
-            ImGui::OpenPopup( "##add_component" );
+        if( lPressed ) ImGui::OpenPopup( "##add_component" );
 
         if( mContent != nullptr )
         {
@@ -84,55 +65,5 @@ namespace SE::Core
                 ImGui::EndPopup();
             }
         }
-    }
-
-    void *UIDropdownButton::UIDropdownButton_Create()
-    {
-        auto lNewImage = new UIDropdownButton();
-
-        return static_cast<void *>( lNewImage );
-    }
-
-    void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance )
-    {
-        delete static_cast<UIDropdownButton *>( aInstance );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetContent( void *aInstance, void *aContent )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lContent  = static_cast<UIComponent *>( aContent );
-
-        return lInstance->SetContent( lContent );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetContentSize( void *aInstance, math::vec2 aContentSizse )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-
-        return lInstance->SetContentSize( aContentSizse );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetImage( void *aInstance, void *aImage )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lImage    = static_cast<UIBaseImage *>( aImage );
-
-        lInstance->SetImage( lImage );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-
-        lInstance->SetText( lString );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetTextColor( void *aInstance, math::vec4 aColor )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-
-        lInstance->SetTextColor( aColor );
     }
 } // namespace SE::Core

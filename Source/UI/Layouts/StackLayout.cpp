@@ -1,5 +1,4 @@
 #include "StackLayout.h"
-#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -55,34 +54,5 @@ namespace SE::Core
         mChildren[mCurrent]->Update( ImVec2{}, aSize );
         ImGui::EndChild();
         ImGui::PopID();
-    }
-
-    void *UIStackLayout::UIStackLayout_Create()
-    {
-        auto lNewLayout = new UIStackLayout();
-
-        return static_cast<void *>( lNewLayout );
-    }
-
-    void UIStackLayout::UIStackLayout_Destroy( void *aInstance )
-    {
-        delete static_cast<UIStackLayout *>( aInstance );
-    }
-
-    void UIStackLayout::UIStackLayout_Add( void *aInstance, void *aChild, void *aKey )
-    {
-        auto lInstance = static_cast<UIStackLayout *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aKey ) );
-
-        lInstance->Add( lChild, lString );
-    }
-
-    void UIStackLayout::UIStackLayout_SetCurrent( void *aInstance, void *aKey )
-    {
-        auto lInstance = static_cast<UIStackLayout *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aKey ) );
-
-        lInstance->SetCurrent( lString );
     }
 } // namespace SE::Core

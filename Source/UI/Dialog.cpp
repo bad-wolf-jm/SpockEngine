@@ -1,6 +1,5 @@
 #include "Dialog.h"
 
-#include "DotNet/Runtime.h"
 namespace SE::Core
 {
     UIDialog::UIDialog()
@@ -18,6 +17,7 @@ namespace SE::Core
     void UIDialog::PushStyles()
     {
     }
+
     void UIDialog::PopStyles()
     {
     }
@@ -26,10 +26,12 @@ namespace SE::Core
     {
         mTitle = aTitle;
     }
+
     void UIDialog::SetSize( math::vec2 aSize )
     {
         mSize = aSize;
     }
+
     void UIDialog::SetContent( UIComponent *aContent )
     {
         mContent = aContent;
@@ -55,6 +57,7 @@ namespace SE::Core
 
         if( !ImGui::IsPopupOpen( mTitle.c_str() ) )
             ImGui::OpenPopup( mTitle.c_str() );
+            
         ImGui::SetNextWindowSize( ImVec2{ mSize.x, mSize.y } );
         ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize |
                                   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
@@ -88,67 +91,4 @@ namespace SE::Core
     {
     }
 
-    void *UIDialog::UIDialog_Create()
-    {
-        auto lNewDialog = new UIDialog();
-
-        return static_cast<void *>( lNewDialog );
-    }
-
-    void *UIDialog::UIDialog_CreateWithTitleAndSize( void *aTitle, math::vec2 *aSize )
-    {
-        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
-        auto lNewDialog = new UIDialog( lString, *aSize );
-
-        return static_cast<void *>( lNewDialog );
-    }
-
-    void UIDialog::UIDialog_Destroy( void *aInstance )
-    {
-        delete static_cast<UIDialog *>( aInstance );
-    }
-
-    void UIDialog::UIDialog_SetTitle( void *aInstance, void *aTitle )
-    {
-        auto lInstance = static_cast<UIDialog *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
-
-        lInstance->SetTitle( lString );
-    }
-
-    void UIDialog::UIDialog_SetSize( void *aInstance, math::vec2 aSize )
-    {
-        auto lInstance = static_cast<UIDialog *>( aInstance );
-
-        lInstance->SetSize( aSize );
-    }
-
-    void UIDialog::UIDialog_SetContent( void *aInstance, void *aContent )
-    {
-        auto lInstance = static_cast<UIDialog *>( aInstance );
-        auto lContent  = static_cast<UIComponent *>( aContent );
-
-        lInstance->SetContent( lContent );
-    }
-
-    void UIDialog::UIDialog_Open( void *aInstance )
-    {
-        auto lInstance = static_cast<UIDialog *>( aInstance );
-
-        lInstance->Open();
-    }
-
-    void UIDialog::UIDialog_Close( void *aInstance )
-    {
-        auto lInstance = static_cast<UIDialog *>( aInstance );
-
-        lInstance->Close();
-    }
-
-    void UIDialog::UIDialog_Update( void *aInstance )
-    {
-        auto lInstance = static_cast<UIDialog *>( aInstance );
-
-        lInstance->Update();
-    }
 } // namespace SE::Core

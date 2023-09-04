@@ -16,8 +16,8 @@
 namespace SE::Core
 {
 
-    UIContext::UIContext( ref_t<SE::Core::IWindow> aWindow, ref_t<IGraphicContext> aGraphicContext, ref_t<IRenderContext> aRenderContext,
-                          string_t &aImGuiConfigPath, UIConfiguration const &aConfig )
+    UIContext::UIContext( ref_t<SE::Core::IWindow> aWindow, ref_t<IGraphicContext> aGraphicContext,
+                          ref_t<IRenderContext> aRenderContext, string_t &aImGuiConfigPath, UIConfiguration const &aConfig )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {
@@ -56,13 +56,14 @@ namespace SE::Core
         mFonts[FontFamilyFlags::H1]        = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
         mFonts[FontFamilyFlags::H2]        = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
         mFonts[FontFamilyFlags::H3]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
-        mFonts[FontFamilyFlags::EM]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
         mFonts[FontFamilyFlags::HUGE]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
         mFonts[FontFamilyFlags::LARGE]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::EM]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
+        mFonts[FontFamilyFlags::BOLD]      = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::NORMAL]    = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::SMALL]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
         mFonts[FontFamilyFlags::TINY]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .5f );
-        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
+        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize * .9f );
 
         mUIStyle = UIStyle{ true };
 
@@ -151,7 +152,7 @@ namespace SE::Core
         ( (UIWindow *)( vp->RendererUserData ) )->EndRender( vp->DrawData );
     }
 
-    ImFont *UIContext::LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize )
+    ImFont *UIContext::LoadFont( path_t aFontName, path_t aIconFontName, uint32_t aFontSize )
     {
         static ImWchar      lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2100, 0x21FF, 0x2200,
                                               0x2300, 0x2A00, 0x2AFF, 0x370,  0x3ff,  0 };

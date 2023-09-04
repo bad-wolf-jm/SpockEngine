@@ -1,8 +1,6 @@
 #include "Plot.h"
 #include "implot_internal.h"
 
-#include "DotNet/Runtime.h"
-
 namespace SE::Core
 {
     UIPlot::UIPlot()
@@ -26,18 +24,21 @@ namespace SE::Core
     {
     }
 
-    void UIPlot::Add( ref_t<sPlotData> aPlot )
+    void UIPlot::Add( ref_t<UIPlotData> aPlot )
     {
         mElements.push_back( aPlot.get() );
     };
-    void UIPlot::Add( sPlotData *aPlot )
+
+    void UIPlot::Add( UIPlotData *aPlot )
     {
         mElements.push_back( aPlot );
     };
+
     void UIPlot::Clear()
     {
         mElements.clear();
     };
+    
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
         mLegendPadding      = ImVec2{ aLegendPadding.x, aLegendPadding.y };
@@ -101,103 +102,7 @@ namespace SE::Core
         }
         ImPlot::PopStyleVar();
     }
-
-    void *UIPlot::UIPlot_Create()
-    {
-        auto lNewPlot = new UIPlot();
-
-        return static_cast<void *>( lNewPlot );
-    }
-
-    void UIPlot::UIPlot_Destroy( void *aInstance )
-    {
-        delete static_cast<UIPlot *>( aInstance );
-    }
-
-    void UIPlot::UIPlot_Clear( void *aInstance )
-    {
-        auto lSelf = static_cast<UIPlot *>( aInstance );
-
-        lSelf->Clear();
-    }
-
-    void UIPlot::UIPlot_ConfigureLegend( void *aInstance, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
-                                         math::vec2 *aLegendSpacing )
-    {
-        auto lSelf = static_cast<UIPlot *>( aInstance );
-
-        lSelf->ConfigureLegend( *aLegendPadding, *aLegendInnerPadding, *aLegendSpacing );
-    }
-
-    void UIPlot::UIPlot_Add( void *aInstance, void *aPlot )
-    {
-        auto lSelf = static_cast<UIPlot *>( aInstance );
-        auto lPlot = static_cast<sPlotData *>( aPlot );
-
-        lSelf->Add( lPlot );
-    }
-
-    void UIPlot::UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax )
-    {
-        auto lSelf = static_cast<UIPlot *>( aInstance );
-
-        lSelf->mAxisConfiguration[aAxis].mSetLimitRequest = true;
-
-        lSelf->mAxisConfiguration[aAxis].mMin = static_cast<float>( aMin );
-        lSelf->mAxisConfiguration[aAxis].mMax = static_cast<float>( aMax );
-    }
-
-    void UIPlot::UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle )
-    {
-        auto lSelf = static_cast<UIPlot *>( aInstance );
-
-        lSelf->mAxisConfiguration[aAxis].mTitle = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
-    }
-
-    void *UIPlot::UIPlot_GetAxisTitle( void *aInstance, int aAxis )
-    {
-        auto lSelf = static_cast<UIPlot *>( aInstance );
-
-        return DotNetRuntime::NewString( lSelf->mAxisConfiguration[aAxis].mTitle );
-    }
-
-    void sPlotData::UIPlotData_SetLegend( void *aSelf, void *aText )
-    {
-        auto lSelf   = static_cast<sPlotData *>( aSelf );
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-
-        lSelf->mLegend = lString;
-    }
-
-    void sPlotData::UIPlotData_SetThickness( void *aSelf, float aThickness )
-    {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mThickness = aThickness;
-    }
-
-    void sPlotData::UIPlotData_SetColor( void *aSelf, math::vec4 aColor )
-    {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mColor = aColor;
-    }
-
-    void sPlotData::UIPlotData_SetXAxis( void *aSelf, int aAxis )
-    {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mXAxis = static_cast<UIPlotAxis>( aAxis );
-    }
-
-    void sPlotData::UIPlotData_SetYAxis( void *aSelf, int aAxis )
-    {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mYAxis = static_cast<UIPlotAxis>( aAxis );
-    }
-
-    void sFloat64LinePlot::Render( UIPlot *aParentPlot )
+    void UIFloat64LinePlot::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
         auto lPlotSize = ImPlot::GetPlotSize();
@@ -216,33 +121,7 @@ namespace SE::Core
             ImPlot::PopStyleVar();
     }
 
-    void *sFloat64LinePlot::UIFloat64LinePlot_Create()
-    {
-        auto lSelf = new sFloat64LinePlot();
-
-        return static_cast<sFloat64LinePlot *>( lSelf );
-    }
-
-    void sFloat64LinePlot::UIFloat64LinePlot_Destroy( void *aSelf )
-    {
-        delete static_cast<sFloat64LinePlot *>( aSelf );
-    }
-
-    void sFloat64LinePlot::UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
-    {
-        auto lSelf = static_cast<sFloat64LinePlot *>( aSelf );
-
-        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sFloat64LinePlot::UIFloat64LinePlot_SetY( void *aSelf, void *aValue )
-    {
-        auto lSelf = static_cast<sFloat64LinePlot *>( aSelf );
-
-        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sFloat64ScatterPlot::Render( UIPlot *aParentPlot )
+    void UIFloat64ScatterPlot::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
         auto lPlotSize = ImPlot::GetPlotSize();
@@ -261,33 +140,7 @@ namespace SE::Core
             ImPlot::PopStyleVar();
     }
 
-    void *sFloat64ScatterPlot::UIFloat64ScatterPlot_Create()
-    {
-        auto lSelf = new sFloat64ScatterPlot();
-
-        return static_cast<sFloat64ScatterPlot *>( lSelf );
-    }
-
-    void sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy( void *aSelf )
-    {
-        delete static_cast<sFloat64ScatterPlot *>( aSelf );
-    }
-
-    void sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue )
-    {
-        auto lSelf = static_cast<sFloat64ScatterPlot *>( aSelf );
-
-        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sFloat64ScatterPlot::UIFloat64ScatterPlot_SetY( void *aSelf, void *aValue )
-    {
-        auto lSelf = static_cast<sFloat64ScatterPlot *>( aSelf );
-
-        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sVLine::Render( UIPlot *aParentPlot )
+    void UIVLinePlot::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
 
@@ -302,26 +155,7 @@ namespace SE::Core
             ImPlot::PopStyleVar();
     }
 
-    void *sVLine::UIVLinePlot_Create()
-    {
-        auto lSelf = new sVLine();
-
-        return static_cast<sVLine *>( lSelf );
-    }
-
-    void sVLine::UIVLinePlot_Destroy( void *aSelf )
-    {
-        delete static_cast<sVLine *>( aSelf );
-    }
-
-    void sVLine::UIVLinePlot_SetX( void *aSelf, void *aValue )
-    {
-        auto lSelf = static_cast<sVLine *>( aSelf );
-
-        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sHLine::Render( UIPlot *aParentPlot )
+    void UIHLinePlot::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
 
@@ -338,26 +172,7 @@ namespace SE::Core
             ImPlot::PopStyleVar();
     }
 
-    void *sHLine::UIHLinePlot_Create()
-    {
-        auto lSelf = new sHLine();
-
-        return static_cast<sHLine *>( lSelf );
-    }
-
-    void sHLine::UIHLinePlot_Destroy( void *aSelf )
-    {
-        delete static_cast<sHLine *>( aSelf );
-    }
-
-    void sHLine::UIHLinePlot_SetY( void *aSelf, void *aValue )
-    {
-        auto lSelf = static_cast<sHLine *>( aSelf );
-
-        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sAxisTag::Render( UIPlot *aParentPlot )
+    void UIAxisTag::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
 
@@ -378,71 +193,7 @@ namespace SE::Core
         }
     }
 
-    void *sAxisTag::UIAxisTag_Create()
-    {
-        auto lSelf = new sAxisTag();
-
-        return static_cast<sAxisTag *>( lSelf );
-    }
-
-    void *sAxisTag::UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, math::vec4 aColor )
-    {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-
-        auto lSelf = new sAxisTag( aAxis, aX, lString, aColor );
-
-        return static_cast<sAxisTag *>( lSelf );
-    }
-
-    void sAxisTag::UIAxisTag_Destroy( void *aSelf )
-    {
-        delete static_cast<sAxisTag *>( aSelf );
-    }
-
-    void sAxisTag::UIAxisTag_SetX( void *aSelf, double aValue )
-    {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        lSelf->mX = aValue;
-    }
-
-    void sAxisTag::UIAxisTag_SetText( void *aSelf, void *aText )
-    {
-        auto lSelf   = static_cast<sAxisTag *>( aSelf );
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-
-        lSelf->mText = lString;
-    }
-
-    void sAxisTag::UIAxisTag_SetColor( void *aSelf, math::vec4 aColor )
-    {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        lSelf->mColor = aColor;
-    }
-
-    math::vec4 sAxisTag::UIAxisTag_GetColor( void *aSelf )
-    {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        return lSelf->mColor;
-    }
-
-    void sAxisTag::UIAxisTag_SetAxis( void *aSelf, int aAxis )
-    {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        lSelf->mAxis = static_cast<UIPlotAxis>( aAxis );
-    }
-
-    int sAxisTag::UIAxisTag_GetAxis( void *aSelf )
-    {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        return static_cast<int>( lSelf->mXAxis );
-    }
-
-    void sVRange::Render( UIPlot *aParentPlot )
+    void UIVRangePlot::Render( UIPlot *aParentPlot )
     {
         ImPlotPlot  *plot     = ImPlot::GetCurrentPlot();
         ImGuiWindow *Window   = ImGui::GetCurrentWindow();
@@ -465,47 +216,7 @@ namespace SE::Core
         DrawList->AddRectFilled( lMin, lMax, lColor );
     }
 
-    void *sVRange::UIVRangePlot_Create()
-    {
-        auto lSelf = new sVRange();
-
-        return static_cast<sVRange *>( lSelf );
-    }
-
-    void sVRange::UIVRangePlot_Destroy( void *aSelf )
-    {
-        delete static_cast<sVRange *>( aSelf );
-    }
-
-    void sVRange::UIVRangePlot_SetMin( void *aSelf, double aValue )
-    {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        lSelf->mX0 = aValue;
-    }
-
-    double sVRange::UIVRangePlot_GetMin( void *aSelf )
-    {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        return (double)lSelf->mX0;
-    }
-
-    void sVRange::UIVRangePlot_SetMax( void *aSelf, double aValue )
-    {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        lSelf->mX1 = aValue;
-    }
-
-    double sVRange::UIVRangePlot_GetMax( void *aSelf )
-    {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        return (double)lSelf->mX1;
-    }
-
-    void sHRange::Render( UIPlot *aParentPlot )
+    void UIHRangePlot::Render( UIPlot *aParentPlot )
     {
         ImPlotPlot  *plot     = ImPlot::GetCurrentPlot();
         ImGuiWindow *Window   = ImGui::GetCurrentWindow();
@@ -527,45 +238,4 @@ namespace SE::Core
 
         DrawList->AddRectFilled( lMin, lMax, lColor );
     }
-
-    void *sHRange::UIHRangePlot_Create()
-    {
-        auto lSelf = new sHRange();
-
-        return static_cast<sHRange *>( lSelf );
-    }
-
-    void sHRange::UIHRangePlot_Destroy( void *aSelf )
-    {
-        delete static_cast<sHRange *>( aSelf );
-    }
-
-    void sHRange::UIHRangePlot_SetMin( void *aSelf, double aValue )
-    {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        lSelf->mY0 = aValue;
-    }
-
-    double sHRange::UIHRangePlot_GetMin( void *aSelf )
-    {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        return (double)lSelf->mY0;
-    }
-
-    void sHRange::UIHRangePlot_SetMax( void *aSelf, double aValue )
-    {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        lSelf->mY1 = aValue;
-    }
-
-    double sHRange::UIHRangePlot_GetMax( void *aSelf )
-    {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        return (double)lSelf->mY1;
-    }
-
 } // namespace SE::Core

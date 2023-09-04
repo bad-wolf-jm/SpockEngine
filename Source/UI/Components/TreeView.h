@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 #include "UI/Components/Component.h"
 #include "UI/Components/Label.h"
 #include "UI/Components/Image.h"
@@ -26,6 +28,11 @@ namespace SE::Core
 
         UITreeViewNode* Add();
 
+        void OnSelected( std::function<void(UITreeViewNode*)> aOnSelected );
+
+      protected:
+        std::function<void(UITreeViewNode*)> mOnSelected;
+
       protected:
         ImGuiTreeNodeFlags mFlags;
 
@@ -40,6 +47,9 @@ namespace SE::Core
         UITreeViewNode *mParent;
         vector_t<UITreeViewNode*> mChildren;
 
+        uint32_t mLevel = 0;
+        bool mIsOpen= false;
+
       protected:
         void PushStyles();
         void PopStyles();
@@ -47,24 +57,13 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      protected:
-        void TreePushOverrideID( );
-        void TreePop();
+      public:
         bool IsOpen();
-        bool RenderNode();
+        void RenderNode();
         void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale );
         void RenderIcon( ImDrawList *aDrawList, ImVec2 aPosition );
         
         virtual bool IsLeaf();
-
-      public:
-        static void *UITreeViewNode_Create();
-        static void  UITreeViewNode_Destroy( void *aInstance );        
-        static void  UITreeViewNode_SetIcon( void *aInstance, void *aIcon );
-        static void  UITreeViewNode_SetIndicator( void *aInstance, void *aIndicator );
-        static void  UITreeViewNode_SetText( void *aInstance, void *aText );
-        static void  UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor );
-        static void *UITreeViewNode_Add( void *aInstance );
     };
 
     class UITreeView : public UIComponent
@@ -75,11 +74,15 @@ namespace SE::Core
         void SetIndent(float aIndent);
         void SetIconSpacing(float aSpacing);
         UITreeViewNode* Add();
+        void UpdateRows();
 
         protected:
             float mIndent = 5.0f;
             float mIconSpacing = 12.0f;
+            uint32_t mCurrentID = 0;
             UITreeViewNode* mRoot; 
+            std::vector<UITreeViewNode*> mRows;
+            std::mutex mRowsLock;
 
       protected:
         void PushStyles();
@@ -87,14 +90,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UITreeView_Create();
-        static void  UITreeView_Destroy( void *aInstance );
-        static void  UITreeView_SetIndent( void *aInstance, float aIndent );
-        static void  UITreeView_SetIconSpacing( void *aInstance, float aSpacing );
-        static void  *UITreeView_Add( void *aInstance );
-
         friend class UITreeViewNode;
     };
 } // namespace SE::Core

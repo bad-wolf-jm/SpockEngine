@@ -24,19 +24,8 @@ namespace SE::Core
 
         void Update();
 
-      public:
-        static void *UIDialog_Create();
-        static void *UIDialog_CreateWithTitleAndSize( void *aTitle, math::vec2 *aSize );
-        static void  UIDialog_Destroy( void *aInstance );
-        static void  UIDialog_SetTitle( void *aInstance, void *aTitle );
-        static void  UIDialog_SetSize( void *aInstance, math::vec2 aSize );
-        static void  UIDialog_SetContent( void *aInstance, void *aContent );
-        static void  UIDialog_Open( void *aInstance );
-        static void  UIDialog_Close( void *aInstance );
-        static void  UIDialog_Update( void *aInstance );
-
       protected:
-        string_t  mTitle;
+        string_t     mTitle;
         UIComponent *mContent = nullptr;
         math::vec2   mSize;
 

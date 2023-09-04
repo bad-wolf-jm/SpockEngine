@@ -5,19 +5,19 @@
 #include "UI/Components/Label.h"
 #include "UI/Layouts/BoxLayout.h"
 
-#include "DotNet/Instance.h"
-
 namespace SE::Core
 {
     class UIPropertyValue : public UIBoxLayout
     {
       public:
-        UIPropertyValue()  = default;
+        UIPropertyValue();
         ~UIPropertyValue() = default;
 
         UIPropertyValue( string_t aName );
         UIPropertyValue( string_t aName, eBoxLayoutOrientation aOrientation );
 
+        void SetText( string_t aValue );
+        void SetOrientation( eBoxLayoutOrientation aValue );
         void SetValue( string_t aValue );
         void SetValueFont( FontFamilyFlags aFont );
         void SetNameFont( FontFamilyFlags aFont );
@@ -32,14 +32,5 @@ namespace SE::Core
       protected:
         ref_t<UILabel> mName;
         ref_t<UILabel> mValue;
-
-      public:
-        static void *UIPropertyValue_Create();
-        static void *UIPropertyValue_CreateWithText( void *aText );
-        static void *UIPropertyValue_CreateWithTextAndOrientation( void *aText, eBoxLayoutOrientation aOrientation );
-        static void  UIPropertyValue_Destroy( void *aInstance );
-        static void  UIPropertyValue_SetValue( void *aInstance, void *aText );
-        static void  UIPropertyValue_SetValueFont( void *aInstance, FontFamilyFlags aFont );
-        static void  UIPropertyValue_SetNameFont( void *aInstance, FontFamilyFlags aFont );
     };
 } // namespace SE::Core

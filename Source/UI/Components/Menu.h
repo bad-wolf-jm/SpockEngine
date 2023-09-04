@@ -25,7 +25,7 @@ namespace SE::Core
       protected:
         string_t mText;
         string_t mShortcut;
-        ImVec4      mTextColor;
+        ImVec4   mTextColor;
 
       protected:
         void PushStyles();
@@ -33,20 +33,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      private:
-        void *mOnTriggerDelegate       = nullptr;
-        int   mOnTriggerDelegateHandle = -1;
-
-      public:
-        static void *UIMenuItem_Create();
-        static void *UIMenuItem_CreateWithText( void *aText );
-        static void *UIMenuItem_CreateWithTextAndShortcut( void *aText, void *aShortcut );
-        static void  UIMenuItem_Destroy( void *aInstance );
-        static void  UIMenuItem_SetText( void *aInstance, void *aText );
-        static void  UIMenuItem_SetShortcut( void *aInstance, void *aShortcut );
-        static void  UIMenuItem_SetTextColor( void *aInstance, math::vec4 *aTextColor );
-        static void  UIMenuItem_OnTrigger( void *aInstance, void *aDelegate );
     };
 
     class UIMenuSeparator : public UIMenuItem
@@ -61,10 +47,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UIMenuSeparator_Create();
-        static void  UIMenuSeparator_Destroy( void *aInstance );
     };
 
     class UIMenu : public UIMenuItem
@@ -80,7 +62,7 @@ namespace SE::Core
 
         void Update();
 
-      private:
+      public:
         UIMenuItem *AddActionRaw( string_t const &aText, string_t const &aShortcut );
         UIMenu     *AddMenuRaw( string_t const &aText );
         UIMenuItem *AddSeparatorRaw();
@@ -94,14 +76,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        static void *UIMenu_Create();
-        static void *UIMenu_CreateWithText( void *aText );
-        static void  UIMenu_Destroy( void *aInstance );
-        static void *UIMenu_AddAction( void *aInstance, void *aText, void *aShortcut );
-        static void *UIMenu_AddMenu( void *aInstance, void *aText );
-        static void *UIMenu_AddSeparator( void *aInstance );
-        static void  UIMenu_Update( void *aInstance );
     };
 } // namespace SE::Core

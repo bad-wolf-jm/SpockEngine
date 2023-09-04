@@ -1,11 +1,10 @@
 #include "BaseImage.h"
-#include "DotNet/Runtime.h"
 
 #include "Engine/Engine.h"
 
 namespace SE::Core
 {
-    UIBaseImage::UIBaseImage( fs::path const &aImagePath, math::vec2 aSize )
+    UIBaseImage::UIBaseImage( path_t const &aImagePath, math::vec2 aSize )
         : mImagePath{ aImagePath }
         , mSize{ aSize.x, aSize.y }
         , mTopLeft{ 0.0f, 0.0f }
@@ -28,12 +27,15 @@ namespace SE::Core
     void UIBaseImage::PushStyles()
     {
     }
+
     void UIBaseImage::PopStyles()
     {
     }
 
-    void UIBaseImage::SetImage( fs::path const &aImagePath )
+    void UIBaseImage::SetImage( path_t const &aImagePath )
     {
+        SE::Logging::Info( "Loading image: '{}'", aImagePath.string() );
+
         SE::Core::sTextureCreateInfo lTextureCreateInfo{};
         TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
         sTextureSamplingInfo         lSamplingInfo{};
@@ -49,10 +51,12 @@ namespace SE::Core
     {
         return mSize;
     }
+
     void UIBaseImage::SetSize( math::vec2 aSize )
     {
         mSize = ImVec2{ aSize.x, aSize.y };
     }
+    
     void UIBaseImage::SetSize( float aWidth, float aHeight )
     {
         SetSize( math::vec2{ aWidth, aHeight } );
@@ -87,10 +91,7 @@ namespace SE::Core
 
     ImTextureID UIBaseImage::TextureID()
     {
-        if( mHandle.Handle )
-            return static_cast<ImTextureID>( mHandle.Handle->GetID() );
-
-        return 0;
+        return static_cast<ImTextureID>( mHandle.Handle->GetID() );
     }
 
     ImVec2 UIBaseImage::RequiredSize()
@@ -101,93 +102,4 @@ namespace SE::Core
     void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
     }
-
-    void *UIBaseImage::UIBaseImage_Create()
-    {
-        auto lNewImage = new UIBaseImage();
-
-        return static_cast<void *>( lNewImage );
-    }
-
-    void *UIBaseImage::UIBaseImage_CreateWithPath( void *aText, math::vec2 aSize )
-    {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewImage = new UIBaseImage( lString, aSize );
-
-        return static_cast<void *>( lNewImage );
-    }
-
-    void UIBaseImage::UIBaseImage_Destroy( void *aInstance )
-    {
-        delete static_cast<UIBaseImage *>( aInstance );
-    }
-
-    void UIBaseImage::UIBaseImage_SetImage( void *aInstance, void *aPath )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
-
-        lInstance->SetImage( lString );
-    }
-
-    void UIBaseImage::UIBaseImage_SetSize( void *aInstance, math::vec2 aSize )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-        lInstance->SetSize( aSize );
-    }
-
-    math::vec2 UIBaseImage::UIBaseImage_GetSize( void *aInstance )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-        auto lV        = lInstance->Size();
-
-        return math::vec2{ lV.y, lV.y };
-    }
-
-    void UIBaseImage::UIBaseImage_SetTopLeft( void *aInstance, math::vec2 aTopLeft )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-        lInstance->SetTopLeft( aTopLeft );
-    }
-
-    math::vec2 UIBaseImage::UIBaseImage_GetTopLeft( void *aInstance )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-        auto lV        = lInstance->TopLeft();
-
-        return math::vec2{ lV.y, lV.y };
-    }
-
-    void UIBaseImage::UIBaseImage_SetBottomRight( void *aInstance, math::vec2 aBottomRight )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-        lInstance->SetBottomRight( aBottomRight );
-    }
-
-    math::vec2 UIBaseImage::UIBaseImage_GetBottomRight( void *aInstance )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-        auto lV        = lInstance->BottomRight();
-
-        return math::vec2{ lV.x, lV.y };
-    }
-
-    void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 aColor )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-        lInstance->SetTintColor( aColor );
-    }
-
-    math::vec4 UIBaseImage::UIBaseImage_GetTintColor( void *aInstance )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
-        auto lV        = lInstance->TintColor();
-
-        return math::vec4{ lV.x, lV.y, lV.z, lV.w };
-    }
-
 } // namespace SE::Core

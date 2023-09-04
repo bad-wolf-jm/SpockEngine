@@ -28,12 +28,12 @@ namespace SE::Core
     {
         uint32_t mFontSize;
 
-        fs::path mMainFont;
-        fs::path mBoldFont;
-        fs::path mItalicFont;
-        fs::path mBoldItalicFont;
-        fs::path mMonoFont;
-        fs::path mIconFont;
+        path_t mMainFont;
+        path_t mBoldFont;
+        path_t mItalicFont;
+        path_t mBoldItalicFont;
+        path_t mMonoFont;
+        path_t mIconFont;
     };
 
     enum class FontFamilyFlags : int32_t
@@ -42,9 +42,10 @@ namespace SE::Core
         H1,
         H2,
         H3,
-        EM,
         HUGE,
         LARGE,
+        EM,
+        BOLD,
         NORMAL,
         SMALL,
         TINY,
@@ -66,7 +67,7 @@ namespace SE::Core
 
         ImGuiIO &GetIO();
 
-        ImageHandle         CreateTextureHandle( ref_t<ISampler2D> aTexture );
+        ImageHandle           CreateTextureHandle( ref_t<ISampler2D> aTexture );
         ref_t<IDescriptorSet> AddTexture( ref_t<ISampler2D> aTexture );
 
         ref_t<IGraphicContext> GraphicContext()
@@ -76,7 +77,7 @@ namespace SE::Core
 
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
-        string_t    mImGuiConfigPath;
+        string_t       mImGuiConfigPath;
 
         UIStyle mUIStyle;
 
@@ -89,7 +90,11 @@ namespace SE::Core
 
         std::map<FontFamilyFlags, ImFont *> mFonts;
 
-        ImFont *LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize );
+        ImFont *LoadFont( path_t aFontName, path_t aIconFontName, uint32_t aFontSize );
+        ImFont *GetFont( FontFamilyFlags aFont )
+        {
+            return mFonts[aFont];
+        }
 
       private:
         ref_t<UIWindow> mMainWindow;

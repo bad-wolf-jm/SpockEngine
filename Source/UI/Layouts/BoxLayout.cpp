@@ -79,6 +79,11 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight } + UIComponent::RequiredSize();
     }
 
+    void UIBoxLayout::SetOrientation( eBoxLayoutOrientation aValue )
+    {
+        mOrientation = aValue;
+    }
+
     void UIBoxLayout::SetItemSpacing( float aItemSpacing )
     {
         mItemSpacing = aItemSpacing;
@@ -225,6 +230,7 @@ namespace SE::Core
                     ImGui::BeginChild( "##BoxLayoutItem", lItemSize );
                     lItemPosition = ImVec2{};
                 }
+
                 lItem.mItem->Update( lItemPosition, lItemSize );
                 if( !mSimple )
                 {
@@ -262,72 +268,4 @@ namespace SE::Core
                 lCurrentPosition.x += ( lPositionStep + mItemSpacing );
         }
     }
-
-    void *UIBoxLayout::UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
-    {
-        auto lNewLayout = new UIBoxLayout( aOrientation );
-
-        return static_cast<void *>( lNewLayout );
-    }
-
-    void UIBoxLayout::UIBoxLayout_Destroy( void *aInstance )
-    {
-        delete static_cast<UIBoxLayout *>( aInstance );
-    }
-
-    void UIBoxLayout::UIBoxLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
-                                                      eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-
-        lInstance->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
-    }
-
-    void UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-
-        lInstance->Add( lChild, aExpand, aFill );
-    }
-
-    void UIBoxLayout::UIBoxLayout_AddAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill,
-                                                   eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-
-        lInstance->Add( lChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment );
-    }
-
-    void UIBoxLayout::UIBoxLayout_AddNonAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-        auto lChild    = static_cast<UIComponent *>( aChild );
-
-        lInstance->Add( lChild, aFixedSize, aExpand, aFill );
-    }
-
-    void UIBoxLayout::UIBoxLayout_AddSeparator( void *aInstance )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-
-        lInstance->AddSeparator();
-    }
-
-    void UIBoxLayout::UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-
-        lInstance->SetItemSpacing( aItemSpacing );
-    }
-
-    void UIBoxLayout::UIBoxLayout_Clear( void *aInstance )
-    {
-        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
-
-        lInstance->Clear();
-    }
-
 } // namespace SE::Core
