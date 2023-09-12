@@ -37,6 +37,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Shader/Compiler.cpp
     
     UI/UI.cpp
+
     UI/Components/Component.cpp
     UI/Components/Button.cpp
     UI/Components/CheckBox.cpp
@@ -57,14 +58,22 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/ProgressBar.cpp
     UI/Components/DropdownButton.cpp
     UI/Components/TreeView.cpp
-    UI/Widgets/FileTree.cpp
     UI/Components/ColorButton.cpp
     UI/Components/Slider.cpp
+    UI/Components/VectorEdit.cpp
+    UI/Components/CodeEditor/CodeEditor.cpp
+    UI/Components/Markdown/md4c.c
+    UI/Components/Markdown/MarkdownRenderer.cpp
+    UI/Components/Markdown/Markdown.cpp
+
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Layouts/Splitter.cpp
     UI/Layouts/StackLayout.cpp
     UI/Layouts/Container.cpp
+
+    UI/Widgets/FileTree.cpp
+
     UI/Form.cpp
     UI/Dialog.cpp
     UI/UIContext.cpp
