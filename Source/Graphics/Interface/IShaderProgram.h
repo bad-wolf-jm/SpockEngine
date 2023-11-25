@@ -19,8 +19,8 @@ namespace SE::Graphics
         /** @brief */
         IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
                         string_t const &aName );
-        IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                        string_t const &aName, fs::path const &aCacheRoot );
+        IShaderProgram( ref_t<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion, string_t const &aName,
+                        fs::path const &aCacheRoot );
 
         /** @brief */
         ~IShaderProgram() = default;
@@ -50,24 +50,24 @@ namespace SE::Graphics
             AddCode( fmt::format( "#define {} {}", aConstant, aValue ) );
         }
 
-        string_t  Program();
+        string_t     Program();
         void         Compile();
         virtual void DoCompile()    = 0;
         virtual void BuildProgram() = 0;
-        string_t  Hash();
+        string_t     Hash();
         size_t       HashNum();
 
       protected:
         ref_t<IGraphicContext> mGraphicContext = nullptr;
 
         vector_t<string_t> mCodeBlocks;
-        vector_t<uint32_t>    mCompiledByteCode;
+        vector_t<uint32_t> mCompiledByteCode;
 
         string_t mProgram{};
 
         int                   mVersion;
-        string_t           mName;
-        string_t           mCacheFileName;
+        string_t              mName;
+        string_t              mCacheFileName;
         fs::path              mCacheRoot;
         eShaderStageTypeFlags mShaderType;
     };

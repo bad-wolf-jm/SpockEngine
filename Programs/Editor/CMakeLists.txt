@@ -49,7 +49,7 @@ set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
-    "D:\\Work\\Git\\SpockEngine\\Build\\CoreScripting\\Debug\\SE_Core.dll"
+    "D:\\Personal\\Git\\SpockEngine\\Build\\CoreScripting\\Debug\\SE_Core.dll"
 
     ${DOTNET_REFERENCE_PATH}
 )

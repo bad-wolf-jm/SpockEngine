@@ -29,9 +29,9 @@ namespace SE::Core
         lVertexShader->AddCode( "#define DIRECTIONAL_LIGHT_SHADOW_VERTEX_SHADER" );
         lVertexShader->AddCode( "#define MATERIAL_HAS_NORMALS" );
         lVertexShader->AddCode( "#define MATERIAL_HAS_UV0" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
+        lVertexShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
+        lVertexShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
         lVertexShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
@@ -75,9 +75,9 @@ namespace SE::Core
         lVertexShader->AddCode( "#define PUNCTUAL_LIGHT_SHADOW_VERTEX_SHADER" );
         lVertexShader->AddCode( "#define MATERIAL_HAS_NORMALS" );
         lVertexShader->AddCode( "#define MATERIAL_HAS_UV0" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
+        lVertexShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Common\\Varying.hpp" );
+        lVertexShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
         lVertexShader->Compile();
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
@@ -86,8 +86,8 @@ namespace SE::Core
         lFragmentShader->AddCode( "#define __GLSL__" );
         lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
         lFragmentShader->AddCode( "#define PUNCTUAL_LIGHT_SHADOW_FRAGMENT_SHADER" );
-        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
-        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
+        lFragmentShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lFragmentShader->AddFile( "D:\\Personal\\Git\\SpockEngine\\Shaders\\Source\\Shadow.hpp" );
         lFragmentShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );

@@ -271,7 +271,7 @@ int main( int argc, char **argv )
     }
 
     // Retrieve the Mono core assembly path
-    fs::path lCoreScriptingPath = "D:/Work/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
+    fs::path lCoreScriptingPath = "D:/Personal/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<string_t>( "--script_core" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) )
             lCoreScriptingPath = lCoreScriptingPathOverride.value();
@@ -284,7 +284,7 @@ int main( int argc, char **argv )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
-            fs::path( "D:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
+            fs::path( "D:\\Personal\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) )
             DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
