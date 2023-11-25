@@ -44,11 +44,11 @@ namespace SE::Editor
         mNewSceneRenderer->Update( mEditorWindow.ActiveWorld );
         // mNewSceneRenderer->SetView( mEditorWindow.ActiveWorld->mEditorView );
 
-        if( mApplicationInstance )
-        {
-            float lTs = ts.GetMilliseconds();
-            mApplicationInstance->CallMethod( "Update", &lTs );
-        }
+        // if( mApplicationInstance )
+        // {
+        //     float lTs = ts.GetMilliseconds();
+        //     mApplicationInstance->CallMethod( "Update", &lTs );
+        // }
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -179,11 +179,11 @@ namespace SE::Editor
 
         if( lApplicationType )
         {
-            mApplicationInstance    = lApplicationType.Instantiate();
-            auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
-            mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
+            // mApplicationInstance    = lApplicationType.Instantiate();
+            // auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
+            // mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
 
-            mEditorWindow.mApplicationInstance = mApplicationInstance;
+            mEditorWindow.mApplicationInstance = nullptr;//mApplicationInstance;
         }
         else
         {
