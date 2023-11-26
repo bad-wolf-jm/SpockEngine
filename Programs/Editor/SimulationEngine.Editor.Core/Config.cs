@@ -2,5 +2,5 @@
 
 public class Config
 {
-    public static readonly string EnginePath = "";
+    public const string EnginePath = "";
 }

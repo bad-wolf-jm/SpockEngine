@@ -11,6 +11,6 @@ public class Renderer
         _sceneRenderer = CreateRenderer(Engine.GraphicContext, sampleCount, colorFormat);
     }
 
-    [DllImport("LTSimulationEngine.dll")]
+    [DllImport(Config.EnginePath)]
     private static extern IntPtr CreateRenderer(IntPtr context, int sampleCount, int colorFormat);
 }

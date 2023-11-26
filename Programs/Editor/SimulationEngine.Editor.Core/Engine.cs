@@ -11,6 +11,6 @@ public class Engine
         GraphicContext = CreateGraphicContext(4);
     }
 
-    [DllImport("LTSimulationEngine.dll")]
+    [DllImport(Config.EnginePath)]
     public static extern IntPtr CreateGraphicContext(int SampleCount);
 }
