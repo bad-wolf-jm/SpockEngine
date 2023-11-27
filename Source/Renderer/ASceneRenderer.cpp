@@ -13,7 +13,8 @@ namespace SE::Core
     using namespace math;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    BaseSceneRenderer::BaseSceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    BaseSceneRenderer::BaseSceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
+                                          uint32_t aOutputSampleCount )
         : mGraphicContext{ aGraphicContext }
         , mOutputFormat{ aOutputFormat }
         , mOutputSampleCount{ aOutputSampleCount }
@@ -32,11 +33,20 @@ namespace SE::Core
         mCameraPosition = vec3( Inverse( mViewMatrix )[3] );
     }
 
-    void BaseSceneRenderer::SetGamma( float aGamma ) { mGamma = aGamma; }
+    void BaseSceneRenderer::SetGamma( float aGamma )
+    {
+        mGamma = aGamma;
+    }
 
-    void BaseSceneRenderer::SetExposure( float aExposure ) { mExposure = aExposure; }
+    void BaseSceneRenderer::SetExposure( float aExposure )
+    {
+        mExposure = aExposure;
+    }
 
-    void BaseSceneRenderer::SetAmbientLighting( vec4 aAmbientLight ) { mAmbientLight = aAmbientLight; }
+    void BaseSceneRenderer::SetAmbientLighting( vec4 aAmbientLight )
+    {
+        mAmbientLight = aAmbientLight;
+    }
 
     void BaseSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
@@ -50,9 +60,11 @@ namespace SE::Core
 
         mScene = aScene;
 
-        if( !mScene ) return;
-
+        if( !mScene )
+            return;
     }
 
-    void BaseSceneRenderer::Render() {}
+    void BaseSceneRenderer::Render()
+    {
+    }
 } // namespace SE::Core

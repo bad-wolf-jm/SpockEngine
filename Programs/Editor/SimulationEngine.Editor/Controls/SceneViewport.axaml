@@ -1,0 +1,16 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:SimulationEngine.Editor.Desktop.Controls">
+  <Design.PreviewWith>
+    <controls:SceneViewport />
+  </Design.PreviewWith>
+
+  <Style Selector="controls|SceneViewport">
+    <!-- Set Defaults -->
+    <Setter Property="Template">
+      <ControlTemplate>
+        <TextBlock Text="Templated Control" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+</Styles>

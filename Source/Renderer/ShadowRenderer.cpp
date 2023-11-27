@@ -58,7 +58,7 @@ namespace SE::Core
         mCameraBuffer->Write( aView );
     }
 
-    OmniShadowMeshRenderer::OmniShadowMeshRenderer( ref_t<IGraphicContext>                aGraphicContext,
+    OmniShadowMeshRenderer::OmniShadowMeshRenderer( ref_t<IGraphicContext>              aGraphicContext,
                                                     ShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }

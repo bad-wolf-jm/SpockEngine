@@ -5,8 +5,8 @@
 #include "Scene/Components.h"
 
 #include "ASceneRenderer.h"
-#include "ShadowRenderer.h"
 #include "GridRenderer.h"
+#include "ShadowRenderer.h"
 
 namespace SE::Core
 {
@@ -23,10 +23,10 @@ namespace SE::Core
         // Buffer data
         ref_t<IGraphicBuffer> mVertexBuffer = nullptr;
         ref_t<IGraphicBuffer> mIndexBuffer  = nullptr;
-        uint32_t            mVertexOffset = 0;
-        uint32_t            mVertexCount  = 0;
-        uint32_t            mIndexOffset  = 0;
-        uint32_t            mIndexCount   = 0;
+        uint32_t              mVertexOffset = 0;
+        uint32_t              mVertexCount  = 0;
+        uint32_t              mIndexOffset  = 0;
+        uint32_t              mIndexCount   = 0;
 
         sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID )
             : mMaterialID{ aMaterialID.mMaterialID }
@@ -42,7 +42,7 @@ namespace SE::Core
 
     struct sRenderQueue
     {
-        ref_t<IGraphicsPipeline>       mPipeline;
+        ref_t<IGraphicsPipeline>  mPipeline;
         vector_t<sMeshRenderData> mMeshes;
     };
 

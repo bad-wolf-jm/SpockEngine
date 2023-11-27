@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SimulationEngine.Editor.Desktop": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

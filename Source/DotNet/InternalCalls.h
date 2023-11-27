@@ -22,6 +22,9 @@ namespace SE::MonoInternalCalls
         void *CreateGraphicContext( int aSampleCount );
         void *CreateRenderer( void *aGraphicContext, int sSampleCount, int aColorFormat );
         void *CreateScene( void *aGraphicContext );
+        void  UpdateRenderer( void *renderer, void *scene );
+        void  UpdateScene( void *scene, float ts );
+        void  LoadScenario( void *scene, const char_t *path );
     }
     // // void Console_Initialize();
     // // void Console_Write( MonoString *aBuffer );

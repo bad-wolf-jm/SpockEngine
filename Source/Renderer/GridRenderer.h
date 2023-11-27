@@ -26,7 +26,7 @@ namespace SE::Core
         void Render( math::mat4 aProjection, math::mat4 aView, ref_t<IRenderContext> aRenderContext );
 
       private:
-        ref_t<IDescriptorSetLayout> mPipelineLayout     = nullptr;
+        ref_t<IDescriptorSetLayout> mPipelineLayout    = nullptr;
         ref_t<IGraphicContext>      mGraphicContext    = nullptr;
         ref_t<IGraphicBuffer>       mCameraBuffer      = nullptr;
         ref_t<IDescriptorSet>       mCameraDescriptors = nullptr;

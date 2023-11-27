@@ -123,7 +123,7 @@ namespace SE::Core
         void Update( ref_t<Scene> aWorld );
         void Render();
 
-        void               ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        void                 ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
         ref_t<IRenderTarget> NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
         static ref_t<IDescriptorSet> GetDirectionalShadowMapsLayout();
@@ -159,7 +159,7 @@ namespace SE::Core
         vector_t<ref_t<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
         vector_t<std::array<ref_t<IGraphicBuffer>, 6>> mPointLightsShadowCameraUniformBuffer = {};
         vector_t<std::array<ref_t<IDescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
-        ref_t<OmniShadowMeshRenderer>                     mOmniRenderPipeline                   = nullptr;
+        ref_t<OmniShadowMeshRenderer>                  mOmniRenderPipeline                   = nullptr;
 
         ref_t<IRenderTarget>  mGeometryRenderTarget = nullptr;
         ref_t<IRenderContext> mGeometryContext{};
@@ -177,7 +177,7 @@ namespace SE::Core
         ref_t<IDescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
         ref_t<IDescriptorSet>       mShadowMapDescriptorSet    = nullptr;
 
-        sDirectionalLight           mDirectionalLight;
+        sDirectionalLight        mDirectionalLight;
         vector_t<sPunctualLight> mPointLights;
     };
 

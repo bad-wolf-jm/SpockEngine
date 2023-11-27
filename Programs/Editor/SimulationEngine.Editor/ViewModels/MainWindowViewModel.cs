@@ -14,6 +14,8 @@ namespace SimulationEngine.Editor.ViewModels
         {
             _renderer = new Renderer(4, 12);
             _scene = new Scene();
+
+            _scene.LoadScenario("C:\\GitLab\\SpockEngine\\Saved\\TEST\\Sponza_SCENE\\SceneDefinition.yaml");
         }
     }
 }

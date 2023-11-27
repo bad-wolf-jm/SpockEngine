@@ -48,6 +48,28 @@ namespace SE::MonoInternalCalls
 
             return &scenes.back();
         }
+
+        void UpdateRenderer( void *renderer, void *scene )
+        {
+            auto *re = (ref_t<SceneRenderer> *)( renderer );
+            auto *sc = (ref_t<Scene> *)( scene );
+
+            (*re)->Update( *sc );
+        }
+
+        void UpdateScene( void *scene, float ts )
+        {
+            auto *sc = (ref_t<Scene> *)( scene );
+
+            (*sc)->Update( ts );
+        }
+
+        void LoadScenario( void *scene, const char_t* path )
+        {
+            auto *sc = (ref_t<Scene> *)( scene );
+            
+            (*sc)->LoadScenario( string_t(path) );
+        }
     }
     // uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aEntityID )
     // {

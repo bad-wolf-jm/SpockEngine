@@ -87,8 +87,8 @@ namespace SE::Core
         if( mScene == nullptr )
             return;
 
-        bool                        lFoundDirectionalLight = false;
-        sDirectionalLight           lDirectionalLight{};
+        bool                     lFoundDirectionalLight = false;
+        sDirectionalLight        lDirectionalLight{};
         vector_t<sPunctualLight> lPointLights;
 
         // clang-format off

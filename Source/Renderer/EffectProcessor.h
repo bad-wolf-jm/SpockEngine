@@ -29,7 +29,7 @@ namespace SE::Core
 
         void Render( ref_t<ISampler2D> aImageSampler, ref_t<IRenderContext> aRenderContext );
 
-        EffectProcessorCreateInfo Spec;
+        EffectProcessorCreateInfo   Spec;
         ref_t<IDescriptorSetLayout> PipelineLayout = nullptr;
         ref_t<IDescriptorSet>       mTextures      = nullptr;
 

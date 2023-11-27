@@ -139,9 +139,9 @@ namespace SE::Core
         EntityCollection mMaterialRegistry;
 
         vector_t<ref_t<ISampler2D>> mTextureData;
-        vector_t<sShaderMaterial> mMaterialData;
-        sDirectionalLight            mDirectionalLight;
-        vector_t<sPunctualLight>  mPointLights;
+        vector_t<sShaderMaterial>   mMaterialData;
+        sDirectionalLight           mDirectionalLight;
+        vector_t<sPunctualLight>    mPointLights;
 
         std::map<size_t, ref_t<IShaderProgram>> mVertexShaders;
         std::map<size_t, ref_t<IShaderProgram>> mFragmentShaders;
@@ -166,7 +166,7 @@ namespace SE::Core
         ref_t<IDescriptorSet>       mPunctualLightsDescriptor       = nullptr;
         ref_t<IDescriptorSetLayout> mPunctualLightsDescriptorLayout = nullptr;
 
-        Cuda::GPUMemory           mMaterialCudaTextures{};
+        Cuda::GPUMemory             mMaterialCudaTextures{};
         ref_t<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
         ref_t<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
 
@@ -175,8 +175,8 @@ namespace SE::Core
         ref_t<IDescriptorSetLayout> mDirectionalLightShadowMapDescriptorLayout = nullptr;
 
         vector_t<ref_t<ISamplerCubeMap>> mPunctualLightShadowMaps                = {};
-        ref_t<IDescriptorSet>               mPunctualLightShadowMapDescriptor       = nullptr;
-        ref_t<IDescriptorSetLayout>         mPunctualLightShadowMapDescriptorLayout = nullptr;
+        ref_t<IDescriptorSet>            mPunctualLightShadowMapDescriptor       = nullptr;
+        ref_t<IDescriptorSetLayout>      mPunctualLightShadowMapDescriptorLayout = nullptr;
 
         std::unordered_map<Material, int32_t> mMaterialIndexLookup;
 
@@ -211,7 +211,7 @@ namespace SE::Core
             aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
         }
 
-        void        AddDefinitions( ref_t<IShaderProgram> aShaderProgram, Material aMaterial );
+        void     AddDefinitions( ref_t<IShaderProgram> aShaderProgram, Material aMaterial );
         string_t CreateShaderName( Material aMaterial, const char *aPrefix );
 
         void    AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo );

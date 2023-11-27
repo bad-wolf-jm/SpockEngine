@@ -365,6 +365,8 @@ namespace SE::Core
 
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
+        SE::Logging::Info(aScenarioPath.string());
+
         mRegistry.Clear();
         // mMaterialSystem->Wipe();
 

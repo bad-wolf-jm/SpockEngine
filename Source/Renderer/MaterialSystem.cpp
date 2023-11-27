@@ -464,7 +464,7 @@ namespace SE::Core
 
     Material MaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
     {
-        SE::Logging::Info( "MaterialSystem::CreateMaterial( {} )", aMaterialPath.string() );
+        // SE::Logging::Info( "MaterialSystem::CreateMaterial( {} )", aMaterialPath.string() );
         BinaryAsset lBinaryDataFile( aMaterialPath );
 
         uint32_t lTextureCount = lBinaryDataFile.CountAssets() - 1;
