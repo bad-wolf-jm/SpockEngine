@@ -5,30 +5,30 @@
 
 namespace SE::Core
 {
-    bool EditComponent( sActorComponent &aComponent )
-    {
-        UI::Text( "Component class:" );
-        UI::Text( "{}", aComponent.mClassFullName );
+    // bool EditComponent( sActorComponent &aComponent )
+    // {
+    //     UI::Text( "Component class:" );
+    //     UI::Text( "{}", aComponent.mClassFullName );
 
-        for( const auto &[name, field] : aComponent.mClass.GetFields() )
-        {
-            UI::Text( "{}", name );
-        }
+    //     for( const auto &[name, field] : aComponent.mClass.GetFields() )
+    //     {
+    //         UI::Text( "{}", name );
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
-    bool EditComponent( sUIComponent &aComponent )
-    {
-        UI::Text( "Component class:" );
-        UI::Text( "{}", aComponent.mClassFullName );
+    // bool EditComponent( sUIComponent &aComponent )
+    // {
+    //     UI::Text( "Component class:" );
+    //     UI::Text( "{}", aComponent.mClassFullName );
 
-        for( const auto &[name, field] : aComponent.mClass.GetFields() )
-        {
-            UI::Text( "{}", name );
-        }
+    //     for( const auto &[name, field] : aComponent.mClass.GetFields() )
+    //     {
+    //         UI::Text( "{}", name );
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
 } // namespace SE::Core

@@ -10,7 +10,7 @@ namespace SE::Core
         { typeid(sCameraComponent).name(),            "CAMERA" },
         { typeid(sAnimationChooser).name(),           "ANIMATION_CHOOSER" },
         { typeid(sAnimationComponent).name(),         "ANIMATION" },
-        { typeid(sActorComponent).name(),             "ACTOR" },
+        // { typeid(sActorComponent).name(),             "ACTOR" },
         { typeid(sAnimatedTransformComponent).name(), "ANIMATED_TRANSFORM" },
         { typeid(sNodeTransformComponent).name(),     "NODE_TRANSFORM" },
         { typeid(sStaticMeshComponent).name(),        "STATIC_MESH" },
@@ -26,7 +26,7 @@ namespace SE::Core
         { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
         { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
         { typeid(sLightComponent).name(),             "LIGHT" },
-        { typeid(sUIComponent).name(),                "HUD" }
+        // { typeid(sUIComponent).name(),                "HUD" }
     };
     // clang-format on
 
@@ -92,10 +92,10 @@ namespace SE::Core
         aComponent.AspectRatio = Get( aNode["AspectRatio"], 0.0f );
     }
 
-    void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
-    {
-        aComponent.mClassFullName = Get( aNode["mClassFullName"], string_t{ "" } );
-    }
+    // void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    // {
+    //     aComponent.mClassFullName = Get( aNode["mClassFullName"], string_t{ "" } );
+    // }
 
     void ReadComponent( sAnimationChooser &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
@@ -275,19 +275,19 @@ namespace SE::Core
         aComponent.mIsOn      = Get( aNode["mIsOn"], true );
     }
 
-    void ReadComponent( sUIComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
-    {
-        aComponent.mX               = Get( aNode["mX"], 0.0f );
-        aComponent.mY               = Get( aNode["mY"], 0.0f );
-        aComponent.mWidth           = Get( aNode["mWidth"], 0.0f );
-        aComponent.mHeight          = Get( aNode["mHeight"], 0.0f );
-        aComponent.mClassFullName   = Get( aNode["mClassFullName"], string_t{ "" } );
-        aComponent.mFillColor       = Get( aNode["mFillColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
-        aComponent.mBorderColor     = Get( aNode["mBorderColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
-        aComponent.mBorderThickness = Get( aNode["mBorderThickness"], 1.0f );
-        aComponent.mDisplayInEditor = Get( aNode["mDisplayInEditor"], true );
-        aComponent.mPreview         = Get( aNode["mPreview"], false );
-    }
+    // void ReadComponent( sUIComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    // {
+    //     aComponent.mX               = Get( aNode["mX"], 0.0f );
+    //     aComponent.mY               = Get( aNode["mY"], 0.0f );
+    //     aComponent.mWidth           = Get( aNode["mWidth"], 0.0f );
+    //     aComponent.mHeight          = Get( aNode["mHeight"], 0.0f );
+    //     aComponent.mClassFullName   = Get( aNode["mClassFullName"], string_t{ "" } );
+    //     aComponent.mFillColor       = Get( aNode["mFillColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
+    //     aComponent.mBorderColor     = Get( aNode["mBorderColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
+    //     aComponent.mBorderThickness = Get( aNode["mBorderThickness"], 1.0f );
+    //     aComponent.mDisplayInEditor = Get( aNode["mDisplayInEditor"], true );
+    //     aComponent.mPreview         = Get( aNode["mPreview"], false );
+    // }
 
     template <typename _Ty>
     void WriteTypeTag( ConfigurationWriter &aOut )
@@ -357,13 +357,13 @@ namespace SE::Core
         aOut.EndSequence();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent )
-    {
-        WriteTypeTag<sActorComponent>( aOut );
-        aOut.BeginMap( true );
-        aOut.WriteKey( "mClassFullName", aComponent.mClassFullName );
-        aOut.EndMap();
-    }
+    // void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent )
+    // {
+    //     WriteTypeTag<sActorComponent>( aOut );
+    //     aOut.BeginMap( true );
+    //     aOut.WriteKey( "mClassFullName", aComponent.mClassFullName );
+    //     aOut.EndMap();
+    // }
 
     void WriteComponent( ConfigurationWriter &aOut, sAnimatedTransformComponent const &aComponent )
     {
@@ -543,25 +543,25 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sUIComponent const &aComponent )
-    {
-        WriteTypeTag<sUIComponent>( aOut );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mX", aComponent.mX );
-            aOut.WriteKey( "mY", aComponent.mY );
-            aOut.WriteKey( "mWidth", aComponent.mWidth );
-            aOut.WriteKey( "mHeight", aComponent.mHeight );
-            aOut.WriteKey( "mClassFullName", aComponent.mClassFullName );
-            aOut.WriteKey( "mFillColor" );
-            aOut.Write( aComponent.mFillColor, { "r", "g", "b", "a" } );
-            aOut.WriteKey( "mBorderColor" );
-            aOut.Write( aComponent.mBorderColor, { "r", "g", "b", "a" } );
-            aOut.WriteKey( "mBorderThickness", aComponent.mBorderThickness );
-            aOut.WriteKey( "mDisplayInEditor", aComponent.mDisplayInEditor );
-            aOut.WriteKey( "mPreview", aComponent.mPreview );
-        }
-        aOut.EndMap();
-    }
+    // void WriteComponent( ConfigurationWriter &aOut, sUIComponent const &aComponent )
+    // {
+    //     WriteTypeTag<sUIComponent>( aOut );
+    //     aOut.BeginMap( true );
+    //     {
+    //         aOut.WriteKey( "mX", aComponent.mX );
+    //         aOut.WriteKey( "mY", aComponent.mY );
+    //         aOut.WriteKey( "mWidth", aComponent.mWidth );
+    //         aOut.WriteKey( "mHeight", aComponent.mHeight );
+    //         aOut.WriteKey( "mClassFullName", aComponent.mClassFullName );
+    //         aOut.WriteKey( "mFillColor" );
+    //         aOut.Write( aComponent.mFillColor, { "r", "g", "b", "a" } );
+    //         aOut.WriteKey( "mBorderColor" );
+    //         aOut.Write( aComponent.mBorderColor, { "r", "g", "b", "a" } );
+    //         aOut.WriteKey( "mBorderThickness", aComponent.mBorderThickness );
+    //         aOut.WriteKey( "mDisplayInEditor", aComponent.mDisplayInEditor );
+    //         aOut.WriteKey( "mPreview", aComponent.mPreview );
+    //     }
+    //     aOut.EndMap();
+    // }
 
 } // namespace SE::Core

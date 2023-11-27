@@ -131,14 +131,14 @@ namespace SE::Core
             CopyComponent<sLightComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBehaviourComponent>( lEntity, lClonedEntity );
-            if( ( lEntity.Has<sActorComponent>() ) )
-            {
-                auto &lNewScriptComponent = lClonedEntity.AddOrReplace<sActorComponent>( lEntity.Get<sActorComponent>() );
+            // if( ( lEntity.Has<sActorComponent>() ) )
+            // {
+            //     auto &lNewScriptComponent = lClonedEntity.AddOrReplace<sActorComponent>( lEntity.Get<sActorComponent>() );
 
-                lNewScriptComponent.Initialize( lClonedEntity );
-            }
+            //     lNewScriptComponent.Initialize( lClonedEntity );
+            // }
 
-            CopyComponent<sUIComponent>( lEntity, lClonedEntity );
+            // CopyComponent<sUIComponent>( lEntity, lClonedEntity );
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -337,24 +337,24 @@ namespace SE::Core
 
     void Scene::ConnectSignalHandlers()
     {
-        // clang-format off
-        mRegistry.OnComponentAdded<sActorComponent>( 
-            [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // // clang-format off
+        // mRegistry.OnComponentAdded<sActorComponent>( 
+        //     [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
 
-        mRegistry.OnComponentUpdated<sActorComponent>( 
-            [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentUpdated<sActorComponent>( 
+        //     [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
 
-        mRegistry.OnComponentAdded<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentAdded<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
 
-        mRegistry.OnComponentUpdated<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
-        } );
+        // mRegistry.OnComponentUpdated<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        //         aComponent.Initialize( aEntity ); 
+        // } );
         // clang-format on
     }
 
@@ -491,20 +491,20 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sLightComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sActorComponent>();
+            // if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
+            // {
+            //     auto &lComponent = lEntity.Add<sActorComponent>();
 
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
-            }
+            //     ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
+            // }
 
-            if( HasTypeTag<sUIComponent>( lEntityConfiguration ) )
-            {
-                sUIComponent lComponent{};
+            // if( HasTypeTag<sUIComponent>( lEntityConfiguration ) )
+            // {
+            //     sUIComponent lComponent{};
 
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sUIComponent>()], lReadContext );
-                lEntity.Add<sUIComponent>( lComponent );
-            }
+            //     ReadComponent( lComponent, lEntityConfiguration[TypeTag<sUIComponent>()], lReadContext );
+            //     lEntity.Add<sUIComponent>( lComponent );
+            // }
         }
 
         std::mutex lMaterialSystemLock;
@@ -855,7 +855,7 @@ namespace SE::Core
 
     void Scene::AttachScript( Element aElement, string_t aClassName )
     {
-        auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
+        // auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
     }
 
     void Scene::BeginScenario()
@@ -879,8 +879,8 @@ namespace SE::Core
                 }
             } );
 
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
-        ForEach<sUIComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
+        // ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
+        // ForEach<sUIComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -906,7 +906,7 @@ namespace SE::Core
             } );
 
         // Destroy Lua scripts
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnEndScenario(); } );
+        // ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnEndScenario(); } );
 
         mState = eSceneState::EDITING;
     }
@@ -987,7 +987,7 @@ namespace SE::Core
                         aComponent.ControllerInstance->OnTick( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
+            // ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
 
             // Update animations
             ForEach<sAnimationChooser>( [=]( auto aEntity, auto &aComponent ) { UpdateAnimation( aComponent.Animations[0], ts ); } );
@@ -1003,42 +1003,42 @@ namespace SE::Core
                 } );
         }
 
-        ForEach<sUIComponent>(
-            [=]( auto aEntity, auto &aComponent )
-            {
-                if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor )
-                    return;
+        // ForEach<sUIComponent>(
+        //     [=]( auto aEntity, auto &aComponent )
+        //     {
+        //         if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor )
+        //             return;
 
-                static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        //         static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
-                ImVec2 lPosition = ImVec2{ aComponent.mX, aComponent.mY } + ImVec2{ mViewportPosition.x, mViewportPosition.y };
+        //         ImVec2 lPosition = ImVec2{ aComponent.mX, aComponent.mY } + ImVec2{ mViewportPosition.x, mViewportPosition.y };
 
-                ImGui::SetNextWindowPos( lPosition, ImGuiCond_Always );
-                ImGui::SetNextWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight }, ImGuiCond_Always );
+        //         ImGui::SetNextWindowPos( lPosition, ImGuiCond_Always );
+        //         ImGui::SetNextWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight }, ImGuiCond_Always );
 
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, aComponent.mBorderThickness );
+        //         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
+        //         ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, aComponent.mBorderThickness );
 
-                auto &lFillColor = aComponent.mFillColor;
-                ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ lFillColor.x, lFillColor.y, lFillColor.z, lFillColor.w } );
+        //         auto &lFillColor = aComponent.mFillColor;
+        //         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ lFillColor.x, lFillColor.y, lFillColor.z, lFillColor.w } );
 
-                auto &lBorderColor = aComponent.mBorderColor;
-                ImGui::PushStyleColor( ImGuiCol_Border, ImVec4{ lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w } );
+        //         auto &lBorderColor = aComponent.mBorderColor;
+        //         ImGui::PushStyleColor( ImGuiCol_Border, ImVec4{ lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w } );
 
-                auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
-                if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
-                {
-                    // If the scene is in a running state, call the scripted function to populate the window
-                    // and interact with it.
-                    if( mState == eSceneState::RUNNING )
-                        aComponent.OnUpdate( ts );
-                    else if( aComponent.mPreview )
-                        aComponent.OnPreviewUpdate( ts );
-                }
-                ImGui::End();
-                ImGui::PopStyleColor( 2 );
-                ImGui::PopStyleVar( 2 );
-            } );
+        //         auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
+        //         if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
+        //         {
+        //             // If the scene is in a running state, call the scripted function to populate the window
+        //             // and interact with it.
+        //             if( mState == eSceneState::RUNNING )
+        //                 aComponent.OnUpdate( ts );
+        //             else if( aComponent.mPreview )
+        //                 aComponent.OnPreviewUpdate( ts );
+        //         }
+        //         ImGui::End();
+        //         ImGui::PopStyleColor( 2 );
+        //         ImGui::PopStyleVar( 2 );
+        //     } );
 
         mTransformCache.clear();
         ForEach<sUUID, sNodeTransformComponent>(
@@ -1229,8 +1229,8 @@ namespace SE::Core
                 WriteComponent( lOut, aEntity.Get<sCameraComponent>() );
             if( aEntity.Has<sAnimationChooser>() )
                 WriteComponent( lOut, aEntity.Get<sAnimationChooser>() );
-            if( aEntity.Has<sActorComponent>() )
-                WriteComponent( lOut, aEntity.Get<sActorComponent>() );
+            // if( aEntity.Has<sActorComponent>() )
+            //     WriteComponent( lOut, aEntity.Get<sActorComponent>() );
 
             if( aEntity.Has<sAnimationComponent>() )
             {
@@ -1295,8 +1295,8 @@ namespace SE::Core
             if( aEntity.Has<sLightComponent>() )
                 WriteComponent( lOut, aEntity.Get<sLightComponent>() );
 
-            if( aEntity.Has<sUIComponent>() )
-                WriteComponent( lOut, aEntity.Get<sUIComponent>() );
+            // if( aEntity.Has<sUIComponent>() )
+            //     WriteComponent( lOut, aEntity.Get<sUIComponent>() );
         }
         lOut.EndMap();
     }

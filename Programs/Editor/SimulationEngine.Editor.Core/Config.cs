@@ -2,5 +2,5 @@
 
 public class Config
 {
-    public const string EnginePath = "";
+    public const string EnginePath = "D:\\Personal\\Git\\SpockEngine\\Build\\CoreLibrary\\Source\\LTSimulationEngineRuntime.dll";
 }

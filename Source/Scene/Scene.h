@@ -131,7 +131,7 @@ namespace SE::Core
         mat4 mEditorView;
 
       private:
-        eSceneState                   mState                 = eSceneState::EDITING;
+        eSceneState                     mState                 = eSceneState::EDITING;
         ref_t<IGraphicContext>          mGraphicContext        = nullptr;
         ref_t<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         ref_t<OptixScene>               mAccelerationStructure = nullptr;
@@ -139,7 +139,7 @@ namespace SE::Core
         // Handle to the new version of the material system
         ref_t<MaterialSystem> mMaterialSystem = nullptr;
 
-        vector_t<sActorComponent> mActorComponents;
+        // vector_t<sActorComponent> mActorComponents;
 
       protected:
         SE::Core::EntityCollection mRegistry;

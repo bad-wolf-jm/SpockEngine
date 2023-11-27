@@ -58,7 +58,7 @@ namespace SE::Core
 
     void ReadComponent( sTag &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sCameraComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    // void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAnimationChooser &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAnimationComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext,
                         vector_t<sImportedAnimationSampler> &aInterpolationData );
@@ -77,13 +77,13 @@ namespace SE::Core
     void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sLightComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sUIComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    // void ReadComponent( sUIComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
 
     void WriteComponent( ConfigurationWriter &aOut, sTag const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sRelationshipComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sCameraComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAnimationChooser const &aComponent );
-    void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent );
+    // void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAnimatedTransformComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sNodeTransformComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, string_t const &aMeshPath );
@@ -99,5 +99,5 @@ namespace SE::Core
     void WriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAmbientLightingComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sLightComponent const &aComponent );
-    void WriteComponent( ConfigurationWriter &aOut, sUIComponent const &aComponent );
+    // void WriteComponent( ConfigurationWriter &aOut, sUIComponent const &aComponent );
 } // namespace SE::Core

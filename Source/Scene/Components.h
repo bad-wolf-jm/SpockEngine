@@ -20,7 +20,7 @@
 
 #include "Primitives/Primitives.h"
 
-#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 #include "Core/Profiling/BlockTimer.h"
 
@@ -162,14 +162,14 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         string_t mName = "";
 
-        ePrimitiveTopology  mPrimitive         = ePrimitiveTopology::TRIANGLES;
+        ePrimitiveTopology    mPrimitive         = ePrimitiveTopology::TRIANGLES;
         ref_t<IGraphicBuffer> mVertexBuffer      = nullptr;
         ref_t<IGraphicBuffer> mIndexBuffer       = nullptr;
         ref_t<IGraphicBuffer> mTransformedBuffer = nullptr;
-        uint32_t            mVertexOffset      = 0;
-        uint32_t            mVertexCount       = 0;
-        uint32_t            mIndexOffset       = 0;
-        uint32_t            mIndexCount        = 0;
+        uint32_t              mVertexOffset      = 0;
+        uint32_t              mVertexCount       = 0;
+        uint32_t              mIndexOffset       = 0;
+        uint32_t              mIndexCount        = 0;
 
         sStaticMeshComponent()                               = default;
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
@@ -177,7 +177,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sSkeletonComponent
     {
-        uint32_t            BoneCount;
+        uint32_t         BoneCount;
         vector_t<Entity> Bones;
         vector_t<mat4>   InverseBindMatrices;
         vector_t<mat4>   JointMatrices;

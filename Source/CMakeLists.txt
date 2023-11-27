@@ -7,7 +7,9 @@ cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/
 
 message(STATUS ${SHADER_EMBEDDED_FILES})
 
-add_library(LTSimulationEngineRuntime STATIC
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+add_library(LTSimulationEngineRuntime SHARED
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
@@ -16,11 +18,11 @@ add_library(LTSimulationEngineRuntime STATIC
 
     Core/Entity/EditComponent.cpp
 
-    DotNet/Runtime.cpp
-    DotNet/Class.cpp
-    DotNet/Instance.cpp
-    DotNet/Utils.cpp
-    DotNet/EntityRegistry.cpp
+    # DotNet/Runtime.cpp
+    # DotNet/Class.cpp
+    # DotNet/Instance.cpp
+    # DotNet/Utils.cpp
+    # DotNet/EntityRegistry.cpp
     DotNet/InternalCalls.cpp
 
     Core/CUDA/Cuda.cpp
@@ -188,20 +190,20 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     glslang
     SPIRV 
     glslang-default-resource-limits
-    ${MONO_PATH}/libmono-static-sgen.lib
-    ${MONO_PATH}/mono-2.0-sgen.lib
-    ${MONO_PATH}/MonoPosixHelper.lib
-    ${MONO_PATH}/libmonoruntime-sgen.lib
-    ${MONO_PATH}/libmonoutils.lib
-    ${MONO_PATH}/libmini-sgen.lib
-    ${MONO_PATH}/libgcmonosgen.lib
-    ${MONO_PATH}/eglib.lib
+    # ${MONO_PATH}/libmono-static-sgen.lib
+    # ${MONO_PATH}/mono-2.0-sgen.lib
+    # ${MONO_PATH}/MonoPosixHelper.lib
+    # ${MONO_PATH}/libmonoruntime-sgen.lib
+    # ${MONO_PATH}/libmonoutils.lib
+    # ${MONO_PATH}/libmini-sgen.lib
+    # ${MONO_PATH}/libgcmonosgen.lib
+    # ${MONO_PATH}/eglib.lib
     ${optix_LIBRARY}
     ${CUDA_LIBRARIES}
     ${CUDA_CUDA_LIBRARY}
     CUDA::curand    
-    wsock32
-    ws2_32
+    # wsock32
+    # ws2_32
     yaml-cpp
     pugixml
     tinygltf
@@ -209,14 +211,14 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     glfw
 )
 
-target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
+target_compile_definitions(LTSimulationEngineRuntime PUBLIC LTSimulationEngineRuntime )
 target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
 
 
-add_executable( SE_Run WIN32 Launch/EditorMain.cpp )
-target_include_directories(SE_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
-target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
-target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)
-set_target_properties( SE_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
+# add_executable( SE_Run WIN32 Launch/EditorMain.cpp )
+# target_include_directories(SE_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
+# target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
+# target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)
+# set_target_properties( SE_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
