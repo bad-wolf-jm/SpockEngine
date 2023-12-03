@@ -7,17 +7,23 @@ namespace SimulationEngine.Editor.Core;
 public class Renderer
 {
     IntPtr _sceneRenderer = 0;
-    WriteableBitmap _bitmap;
-    public WriteableBitmap Output => _bitmap;
+    //WriteableBitmap _bitmap;
+    //public WriteableBitmap Output => _bitmap;
 
     int _outputWidth = 0;
+    public int OutputWidth => _outputWidth;
+
     int _outputHeight = 0;
-    int _bitsPerPixel = 0;
+    public int OutputHeight => _outputHeight;
+
+    byte _bitsPerPixel = 0;
+
+    int _bufferByteSize => _outputWidth * _outputHeight * _bitsPerPixel;
 
     public Renderer(int sampleCount, int colorFormat)
     {
         _sceneRenderer = CreateRenderer(Engine.GraphicContext, sampleCount, colorFormat);
-        _bitsPerPixel = (int)GetPixelSize(_sceneRenderer);
+        _bitsPerPixel = GetPixelSize(_sceneRenderer);
     }
 
     public void Update(Scene scene)
@@ -27,31 +33,24 @@ public class Renderer
 
     public void Render()
     {
-        Render(_sceneRenderer);
-        UpdateRenderedImage();
+        InternalRender(_sceneRenderer);
+    }
+
+    public void Render(IntPtr framebuffer)
+    {
+        Render();
+        GetRenderedImage(_sceneRenderer, framebuffer, _bufferByteSize);
     }
 
     public void ResizeOutput(int width, int height)
     {
-        var size = new PixelSize(width, height);
-        var dpi = new Vector(96, 96);
-        _bitmap = new WriteableBitmap(size, dpi, Avalonia.Platform.PixelFormats.Rgba64);
-
         ResizeRendererOutput(_sceneRenderer, width, height);
-    }
 
-    public void UpdateRenderedImage()
-    {
-        uint width, height;
+        uint actualWidth, actualHight;
         byte bpp;
-        GetOutputSize(_sceneRenderer, out width, out height, out bpp);
-
-        using (var bitmapData = _bitmap.Lock())
-        {
-            GetRenderedImage(_sceneRenderer, bitmapData.Address, (int)(width * height * bpp));
-        }
-        _bitmap.Save(@"D:\Personal\Git\SpockEngine\Programs\Editor\test_2.png");
+        GetOutputSize(_sceneRenderer, out actualWidth, out actualHight, out bpp);
     }
+
 
     [DllImport(Config.EnginePath)]
     private static extern IntPtr CreateRenderer(IntPtr context, int sampleCount, int colorFormat);
@@ -60,7 +59,7 @@ public class Renderer
     private static extern IntPtr UpdateRenderer(IntPtr self, IntPtr scene);
 
     [DllImport(Config.EnginePath)]
-    private static extern IntPtr Render(IntPtr self);
+    private static extern IntPtr InternalRender(IntPtr self);
 
     [DllImport(Config.EnginePath)]
     private static extern IntPtr ResizeRendererOutput(IntPtr self, int width, int height);

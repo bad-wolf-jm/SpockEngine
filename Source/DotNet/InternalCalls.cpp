@@ -76,7 +76,7 @@ namespace SE::MonoInternalCalls
             ( *re )->Update( *sc );
         }
 
-        void Render( void *renderer )
+        void InternalRender( void *renderer )
         {
             auto *re = (ref_t<SceneRenderer> *)( renderer );
 

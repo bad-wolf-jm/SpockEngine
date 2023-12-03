@@ -9,7 +9,9 @@
     <!-- Set Defaults -->
     <Setter Property="Template">
       <ControlTemplate>
-        <TextBlock Text="Templated Control" />
+        <Border Background="{TemplateBinding Background}" BorderBrush="Red" BorderThickness="3" Margin="10">
+          <Image Source="{TemplateBinding Framebuffer}" Stretch="None" />
+        </Border>
       </ControlTemplate>
     </Setter>
   </Style>

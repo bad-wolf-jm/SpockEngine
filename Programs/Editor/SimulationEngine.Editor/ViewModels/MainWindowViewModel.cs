@@ -8,6 +8,7 @@ namespace SimulationEngine.Editor.ViewModels
     public partial class MainWindowViewModel : ObservableObject
     {
         Renderer _renderer;
+        public Renderer Renderer => _renderer;
         Scene _scene;
 
         public string Greeting => "Welcome to Avalonia!";

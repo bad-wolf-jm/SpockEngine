@@ -13,8 +13,8 @@ namespace SE::Core
     using namespace SE::Core::Primitives;
     using namespace math;
 
-    SceneRenderer::SceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
-        : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
+    SceneRenderer::SceneRenderer( ref_t<IGraphicContext> aGraphicContext, eColorFormat mOutputFormat, uint32_t aOutputSampleCount )
+        : BaseSceneRenderer( aGraphicContext, mOutputFormat, aOutputSampleCount )
     {
     }
 
@@ -27,7 +27,7 @@ namespace SE::Core
 
         mGeometryRenderTarget = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
         mGeometryRenderTarget->AddAttachment( "OUTPUT",
-                                              sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::RGBA16_FLOAT, true ) );
+                                              sAttachmentDescription( eAttachmentType::COLOR, mOutputFormat, true ) );
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL",
                                               sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
         mGeometryRenderTarget->Finalize();
@@ -43,9 +43,9 @@ namespace SE::Core
         mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
         mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT",
-                                              sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::RGBA16_FLOAT ) );
+                                              sAttachmentDescription( eAttachmentType::COLOR, mOutputFormat ) );
         mGeometryRenderTarget->AddAttachment(
-            "OUTPUT", sAttachmentDescription( eAttachmentType::MSAA_RESOLVE, eColorFormat::RGBA16_FLOAT, true ) );
+            "OUTPUT", sAttachmentDescription( eAttachmentType::MSAA_RESOLVE, mOutputFormat, true ) );
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL",
                                               sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
 
@@ -62,7 +62,7 @@ namespace SE::Core
 
         mFxaaRenderTarget = Graphics::CreateRenderTarget( mGraphicContext, lFxaaSpec );
         mFxaaRenderTarget->AddAttachment( "OUTPUT",
-                                          sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::RGBA16_FLOAT, true ) );
+                                          sAttachmentDescription( eAttachmentType::COLOR, mOutputFormat, true ) );
         mFxaaRenderTarget->Finalize();
 
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
