@@ -30,7 +30,7 @@ namespace SE::Graphics
         if( !lFileObject.is_open() )
             throw std::runtime_error( "failed to open file!" );
 
-        size_t            lFileSize = (size_t)lFileObject.tellg();
+        size_t         lFileSize = (size_t)lFileObject.tellg();
         vector_t<char> lBuffer( lFileSize );
 
         lFileObject.seekg( 0 );
@@ -60,7 +60,7 @@ namespace SE::Graphics
         if( IsSPIRV( FilePaths ) )
             return LoadShaderModuleBytecode( FilePaths );
 
-        auto        lProgram       = ReadFile( FilePaths );
+        auto     lProgram       = ReadFile( FilePaths );
         string_t lProgramString = string_t( lProgram.begin(), lProgram.end() );
 
         vector_t<uint32_t> lByteCode( 0 );
@@ -73,7 +73,7 @@ namespace SE::Graphics
         : Type{ aShaderType }
     {
         vector_t<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );
-        mShaderModuleObject             = New<sVkShaderModuleObject>( mContext, lByteCode );
+        mShaderModuleObject          = New<sVkShaderModuleObject>( mContext, lByteCode );
     }
 
     VkPipelineShaderStageCreateInfo ShaderModule::GetShaderStage()
@@ -114,7 +114,7 @@ namespace SE::Graphics
         return shaderStages;
     }
 
-    sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( ref_t<VkGraphicContext>                     aContext,
+    sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( ref_t<VkGraphicContext>                aContext,
                                                                 vector_t<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
         : mContext{ aContext }
     {
@@ -174,7 +174,7 @@ namespace SE::Graphics
 
     void sVkDescriptorSetObject::Write( sImageBindInfo aImages )
     {
-        VkWriteDescriptorSet               lWriteDSOps;
+        VkWriteDescriptorSet            lWriteDSOps;
         vector_t<VkDescriptorImageInfo> lWriteBufferInfo;
 
         for( uint32_t j = 0; j < aImages.mSampler.size(); j++ )
@@ -212,15 +212,15 @@ namespace SE::Graphics
     }
 
     ref_t<sVkDescriptorSetObject> sVkDescriptorPoolObject::Allocate( ref_t<sVkDescriptorSetLayoutObject> aLayout,
-                                                                   uint32_t                          aDescriptorCount )
+                                                                     uint32_t                            aDescriptorCount )
     {
         return SE::Core::New<sVkDescriptorSetObject>( mContext,
                                                       mContext->AllocateDescriptorSet( aLayout->mVkObject, aDescriptorCount ) );
     }
 
-    sVkPipelineLayoutObject::sVkPipelineLayoutObject( ref_t<VkGraphicContext>                          aContext,
+    sVkPipelineLayoutObject::sVkPipelineLayoutObject( ref_t<VkGraphicContext>                       aContext,
                                                       vector_t<ref_t<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
-                                                      vector_t<sPushConstantRange>                aPushConstantRanges )
+                                                      vector_t<sPushConstantRange>                  aPushConstantRanges )
         : mContext{ aContext }
     {
 
@@ -332,7 +332,7 @@ namespace SE::Graphics
     }
 
     void sVkPipelineObject::Compile( vector_t<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
-                                     VkVertexInputBindingDescription                &aBindingDesc,
+                                     VkVertexInputBindingDescription             &aBindingDesc,
                                      vector_t<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
     {
         aBindingDesc.binding   = aBinding;
@@ -431,13 +431,13 @@ namespace SE::Graphics
         VkPipelineVertexInputStateCreateInfo lVertexInputInfo{};
         lVertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
-        uint32_t                                       lStride0 = CalculateOffsetsAndStride( aVertexBufferLayout );
-        VkVertexInputBindingDescription                lBindings;
+        uint32_t                                    lStride0 = CalculateOffsetsAndStride( aVertexBufferLayout );
+        VkVertexInputBindingDescription             lBindings;
         vector_t<VkVertexInputAttributeDescription> lAttributes;
         Compile( aVertexBufferLayout, 0, lStride0, lBindings, lAttributes, false );
 
-        uint32_t                                       lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
-        VkVertexInputBindingDescription                lInstanceBindings;
+        uint32_t                                    lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
+        VkVertexInputBindingDescription             lInstanceBindings;
         vector_t<VkVertexInputAttributeDescription> lInstancedttributes;
         Compile( aInstanceBufferLayout, 1, lStride1, lInstanceBindings, lInstancedttributes, true );
 
@@ -485,7 +485,7 @@ namespace SE::Graphics
         lColorBlendAttachment.alphaBlendOp        = Convert( aBlending.mAlphaBlendOperation );
 
         vector_t<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
-                                                                            lColorBlendAttachment );
+                                                                         lColorBlendAttachment );
 
         VkPipelineColorBlendStateCreateInfo lColorBlendingInfo{};
         lColorBlendingInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;

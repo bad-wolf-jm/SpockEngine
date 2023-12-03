@@ -8,6 +8,7 @@
 
 #include "Core/CUDA/Array/CudaBuffer.h"
 #include "Core/CUDA/CudaAssert.h"
+#include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/CUDA/Texture/Conversion.h"
 #include "VkCommand.h"
 #include "VkGpuBuffer.h"
@@ -139,11 +140,13 @@ namespace SE::Graphics
 
     void VkTexture2D::SetPixelData( ref_t<IGraphicBuffer> aBuffer )
     {
-        ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
         vector_t<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lOffset = 0;
+        uint32_t               lOffset    = 0;
+        int32_t                lPixelSize = Core::GetPixelSize( mSpec.mFormat );
 
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
@@ -158,7 +161,7 @@ namespace SE::Graphics
             lBufferCopyRegion.mOffset        = lOffset;
 
             lBufferCopyRegions.push_back( lBufferCopyRegion );
-            lOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
+            lOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * lPixelSize );
         }
 
         sImageRegion lImageCopyRegion{};
@@ -176,7 +179,8 @@ namespace SE::Graphics
 
     void VkTexture2D::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
-        ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
         lCommandBufferObject->End();
@@ -186,11 +190,12 @@ namespace SE::Graphics
 
     void VkTexture2D::GetPixelData( TextureData2D &aTextureData )
     {
-        uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
+        int32_t     lPixelSize = GetPixelSize( mSpec.mFormat );
+        uint32_t    lByteSize  = mSpec.mWidth * mSpec.mHeight * lPixelSize;
         VkGpuBuffer lStagingBuffer( GraphicContext<VkGraphicContext>(), eBufferType::UNKNOWN, true, false, false, true, lByteSize );
 
         vector_t<sImageRegion> lBufferCopyRegions;
-        uint32_t                  lBufferByteOffset = 0;
+        uint32_t               lBufferByteOffset = 0;
         for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
             sImageRegion lBufferCopyRegion{};
@@ -204,11 +209,12 @@ namespace SE::Graphics
             lBufferCopyRegion.mOffset        = lBufferByteOffset;
 
             lBufferCopyRegions.push_back( lBufferCopyRegion );
-            lBufferByteOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
+            lBufferByteOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * lPixelSize );
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
-        ref_t<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
+        ref_t<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         lCommandBufferObject->End();

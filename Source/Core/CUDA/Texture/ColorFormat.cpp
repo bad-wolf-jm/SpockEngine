@@ -60,4 +60,32 @@ namespace SE::Core
         return VK_FORMAT_UNDEFINED;
     }
 
+    uint8_t GetPixelSize(eColorFormat aColorFormat)
+    {
+        switch( aColorFormat )
+        {
+        case eColorFormat::R32_FLOAT: return 4;
+        case eColorFormat::RG32_FLOAT: return 8;
+        case eColorFormat::RGB32_FLOAT: return 12;
+        case eColorFormat::RGBA32_FLOAT: return 16;
+        case eColorFormat::R16_FLOAT: return 2;
+        case eColorFormat::RG16_FLOAT: return 4;
+        case eColorFormat::RGB16_FLOAT: return 6;
+        case eColorFormat::RGBA16_FLOAT: return 8;
+        case eColorFormat::R8_UNORM: return 1;
+        case eColorFormat::RG8_UNORM: return 2;
+        case eColorFormat::RGB8_UNORM: return 3;
+        case eColorFormat::RGBA8_UNORM: return 4;
+        case eColorFormat::D16_UNORM: return 2;
+        case eColorFormat::X8_D24_UNORM_PACK32: return 4;
+        case eColorFormat::D32_SFLOAT: return 4;
+        case eColorFormat::S8_UINT: return 1;
+        case eColorFormat::D16_UNORM_S8_UINT: return 3;
+        case eColorFormat::D24_UNORM_S8_UINT: return 4;
+        case eColorFormat::D32_UNORM_S8_UINT: return 5;
+        case eColorFormat::BGR8_SRGB: return 3;
+        case eColorFormat::BGRA8_SRGB: return 4;
+        }
+        return 0;
+    }
 } // namespace SE::Core

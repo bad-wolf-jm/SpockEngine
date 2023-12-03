@@ -70,6 +70,8 @@ namespace SE::Core
 
     void SceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
+        BaseSceneRenderer::ResizeOutput( aOutputWidth, aOutputHeight );
+
         if( mOutputSampleCount == 1 )
             CreateRenderTarget( aOutputWidth, aOutputHeight );
         else

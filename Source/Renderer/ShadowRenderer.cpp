@@ -157,7 +157,7 @@ namespace SE::Core
         mRenderPipeline              = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         mDirectionalShadowMapSampler = CreateSampler2D( mGraphicContext, lDirectionalShadowMaps->GetAttachment( "SHADOW_MAP" ) );
 
-        constexpr int32_t        mOmniShadowResolution = 1024;
+        constexpr int32_t        mOmniShadowResolution = 512;
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = mOmniShadowResolution;
         lRenderTargetSpec.mHeight      = mOmniShadowResolution;
@@ -203,7 +203,7 @@ namespace SE::Core
     {
         BaseSceneRenderer::Update( aWorld );
 
-        constexpr int32_t mOmniShadowResolution = 1024;
+        constexpr int32_t mOmniShadowResolution = 512;
         if( mPointLights.size() != mPointLightsShadowMapRenderContext.size() )
         {
             mPointLightsShadowMapRenderContext.clear();
@@ -212,7 +212,7 @@ namespace SE::Core
             mPointLightShadowMapSamplers.clear();
 
             sTextureCreateInfo lCreateInfo{};
-            lCreateInfo.mFormat = eColorFormat::RGBA32_FLOAT;
+            lCreateInfo.mFormat = eColorFormat::R32_FLOAT;
             lCreateInfo.mWidth  = mOmniShadowResolution;
             lCreateInfo.mHeight = mOmniShadowResolution;
             lCreateInfo.mDepth  = 1;

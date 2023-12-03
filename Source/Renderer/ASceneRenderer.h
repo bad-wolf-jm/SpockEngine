@@ -36,7 +36,16 @@ namespace SE::Core
 
         virtual void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
-        virtual ref_t<ITexture2D> GetOutputImage() = 0;
+        virtual ref_t<ITexture2D>               GetOutputImage() = 0;
+        std::tuple<uint32_t, uint32_t, uint8_t> GetOutputSize()
+        {
+            return { mOutputWidth, mOutputHeight, GetPixelSize() };
+        }
+
+        int8_t GetPixelSize()
+        {
+            return Core::GetPixelSize( mOutputFormat );
+        }
 
       protected:
         ref_t<IGraphicContext> mGraphicContext{};

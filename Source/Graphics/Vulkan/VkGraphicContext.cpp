@@ -13,7 +13,7 @@ namespace SE::Graphics
     {
         struct sSwapChainSupportDetails
         {
-            VkSurfaceCapabilitiesKHR        mCapabilities;
+            VkSurfaceCapabilitiesKHR     mCapabilities;
             vector_t<VkSurfaceFormatKHR> mFormats;
             vector_t<VkPresentModeKHR>   mPresentModes;
         };
@@ -418,11 +418,11 @@ namespace SE::Graphics
         }
 
         const vector_t<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
-                                                                     VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
-                                                                     VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
+                                                                  VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
+                                                                  VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
+                                                                  VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
 
         mVkPhysicalDevice = PickPhysicalDevice( mVkInstance, lLogicalDeviceExtensions );
         mDepthFormat      = FindDepthFormat( mVkPhysicalDevice );
@@ -432,7 +432,7 @@ namespace SE::Graphics
         mTransferFamily = GetTransferQueueFamilies( mVkPhysicalDevice );
 
         vector_t<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
-        std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily, mTransferFamily };
+        std::set<uint32_t>                lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily, mTransferFamily };
 
         float lQueuePriority = 1.0f;
         for( uint32_t lQueueFamily : lUniqueQueueFamilies )
@@ -1084,7 +1084,7 @@ namespace SE::Graphics
     }
 
     VkDescriptorSetLayout VkGraphicContext::CreateDescriptorSetLayout( vector_t<VkDescriptorSetLayoutBinding> aBindings,
-                                                                       bool                                      aUnbounded )
+                                                                       bool                                   aUnbounded )
     {
         VkDescriptorSetLayoutCreateInfo lDescriptorSetLayoutCreateInfo{};
         lDescriptorSetLayoutCreateInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -1129,8 +1129,7 @@ namespace SE::Graphics
         }
     }
 
-    VkDescriptorPool VkGraphicContext::CreateDescriptorPool( uint32_t                          aDescriptorSetCount,
-                                                             vector_t<VkDescriptorPoolSize> aPoolSizes )
+    VkDescriptorPool VkGraphicContext::CreateDescriptorPool( uint32_t aDescriptorSetCount, vector_t<VkDescriptorPoolSize> aPoolSizes )
     {
         VkDescriptorPoolCreateInfo lDescriptorPoolCreateInfo{};
         lDescriptorPoolCreateInfo.sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;

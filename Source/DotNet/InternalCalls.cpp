@@ -21,9 +21,9 @@ namespace SE::MonoInternalCalls
 
     extern "C"
     {
-        void *CreateGraphicContext( int aSampleCount )
+        void *CreateGraphicContext( int sampleCount )
         {
-            auto newGraphicContext = SE::Graphics::CreateGraphicContext( aSampleCount );
+            auto newGraphicContext = SE::Graphics::CreateGraphicContext( sampleCount );
             graphicContexts.push_back( newGraphicContext );
 
             SE::Graphics::OptixDeviceContextObject::Initialize();
@@ -31,18 +31,37 @@ namespace SE::MonoInternalCalls
             return &graphicContexts.back();
         }
 
-        void *CreateRenderer( void *aGraphicContext, int aSampleCount, int aColorFormat )
+        void *CreateRenderer( void *graphicContext, int sampleCount, int colorFormat )
         {
-            auto *gc          = (ref_t<IGraphicContext> *)( aGraphicContext );
-            auto  newRenderer = New<SceneRenderer>( *gc, (eColorFormat)aColorFormat, aSampleCount );
+            auto *gc          = (ref_t<IGraphicContext> *)( graphicContext );
+            auto  newRenderer = New<SceneRenderer>( *gc, (eColorFormat)colorFormat, sampleCount );
+            newRenderer->SetProjection( math::Perspective( math::radians( 90.0f ), 1.0, 0.01f, 100000.0f ) );
+            math::mat4 view = { -0.159577087,
+                                0.223601535,
+                                -0.961528659,
+                                0,
+                                0,
+                                0.97401011,
+                                0.226504087,
+                                0,
+                                0.987185299,
+                                0.0361448675,
+                                -0.155429721,
+                                0,
+                                -0.0188307762,
+                                -0.807918966,
+                                -7.64284277,
+                                1 };
+            newRenderer->SetView( view );
+
             sceneRenderers.push_back( newRenderer );
 
             return &sceneRenderers.back();
         }
 
-        void *CreateScene( void *aGraphicContext )
+        void *CreateScene( void *graphicContext )
         {
-            auto *gc       = (ref_t<IGraphicContext> *)( aGraphicContext );
+            auto *gc       = (ref_t<IGraphicContext> *)( graphicContext );
             auto  newScene = New<Scene>( *gc, nullptr );
             scenes.push_back( newScene );
 
@@ -54,21 +73,83 @@ namespace SE::MonoInternalCalls
             auto *re = (ref_t<SceneRenderer> *)( renderer );
             auto *sc = (ref_t<Scene> *)( scene );
 
-            (*re)->Update( *sc );
+            ( *re )->Update( *sc );
+        }
+
+        void Render( void *renderer )
+        {
+            auto *re = (ref_t<SceneRenderer> *)( renderer );
+
+            ( *re )->Render();
+        }
+
+        void ResizeRendererOutput( void *renderer, uint32_t width, uint32_t height )
+        {
+            auto *re = (ref_t<SceneRenderer> *)( renderer );
+
+            ( *re )->ResizeOutput( width, height );
+        }
+
+        uint8_t GetPixelSize( void *renderer )
+        {
+            auto *re = (ref_t<SceneRenderer> *)( renderer );
+
+            return ( *re )->GetPixelSize();
+        }
+
+        struct RenderedImage
+        {
+            int      width;
+            int      height;
+            uint8_t *data;
+        };
+
+        void GetOutputSize( void *renderer, uint32_t *width, uint32_t *height, uint8_t *bpp )
+        {
+            auto *re       = (ref_t<SceneRenderer> *)( renderer );
+            auto [w, h, b] = ( *re )->GetOutputSize();
+
+            *width  = w;
+            *height = h;
+            *bpp    = b;
+        }
+
+        void GetRenderedImage( void *renderer, uint8_t *buffer, int len )
+        {
+            auto *re = (ref_t<SceneRenderer> *)( renderer );
+
+            auto outputTexture = ( *re )->GetOutputImage();
+
+            TextureData2D imageData;
+            outputTexture->GetPixelData( imageData );
+
+            auto     imagePixels = imageData.GetImageData();
+            int      width       = imagePixels.mWidth;
+            int      height      = imagePixels.mHeight;
+            uint8_t *data        = imagePixels.mPixelData.data();
+
+            int size = min( width * height * 8, len );
+
+            memcpy( buffer, data, size );
         }
 
         void UpdateScene( void *scene, float ts )
         {
             auto *sc = (ref_t<Scene> *)( scene );
 
-            (*sc)->Update( ts );
+            ( *sc )->Update( ts );
         }
 
-        void LoadScenario( void *scene, const char_t* path )
+        void LoadScenario( void *scene, const char_t *path )
         {
             auto *sc = (ref_t<Scene> *)( scene );
-            
-            (*sc)->LoadScenario( string_t(path) );
+
+            ( *sc )->LoadScenario( string_t( path ) );
+        }
+
+        void SetShaderCacheFolder( const char_t *path )
+        {
+            SE::Graphics::SetShaderCacheFolder( string_t( path ) );
         }
     }
     // uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aEntityID )

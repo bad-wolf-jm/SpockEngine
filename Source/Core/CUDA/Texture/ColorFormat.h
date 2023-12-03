@@ -43,5 +43,6 @@ namespace SE::Core
 
     eColorFormat ToLtseFormat( VkFormat C );
     VkFormat     ToVkFormat( eColorFormat C );
+    uint8_t      GetPixelSize( eColorFormat aColorFormat );
 
 } // namespace SE::Core

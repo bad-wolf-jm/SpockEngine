@@ -9,8 +9,16 @@ public class Engine
     static Engine()
     {
         GraphicContext = CreateGraphicContext(4);
+        SetShaderCacheFolder(@"C:\Users\jmalb\AppData\Local\SpockEngine\Resources\Shaders");
+    }
+
+    public static void Shutdown()
+    {
     }
 
     [DllImport(Config.EnginePath)]
     public static extern IntPtr CreateGraphicContext(int SampleCount);
+
+    [DllImport(Config.EnginePath)]
+    public static extern void SetShaderCacheFolder(string SampleCount);
 }
