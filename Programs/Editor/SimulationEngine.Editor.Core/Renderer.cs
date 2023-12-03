@@ -46,9 +46,12 @@ public class Renderer
     {
         ResizeRendererOutput(_sceneRenderer, width, height);
 
-        uint actualWidth, actualHight;
+        uint actualWidth, actualHeight;
         byte bpp;
-        GetOutputSize(_sceneRenderer, out actualWidth, out actualHight, out bpp);
+        GetOutputSize(_sceneRenderer, out actualWidth, out actualHeight, out bpp);
+
+        _outputWidth = (int) actualWidth;
+        _outputHeight = (int) actualHeight;
     }
 
 
