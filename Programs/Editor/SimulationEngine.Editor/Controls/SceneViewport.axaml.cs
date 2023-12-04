@@ -49,12 +49,19 @@ public class SceneViewport : TemplatedControl
 
         FramebufferProperty.Changed.AddClassHandler<SceneViewport>(OnFramebufferChanged);
         RendererProperty.Changed.AddClassHandler<SceneViewport>(OnRendererChanged);
+        SceneProperty.Changed.AddClassHandler<SceneViewport>(OnSceneChanged);
     }
+
 
     Avalonia.Controls.Image? _image;
     public void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         _image = e.NameScope.Find<Avalonia.Controls.Image>("image");
+    }
+
+    private void OnSceneChanged(SceneViewport viewport, AvaloniaPropertyChangedEventArgs args)
+    {
+        UpdateFramebuffer();
     }
 
     private void OnFramebufferChanged(SceneViewport viewport, AvaloniaPropertyChangedEventArgs args)
