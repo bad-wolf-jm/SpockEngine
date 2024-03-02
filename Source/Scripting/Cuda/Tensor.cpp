@@ -156,20 +156,20 @@ namespace SE::Core
         lMultiTensorType["fetch_mat3"] = MakeFetchFunction<math::mat3>();
         lMultiTensorType["fetch_mat4"] = MakeFetchFunction<math::mat4>();
 
-        auto lScopeType     = aScriptingState.new_usertype<TensorOps::Scope>( "Scope", constructors<TensorOps::Scope( uint32_t aMemorySize )>() );
-        lScopeType["reset"] = []( TensorOps::Scope &aSelf ) { aSelf.Reset(); };
+        auto lScopeType     = aScriptingState.new_usertype<TensorOps::scope_t>( "Scope", constructors<TensorOps::scope_t( uint32_t aMemorySize )>() );
+        lScopeType["reset"] = []( TensorOps::scope_t &aSelf ) { aSelf.Reset(); };
 
         // clang-format off
         lScopeType["run"] = overload(
-            []( TensorOps::Scope &aSelf, TensorOps::OpNode &aNode ) { aSelf.Run( aNode ); },
-            []( TensorOps::Scope &aSelf, vector_t<TensorOps::OpNode> aNode ) { aSelf.Run( aNode ); },
-            []( TensorOps::Scope &aSelf, sol::table aNode )
+            []( TensorOps::scope_t &aSelf, TensorOps::graph_node_t &aNode ) { aSelf.Run( aNode ); },
+            []( TensorOps::scope_t &aSelf, vector_t<TensorOps::graph_node_t> aNode ) { aSelf.Run( aNode ); },
+            []( TensorOps::scope_t &aSelf, sol::table aNode )
             {
-                vector_t<TensorOps::OpNode> lOpNodes{};
+                vector_t<TensorOps::graph_node_t> lOpNodes{};
 
                 for (uint32_t i=0; i < aNode.size(); i++)
                 {
-                    auto lNode = aNode.get<TensorOps::OpNode>( i + 1 );
+                    auto lNode = aNode.get<TensorOps::graph_node_t>( i + 1 );
                     lOpNodes.push_back( lNode );
                 }
 
@@ -279,19 +279,19 @@ namespace SE::Core
 
         // clang-format off
         lOpsModule["MultiTensorValue"] = overload(
-            []( Scope &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( Scope &aScope, sVectorInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( Scope &aScope, sDataInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( Scope &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( Scope &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             }
         );
@@ -347,8 +347,8 @@ namespace SE::Core
         lOpsModule["HCat"]     = TensorOps::HCat;
 
         lOpsModule["Summation"] =
-            overload( []( Scope &aScope, OpNode const &aArray ) { return Summation( aScope, aArray ); },
-                      []( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd ) { return Summation( aScope, aArray, aBegin, aEnd ); } );
+            overload( []( scope_t &aScope, graph_node_t const &aArray ) { return Summation( aScope, aArray ); },
+                      []( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd ) { return Summation( aScope, aArray, aBegin, aEnd ); } );
 
         lOpsModule["CountTrue"]    = TensorOps::CountTrue;
         lOpsModule["CountNonZero"] = TensorOps::CountNonZero;

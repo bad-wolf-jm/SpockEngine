@@ -27,7 +27,7 @@ namespace SE::TensorOps
     using MemoryPool   = SE::Cuda::MemoryPool;
     using sTensorShape = SE::Cuda::sTensorShape;
 
-    using OpNode = SE::Core::Entity;
+    using graph_node_t = SE::Core::Entity;
 
     /// @brief sGraphOperationController
     ///
@@ -50,13 +50,13 @@ namespace SE::TensorOps
             return mEntity.Has<T>();
         }
 
-        OpNode GetControlledEntity()
+        graph_node_t GetControlledEntity()
         {
             return mEntity;
         };
 
       public:
-        virtual void Initialize( OpNode aEntity )
+        virtual void Initialize( graph_node_t aEntity )
         {
             mEntity = aEntity;
         }
@@ -65,7 +65,7 @@ namespace SE::TensorOps
         }
 
       private:
-        OpNode mEntity;
+        graph_node_t mEntity;
     };
 
     /// @brief sGraphOperationComponent
@@ -164,10 +164,10 @@ namespace SE::TensorOps
     ///
     struct sOperandComponent
     {
-        vector_t<OpNode> mOperands = {}; //!< List of entities that have to be run before the current entity.
+        vector_t<graph_node_t> mOperands = {}; //!< List of entities that have to be run before the current entity.
 
         sOperandComponent() = default;
-        sOperandComponent( vector_t<OpNode> const &aOpNodes )
+        sOperandComponent( vector_t<graph_node_t> const &aOpNodes )
         {
             mOperands = aOpNodes;
         };
@@ -182,9 +182,9 @@ namespace SE::TensorOps
     ///
     struct sARangeComponent
     {
-        OpNode mLeft{};  //!< Lower bound. Should be a vector.
-        OpNode mRight{}; //!< Upper bound. Should be a vector.
-        OpNode mDelta{}; //!< Difference. Should be a vector.
+        graph_node_t mLeft{};  //!< Lower bound. Should be a vector.
+        graph_node_t mRight{}; //!< Upper bound. Should be a vector.
+        graph_node_t mDelta{}; //!< Difference. Should be a vector.
 
         sARangeComponent()                           = default;
         sARangeComponent( const sARangeComponent & ) = default;
@@ -197,8 +197,8 @@ namespace SE::TensorOps
     ///
     struct sBinaryOperationComponent
     {
-        OpNode mLeftOperand;  //!< Left operand
-        OpNode mRightOperand; //!< Right operand
+        graph_node_t mLeftOperand;  //!< Left operand
+        graph_node_t mRightOperand; //!< Right operand
 
         sBinaryOperationComponent()                                    = default;
         sBinaryOperationComponent( const sBinaryOperationComponent & ) = default;
@@ -208,9 +208,9 @@ namespace SE::TensorOps
     {
         eBroadcastHint mBroadcastHint = eBroadcastHint::NONE; //!< How to broadcast the operation.
 
-        OpNode   mBlockSizes;                                 //!< Block sizes
+        graph_node_t   mBlockSizes;                                 //!< Block sizes
         uint32_t mMaxBlockSize = 0;                           //!< Maximum value of the `mBlockSizes` parameter
-        OpNode   mBroadcastDimension;                         //!< Size of the broadcast dimension
+        graph_node_t   mBroadcastDimension;                         //!< Size of the broadcast dimension
         uint32_t mMaxBroadcastDimension = 0;                  //!< Maximum size of the broadcast dimension
 
         sBroadcastInfoComponent()                                  = default;
@@ -219,7 +219,7 @@ namespace SE::TensorOps
 
     struct sNotOperationComponent
     {
-        OpNode mOperand; //!< Left operand
+        graph_node_t mOperand; //!< Left operand
 
         sNotOperationComponent()                                 = default;
         sNotOperationComponent( const sNotOperationComponent & ) = default;
@@ -227,7 +227,7 @@ namespace SE::TensorOps
 
     struct sBitwiseNotOperationComponent
     {
-        OpNode mOperand; //!< Left operand
+        graph_node_t mOperand; //!< Left operand
 
         sBitwiseNotOperationComponent()                                        = default;
         sBitwiseNotOperationComponent( const sBitwiseNotOperationComponent & ) = default;
@@ -235,9 +235,9 @@ namespace SE::TensorOps
 
     struct sInIntervalOperationComponent
     {
-        OpNode mX;           //!< Value to test
-        OpNode mLower;       //!< Interval lower bound
-        OpNode mUpper;       //!< Interval upper bound
+        graph_node_t mX;           //!< Value to test
+        graph_node_t mLower;       //!< Interval lower bound
+        graph_node_t mUpper;       //!< Interval upper bound
         bool   mStrictLower; //!< Use strict inequality for lower bound
         bool   mStrictUpper; //!< Use strict inequality for upper bound
 
@@ -253,8 +253,8 @@ namespace SE::TensorOps
     ///
     struct sRepeatOperationComponent
     {
-        OpNode mArray;       //!< @ref MultiTensor to repeat.
-        OpNode mRepetitions; //!< Number of times the elements of the @ref MultiTensor should be repeated
+        graph_node_t mArray;       //!< @ref MultiTensor to repeat.
+        graph_node_t mRepetitions; //!< Number of times the elements of the @ref MultiTensor should be repeated
 
         sRepeatOperationComponent()                                    = default;
         sRepeatOperationComponent( const sRepeatOperationComponent & ) = default;
@@ -268,8 +268,8 @@ namespace SE::TensorOps
     ///
     struct sTileOperationComponent
     {
-        OpNode mArray;       //!< @ref MultiTensor to repeat.
-        OpNode mRepetitions; //!< Number of times the elements of the @ref MultiTensor should be tiled
+        graph_node_t mArray;       //!< @ref MultiTensor to repeat.
+        graph_node_t mRepetitions; //!< Number of times the elements of the @ref MultiTensor should be tiled
 
         sTileOperationComponent()                                  = default;
         sTileOperationComponent( const sTileOperationComponent & ) = default;
@@ -282,9 +282,9 @@ namespace SE::TensorOps
     ///
     struct sLinearSpaceComponent
     {
-        OpNode mLeft{};         //!< Lower bound
-        OpNode mRight{};        //!< Upper bound
-        OpNode mSubdivisions{}; //!< Number of subdivisions
+        graph_node_t mLeft{};         //!< Lower bound
+        graph_node_t mRight{};        //!< Upper bound
+        graph_node_t mSubdivisions{}; //!< Number of subdivisions
 
         sLinearSpaceComponent()                                = default;
         sLinearSpaceComponent( const sLinearSpaceComponent & ) = default;
@@ -292,9 +292,9 @@ namespace SE::TensorOps
 
     struct sWhereOperationComponent
     {
-        OpNode mCondition{};    //!< Lower bound
-        OpNode mValueIfTrue{};  //!< Upper bound
-        OpNode mValueIfFalse{}; //!< Number of subdivisions
+        graph_node_t mCondition{};    //!< Lower bound
+        graph_node_t mValueIfTrue{};  //!< Upper bound
+        graph_node_t mValueIfFalse{}; //!< Number of subdivisions
 
         sWhereOperationComponent()                                   = default;
         sWhereOperationComponent( const sWhereOperationComponent & ) = default;
@@ -307,9 +307,9 @@ namespace SE::TensorOps
     ///
     struct sMixNodeComponent
     {
-        OpNode mA{}; //!< Left
-        OpNode mB{}; //!< Right
-        OpNode mT{}; //!< Coefficient
+        graph_node_t mA{}; //!< Left
+        graph_node_t mB{}; //!< Right
+        graph_node_t mT{}; //!< Coefficient
 
         sMixNodeComponent()                            = default;
         sMixNodeComponent( const sMixNodeComponent & ) = default;
@@ -463,9 +463,9 @@ namespace SE::TensorOps
     ///
     struct sSample2DComponent
     {
-        OpNode mX{};        //!< X coordinates of the texture samples
-        OpNode mY{};        //!< Y coordinates of the texture samples
-        OpNode mTextures{}; //!< Textures to sample from
+        graph_node_t mX{};        //!< X coordinates of the texture samples
+        graph_node_t mY{};        //!< Y coordinates of the texture samples
+        graph_node_t mTextures{}; //!< Textures to sample from
 
         sSample2DComponent()                             = default;
         sSample2DComponent( const sSample2DComponent & ) = default;
@@ -479,8 +479,8 @@ namespace SE::TensorOps
     struct sToFixedPointNodeComponent
     {
         scalar_type_t mOutputType = scalar_type_t::UINT32; //!< Integer type to use to engode the fixed point decimal numbers
-        OpNode      mArray{};                          //!< Input tensor/
-        OpNode      mScaling{};                        //!< Scaling factor.
+        graph_node_t      mArray{};                          //!< Input tensor/
+        graph_node_t      mScaling{};                        //!< Scaling factor.
 
         sToFixedPointNodeComponent()                                     = default;
         sToFixedPointNodeComponent( const sToFixedPointNodeComponent & ) = default;
@@ -492,9 +492,9 @@ namespace SE::TensorOps
     ///
     struct sAffineNodeComponent
     {
-        OpNode mA{}; //!< Coefficient
-        OpNode mX{}; //!< Variable
-        OpNode mB{}; //!< Translation
+        graph_node_t mA{}; //!< Coefficient
+        graph_node_t mX{}; //!< Variable
+        graph_node_t mB{}; //!< Translation
 
         sAffineNodeComponent()                               = default;
         sAffineNodeComponent( const sAffineNodeComponent & ) = default;
@@ -503,12 +503,12 @@ namespace SE::TensorOps
     /// @brief sArraySliceNodeComponent
     struct sArraySliceNodeComponent
     {
-        OpNode mArray;              //!< Tensor to transform
-        OpNode mBegin;              //!< Lower index value for each layer
-        OpNode mEnd;                //!< Upper index value for each layer
+        graph_node_t mArray;              //!< Tensor to transform
+        graph_node_t mBegin;              //!< Lower index value for each layer
+        graph_node_t mEnd;                //!< Upper index value for each layer
 
-        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       //!< Length of the last dimension of `mArray`
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -519,12 +519,12 @@ namespace SE::TensorOps
     /// @brief sArraySummationNodeComponent
     struct sArraySummationNodeComponent
     {
-        OpNode mArray;              //!< Tensor to transform
-        OpNode mBegin;              //!< Lower index value for each layer
-        OpNode mEnd;                //!< Upper index value for each layer
+        graph_node_t mArray;              //!< Tensor to transform
+        graph_node_t mBegin;              //!< Lower index value for each layer
+        graph_node_t mEnd;                //!< Upper index value for each layer
 
-        OpNode mElementCount;       // Length of the last dimension of `mArray`
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       // Length of the last dimension of `mArray`
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -535,15 +535,15 @@ namespace SE::TensorOps
     /// @brief sConv1DNodeComponent
     struct sConv1DNodeComponent
     {
-        OpNode   mArray0;               //!< Tensor to transform
-        OpNode   mElementCount0;        //!< Length of the last dimension of `mArray0`
-        OpNode   mBlockSizes0;          //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
+        graph_node_t   mArray0;               //!< Tensor to transform
+        graph_node_t   mElementCount0;        //!< Length of the last dimension of `mArray0`
+        graph_node_t   mBlockSizes0;          //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
         uint32_t mMaxElementCount0 = 0; //!< Maximum value of the `mElementCount0` parameter
         uint32_t mMaxBlockSize0    = 0; //!< Maximum value of the `aBlockSizes0` parameter
 
-        OpNode   mArray1;               //!< Convolution kernel
-        OpNode   mElementCount1;        //!< Length of the last dimension of `mArray1`
-        OpNode   mBlockSizes1;          //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
+        graph_node_t   mArray1;               //!< Convolution kernel
+        graph_node_t   mElementCount1;        //!< Length of the last dimension of `mArray1`
+        graph_node_t   mBlockSizes1;          //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
         uint32_t mMaxBlockSize1 = 0;    //!< Maximum value of the `aBlockSizes1` parameter
 
         sConv1DNodeComponent()                               = default;
@@ -553,9 +553,9 @@ namespace SE::TensorOps
     /// @brief sCountTrueNodeComponent
     struct sCountTrueNodeComponent
     {
-        OpNode mArray;              //!< Tensor to transform
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
+        graph_node_t mArray;              //!< Tensor to transform
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -566,9 +566,9 @@ namespace SE::TensorOps
     /// @brief sCountNonZeroNodeComponent
     struct sCountNonZeroNodeComponent
     {
-        OpNode mArray;              //!< Tensor to transform
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
+        graph_node_t mArray;              //!< Tensor to transform
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -579,9 +579,9 @@ namespace SE::TensorOps
     /// @brief sCountZeroNodeComponent
     struct sCountZeroNodeComponent
     {
-        OpNode mArray;              //!< Tensor to transform
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
+        graph_node_t mArray;              //!< Tensor to transform
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -592,7 +592,7 @@ namespace SE::TensorOps
     /// @brief sFloorNodeComponent
     struct sFloorNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        graph_node_t mArray; //!< Tensor to transform
 
         sFloorNodeComponent()                              = default;
         sFloorNodeComponent( const sFloorNodeComponent & ) = default;
@@ -601,7 +601,7 @@ namespace SE::TensorOps
     /// @brief sCeilNodeComponent
     struct sCeilNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        graph_node_t mArray; //!< Tensor to transform
 
         sCeilNodeComponent()                             = default;
         sCeilNodeComponent( const sCeilNodeComponent & ) = default;
@@ -610,7 +610,7 @@ namespace SE::TensorOps
     /// @brief sAbsNodeComponent
     struct sAbsNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        graph_node_t mArray; //!< Tensor to transform
 
         sAbsNodeComponent()                            = default;
         sAbsNodeComponent( const sAbsNodeComponent & ) = default;
@@ -619,7 +619,7 @@ namespace SE::TensorOps
     /// @brief sSqrtNodeComponent
     struct sSqrtNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        graph_node_t mArray; //!< Tensor to transform
 
         sSqrtNodeComponent()                             = default;
         sSqrtNodeComponent( const sSqrtNodeComponent & ) = default;
@@ -628,7 +628,7 @@ namespace SE::TensorOps
     /// @brief sRoundNodeComponent
     struct sRoundNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        graph_node_t mArray; //!< Tensor to transform
 
         sRoundNodeComponent()                              = default;
         sRoundNodeComponent( const sRoundNodeComponent & ) = default;
@@ -637,11 +637,11 @@ namespace SE::TensorOps
     /// @brief sDiffNodeComponent
     struct sDiffNodeComponent
     {
-        OpNode   mArray; //!< Tensor to transform
+        graph_node_t   mArray; //!< Tensor to transform
         uint32_t mCount = 0;
 
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -652,12 +652,12 @@ namespace SE::TensorOps
     /// @brief sShiftNodeComponent
     struct sShiftNodeComponent
     {
-        OpNode  mArray; //!< Tensor to transform
+        graph_node_t  mArray; //!< Tensor to transform
         int32_t mCount = 0;
-        OpNode  mFillValue;
+        graph_node_t  mFillValue;
 
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
-        OpNode mElementCount;       //!< Length of the last dimension of `mArray`
+        graph_node_t mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray`
+        graph_node_t mElementCount;       //!< Length of the last dimension of `mArray`
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
@@ -668,14 +668,14 @@ namespace SE::TensorOps
     /// @brief sHCatNodeComponent
     struct sHCatNodeComponent
     {
-        OpNode mArray0;             //!< First tensor to concatenate
-        OpNode mArray1;             //!< Second tensor to concatenate
+        graph_node_t mArray0;             //!< First tensor to concatenate
+        graph_node_t mArray1;             //!< Second tensor to concatenate
 
-        OpNode   mBlockSizes;       //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
+        graph_node_t   mBlockSizes;       //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `mBlockSizes` parameter
 
-        OpNode mElementCount0;      //!< Length of the last dimension of `mArray0`
-        OpNode mElementCount1;      //!< Length of the last dimension of `mArray1`
+        graph_node_t mElementCount0;      //!< Length of the last dimension of `mArray0`
+        graph_node_t mElementCount1;      //!< Length of the last dimension of `mArray1`
 
         sHCatNodeComponent()                             = default;
         sHCatNodeComponent( const sHCatNodeComponent & ) = default;

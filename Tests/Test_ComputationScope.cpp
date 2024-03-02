@@ -135,7 +135,7 @@ std::vector<std::vector<_Ty>> BroadcastMap( std::vector<_Ty> aVec1, std::vector<
 TEST_CASE( "VectorNode", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Node allocation" )
     {
@@ -162,7 +162,7 @@ TEST_CASE( "VectorNode", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Node allocation" )
     {
@@ -596,7 +596,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Add scalar to array (float)" )
     {
@@ -1014,7 +1014,7 @@ TEMPLATE_TEST_CASE( "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t,
                     double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 1400 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() );
@@ -1061,7 +1061,7 @@ TEMPLATE_TEST_CASE( "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t,
 TEST_CASE( "Tensor AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 29, 12, 23 };
     std::vector<uint32_t> lDim2{ 33, 14, 13 };
@@ -1097,7 +1097,7 @@ TEST_CASE( "Tensor AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor AND Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1141,7 +1141,7 @@ TEST_CASE( "Tensor AND Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1196,7 +1196,7 @@ TEST_CASE( "Tensor AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 29, 12, 23 };
     std::vector<uint32_t> lDim2{ 33, 14, 13 };
@@ -1233,7 +1233,7 @@ TEST_CASE( "Tensor OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor OR Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1277,7 +1277,7 @@ TEST_CASE( "Tensor OR Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1332,7 +1332,7 @@ TEST_CASE( "Tensor OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 29, 12, 23 };
     std::vector<uint32_t> lDim2{ 33, 14, 13 };
@@ -1358,7 +1358,7 @@ TEST_CASE( "NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor BITWISE_AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 29, 12, 23 };
     std::vector<uint32_t> lDim2{ 33, 14, 13 };
@@ -1394,7 +1394,7 @@ TEST_CASE( "Tensor BITWISE_AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor BITWISE_AND Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1438,7 +1438,7 @@ TEST_CASE( "Tensor BITWISE_AND Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor BITWISE_AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1473,7 +1473,7 @@ TEST_CASE( "Tensor BITWISE_AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor BITWISE_OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 29, 12, 23 };
     std::vector<uint32_t> lDim2{ 33, 14, 13 };
@@ -1510,7 +1510,7 @@ TEST_CASE( "Tensor BITWISE_OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor BITWISE_OR Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1554,7 +1554,7 @@ TEST_CASE( "Tensor BITWISE_OR Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tensor BITWISE_OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 2, 12, 23 };
     std::vector<uint32_t> lDim2{ 3, 14, 13 };
@@ -1589,7 +1589,7 @@ TEST_CASE( "Tensor BITWISE_OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "BITWISE_NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 29, 12, 23 };
     std::vector<uint32_t> lDim2{ 33, 14, 13 };
@@ -1615,7 +1615,7 @@ TEST_CASE( "BITWISE_NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Affine transform tensor/tensor/tensor (float)" )
     {
@@ -1986,7 +1986,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Mix node", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Mix tensors (float)" )
     {
@@ -2020,7 +2020,7 @@ TEST_CASE( "Mix node", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Linear space allocation (float)" )
     {
@@ -2116,7 +2116,7 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "ARange allocation (float)" )
     {
@@ -2209,7 +2209,7 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Repeat node allocation (float)" )
     {
@@ -2295,7 +2295,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     SECTION( "Tile node allocation (float)" )
     {
@@ -2373,7 +2373,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2420,7 +2420,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2467,7 +2467,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2527,7 +2527,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2582,7 +2582,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Scope operation names", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lValue = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     auto                  lNode  = VectorValue<uint32_t>( lScope.WithOpName( "Node_1" ), lValue );
@@ -2592,7 +2592,7 @@ TEST_CASE( "Scope operation names", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "InInterval Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2624,7 +2624,7 @@ TEST_CASE( "InInterval Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2661,7 +2661,7 @@ TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "InInterval Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2689,7 +2689,7 @@ TEST_CASE( "InInterval Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2726,7 +2726,7 @@ TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "InInterval Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2754,7 +2754,7 @@ TEST_CASE( "InInterval Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "InInterval Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2781,7 +2781,7 @@ TEST_CASE( "InInterval Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2811,7 +2811,7 @@ TEST_CASE( "LessThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2845,7 +2845,7 @@ TEST_CASE( "LessThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2871,7 +2871,7 @@ TEST_CASE( "LessThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2905,7 +2905,7 @@ TEST_CASE( "LessThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2931,7 +2931,7 @@ TEST_CASE( "LessThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2961,7 +2961,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -2995,7 +2995,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3021,7 +3021,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3055,7 +3055,7 @@ TEST_CASE( "LessThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "LessThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3081,7 +3081,7 @@ TEST_CASE( "LessThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3111,7 +3111,7 @@ TEST_CASE( "GreaterThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3145,7 +3145,7 @@ TEST_CASE( "GreaterThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3171,7 +3171,7 @@ TEST_CASE( "GreaterThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3205,7 +3205,7 @@ TEST_CASE( "GreaterThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3231,7 +3231,7 @@ TEST_CASE( "GreaterThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3261,7 +3261,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3295,7 +3295,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3321,7 +3321,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3355,7 +3355,7 @@ TEST_CASE( "GreaterThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "GreaterThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3381,7 +3381,7 @@ TEST_CASE( "GreaterThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3415,7 +3415,7 @@ TEST_CASE( "Where Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3458,7 +3458,7 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3488,7 +3488,7 @@ TEST_CASE( "Where Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3533,7 +3533,7 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3576,7 +3576,7 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3616,7 +3616,7 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3646,7 +3646,7 @@ TEST_CASE( "Where Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3687,7 +3687,7 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Where Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 128 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3716,7 +3716,7 @@ TEST_CASE( "Where Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3794,7 +3794,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3872,7 +3872,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -3950,7 +3950,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4028,7 +4028,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4109,7 +4109,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4190,7 +4190,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4271,7 +4271,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4352,7 +4352,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4430,7 +4430,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4512,7 +4512,7 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4594,7 +4594,7 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4676,7 +4676,7 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Floor", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4704,7 +4704,7 @@ TEST_CASE( "Floor", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Ceiling", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4732,7 +4732,7 @@ TEST_CASE( "Ceiling", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Absolute value", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4760,7 +4760,7 @@ TEST_CASE( "Absolute value", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Square roots", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4796,7 +4796,7 @@ TEST_CASE( "Square roots", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Rounding", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4831,7 +4831,7 @@ TEST_CASE( "Rounding", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4909,7 +4909,7 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -4988,7 +4988,7 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -5073,7 +5073,7 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
@@ -5195,7 +5195,7 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 7, 3, 124 };
     std::vector<uint32_t> lValues1;
@@ -5314,7 +5314,7 @@ TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t> lDim1{ 7, 3, 124 };
     std::vector<uint32_t> lValues1;
@@ -5425,7 +5425,7 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
 TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() / 2 );
@@ -5485,7 +5485,7 @@ TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint
                     float )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() / 2 );
@@ -5544,7 +5544,7 @@ TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint
 TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>           lDim1{ 7, 3, 124 };
     std::vector<std::vector<float>> lValues1 = RandomVector<float>( lDim1, 0, std::numeric_limits<float>::max() / 2 );
@@ -5609,7 +5609,7 @@ TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
 TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t, int32_t, int64_t, float, double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() / 2 );
@@ -5674,7 +5674,7 @@ TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t
 TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>             lDim1{ 7, 3, 124 };
     std::vector<std::vector<uint8_t>> lValues1 = RandomBooleanVector( lDim1 );
@@ -5733,7 +5733,7 @@ TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>             lDim1{ 7, 3, 124 };
     std::vector<std::vector<uint8_t>> lValues1 = RandomBooleanVector( lDim1 );
@@ -5792,7 +5792,7 @@ TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
 TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() );
@@ -5851,7 +5851,7 @@ TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_
 TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() );
@@ -5911,7 +5911,7 @@ TEMPLATE_TEST_CASE( "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uin
                     double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() / 2 );
@@ -5974,7 +5974,7 @@ TEMPLATE_TEST_CASE( "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
                     double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() / 2 );
@@ -6048,7 +6048,7 @@ TEMPLATE_TEST_CASE( "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uin
 {
 
     size_t lPoolSize = 3 * 1024 * 1024;
-    Scope  lScope( lPoolSize );
+    scope_t  lScope( lPoolSize );
 
     std::vector<uint32_t>              lDim1{ 7, 3, 124 };
     std::vector<std::vector<TestType>> lValues1 = RandomVector<TestType>( lDim1, 0, std::numeric_limits<TestType>::max() / 2 );

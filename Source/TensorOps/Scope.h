@@ -26,23 +26,23 @@
 
 namespace SE::TensorOps
 {
-    using OpNode = SE::Core::Entity;
+    using graph_node_t = SE::Core::Entity;
 
-    struct Scope
+    struct scope_t
     {
         MemoryPool mPool{}; //!< Memory pool
 
         /// @brief Default constructor
-        Scope() = default;
+        scope_t() = default;
 
         /// @brief Copy constructor
-        Scope( const Scope & ) = default;
+        scope_t( const scope_t & ) = default;
 
         /// @brief Create a scope, and reserves `aMemorySize` butes of GPU memory for it
         ///
         /// @param aMemorySize Size, in bytes, of the underlying memory pool
         ///
-        Scope( uint32_t aMemorySize );
+        scope_t( uint32_t aMemorySize );
 
         /// @brief Set `aName` to be the name of the next node
         ///
@@ -50,7 +50,7 @@ namespace SE::TensorOps
         ///
         /// @returns The parent scope for method chaining/
         ///
-        Scope &WithOpName( const string_t &aName );
+        scope_t &WithOpName( const string_t &aName );
 
         /// @brief Create a node in the database
         ///
@@ -59,22 +59,22 @@ namespace SE::TensorOps
         ///
         /// @return The newly cerated node.
         ///
-        OpNode CreateNode();
+        graph_node_t CreateNode();
 
         /// @brief Retrieve a node by name
-        OpNode operator[]( string_t const &aNodeName );
+        graph_node_t operator[]( string_t const &aNodeName );
 
         /// @brief Clears the node registry, and resets the memory pool
         void Reset();
 
         /// @brief Overloaded method provided for convenience.
-        void Run( OpNode const &aNode );
+        void Run( graph_node_t const &aNode );
 
         /// @brief Run a given list of nodes
         ///
         /// This implies running all nodes used as inputs for the nodes to run.
         ///
-        void Run( vector_t<OpNode> const &aNode );
+        void Run( vector_t<graph_node_t> const &aNode );
 
         /// @brief Access the underlying nodes registry
         SE::Core::EntityCollection &GetNodesRegistry()
@@ -85,7 +85,7 @@ namespace SE::TensorOps
       private:
         SE::Core::EntityCollection mNodesRegistry{};     //!< Underlying node database
         std::optional<string_t> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
-        std::unordered_map<string_t, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
+        std::unordered_map<string_t, graph_node_t> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };
 
     /// @brief Create a constant @ref MultiTensor initialized with the given constant
@@ -96,7 +96,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode MultiTensorValue( Scope &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given vector of values
     ///
@@ -109,7 +109,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode MultiTensorValue( Scope &aScope, sVectorInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given data
     ///
@@ -121,7 +121,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode MultiTensorValue( Scope &aScope, sDataInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with uniformly distributed random values
     ///
@@ -131,7 +131,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode MultiTensorValue( Scope &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with normally distributed random values
     ///
@@ -141,7 +141,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode MultiTensorValue( Scope &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
 
     /// @brief Create a constant @ref MemoryBuffer initialized with the given vector
     ///
@@ -153,7 +153,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode VectorValue( Scope &aScope, vector_t<_Ty> const &aValue )
+    graph_node_t VectorValue( scope_t &aScope, vector_t<_Ty> const &aValue )
     {
         auto l_NewEntity = aScope.CreateNode();
 
@@ -183,7 +183,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode ScalarVectorValue( Scope &aScope, scalar_type_t aType, vector_t<_Ty> const &aValue )
+    graph_node_t ScalarVectorValue( scope_t &aScope, scalar_type_t aType, vector_t<_Ty> const &aValue )
     {
         uint32_t                 lSize = aValue.size();
         vector_t<scalar_value_t> lValues( lSize );
@@ -204,7 +204,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode ConstantScalarValue( Scope &aScope, _Ty const &aValue )
+    graph_node_t ConstantScalarValue( scope_t &aScope, _Ty const &aValue )
     {
         auto l_NewEntity = aScope.CreateNode();
 
@@ -229,7 +229,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Add( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t Add( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Subtracts the outputs of two nodes
     ///
@@ -244,7 +244,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Subtract( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t Subtract( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Divides the outputs of two nodes
     ///
@@ -259,7 +259,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Divide( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t Divide( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Multiplies the outputs of two nodes
     ///
@@ -274,7 +274,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Multiply( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t Multiply( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Conjunction of two boolean (uint8_t) nodes
     ///
@@ -289,7 +289,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode And( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t And( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Disjunction of two boolean (uint8_t) nodes
     ///
@@ -304,7 +304,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Or( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t Or( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Negation of two boolean (uint8_t) nodes
     ///
@@ -316,7 +316,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Not( Scope &aScope, OpNode const &aOperand );
+    graph_node_t Not( scope_t &aScope, graph_node_t const &aOperand );
 
     /// @brief Bitwise conjunction of two integer nodes
     ///
@@ -331,7 +331,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode BitwiseAnd( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t BitwiseAnd( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Bitwise disjunction of two integer nodes
     ///
@@ -346,7 +346,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode BitwiseOr( Scope &aScope, OpNode const &aLeft, OpNode const &aRight );
+    graph_node_t BitwiseOr( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
 
     /// @brief Bitwise negation of two integer nodes
     ///
@@ -358,7 +358,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode BitwiseNot( Scope &aScope, OpNode const &aOperand );
+    graph_node_t BitwiseNot( scope_t &aScope, graph_node_t const &aOperand );
 
     /// @brief Test whether the values contained in a tensor lie within an interval
     ///
@@ -374,7 +374,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode InInterval( Scope &aScope, OpNode const &aX, OpNode const &aLower, OpNode const &aUpper, bool aStrictLower,
+    graph_node_t InInterval( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aLower, graph_node_t const &aUpper, bool aStrictLower,
                        bool aStrictUpper );
 
     /// @brief Equality
@@ -390,7 +390,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Equal( Scope &aScope, OpNode const &aX, OpNode const &aY );
+    graph_node_t Equal( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
 
     /// @brief Less than
     ///
@@ -405,7 +405,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode LessThan( Scope &aScope, OpNode const &aX, OpNode const &aY );
+    graph_node_t LessThan( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
 
     /// @brief Less than or equal to
     ///
@@ -420,7 +420,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode LessThanOrEqual( Scope &aScope, OpNode const &aX, OpNode const &aY );
+    graph_node_t LessThanOrEqual( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
 
     /// @brief Greater than
     ///
@@ -435,7 +435,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode GreaterThan( Scope &aScope, OpNode const &aX, OpNode const &aY );
+    graph_node_t GreaterThan( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
 
     /// @brief Greater than or equal to
     ///
@@ -450,7 +450,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode GreaterThanOrEqual( Scope &aScope, OpNode const &aX, OpNode const &aY );
+    graph_node_t GreaterThanOrEqual( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
 
     /// @brief Choose values from one tensor or another based on a given condition
     ///
@@ -466,7 +466,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Where( Scope &aScope, OpNode const &aCondition, OpNode const &aValueIfTrue, OpNode const &aValueIfFalse );
+    graph_node_t Where( scope_t &aScope, graph_node_t const &aCondition, graph_node_t const &aValueIfTrue, graph_node_t const &aValueIfFalse );
 
     /// @brief Computes the pointwise mix of two tensors
     ///
@@ -481,7 +481,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Mix( Scope &aScope, OpNode const &aA, OpNode const &aB, OpNode const &aT );
+    graph_node_t Mix( scope_t &aScope, graph_node_t const &aA, graph_node_t const &aB, graph_node_t const &aT );
 
     /// @brief Affine transforms
     ///
@@ -498,7 +498,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode AffineTransform( Scope &aScope, OpNode const &aA, OpNode const &aX, OpNode const &aB );
+    graph_node_t AffineTransform( scope_t &aScope, graph_node_t const &aA, graph_node_t const &aX, graph_node_t const &aB );
 
     /// @brief Computes a set of ranges of values with a regular step.
     ///
@@ -514,7 +514,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode ARange( Scope &aScope, OpNode const &aLeft, OpNode const &aRight, OpNode const &aDelta );
+    graph_node_t ARange( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight, graph_node_t const &aDelta );
 
     /// @brief Computes evenly spaced numbers in the intervals specified by two tensors
     ///
@@ -530,7 +530,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode LinearSpace( Scope &aScope, OpNode const &aLeft, OpNode const &aRight, OpNode const &aSubdivisions );
+    graph_node_t LinearSpace( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight, graph_node_t const &aSubdivisions );
 
     /// @brief Repeat each element of a multi-tensor.
     ///
@@ -546,7 +546,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Repeat( Scope &aScope, OpNode const &aArray, OpNode const &aRepetitions );
+    graph_node_t Repeat( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aRepetitions );
 
     /// @brief Repeat each layer of a multi-tensor.
     ///
@@ -562,7 +562,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Tile( Scope &aScope, OpNode const &aArray, OpNode const &aRepetitions );
+    graph_node_t Tile( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aRepetitions );
 
     /// @brief Texture sampling
     ///
@@ -578,7 +578,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Sample2D( Scope &aScope, OpNode const &aX, OpNode const &aY, OpNode const &aTextures );
+    graph_node_t Sample2D( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY, graph_node_t const &aTextures );
 
     /// @brief Fixed point conversion
     ///
@@ -591,7 +591,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode ToFixedPoint( Scope &aScope, scalar_type_t aOutputType, OpNode const &aArray, OpNode const &aScaling );
+    graph_node_t ToFixedPoint( scope_t &aScope, scalar_type_t aOutputType, graph_node_t const &aArray, graph_node_t const &aScaling );
 
     /// @brief Collapse a @ref MultiTensor into a @ref MultiTensor having only one layer
     ///
@@ -603,7 +603,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Collapse( Scope &aScope, OpNode const &aArray );
+    graph_node_t Collapse( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Expand the first dimension of a @ref MultiTensor with only one layer into a multi-layered MultiTensor
     ///
@@ -616,7 +616,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Expand( Scope &aScope, OpNode const &aArray );
+    graph_node_t Expand( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Reshape the input @ref MultiTensor
     ///
@@ -630,7 +630,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Reshape( Scope &aScope, OpNode const &aArray, Cuda::sTensorShape &aNewShape );
+    graph_node_t Reshape( scope_t &aScope, graph_node_t const &aArray, Cuda::sTensorShape &aNewShape );
 
     /// @brief Relayout the input @ref MultiTensor
     ///
@@ -642,7 +642,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Relayout( Scope &aScope, OpNode const &aArray, sTensorShape &aNewLayout );
+    graph_node_t Relayout( scope_t &aScope, graph_node_t const &aArray, sTensorShape &aNewLayout );
 
     /// @brief Flatten the input @ref MultiTensor
     ///
@@ -654,7 +654,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Flatten( Scope &aScope, OpNode const &aArray );
+    graph_node_t Flatten( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Slice the input @ref MultiTensor
     ///
@@ -669,7 +669,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Slice( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd );
+    graph_node_t Slice( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd );
 
     /// @brief Sum the last dimension of the input @ref MultiTensor
     ///
@@ -681,7 +681,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Summation( Scope &aScope, OpNode const &aArray );
+    graph_node_t Summation( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Sum the last dimension of the input @ref MultiTensor
     ///
@@ -696,7 +696,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Summation( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd );
+    graph_node_t Summation( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd );
 
     /// @brief Count the number of `true` elements in the last dimension of @ref MultiTensor
     ///
@@ -708,7 +708,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode CountTrue( Scope &aScope, OpNode const &aArray );
+    graph_node_t CountTrue( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Count the number of non-zero elements in the last dimension of @ref MultiTensor
     ///
@@ -720,7 +720,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode CountNonZero( Scope &aScope, OpNode const &aArray );
+    graph_node_t CountNonZero( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Count the number of zero elements in the last dimension of @ref MultiTensor
     ///
@@ -732,7 +732,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode CountZero( Scope &aScope, OpNode const &aArray );
+    graph_node_t CountZero( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Compute the pointwise floor of @ref MultiTensor
     ///
@@ -743,7 +743,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Floor( Scope &aScope, OpNode const &aArray );
+    graph_node_t Floor( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Compute the pointwise ceiling of @ref MultiTensor
     ///
@@ -754,7 +754,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Ceil( Scope &aScope, OpNode const &aArray );
+    graph_node_t Ceil( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Compute the pointwise absolute value of @ref MultiTensor
     ///
@@ -765,7 +765,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Abs( Scope &aScope, OpNode const &aArray );
+    graph_node_t Abs( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Compute the pointwise square root value of @ref MultiTensor
     ///
@@ -776,7 +776,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Sqrt( Scope &aScope, OpNode const &aArray );
+    graph_node_t Sqrt( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Compute the pointwise rounded value of @ref MultiTensor
     ///
@@ -787,7 +787,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Round( Scope &aScope, OpNode const &aArray );
+    graph_node_t Round( scope_t &aScope, graph_node_t const &aArray );
 
     /// @brief Compute the iterated finite difference along the last dimension of @ref MultiTensor
     ///
@@ -800,7 +800,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Diff( Scope &aScope, OpNode const &aArray, uint32_t aCount );
+    graph_node_t Diff( scope_t &aScope, graph_node_t const &aArray, uint32_t aCount );
 
     /// @brief Compute the finite shift along the last dimension of @ref MultiTensor
     ///
@@ -814,7 +814,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Shift( Scope &aScope, OpNode const &aArray, int32_t aCount, OpNode const &aFillValue );
+    graph_node_t Shift( scope_t &aScope, graph_node_t const &aArray, int32_t aCount, graph_node_t const &aFillValue );
 
     /// @brief Compute the 1-dimensional convolution the last dimension of @ref MultiTensor
     ///
@@ -826,7 +826,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode Conv1D( Scope &aScope, OpNode const &aArray0, OpNode const &aArray1 );
+    graph_node_t Conv1D( scope_t &aScope, graph_node_t const &aArray0, graph_node_t const &aArray1 );
 
     /// @brief Concatenate the given @ref MultiTensors along the last dimension
     ///
@@ -836,6 +836,6 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode HCat( Scope &aScope, OpNode const &aArray0, OpNode const &aArray1 );
+    graph_node_t HCat( scope_t &aScope, graph_node_t const &aArray0, graph_node_t const &aArray1 );
 
 } // namespace SE::TensorOps

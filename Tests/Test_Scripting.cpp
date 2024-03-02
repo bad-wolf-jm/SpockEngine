@@ -1389,7 +1389,7 @@ mt       = Cuda.Ops.MultiTensorValue(scope, constant, shape)
 scope:run(mt)
 )" );
 
-    auto lTensorValues0 = scriptingEngine.Get<OpNode>( "mt" ).Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
     auto lExpected      = std::vector<float>( lTensorValues0.size(), 1.234f );
 
     REQUIRE( lTensorValues0 == lExpected );
@@ -1410,7 +1410,7 @@ mt       = Cuda.Ops.MultiTensorValue(scope, constant, shape)
 scope:run(mt)
 )" );
 
-    auto lTensorValues0 = scriptingEngine.Get<OpNode>( "mt" ).Get<sMultiTensorComponent>().mValue;
+    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<sMultiTensorComponent>().mValue;
 
     {
         auto lLayer1   = lTensorValues0.FetchBufferAt<float>( 0 );
@@ -1452,7 +1452,7 @@ mt       = Cuda.Ops.MultiTensorValue(scope, constant, shape)
 scope:run(mt)
 )" );
 
-    auto lTensorValues0 = scriptingEngine.Get<OpNode>( "mt" ).Get<sMultiTensorComponent>().mValue;
+    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<sMultiTensorComponent>().mValue;
 
     {
         auto lValues = lTensorValues0.FetchBufferAt<float>( 0 );

@@ -16,20 +16,20 @@ namespace SE::TensorOps
 {
     using namespace SE::Cuda;
 
-    Scope::Scope( uint32_t aMemorySize )
+    scope_t::scope_t( uint32_t aMemorySize )
     {
         mPool = MemoryPool( aMemorySize );
     }
 
-    Scope &Scope::WithOpName( const string_t &aName )
+    scope_t &scope_t::WithOpName( const string_t &aName )
     {
         mName = aName;
         return *this;
     }
 
-    OpNode Scope::CreateNode()
+    graph_node_t scope_t::CreateNode()
     {
-        OpNode lNewEntity;
+        graph_node_t lNewEntity;
         if( mName.has_value() )
         {
             lNewEntity                 = mNodesRegistry.CreateEntity( mName.value() );
@@ -44,14 +44,14 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Scope::operator[]( const string_t &aNodeName )
+    graph_node_t scope_t::operator[]( const string_t &aNodeName )
     {
         if( mNamedNodes.find( aNodeName ) != mNamedNodes.end() )
             return mNamedNodes[aNodeName];
-        return OpNode{};
+        return graph_node_t{};
     }
 
-    void Scope::Reset()
+    void scope_t::Reset()
     {
         mPool.Reset();
         mNodesRegistry.Clear();
@@ -59,25 +59,25 @@ namespace SE::TensorOps
         mName.reset();
     }
 
-    void Scope::Run( OpNode const &aNode )
+    void scope_t::Run( graph_node_t const &aNode )
     {
-        Run( vector_t<OpNode>{ aNode } );
+        Run( vector_t<graph_node_t>{ aNode } );
     }
 
-    void Scope::Run( vector_t<OpNode> const &aNode )
+    void scope_t::Run( vector_t<graph_node_t> const &aNode )
     {
-        std::deque<OpNode>                   lExecutionQueue;
-        std::stack<OpNode, vector_t<OpNode>> lStack( aNode );
+        std::deque<graph_node_t>                   lExecutionQueue;
+        std::stack<graph_node_t, vector_t<graph_node_t>> lStack( aNode );
 
         while( !lStack.empty() )
         {
-            OpNode lCurrent = lStack.top();
+            graph_node_t lCurrent = lStack.top();
             lStack.pop();
 
             if( lCurrent.Has<sDoNotExpand>() )
                 continue;
 
-            std::deque<OpNode>::iterator lPos = std::find( lExecutionQueue.begin(), lExecutionQueue.end(), lCurrent );
+            std::deque<graph_node_t>::iterator lPos = std::find( lExecutionQueue.begin(), lExecutionQueue.end(), lCurrent );
             if( lPos != lExecutionQueue.end() )
             {
                 lExecutionQueue.erase( lPos );
@@ -85,7 +85,7 @@ namespace SE::TensorOps
             lExecutionQueue.push_back( lCurrent );
             if( lCurrent.Has<sOperandComponent>() )
             {
-                for( OpNode lDependent : lCurrent.Get<sOperandComponent>().mOperands )
+                for( graph_node_t lDependent : lCurrent.Get<sOperandComponent>().mOperands )
                 {
                     lStack.push( lDependent );
                 }
@@ -130,7 +130,7 @@ namespace SE::TensorOps
         SyncDevice();
     }
 
-    OpNode CreateMultiTensor( Scope &aScope, sTensorShape const &aShape )
+    graph_node_t CreateMultiTensor( scope_t &aScope, sTensorShape const &aShape )
     {
         auto lNewEntity = aScope.CreateNode();
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, aShape );
@@ -138,7 +138,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode MultiTensorValue( Scope &aScope, sConstantValueInitializerComponent const &aInitializer, sTensorShape const &aShape )
+    graph_node_t MultiTensorValue( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, sTensorShape const &aShape )
     {
         auto lNewEntity = CreateMultiTensor( aScope, aShape );
         lNewEntity.Add<sTypeComponent>( TypeOf( aInitializer.mValue ) );
@@ -146,7 +146,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode MultiTensorValue( Scope &aScope, sVectorInitializerComponent const &aInitializer, sTensorShape const &aShape )
+    graph_node_t MultiTensorValue( scope_t &aScope, sVectorInitializerComponent const &aInitializer, sTensorShape const &aShape )
     {
         auto lNewEntity = CreateMultiTensor( aScope, aShape );
         lNewEntity.Add<sTypeComponent>( TypeOf( aInitializer.mValue[0] ) );
@@ -155,7 +155,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode MultiTensorValue( Scope &aScope, sDataInitializerComponent const &aInitializer, sTensorShape const &aShape )
+    graph_node_t MultiTensorValue( scope_t &aScope, sDataInitializerComponent const &aInitializer, sTensorShape const &aShape )
     {
         auto lNewEntity = CreateMultiTensor( aScope, aShape );
         lNewEntity.Add<sTypeComponent>( TypeOf( aInitializer.mValue[0] ) );
@@ -163,7 +163,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode MultiTensorValue( Scope &aScope, sRandomUniformInitializerComponent const &aInitializer, sTensorShape const &aShape )
+    graph_node_t MultiTensorValue( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, sTensorShape const &aShape )
     {
         auto lNewEntity = CreateMultiTensor( aScope, aShape );
         lNewEntity.Add<sTypeComponent>( aInitializer.mType );
@@ -171,7 +171,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode MultiTensorValue( Scope &aScope, sRandomNormalInitializerComponent const &aInitializer, sTensorShape const &aShape )
+    graph_node_t MultiTensorValue( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, sTensorShape const &aShape )
     {
         auto lNewEntity = CreateMultiTensor( aScope, aShape );
         lNewEntity.Add<sTypeComponent>( aInitializer.mType );
@@ -179,23 +179,23 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    static inline bool SameType( OpNode const &aLeft, OpNode const &aRight )
+    static inline bool SameType( graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         return ( aLeft.Get<sTypeComponent>().mValue == aRight.Get<sTypeComponent>().mValue );
     }
 
-    static inline bool SameShape( OpNode const &aLeft, OpNode const &aRight )
+    static inline bool SameShape( graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         return ( aLeft.Get<sMultiTensorComponent>().Shape() == aRight.Get<sMultiTensorComponent>().Shape() );
     }
 
     template <typename T>
-    static inline bool SameLength( OpNode aLeft, OpNode const &aRight )
+    static inline bool SameLength( graph_node_t aLeft, graph_node_t const &aRight )
     {
         return ( aLeft.Get<sVectorValueComponent<T>>().mValue.size() == aRight.Get<sVectorValueComponent<T>>().mValue.size() );
     }
 
-    OpNode BinaryOperation( Scope &aScope, scalar_type_t aType, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t BinaryOperation( scope_t &aScope, scalar_type_t aType, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         assert( aLeft.Has<sTypeComponent>() );
         assert( aRight.Has<sTypeComponent>() );
@@ -279,22 +279,22 @@ namespace SE::TensorOps
         }
 
         if( lNewEntity.Has<sBroadcastInfoComponent>() )
-            lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aLeft, aRight, lNewEntity.Get<sBroadcastInfoComponent>().mBlockSizes,
+            lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aLeft, aRight, lNewEntity.Get<sBroadcastInfoComponent>().mBlockSizes,
                                                                  lNewEntity.Get<sBroadcastInfoComponent>().mBroadcastDimension } );
         else
-            lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aLeft, aRight } );
+            lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aLeft, aRight } );
 
         lNewEntity.Add<sTypeComponent>( aType );
 
         return lNewEntity;
     }
 
-    OpNode BinaryOperation( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t BinaryOperation( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         return BinaryOperation( aScope, aLeft.Get<sTypeComponent>().mValue, aLeft, aRight );
     }
 
-    OpNode Add( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t Add( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sAddOperationController>();
@@ -302,7 +302,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Subtract( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t Subtract( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sSubtractOperationController>();
@@ -310,7 +310,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Divide( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t Divide( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sDivideOperationController>();
@@ -318,7 +318,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Multiply( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t Multiply( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sMultiplyOperationController>();
@@ -326,7 +326,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode And( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t And( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
@@ -338,7 +338,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Or( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t Or( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
@@ -350,7 +350,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Not( Scope &aScope, OpNode const &aOperand )
+    graph_node_t Not( scope_t &aScope, graph_node_t const &aOperand )
     {
         assert( ( aOperand.Has<sTypeComponent>() ) );
         assert( aOperand.Get<sTypeComponent>().mValue == scalar_type_t::UINT8 );
@@ -358,7 +358,7 @@ namespace SE::TensorOps
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sNotOperationComponent>( sNotOperationComponent{ aOperand } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aOperand } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aOperand } );
         lNewEntity.Add<sTypeComponent>( aOperand.Get<sTypeComponent>() );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOperandData.mOperand.Get<sMultiTensorComponent>().Shape() );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sNotOperationController>();
@@ -366,7 +366,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode BitwiseAnd( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t BitwiseAnd( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
@@ -379,7 +379,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode BitwiseOr( Scope &aScope, OpNode const &aLeft, OpNode const &aRight )
+    graph_node_t BitwiseOr( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight )
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
@@ -392,7 +392,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode BitwiseNot( Scope &aScope, OpNode const &aOperand )
+    graph_node_t BitwiseNot( scope_t &aScope, graph_node_t const &aOperand )
     {
         assert( ( aOperand.Has<sTypeComponent>() ) );
         assert( ( aOperand.Get<sTypeComponent>().mValue >= scalar_type_t::UINT8 ) &&
@@ -401,7 +401,7 @@ namespace SE::TensorOps
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sBitwiseNotOperationComponent>( sBitwiseNotOperationComponent{ aOperand } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aOperand } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aOperand } );
         lNewEntity.Add<sTypeComponent>( aOperand.Get<sTypeComponent>() );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOperandData.mOperand.Get<sMultiTensorComponent>().Shape() );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sBitwiseNotOperationController>();
@@ -409,7 +409,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode InInterval( Scope &aScope, OpNode const &aX, OpNode const &aLower, OpNode const &aUpper, bool aStrictLower,
+    graph_node_t InInterval( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aLower, graph_node_t const &aUpper, bool aStrictLower,
                        bool aStrictUpper )
     {
         assert( aX.Has<sTypeComponent>() && ( aLower.Has<sTypeComponent>() ) && ( aUpper.Has<sTypeComponent>() ) );
@@ -424,7 +424,7 @@ namespace SE::TensorOps
         auto &lOperandData = lNewEntity.Add<sInIntervalOperationComponent>(
             sInIntervalOperationComponent{ aX, aLower, aUpper, aStrictLower, aStrictUpper } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aX, aLower, aUpper } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aX, aLower, aUpper } );
         lNewEntity.Add<sTypeComponent>( scalar_type_t::UINT8 );
 
         vector_t<vector_t<uint32_t>> lOutputShape = aX.Get<sMultiTensorComponent>().Shape().mShape;
@@ -435,7 +435,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Equal( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    graph_node_t Equal( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY )
     {
         assert( ( aX.Has<sTypeComponent>() ) && ( aY.Has<sTypeComponent>() ) );
         assert( SameType( aX, aY ) );
@@ -446,7 +446,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode LessThan( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    graph_node_t LessThan( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY )
     {
         assert( ( aX.Has<sTypeComponent>() ) && ( aY.Has<sTypeComponent>() ) );
         assert( SameType( aX, aY ) );
@@ -457,7 +457,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode LessThanOrEqual( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    graph_node_t LessThanOrEqual( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY )
     {
         assert( ( aX.Has<sTypeComponent>() ) && ( aY.Has<sTypeComponent>() ) );
         assert( SameType( aX, aY ) );
@@ -468,17 +468,17 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode GreaterThan( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    graph_node_t GreaterThan( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY )
     {
         return LessThan( aScope, aY, aX );
     }
 
-    OpNode GreaterThanOrEqual( Scope &aScope, OpNode const &aX, OpNode const &aY )
+    graph_node_t GreaterThanOrEqual( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY )
     {
         return LessThanOrEqual( aScope, aY, aX );
     }
 
-    OpNode Where( Scope &aScope, OpNode const &aCondition, OpNode const &aValueIfTrue, OpNode const &aValueIfFalse )
+    graph_node_t Where( scope_t &aScope, graph_node_t const &aCondition, graph_node_t const &aValueIfTrue, graph_node_t const &aValueIfFalse )
     {
         assert( ( aCondition.Has<sTypeComponent>() ) && ( aValueIfTrue.Has<sTypeComponent>() ) &&
                 ( aValueIfFalse.Has<sTypeComponent>() ) );
@@ -490,7 +490,7 @@ namespace SE::TensorOps
         auto lNewEntity = aScope.CreateNode();
         lNewEntity.Add<sWhereOperationComponent>( sWhereOperationComponent{ aCondition, aValueIfTrue, aValueIfFalse } );
         lNewEntity.Add<sTypeComponent>( aValueIfTrue.Get<sTypeComponent>() );
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aCondition, aValueIfTrue, aValueIfFalse } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aCondition, aValueIfTrue, aValueIfFalse } );
 
         auto lShape = aCondition.Get<sMultiTensorComponent>().Shape().mShape;
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
@@ -501,7 +501,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Mix( Scope &aScope, OpNode const &aA, OpNode const &aB, OpNode const &aT )
+    graph_node_t Mix( scope_t &aScope, graph_node_t const &aA, graph_node_t const &aB, graph_node_t const &aT )
     {
         assert( ( aA.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aB.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
@@ -510,7 +510,7 @@ namespace SE::TensorOps
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sMixNodeComponent>( sMixNodeComponent{ aA, aB, aT } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aA, aB, aT } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aA, aB, aT } );
         lNewEntity.Add<sTypeComponent>( aA.Get<sTypeComponent>() );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOperandData.mA.Get<sMultiTensorComponent>().Shape() );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sMixOperationController>();
@@ -518,7 +518,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode ToFixedPoint( Scope &aScope, scalar_type_t aOutputType, OpNode const &aArray, OpNode const &aScaling )
+    graph_node_t ToFixedPoint( scope_t &aScope, scalar_type_t aOutputType, graph_node_t const &aArray, graph_node_t const &aScaling )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aScaling.HasAll<sTypeComponent, sScalarNodeComponent>() ) );
@@ -527,7 +527,7 @@ namespace SE::TensorOps
 
         auto &lOperandData = lNewEntity.Add<sToFixedPointNodeComponent>( sToFixedPointNodeComponent{ aOutputType, aArray, aScaling } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, aScaling } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, aScaling } );
 
         auto &lShape = lOperandData.mArray.Get<sMultiTensorComponent>().Shape().mShape;
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aOutputType ) ) );
@@ -537,7 +537,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Repeat( Scope &aScope, OpNode const &aArray, OpNode const &aRepetitions )
+    graph_node_t Repeat( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aRepetitions )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( aRepetitions.Has<sU32VectorComponent>() );
@@ -545,7 +545,7 @@ namespace SE::TensorOps
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sRepeatOperationComponent>( sRepeatOperationComponent{ aArray, aRepetitions } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, aRepetitions } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, aRepetitions } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
 
         auto &lInputShape = lOperandData.mArray.Get<sMultiTensorComponent>().Shape();
@@ -569,7 +569,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Tile( Scope &aScope, OpNode const &aArray, OpNode const &aRepetitions )
+    graph_node_t Tile( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aRepetitions )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( aRepetitions.Has<sU32VectorComponent>() );
@@ -577,7 +577,7 @@ namespace SE::TensorOps
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sTileOperationComponent>( sTileOperationComponent{ aArray, aRepetitions } );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, aRepetitions } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, aRepetitions } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         auto &lInputShape = lOperandData.mArray.Get<sMultiTensorComponent>().Shape();
 
@@ -603,7 +603,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode ARange( Scope &aScope, OpNode const &aLeft, OpNode const &aRight, OpNode const &aDelta )
+    graph_node_t ARange( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight, graph_node_t const &aDelta )
     {
         assert( aLeft.Has<sScalarValueVectorComponent>() && aRight.Has<sScalarValueVectorComponent>() &&
                 aDelta.Has<sScalarValueVectorComponent>() );
@@ -621,7 +621,7 @@ namespace SE::TensorOps
         auto &lOperandData = lNewEntity.Add<sARangeComponent>( sARangeComponent{ aLeft, aRight, aDelta } );
 
         lNewEntity.Add<sTypeComponent>( aLeft.Get<sTypeComponent>() );
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aLeft, aRight, aDelta } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aLeft, aRight, aDelta } );
 
         vector_t<vector_t<uint32_t>> lOutputShape( aLeft.Get<sScalarValueVectorComponent>().mValue.size() );
         auto                         lLeftValues  = aLeft.Get<sScalarValueVectorComponent>().mValue;
@@ -641,7 +641,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode LinearSpace( Scope &aScope, OpNode const &aLeft, OpNode const &aRight, OpNode const &aSubdivisions )
+    graph_node_t LinearSpace( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight, graph_node_t const &aSubdivisions )
     {
         assert( aLeft.Has<sMultiTensorComponent>() && aRight.Has<sMultiTensorComponent>() &&
                 aSubdivisions.Has<sU32VectorComponent>() );
@@ -657,7 +657,7 @@ namespace SE::TensorOps
         auto &lOperandData = lNewEntity.Add<sLinearSpaceComponent>( sLinearSpaceComponent{ aLeft, aRight, aSubdivisions } );
 
         lNewEntity.Add<sTypeComponent>( aLeft.Get<sTypeComponent>() );
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aLeft, aRight, aSubdivisions } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aLeft, aRight, aSubdivisions } );
 
         auto                         lSubdivisions = aSubdivisions.Get<sU32VectorComponent>().mValue;
         vector_t<vector_t<uint32_t>> lOutputShape( aLeft.Get<sMultiTensorComponent>().Shape().mShape.size() );
@@ -675,7 +675,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Sample2D( Scope &aScope, OpNode const &aX, OpNode const &aY, OpNode const &aTextures )
+    graph_node_t Sample2D( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY, graph_node_t const &aTextures )
     {
         assert( ( aX.HasAny<sMultiTensorComponent, sScalarNodeComponent, sScalarValueVectorComponent>() ) );
         assert( ( aY.HasAny<sMultiTensorComponent, sScalarNodeComponent, sScalarValueVectorComponent>() ) );
@@ -702,14 +702,14 @@ namespace SE::TensorOps
         auto &lOperandData = lNewEntity.Add<sSample2DComponent>( sSample2DComponent{ aX, aY, aTextures } );
 
         lNewEntity.Add<sTypeComponent>( aX.Get<sTypeComponent>() );
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aX, aY, aTextures } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aX, aY, aTextures } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOperandData.mX.Get<sMultiTensorComponent>().Shape() );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sSample2DOperationController>();
 
         return lNewEntity;
     }
 
-    OpNode AffineTransform( Scope &aScope, OpNode const &aA, OpNode const &aX, OpNode const &aB )
+    graph_node_t AffineTransform( scope_t &aScope, graph_node_t const &aA, graph_node_t const &aX, graph_node_t const &aB )
     {
         assert( ( aX.HasAll<sMultiTensorComponent, sTypeComponent>() ) );
         assert( ( aA.Has<sTypeComponent>() && aB.Has<sTypeComponent>() ) );
@@ -722,20 +722,20 @@ namespace SE::TensorOps
         auto &lOperandData = lNewEntity.Add<sAffineNodeComponent>( sAffineNodeComponent{ aA, aX, aB } );
         lNewEntity.Add<sTypeComponent>( aX.Get<sTypeComponent>() );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aA, aX, aB } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aA, aX, aB } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOperandData.mX.Get<sMultiTensorComponent>().Shape() );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sAffineNodeController>();
 
         return lNewEntity;
     }
 
-    OpNode Collapse( Scope &aScope, OpNode const &aArray )
+    graph_node_t Collapse( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.Has<sMultiTensorComponent>() ) );
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
 
         auto &lInputShape = aArray.Get<sMultiTensorComponent>().Shape();
         for( uint32_t i = 0; i < lInputShape.mShape.size(); i++ )
@@ -756,12 +756,12 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Expand( Scope &aScope, OpNode const &aArray )
+    graph_node_t Expand( scope_t &aScope, graph_node_t const &aArray )
     {
         auto lNewEntity = aScope.CreateNode();
         assert( ( aArray.Has<sMultiTensorComponent>() ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
 
         auto &lInputShape = aArray.Get<sMultiTensorComponent>().Shape();
 
@@ -782,7 +782,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Reshape( Scope &aScope, OpNode const &aArray, sTensorShape &aNewShape )
+    graph_node_t Reshape( scope_t &aScope, graph_node_t const &aArray, sTensorShape &aNewShape )
     {
         auto lNewEntity = aScope.CreateNode();
         assert( ( aArray.Has<sMultiTensorComponent>() ) );
@@ -804,13 +804,13 @@ namespace SE::TensorOps
         }
 
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, aArray.Get<sMultiTensorComponent>().mValue.GetMemoryBuffer(), aNewShape );
 
         return lNewEntity;
     }
 
-    OpNode Relayout( Scope &aScope, OpNode const &aArray, sTensorShape &aNewLayout )
+    graph_node_t Relayout( scope_t &aScope, graph_node_t const &aArray, sTensorShape &aNewLayout )
     {
         auto lNewEntity = aScope.CreateNode();
         assert( ( aArray.Has<sMultiTensorComponent>() ) );
@@ -834,14 +834,14 @@ namespace SE::TensorOps
         if( aArray.Has<sTypeComponent>() )
             lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, aArray.Get<sMultiTensorComponent>().mValue.GetMemoryBuffer(),
                                                aNewLayout );
 
         return lNewEntity;
     }
 
-    OpNode Flatten( Scope &aScope, OpNode const &aArray )
+    graph_node_t Flatten( scope_t &aScope, graph_node_t const &aArray )
     {
         auto lNewEntity = aScope.CreateNode();
         assert( ( aArray.Has<sMultiTensorComponent>() ) );
@@ -850,14 +850,14 @@ namespace SE::TensorOps
 
         lInputShape.Flatten( 0 );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, aArray.Get<sMultiTensorComponent>().mValue.GetMemoryBuffer(),
                                                lInputShape );
 
         return lNewEntity;
     }
 
-    OpNode Slice( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd )
+    graph_node_t Slice( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( ( aBegin.HasAny<sVectorValueComponent<uint32_t>, sScalarNodeComponent>() ) ) &&
@@ -916,7 +916,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>(
-            vector_t<OpNode>{ aArray, lOperandData.mBegin, lOperandData.mEnd, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+            vector_t<graph_node_t>{ aArray, lOperandData.mBegin, lOperandData.mEnd, lOperandData.mBlockSizes, lOperandData.mElementCount } );
 
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
                                                sTensorShape( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
@@ -925,7 +925,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Summation( Scope &aScope, OpNode const &aArray )
+    graph_node_t Summation( scope_t &aScope, graph_node_t const &aArray )
     {
         auto               lInputShape = aArray.Get<sMultiTensorComponent>().Shape();
         vector_t<uint32_t> lLastDimensions( lInputShape.CountLayers() );
@@ -938,7 +938,7 @@ namespace SE::TensorOps
         return Summation( aScope, aArray, lZero, lEnd );
     }
 
-    OpNode Summation( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd )
+    graph_node_t Summation( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( ( aBegin.HasAny<sVectorValueComponent<uint32_t>, sScalarNodeComponent>() ) ) &&
@@ -981,7 +981,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>(
-            vector_t<OpNode>{ aArray, lOperandData.mBegin, lOperandData.mEnd, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+            vector_t<graph_node_t>{ aArray, lOperandData.mBegin, lOperandData.mEnd, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
                                                sTensorShape( lOutputShape.mShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sArraySummationOperationController>();
@@ -989,7 +989,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode CountTrue( Scope &aScope, OpNode const &aArray )
+    graph_node_t CountTrue( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
 
@@ -1008,14 +1008,14 @@ namespace SE::TensorOps
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountTrueOperationController>();
 
         return lNewEntity;
     }
 
-    OpNode CountZero( Scope &aScope, OpNode const &aArray )
+    graph_node_t CountZero( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
 
@@ -1035,14 +1035,14 @@ namespace SE::TensorOps
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountZeroOperationController>();
 
         return lNewEntity;
     }
 
-    OpNode CountNonZero( Scope &aScope, OpNode const &aArray )
+    graph_node_t CountNonZero( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
 
@@ -1062,14 +1062,14 @@ namespace SE::TensorOps
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountNonZeroOperationController>();
 
         return lNewEntity;
     }
 
-    OpNode Diff( Scope &aScope, OpNode const &aArray, uint32_t aCount )
+    graph_node_t Diff( scope_t &aScope, graph_node_t const &aArray, uint32_t aCount )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
 
@@ -1088,14 +1088,14 @@ namespace SE::TensorOps
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOutputShape );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sDiffOperationController>();
 
         return lNewEntity;
     }
 
-    OpNode Shift( Scope &aScope, OpNode const &aArray, int32_t aCount, OpNode const &aFillValue )
+    graph_node_t Shift( scope_t &aScope, graph_node_t const &aArray, int32_t aCount, graph_node_t const &aFillValue )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aFillValue.HasAll<sTypeComponent, sScalarNodeComponent>() ) );
@@ -1118,21 +1118,21 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>(
-            vector_t<OpNode>{ aArray, lOperandData.mFillValue, lOperandData.mBlockSizes, lOperandData.mElementCount } );
+            vector_t<graph_node_t>{ aArray, lOperandData.mFillValue, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOutputShape );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sShiftOperationController>();
 
         return lNewEntity;
     }
 
-    OpNode Floor( Scope &aScope, OpNode const &aArray )
+    graph_node_t Floor( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aArray.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) );
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sFloorNodeComponent>( sFloorNodeComponent{ aArray } );
 
@@ -1144,14 +1144,14 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Ceil( Scope &aScope, OpNode const &aArray )
+    graph_node_t Ceil( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aArray.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) );
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sCeilNodeComponent>( sCeilNodeComponent{ aArray } );
 
@@ -1163,7 +1163,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Abs( Scope &aScope, OpNode const &aArray )
+    graph_node_t Abs( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aArray.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) ||
@@ -1172,7 +1172,7 @@ namespace SE::TensorOps
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sAbsNodeComponent>( sAbsNodeComponent{ aArray } );
 
@@ -1184,13 +1184,13 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Sqrt( Scope &aScope, OpNode const &aArray )
+    graph_node_t Sqrt( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sSqrtNodeComponent>( sSqrtNodeComponent{ aArray } );
 
@@ -1202,13 +1202,13 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Round( Scope &aScope, OpNode const &aArray )
+    graph_node_t Round( scope_t &aScope, graph_node_t const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray } );
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray } );
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sRoundNodeComponent>( sRoundNodeComponent{ aArray } );
 
@@ -1220,7 +1220,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode Conv1D( Scope &aScope, OpNode const &aArray0, OpNode const &aArray1 )
+    graph_node_t Conv1D( scope_t &aScope, graph_node_t const &aArray0, graph_node_t const &aArray1 )
     {
         assert( ( aArray0.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aArray1.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
@@ -1248,7 +1248,7 @@ namespace SE::TensorOps
         lOperandData.mBlockSizes1   = VectorValue( aScope, lKernelShape.GetDimension( 0 ) );
         lOperandData.mElementCount1 = VectorValue( aScope, lKernelShape.GetDimension( -1 ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ lOperandData.mArray0, lOperandData.mBlockSizes0,
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ lOperandData.mArray0, lOperandData.mBlockSizes0,
                                                              lOperandData.mElementCount0, lOperandData.mArray1,
                                                              lOperandData.mBlockSizes1, lOperandData.mElementCount1 } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOutputShape );
@@ -1257,7 +1257,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode HCat( Scope &aScope, OpNode const &aArray0, OpNode const &aArray1 )
+    graph_node_t HCat( scope_t &aScope, graph_node_t const &aArray0, graph_node_t const &aArray1 )
     {
         assert( ( aArray0.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aArray1.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
@@ -1289,7 +1289,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount0 = VectorValue( aScope, lInputShape0.GetDimension( -1 ) );
         lOperandData.mElementCount1 = VectorValue( aScope, lInputShape1.GetDimension( -1 ) );
 
-        lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ lOperandData.mArray0, lOperandData.mArray1, lOperandData.mBlockSizes,
+        lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ lOperandData.mArray0, lOperandData.mArray1, lOperandData.mBlockSizes,
                                                              lOperandData.mElementCount0, lOperandData.mElementCount1 } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, lOutputShape );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sHCatOperationController>();
