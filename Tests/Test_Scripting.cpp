@@ -1199,15 +1199,15 @@ TEST_CASE( "LUA TextureData load from file", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine scriptingEngine{};
 
-    // scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/SpockEngine/Tests/Data/kueken7_rgba8_unorm.dds"))" );
-    // {
-    //     auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
-    //     REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
-    //     REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGB8_UNORM );
-    //     REQUIRE( lTexture.mSpec.mWidth == 256 );
-    // }
+    scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx"))" );
+    {
+        auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
+        REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
+        REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGB8_UNORM );
+        REQUIRE( lTexture.mSpec.mWidth == 256 );
+    }
 
-    scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/SpockEngine/Tests/Data/kueken7_srgb8.png"))" );
+    scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png"))" );
     {
         auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
         REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
@@ -1218,16 +1218,16 @@ TEST_CASE( "LUA TextureData load from file", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA TextureData get image data from texture", "[CORE_SCRIPTING]" )
 {
-//     ScriptingEngine scriptingEngine{};
+    ScriptingEngine scriptingEngine{};
 
-//     scriptingEngine.Execute( R"(
-//     texture = Core.TextureData2D("C:/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
-//     value = texture:get_image_data()
-// )" );
-//     auto lImageData = scriptingEngine.Get<sol::table>( "value" );
-//     REQUIRE( lImageData.get<eColorFormat>( "color_format" ) == eColorFormat::RGB8_UNORM );
-//     REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
-//     REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
+    scriptingEngine.Execute( R"(
+    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
+    value = texture:get_image_data()
+)" );
+    auto lImageData = scriptingEngine.Get<sol::table>( "value" );
+    REQUIRE( lImageData.get<eColorFormat>( "color_format" ) == eColorFormat::RGB8_UNORM );
+    REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
+    REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
 }
 
 TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
@@ -1235,7 +1235,7 @@ TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
     ScriptingEngine scriptingEngine{};
 
     scriptingEngine.Execute( R"(
-    value = Core.load_image("C:/SpockEngine/Tests/Data/kueken7_srgb8.png")
+    value = Core.load_image("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 )" );
     auto lImageData = scriptingEngine.Get<sol::table>( "value" );
     REQUIRE( lImageData.get<eColorFormat>( "color_format" ) == eColorFormat::RGBA8_UNORM );
@@ -1248,7 +1248,7 @@ TEST_CASE( "LUA TextureSampler", "[CORE_SCRIPTING]" )
     ScriptingEngine scriptingEngine{};
 
     scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/SpockEngine/Tests/Data/kueken7_rgb8_unorm.dds")
+    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
 
     sampler_create_info = {
         minification = Core.eSamplerFilter.NEAREST,
@@ -1274,7 +1274,7 @@ TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
     ScriptingEngine scriptingEngine{};
 
     scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/SpockEngine/Tests/Data/kueken7_srgb8.png")
+    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 
     texture_create_info = {
         filter_mode = Core.eSamplerFilter.NEAREST,
@@ -1295,7 +1295,7 @@ TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
     ScriptingEngine scriptingEngine{};
 
     scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/SpockEngine/Tests/Data/kueken7_srgb8.png")
+    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 
     texture_create_info = {
         filter_mode = Core.eSamplerFilter.NEAREST,
