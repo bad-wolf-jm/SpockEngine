@@ -23,7 +23,6 @@ add_library(LTSimulationEngineRuntime STATIC
     TensorOps/ScalarTypes.cpp
     TensorOps/Scope.cpp
 
-    Scripting/Core/Module.cpp
     Scripting/Core/Texture.cpp
     Scripting/Core/Vector.cpp
     Scripting/Cuda/Tensor.cpp

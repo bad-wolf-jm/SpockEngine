@@ -14,7 +14,7 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(lste_cuda_test WIN32
   TestUtils.cpp
 
-#   Test_AbstractTexture.cpp/
+#   Test_AbstractTexture.cpp
   Test_CudaTexture.cpp
    Test_CudaBuffer.cpp
    Test_EntityRegistry.cpp
