@@ -36,14 +36,14 @@ namespace SE::Core
         auto lPixelData       = aTable.get<sol::table>( "pixel_data" );
         auto lPixelDataSize   = lPixelData.size();
         lImageData.mByteSize  = lPixelDataSize;
-        // lImageData.mPixelData = (uint8_t *)malloc( lPixelDataSize );
+        lImageData.mPixelData = vector_t<uint8_t>( lPixelDataSize );
 
         if( lPixelData.get_type() == sol::type::table )
         {
             for( uint32_t i = 0; i < lPixelDataSize; i++ )
             {
                 auto lPx                 = lPixelData.get<uint8_t>( i + 1 );
-                // lImageData.mPixelData[i] = lPx;
+                lImageData.mPixelData[i] = lPx;
             }
         }
         else
@@ -52,7 +52,7 @@ namespace SE::Core
             for( uint32_t i = 0; i < lPixelDataSize; i++ )
             {
                 auto lPx                 = lDataPointer[i];
-                // lImageData.mPixelData[i] = lPx;
+                lImageData.mPixelData[i] = lPx;
             }
         }
 
