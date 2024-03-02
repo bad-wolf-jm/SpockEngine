@@ -18,7 +18,7 @@ namespace SE::TensorOps
 
     scope_t::scope_t( uint32_t aMemorySize )
     {
-        mPool = MemoryPool( aMemorySize );
+        mPool = memory_pool_t( aMemorySize );
     }
 
     scope_t &scope_t::WithOpName( const string_t &aName )
@@ -101,7 +101,7 @@ namespace SE::TensorOps
             if( ( *lElement ).Has<sMultiTensorComponent>() )
             {
                 ( *lElement ).Get<sMultiTensorComponent>().mValue =
-                    MultiTensor( mPool, ( *lElement ).Get<sMultiTensorComponent>().mShape );
+                    multi_tensor_t( mPool, ( *lElement ).Get<sMultiTensorComponent>().mShape );
                 ( *lElement ).Add<sAllocatedTag>();
             }
 

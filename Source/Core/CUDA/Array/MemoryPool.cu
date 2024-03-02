@@ -15,24 +15,24 @@
 namespace SE::Cuda
 {
 
-    MemoryPool::MemoryPool( size_t aTotalSize )
+    memory_pool_t::memory_pool_t( size_t aTotalSize )
         : Internal::sGPUDevicePointer( aTotalSize )
         , mTotalSize{ aTotalSize }
     {
         Reset();
     }
 
-    MemoryBuffer MemoryPool::Allocate( size_t aBytes )
+    memory_buffer_t memory_pool_t::Allocate( size_t aBytes )
     {
         size_t lAlignedBytes = ( ( aBytes >> 3 ) + 1 ) << 3;
         if( ( mFreePtr + lAlignedBytes ) > mTotalSize ) throw std::runtime_error( "MemoryPool is out of space!!" );
 
         size_t lStart = mFreePtr;
         mFreePtr += lAlignedBytes;
-        return MemoryBuffer( aBytes, lStart, *this );
+        return memory_buffer_t( aBytes, lStart, *this );
     }
 
-    void MemoryPool::Reset()
+    void memory_pool_t::Reset()
     {
         Zero();
         mFreePtr = 0;

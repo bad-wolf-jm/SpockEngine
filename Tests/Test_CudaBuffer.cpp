@@ -197,14 +197,14 @@ TEST_CASE( "Buffer pool", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Allocate memory pool creates buffer of the appropriate size" )
     {
-        MemoryPool lMemoryPool( a_TotalSize );
+        memory_pool_t lMemoryPool( a_TotalSize );
         REQUIRE( lMemoryPool.Size() == a_TotalSize );
     }
 
     SECTION( "Allocated buffer from pool has the requested size" )
     {
-        MemoryPool   lMemoryPool( a_TotalSize );
-        MemoryBuffer lBuffer = lMemoryPool.Allocate( 32 );
+        memory_pool_t   lMemoryPool( a_TotalSize );
+        memory_buffer_t lBuffer = lMemoryPool.Allocate( 32 );
 
         REQUIRE( lBuffer.SizeAs<uint8_t>() == 32 );
         REQUIRE( lBuffer.Size() == 32 );
@@ -212,11 +212,11 @@ TEST_CASE( "Buffer pool", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Allocate buffer larger than pool raises exception" )
     {
-        MemoryPool lMemoryPool( a_TotalSize );
+        memory_pool_t lMemoryPool( a_TotalSize );
 
         try
         {
-            MemoryBuffer lBuffer = lMemoryPool.Allocate( a_TotalSize + 5 );
+            memory_buffer_t lBuffer = lMemoryPool.Allocate( a_TotalSize + 5 );
             REQUIRE( false );
         }
         catch( ... )
@@ -229,9 +229,9 @@ TEST_CASE( "Buffer pool", "[CORE_COMPUTATION_GRAPH]" )
 TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 {
     size_t     lPoolSize = 128 * 1024;
-    MemoryPool lMemoryPool( lPoolSize );
+    memory_pool_t lMemoryPool( lPoolSize );
 
-    MultiTensor lTestTensor;
+    multi_tensor_t lTestTensor;
 
     SECTION( "Initial size is 0" )
     {
@@ -240,7 +240,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Multi tensors are created with the appropriate shape" )
     {
-        MultiTensor lTestTensor( lMemoryPool, sTensorShape( { { 1, 2, 3 }, { 4, 5, 6 } }, sizeof( math::vec3 ) ) );
+        multi_tensor_t lTestTensor( lMemoryPool, sTensorShape( { { 1, 2, 3 }, { 4, 5, 6 } }, sizeof( math::vec3 ) ) );
 
         REQUIRE( lTestTensor.Shape().CountLayers() == 2 );
     }
@@ -249,7 +249,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     {
         std::vector<uint32_t> lDim1{ 3, 5, 8 };
         std::vector<uint32_t> lDim2{ 5, 3, 6 };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( math::vec3 ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( math::vec3 ) ) );
 
         REQUIRE( lTestTensor.Size() >= Prod( lDim1 ) + Prod( lDim2 ) );
     }
@@ -258,7 +258,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     {
         std::vector<uint32_t> lDim1{ 3, 5, 8, sizeof( float ) };
         std::vector<uint32_t> lDim2{ 5, 3, 6, sizeof( float ) };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
         REQUIRE( lTestTensor.SizeAs<float>() == ( Prod( lDim1 ) + Prod( lDim2 ) ) / sizeof( float ) );
     }
@@ -268,7 +268,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 3, 7 };
         std::vector<uint32_t> lDim2{ 2, 11, 3 };
         std::vector<uint32_t> lDim3{ 5, 1, 2 };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
         REQUIRE( lTestTensor.Shape().GetShapeForLayer( 0 ) == lDim1 );
         REQUIRE( lTestTensor.Shape().GetShapeForLayer( 1 ) == lDim2 );
@@ -288,7 +288,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 3, 7 };
         std::vector<uint32_t> lDim2{ 2, 11, 3 };
         std::vector<uint32_t> lDim3{ 5, 1, 2 };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
         std::vector<uint32_t> lStride1{ 21, 7, 1 };
         std::vector<uint32_t> lStride2{ 33, 3, 1 };
@@ -304,7 +304,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 3, 7 };
         std::vector<uint32_t> lDim2{ 2, 11, 3 };
         std::vector<uint32_t> lDim3{ 5, 1, 2 };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
 
         uint32_t lDim1Size = Prod( lDim1 );
         uint32_t lDim2Size = Prod( lDim2 );
@@ -330,7 +330,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 3, 7 };
         std::vector<uint32_t> lDim2{ 2, 11, 3 };
         std::vector<uint32_t> lDim3{ 5, 1, 2 };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
 
         auto lMaxDimension = lTestTensor.Shape().mMaxDimensions;
         REQUIRE( lMaxDimension == std::vector<uint32_t>{ 5, 11, 7 } );
@@ -708,7 +708,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 3, 7 };
         std::vector<uint32_t> lDim2{ 5, 11, 13 };
         std::vector<uint32_t> lDim3{ 5, 3, 2 };
-        MultiTensor           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
+        multi_tensor_t           lTestTensor( lMemoryPool, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
 
         auto lBuffer1 = lTestTensor.BufferAt( 1 );
         auto lBuffer2 = lTestTensor.BufferAt( 2 );
@@ -720,7 +720,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     {
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
-        MultiTensor           lTestTensor2( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( int32_t ) ) );
+        multi_tensor_t           lTestTensor2( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( int32_t ) ) );
 
         std::vector<int32_t> lValues( lTestTensor2.SizeAs<int32_t>() );
         int32_t              i = 0;
@@ -754,7 +754,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     {
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
-        MultiTensor           lTestTensor2( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( int32_t ) ) );
+        multi_tensor_t           lTestTensor2( lMemoryPool, sTensorShape( { lDim1, lDim2 }, sizeof( int32_t ) ) );
 
         std::vector<int32_t> lValues0( Prod( lDim1 ) );
         std::vector<int32_t> lValues1( Prod( lDim2 ) );

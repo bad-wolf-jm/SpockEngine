@@ -1000,10 +1000,10 @@ TEST_CASE( "LUA MultiTensor fetch_at", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
-    MemoryPool      lPool( lPoolSize );
+    memory_pool_t      lPool( lPoolSize );
 
     auto lShape  = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
-    auto lTensor = MultiTensor( lPool, lShape );
+    auto lTensor = multi_tensor_t( lPool, lShape );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
     auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
@@ -1041,10 +1041,10 @@ TEST_CASE( "LUA MultiTensor fetch_flattened", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
-    MemoryPool      lPool( lPoolSize );
+    memory_pool_t      lPool( lPoolSize );
 
     auto lShape  = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
-    auto lTensor = MultiTensor( lPool, lShape );
+    auto lTensor = multi_tensor_t( lPool, lShape );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
     auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
@@ -1066,7 +1066,7 @@ TEST_CASE( "LUA MultiTensor upload", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
-    MemoryPool      lPool( lPoolSize );
+    memory_pool_t      lPool( lPoolSize );
 
     auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
@@ -1085,7 +1085,7 @@ tensor = Cuda.MultiTensor.new(pool, shape)
 tensor:upload_f32(tensor_data)
 )" );
 
-    auto lTensor        = scriptingEngine.Get<MultiTensor>( "tensor" );
+    auto lTensor        = scriptingEngine.Get<multi_tensor_t>( "tensor" );
     auto lTensorValues1 = lTensor.FetchFlattened<float>();
     REQUIRE( lData == lTensorValues1 );
 }
@@ -1094,7 +1094,7 @@ TEST_CASE( "LUA MultiTensor upload layers", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
-    MemoryPool      lPool( lPoolSize );
+    memory_pool_t      lPool( lPoolSize );
 
     auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
@@ -1117,7 +1117,7 @@ tensor:upload_f32(tensor_data_1, 1)
 tensor:upload_f32(tensor_data_2, 2)
 )" );
 
-    auto lTensor = scriptingEngine.Get<MultiTensor>( "tensor" );
+    auto lTensor = scriptingEngine.Get<multi_tensor_t>( "tensor" );
 
     {
         auto lTensorValues1 = lTensor.FetchBufferAt<float>( 0 );

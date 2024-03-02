@@ -56,9 +56,9 @@ namespace SE::Cuda
 
         struct
         {
-            MemoryBuffer mShape{};
-            MemoryBuffer mMaxDimensions{};
-            MemoryBuffer mBufferSizes{};
+            memory_buffer_t mShape{};
+            memory_buffer_t mMaxDimensions{};
+            memory_buffer_t mBufferSizes{};
         } mDeviceSideData; //!< Data shared with GPU.
 
         sTensorShape()                       = default;
@@ -246,18 +246,18 @@ namespace SE::Cuda
     ///   MultiTensor lTestTensor(lMemoryPool, sTensorShape({{1, 2, 3}, {4, 5, 6}}, sizeof(math::vec3)));
     /// @endcode
     ///
-    class MultiTensor
+    class multi_tensor_t
     {
       public:
-        MultiTensor()  = default;
-        ~MultiTensor() = default;
+        multi_tensor_t()  = default;
+        ~multi_tensor_t() = default;
 
         /// @brief Allocates a generalized tensor of the given shape from a memory pool
         ///
         /// @param aMemoryPool The memory pool from which to allocate the tensor
         /// @param aShape      The shape of the tensor to allocate
         ///
-        MultiTensor( MemoryPool &aMemoryPool, const sTensorShape &aShape );
+        multi_tensor_t( memory_pool_t &aMemoryPool, const sTensorShape &aShape );
 
         /// @brief Create a generalized tensor of the given shape using a preallocated buffer from a memory pool
         ///
@@ -265,7 +265,7 @@ namespace SE::Cuda
         /// @param aMemoryBuffer Preallocated buffer to hold data
         /// @param aShape      The shape of the tensor to allocate
         ///
-        MultiTensor( MemoryPool &aMemoryPool, MemoryBuffer &aMemoryBuffer, const sTensorShape &aShape );
+        multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const sTensorShape &aShape );
 
         /// @brief Retrieves the shape of the tensor
         SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF sTensorShape &Shape() { return mShape; }
@@ -289,7 +289,7 @@ namespace SE::Cuda
         ///
         /// @return  A MemoryBuffer pointing to the layer
         ///
-        MemoryBuffer BufferAt( uint32_t i ) const
+        memory_buffer_t BufferAt( uint32_t i ) const
         {
             auto &lBufferInfo = mShape.GetBufferSize( i );
             return mMemoryBuffer.View( lBufferInfo.mSize, lBufferInfo.mOffset );
@@ -392,11 +392,11 @@ namespace SE::Cuda
             return mMemoryBuffer.DataAs<_Tx>();
         }
 
-        MemoryBuffer &GetMemoryBuffer() { return mMemoryBuffer; }
+        memory_buffer_t &GetMemoryBuffer() { return mMemoryBuffer; }
 
       private:
         sTensorShape mShape{};        //!< Shape of the tensor
-        MemoryBuffer mMemoryBuffer{}; //!< Memory buffer assigned to the tensor
+        memory_buffer_t mMemoryBuffer{}; //!< Memory buffer assigned to the tensor
     };
 
 } // namespace SE::Cuda

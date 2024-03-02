@@ -22,25 +22,25 @@ namespace SE::Core
         template <typename _Ty> auto MakeUploadFunction()
         {
             return overload(
-                []( Cuda::MultiTensor &aSelf, numeric_array_t<_Ty> &aValues )
+                []( Cuda::multi_tensor_t &aSelf, numeric_array_t<_Ty> &aValues )
                 {
                     aSelf.Upload( aValues.mArray );
 
                     return aSelf;
                 },
-                []( Cuda::MultiTensor &aSelf, vector_t<_Ty> &aValues )
+                []( Cuda::multi_tensor_t &aSelf, vector_t<_Ty> &aValues )
                 {
                     aSelf.Upload( aValues );
 
                     return aSelf;
                 },
-                []( Cuda::MultiTensor &aSelf, numeric_array_t<_Ty> &aValues, uint32_t aLayer )
+                []( Cuda::multi_tensor_t &aSelf, numeric_array_t<_Ty> &aValues, uint32_t aLayer )
                 {
                     aSelf.Upload( aValues.mArray, aLayer );
 
                     return aSelf;
                 },
-                []( Cuda::MultiTensor &aSelf, vector_t<_Ty> &aValues, uint32_t aLayer )
+                []( Cuda::multi_tensor_t &aSelf, vector_t<_Ty> &aValues, uint32_t aLayer )
                 {
                     aSelf.Upload( aValues, aLayer );
 
@@ -50,8 +50,8 @@ namespace SE::Core
 
         template <typename _Ty> auto MakeFetchFunction()
         {
-            return overload( []( Cuda::MultiTensor &aSelf ) { return aSelf.FetchFlattened<_Ty>(); },
-                             []( Cuda::MultiTensor &aSelf, uint32_t aLayer ) { return aSelf.FetchBufferAt<_Ty>( aLayer ); } );
+            return overload( []( Cuda::multi_tensor_t &aSelf ) { return aSelf.FetchFlattened<_Ty>(); },
+                             []( Cuda::multi_tensor_t &aSelf, uint32_t aLayer ) { return aSelf.FetchBufferAt<_Ty>( aLayer ); } );
         }
     } // namespace
 
@@ -86,14 +86,14 @@ namespace SE::Core
         lTensorShapeType["trim"]          = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Trim( i ); };
         lTensorShapeType["flatten"]       = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Flatten( i ); };
 
-        auto lMemoryPoolType        = aScriptingState.new_usertype<Cuda::MemoryPool>( "MemoryPool", constructors<Cuda::MemoryPool( uint32_t aMemorySize )>() );
-        lMemoryPoolType["reset"]    = []( Cuda::MemoryPool &aSelf ) { aSelf.Reset(); };
-        lMemoryPoolType["allocate"] = []( Cuda::MemoryPool &aSelf, int32_t aBytes ) { return aSelf.Allocate( aBytes ); };
+        auto lMemoryPoolType        = aScriptingState.new_usertype<Cuda::memory_pool_t>( "MemoryPool", constructors<Cuda::memory_pool_t( uint32_t aMemorySize )>() );
+        lMemoryPoolType["reset"]    = []( Cuda::memory_pool_t &aSelf ) { aSelf.Reset(); };
+        lMemoryPoolType["allocate"] = []( Cuda::memory_pool_t &aSelf, int32_t aBytes ) { return aSelf.Allocate( aBytes ); };
 
         auto lMultiTensorType =
-            aScriptingState.new_usertype<Cuda::MultiTensor>( "MultiTensor", constructors<Cuda::MultiTensor( Cuda::MemoryPool & aMemoryPool, const Cuda::sTensorShape &aShape )>() );
-        lMultiTensorType["size"]    = []( Cuda::MultiTensor &aSelf ) { return aSelf.Size(); };
-        lMultiTensorType["size_as"] = []( Cuda::MultiTensor &aSelf, const sol::object &aTypeOrID )
+            aScriptingState.new_usertype<Cuda::multi_tensor_t>( "MultiTensor", constructors<Cuda::multi_tensor_t( Cuda::MemoryPool & aMemoryPool, const Cuda::sTensorShape &aShape )>() );
+        lMultiTensorType["size"]    = []( Cuda::multi_tensor_t &aSelf ) { return aSelf.Size(); };
+        lMultiTensorType["size_as"] = []( Cuda::multi_tensor_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "SizeAs"_hs, aSelf );
 

@@ -176,7 +176,7 @@ namespace SE::Cuda
         mDeviceSideData.mBufferSizes.Upload( mBufferSizes );
     }
 
-    MultiTensor::MultiTensor( MemoryPool &aMemoryPool, const sTensorShape &aShape )
+    multi_tensor_t::multi_tensor_t( memory_pool_t &aMemoryPool, const sTensorShape &aShape )
         : mShape{ aShape }
     {
         mMemoryBuffer                         = aMemoryPool.Allocate( mShape.mByteSize );
@@ -186,7 +186,7 @@ namespace SE::Cuda
         mShape.SyncDeviceData();
     }
 
-    MultiTensor::MultiTensor( MemoryPool &aMemoryPool, MemoryBuffer &aMemoryBuffer, const sTensorShape &aShape )
+    multi_tensor_t::multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const sTensorShape &aShape )
         : mShape{ aShape }
     {
         mMemoryBuffer                         = aMemoryBuffer;

@@ -54,33 +54,33 @@ namespace SE::Core
             return sol::make_reference( aScriptState, std::move( lNewVector ) );
         }
 
-        template <typename _Ty> auto FetchFlattened( Cuda::MultiTensor &aMT, sol::this_state aScriptState )
+        template <typename _Ty> auto FetchFlattened( Cuda::multi_tensor_t &aMT, sol::this_state aScriptState )
         {
             auto x = aMT.FetchFlattened<_Ty>();
             return sol::make_reference( aScriptState, std::move( x ) );
         }
 
-        template <typename _Ty> auto FetchBufferAt( Cuda::MultiTensor &aMT, uint32_t aLayer, sol::this_state aScriptState )
+        template <typename _Ty> auto FetchBufferAt( Cuda::multi_tensor_t &aMT, uint32_t aLayer, sol::this_state aScriptState )
         {
             auto x = aMT.FetchBufferAt<_Ty>( aLayer );
             return sol::make_reference( aScriptState, std::move( x ) );
         }
 
-        template <typename _Ty> size_t SizeAs( Cuda::MultiTensor &aMT ) { return aMT.SizeAs<_Ty>(); }
+        template <typename _Ty> size_t SizeAs( Cuda::multi_tensor_t &aMT ) { return aMT.SizeAs<_Ty>(); }
 
-        template <typename _Ty> void Upload0( Cuda::MultiTensor &aM, sol::table &aArray )
+        template <typename _Ty> void Upload0( Cuda::multi_tensor_t &aM, sol::table &aArray )
         {
             auto &lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload<_Ty>( lArray );
         }
 
-        template <typename _Ty> void Upload1( Cuda::MultiTensor &aM, sol::table &aArray, uint32_t aLayer )
+        template <typename _Ty> void Upload1( Cuda::multi_tensor_t &aM, sol::table &aArray, uint32_t aLayer )
         {
             auto lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload( lArray, aLayer, 0 );
         }
 
-        template <typename _Ty> void Upload2( Cuda::MultiTensor &aM, sol::table &aArray, uint32_t aLayer, uint32_t aOffset )
+        template <typename _Ty> void Upload2( Cuda::multi_tensor_t &aM, sol::table &aArray, uint32_t aLayer, uint32_t aOffset )
         {
             auto lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload<_Ty>( lArray, aOffset );

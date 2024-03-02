@@ -20,7 +20,7 @@
 namespace SE::Cuda
 {
 
-    class MemoryPool;
+    class memory_pool_t;
 
     /// \struct MemoryBuffer
     ///
@@ -31,25 +31,25 @@ namespace SE::Cuda
     /// allocated to it upon destruction. As of now there is no link between the memory pool and the various buffers it allocates.
     ///
     ///
-    class MemoryBuffer : public Internal::sGPUDevicePointerView
+    class memory_buffer_t : public Internal::sGPUDevicePointerView
     {
-        friend class MemoryPool;
+        friend class memory_pool_t;
 
       public:
-        MemoryBuffer()  = default;
-        ~MemoryBuffer() = default;
+        memory_buffer_t()  = default;
+        ~memory_buffer_t() = default;
 
-        MemoryBuffer( const MemoryBuffer & ) = default;
+        memory_buffer_t( const memory_buffer_t & ) = default;
 
-        MemoryBuffer View( size_t aSize, size_t aOffset ) { return MemoryBuffer( aSize, aOffset, *this ); }
-        MemoryBuffer View( size_t aSize, size_t aOffset ) const { return MemoryBuffer( aSize, aOffset, *this ); }
+        memory_buffer_t View( size_t aSize, size_t aOffset ) { return memory_buffer_t( aSize, aOffset, *this ); }
+        memory_buffer_t View( size_t aSize, size_t aOffset ) const { return memory_buffer_t( aSize, aOffset, *this ); }
 
-        MemoryBuffer( size_t aSize, void *aDevicePointer )
+        memory_buffer_t( size_t aSize, void *aDevicePointer )
             : Internal::sGPUDevicePointerView( aSize, aDevicePointer )
         {
         }
 
-        MemoryBuffer( size_t aSize, size_t aOffset, Internal::sGPUDevicePointerView const &aDevicePointer )
+        memory_buffer_t( size_t aSize, size_t aOffset, Internal::sGPUDevicePointerView const &aDevicePointer )
             : Internal::sGPUDevicePointerView( aSize, aOffset, aDevicePointer )
         {
         }
@@ -64,17 +64,17 @@ namespace SE::Cuda
     /// allocated to it upon destruction. As of now there is no link between the memory pool and the various buffers it allocates.
     ///
     ///
-    class MemoryPool : public Internal::sGPUDevicePointer
+    class memory_pool_t : public Internal::sGPUDevicePointer
     {
       public:
-        MemoryPool()  = default;
-        ~MemoryPool() = default;
+        memory_pool_t()  = default;
+        ~memory_pool_t() = default;
 
         /// @brief Allocates `aTotalSize` bytes of memory on the GPU
         ///
         /// @param aTotalSize Size, in bytes, of the memory to allocate.
         ///
-        MemoryPool( size_t aTotalSize );
+        memory_pool_t( size_t aTotalSize );
 
         /// @brief Allocates buffer from the pool.
         ///
@@ -82,7 +82,7 @@ namespace SE::Cuda
         ///
         /// @param aBytes Size, in bytes, of the buffer to allocate.
         ///
-        MemoryBuffer Allocate( size_t aBytes );
+        memory_buffer_t Allocate( size_t aBytes );
 
         /// @brief Resets the pool.
         void Reset();
