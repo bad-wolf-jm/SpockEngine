@@ -22,7 +22,7 @@ namespace TestUtils
     constexpr float EPSILON = 0.000001;
 
     template <typename T>
-    uint32_t Prod( std::vector<T> x )
+    T Prod( std::vector<T> x )
     {
         return std::accumulate( x.begin(), x.end(), 1, std::multiplies<T>() );
     }
