@@ -31,7 +31,7 @@ namespace SE::Cuda
     /// allocated to it upon destruction. As of now there is no link between the memory pool and the various buffers it allocates.
     ///
     ///
-    class memory_buffer_t : public Internal::sGPUDevicePointerView
+    class memory_buffer_t : public Internal::gpu_device_pointer_view_t
     {
         friend class memory_pool_t;
 
@@ -45,12 +45,12 @@ namespace SE::Cuda
         memory_buffer_t View( size_t aSize, size_t aOffset ) const { return memory_buffer_t( aSize, aOffset, *this ); }
 
         memory_buffer_t( size_t aSize, void *aDevicePointer )
-            : Internal::sGPUDevicePointerView( aSize, aDevicePointer )
+            : Internal::gpu_device_pointer_view_t( aSize, aDevicePointer )
         {
         }
 
-        memory_buffer_t( size_t aSize, size_t aOffset, Internal::sGPUDevicePointerView const &aDevicePointer )
-            : Internal::sGPUDevicePointerView( aSize, aOffset, aDevicePointer )
+        memory_buffer_t( size_t aSize, size_t aOffset, Internal::gpu_device_pointer_view_t const &aDevicePointer )
+            : Internal::gpu_device_pointer_view_t( aSize, aOffset, aDevicePointer )
         {
         }
     };
@@ -64,7 +64,7 @@ namespace SE::Cuda
     /// allocated to it upon destruction. As of now there is no link between the memory pool and the various buffers it allocates.
     ///
     ///
-    class memory_pool_t : public Internal::sGPUDevicePointer
+    class memory_pool_t : public Internal::gpu_device_pointer_t
     {
       public:
         memory_pool_t()  = default;

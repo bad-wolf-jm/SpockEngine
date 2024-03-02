@@ -16,7 +16,7 @@ namespace SE::Cuda
 {
 
     memory_pool_t::memory_pool_t( size_t aTotalSize )
-        : Internal::sGPUDevicePointer( aTotalSize )
+        : Internal::gpu_device_pointer_t( aTotalSize )
         , mTotalSize{ aTotalSize }
     {
         Reset();

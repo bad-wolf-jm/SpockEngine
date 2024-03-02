@@ -172,7 +172,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( int8_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( int8_t ) ) );
         lScope.Run( lNode );
 
         auto lBuffer1 = lNode.Get<sMultiTensorComponent>().mValue.BufferAt( 0 );
@@ -189,7 +189,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
         std::vector<float> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
@@ -209,7 +209,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( double ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
         std::vector<double> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<double>() );
@@ -229,7 +229,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint8_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint8_t>() );
@@ -249,7 +249,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint16_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint16_t>() );
@@ -269,7 +269,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint32_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint32_t>() );
@@ -289,7 +289,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint64_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint64_t>() );
@@ -308,7 +308,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
         std::vector<float> lExpectedValues0( Prod( lDim1 ) );
@@ -328,7 +328,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( double ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
         std::vector<double> lExpectedValues0( Prod( lDim1 ) );
@@ -348,7 +348,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint8_t> lExpectedValues0( Prod( lDim1 ) );
@@ -368,7 +368,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint16_t> lExpectedValues0( Prod( lDim1 ) );
@@ -387,7 +387,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint32_t> lExpectedValues0( Prod( lDim1 ) );
@@ -406,7 +406,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint64_t> lExpectedValues0( Prod( lDim1 ) );
@@ -427,7 +427,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
         std::vector<float> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
@@ -443,7 +443,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( double ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
         std::vector<double> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<double>();
@@ -458,7 +458,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint8_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
@@ -473,7 +473,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint16_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint16_t>();
@@ -488,7 +488,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint32_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
@@ -503,7 +503,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
         lScope.Run( lNode );
 
         std::vector<uint64_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
@@ -518,7 +518,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
         std::vector<float> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
@@ -538,7 +538,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( double ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
         std::vector<double> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<double>() );
@@ -558,7 +558,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
         std::vector<float> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
@@ -580,7 +580,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( double ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
         std::vector<double> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<double>() );
@@ -606,7 +606,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lOpNode  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpNode  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lOpSNode = ConstantScalarValue( lScope, 1.234f );
 
         auto lResult0 = Add( lScope, lOpNode, lOpSNode );
@@ -634,8 +634,8 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lOpNode  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lOpSNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpNode  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpSNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Add( lScope, lOpNode, lOpSNode );
 
         lScope.Run( lResult0 );
@@ -659,7 +659,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Add( lScope, lOpNode, lOpSNode );
@@ -723,7 +723,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lOpNode  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpNode  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lOpSNode = ConstantScalarValue( lScope, 1.234f );
         auto lResult0 = Multiply( lScope, lOpNode, lOpSNode );
         auto lResult1 = Multiply( lScope, lOpSNode, lOpNode );
@@ -749,8 +749,8 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lOpNode  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lOpSNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpNode  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpSNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Multiply( lScope, lOpNode, lOpSNode );
         lScope.Run( lResult0 );
 
@@ -773,7 +773,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Multiply( lScope, lOpNode, lOpSNode );
@@ -837,7 +837,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lOpNode  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpNode  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lOpSNode = ConstantScalarValue( lScope, 1.234f );
         auto lResult0 = Subtract( lScope, lOpNode, lOpSNode );
         auto lResult1 = Subtract( lScope, lOpSNode, lOpNode );
@@ -865,7 +865,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Subtract( lScope, lOpNode, lOpSNode );
@@ -929,8 +929,8 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lOpNode  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lOpSNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpNode  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lOpSNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Subtract( lScope, lOpNode, lOpSNode );
         lScope.Run( lResult0 );
 
@@ -953,7 +953,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto                     lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Divide( lScope, lOpNode, lOpSNode );
@@ -1042,7 +1042,7 @@ TEMPLATE_TEST_CASE( "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t,
         ConcatenateVectors( lValues1 ), ConcatenateVectors( lValues2 ), ConcatenateVectors( lValues3 ) } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Divide( lScope, lInputTensor, lScalarNode );
     lScope.Run( lResult0 );
@@ -1070,13 +1070,13 @@ TEST_CASE( "Tensor AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues01 = RandomBool( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<uint8_t> lValues1  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues11 = RandomBool( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
     sDataInitializerComponent lInitializer1( lValues1 );
-    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = And( lScope, lOpNodeLeft, lOpNodeRight );
     auto lResult1 = And( lScope, lOpNodeRight, lOpNodeLeft );
@@ -1108,7 +1108,7 @@ TEST_CASE( "Tensor AND Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
@@ -1152,7 +1152,7 @@ TEST_CASE( "Tensor AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     {
         auto lOpNodeRight = ConstantScalarValue( lScope, static_cast<uint8_t>( 0 ) );
@@ -1205,13 +1205,13 @@ TEST_CASE( "Tensor OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues01 = RandomBool( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<uint8_t> lValues1  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues11 = RandomBool( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
     sDataInitializerComponent lInitializer1( lValues1 );
-    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = Or( lScope, lOpNodeLeft, lOpNodeRight );
     auto lResult1 = Or( lScope, lOpNodeRight, lOpNodeLeft );
@@ -1244,7 +1244,7 @@ TEST_CASE( "Tensor OR Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
@@ -1288,7 +1288,7 @@ TEST_CASE( "Tensor OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     {
         auto lOpNodeRight = ConstantScalarValue( lScope, static_cast<uint8_t>( 1 ) );
@@ -1341,7 +1341,7 @@ TEST_CASE( "NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues01 = RandomBool( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = Not( lScope, lOpNodeLeft );
     lScope.Run( lResult0 );
@@ -1367,13 +1367,13 @@ TEST_CASE( "Tensor BITWISE_AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lValues01 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lValues1  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues11 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
     sDataInitializerComponent lInitializer1( lValues1 );
-    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = BitwiseAnd( lScope, lOpNodeLeft, lOpNodeRight );
     auto lResult1 = BitwiseAnd( lScope, lOpNodeRight, lOpNodeLeft );
@@ -1405,7 +1405,7 @@ TEST_CASE( "Tensor BITWISE_AND Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
@@ -1449,7 +1449,7 @@ TEST_CASE( "Tensor BITWISE_AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lOpNodeRight = ConstantScalarValue( lScope, static_cast<uint64_t>( 0x1b34d765ef12acac ) );
 
@@ -1482,13 +1482,13 @@ TEST_CASE( "Tensor BITWISE_OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lValues01 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lValues1  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues11 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
     sDataInitializerComponent lInitializer1( lValues1 );
-    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = BitwiseOr( lScope, lOpNodeLeft, lOpNodeRight );
     auto lResult1 = BitwiseOr( lScope, lOpNodeRight, lOpNodeLeft );
@@ -1521,7 +1521,7 @@ TEST_CASE( "Tensor BITWISE_OR Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
@@ -1565,7 +1565,7 @@ TEST_CASE( "Tensor BITWISE_OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lOpNodeRight = ConstantScalarValue( lScope, static_cast<uint64_t>( 0x1b34d765ef12acac ) );
 
@@ -1598,7 +1598,7 @@ TEST_CASE( "BITWISE_NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lValues01 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
+    auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = BitwiseNot( lScope, lOpNodeLeft );
     lScope.Run( lResult0 );
@@ -1625,9 +1625,9 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 8, 12 };
         std::vector<uint32_t> lDim2{ 8, 16 };
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNodeX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNodeB = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeB = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1658,8 +1658,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNodeX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lNodeB = VectorValue( lScope, lB );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
@@ -1692,8 +1692,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim2{ 8, 16 };
 
         float lScalarB = 2.142983764918237649f;
-        auto  lNodeA   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeA   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto  lNodeB   = ConstantScalarValue( lScope, lScalarB );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
@@ -1737,8 +1737,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         lB[1] = lBValues[1];
 
         auto lNodeA = VectorValue( lScope, lA );
-        auto lNodeB = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNodeX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeB = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1782,7 +1782,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
 
         auto lNodeA = VectorValue( lScope, lA );
         auto lNodeB = VectorValue( lScope, lB );
-        auto lNodeX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1826,7 +1826,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         float lScalarB = 2.142983764918237649f;
         auto  lNodeA   = VectorValue( lScope, lA );
         auto  lNodeB   = ConstantScalarValue( lScope, lScalarB );
-        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1869,8 +1869,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
 
         float lScalarA = 2.142983764918237649f;
         auto  lNodeA   = ConstantScalarValue( lScope, lScalarA );
-        auto  lNodeB   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeB   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1915,7 +1915,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         float lScalarA = 2.142983764918237649f;
         auto  lNodeA   = ConstantScalarValue( lScope, lScalarA );
         auto  lNodeB   = VectorValue( lScope, lB );
-        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1960,7 +1960,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         auto  lNodeA   = ConstantScalarValue( lScope, lScalarA );
         float lScalarB = 2.142983764918237649f;
         auto  lNodeB   = ConstantScalarValue( lScope, lScalarB );
-        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto  lNodeX   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
@@ -1996,9 +1996,9 @@ TEST_CASE( "Mix node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNodeA  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNodeB  = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNode_T = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeB  = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNode_T = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         auto lResult0 = Mix( lScope, lNodeA, lNodeB, lNode_T );
         lScope.Run( lResult0 );
@@ -2030,8 +2030,8 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        auto lNodeB = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeB = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lSubdivisions{ 32, 64 };
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
@@ -2051,11 +2051,11 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
         sConstantValueInitializerComponent lInitializer0{};
         lInitializer0.mValue = 0.5f;
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         sConstantValueInitializerComponent lInitializer1{};
         lInitializer1.mValue = 1.5f;
-        auto lNodeB          = MultiTensorValue( lScope, lInitializer1, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeB          = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lSubdivisions{ 32, 64 };
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
@@ -2219,7 +2219,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lSubdivisions{ 3, 5 };
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
@@ -2238,7 +2238,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         sRandomNormalInitializerComponent lInitializer0{};
         lInitializer0.mType = scalar_type_t::FLOAT32;
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lRepetitions{ 3, 5 };
         auto                  lNode_R = VectorValue( lScope, lRepetitions );
@@ -2305,7 +2305,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lSubdivisions{ 3, 5 };
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
@@ -2324,7 +2324,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         sRandomNormalInitializerComponent lInitializer0{};
         lInitializer0.mType = scalar_type_t::FLOAT32;
 
-        auto lNodeA = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lRepetitions{ 7, 11 };
         auto                  lNode_R = VectorValue( lScope, lRepetitions );
@@ -2383,7 +2383,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Expanding multi-tensors preserved types" )
     {
         auto lNodeA =
-            MultiTensorValue( lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
+            MultiTensorValue( lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
         REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
@@ -2392,7 +2392,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Expanding multi-tensors gives the correct dimension" )
     {
         auto lNodeA =
-            MultiTensorValue( lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
+            MultiTensorValue( lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
         REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == ( lDim1.size() - 1 ) );
@@ -2406,7 +2406,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Expanding multi-tensors does not change values" )
     {
         auto lNodeA =
-            MultiTensorValue( lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
+            MultiTensorValue( lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
         lScope.Run( lResult0 );
@@ -2433,7 +2433,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Collapsing multi-tensors preserved types" )
     {
         auto lNodeA   = MultiTensorValue( lScope, lInitializer,
-                                          sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1, lDim2 }, sizeof( float ) ) );
+                                          tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
         REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
@@ -2442,7 +2442,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Collapsing multi-tensors gives the correct dimension" )
     {
         auto lNodeA = MultiTensorValue(
-            lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
+            lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
         REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
@@ -2453,7 +2453,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Collapsing multi-tensors does not change values" )
     {
         auto lNodeA = MultiTensorValue(
-            lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
+            lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
         lScope.Run( lResult0 );
@@ -2478,12 +2478,12 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Reshaping multi-tensors preserved types" )
     {
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lODim1{ 7, 3, 42 };
         std::vector<uint32_t> lODim2{ 25, 8, 5 };
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
-        auto                  lResult0 = Reshape( lScope, lNodeA, sTensorShape( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
+        auto                  lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
         REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
@@ -2491,13 +2491,13 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Reshaping multi-tensors gives the correct dimension" )
     {
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lODim1{ 7, 3, 42 };
         std::vector<uint32_t> lODim2{ 25, 8, 5 };
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
 
-        auto lResult0 = Reshape( lScope, lNodeA, sTensorShape( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
+        auto lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
         REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
@@ -2509,13 +2509,13 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Reshaping multi-tensors does not change values" )
     {
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lODim1{ 7, 3, 42 };
         std::vector<uint32_t> lODim2{ 25, 8, 5 };
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
 
-        auto lResult0 = Reshape( lScope, lNodeA, sTensorShape( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
+        auto lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
         std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
@@ -2538,7 +2538,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Reshaping multi-tensors preserved types" )
     {
-        auto lNodeA   = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Flatten( lScope, lNodeA );
 
         REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
@@ -2546,7 +2546,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Flattening multi-tensors gives the correct dimension" )
     {
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lODim1{ 7, 3, 42 };
         std::vector<uint32_t> lODim2{ 25, 8, 5 };
@@ -2564,7 +2564,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Flattening multi-tensors does not change values" )
     {
-        auto lNodeA = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+        auto lNodeA = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
         std::vector<uint32_t> lODim1{ 7, 3, 42 };
         std::vector<uint32_t> lODim2{ 25, 8, 5 };
@@ -2600,9 +2600,9 @@ TEST_CASE( "InInterval Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lLowerBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lUpperBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lOpNode     = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lLowerBound = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lUpperBound = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lResult0    = InInterval( lScope, lOpNode, lLowerBound, lUpperBound, false, false );
 
     lScope.Run( lResult0 );
@@ -2632,8 +2632,8 @@ TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lLowerBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lOpNode     = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lLowerBound = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lUpperBound = VectorValue( lScope, lConstants );
@@ -2669,8 +2669,8 @@ TEST_CASE( "InInterval Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lLowerBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lOpNode     = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lLowerBound = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lUpperBound = ConstantScalarValue( lScope, 0.245f );
     auto lResult0    = InInterval( lScope, lOpNode, lLowerBound, lUpperBound, false, false );
@@ -2697,8 +2697,8 @@ TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lUpperBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lOpNode     = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lUpperBound = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lLowerBound = VectorValue( lScope, lConstants );
@@ -2734,8 +2734,8 @@ TEST_CASE( "InInterval Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lUpperBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lOpNode     = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lUpperBound = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lLowerBound = ConstantScalarValue( lScope, 0.245f );
     auto lResult0    = InInterval( lScope, lOpNode, lLowerBound, lUpperBound, false, false );
@@ -2762,7 +2762,7 @@ TEST_CASE( "InInterval Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lOpNode     = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lLowerBound = ConstantScalarValue( lScope, 0.245f );
     auto lUpperBound = ConstantScalarValue( lScope, 0.75f );
 
@@ -2789,8 +2789,8 @@ TEST_CASE( "LessThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = LessThan( lScope, lX, lY );
     lScope.Run( lResult0 );
@@ -2819,7 +2819,7 @@ TEST_CASE( "LessThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
@@ -2853,7 +2853,7 @@ TEST_CASE( "LessThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lY = ConstantScalarValue( lScope, 0.245f );
 
     auto lResult0 = LessThan( lScope, lX, lY );
@@ -2881,7 +2881,7 @@ TEST_CASE( "LessThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
-    auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto                     lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = LessThan( lScope, lX, lY );
 
@@ -2914,7 +2914,7 @@ TEST_CASE( "LessThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = LessThan( lScope, lX, lY );
 
@@ -2939,8 +2939,8 @@ TEST_CASE( "LessThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = LessThanOrEqual( lScope, lX, lY );
     lScope.Run( lResult0 );
@@ -2969,7 +2969,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
@@ -3003,7 +3003,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lY = ConstantScalarValue( lScope, 0.245f );
 
     auto lResult0 = LessThanOrEqual( lScope, lX, lY );
@@ -3031,7 +3031,7 @@ TEST_CASE( "LessThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
-    auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto                     lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = LessThanOrEqual( lScope, lX, lY );
 
@@ -3064,7 +3064,7 @@ TEST_CASE( "LessThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = LessThanOrEqual( lScope, lX, lY );
 
@@ -3089,8 +3089,8 @@ TEST_CASE( "GreaterThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = GreaterThan( lScope, lX, lY );
     lScope.Run( lResult0 );
@@ -3119,7 +3119,7 @@ TEST_CASE( "GreaterThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
@@ -3153,7 +3153,7 @@ TEST_CASE( "GreaterThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lY = ConstantScalarValue( lScope, 0.245f );
 
     auto lResult0 = GreaterThan( lScope, lX, lY );
@@ -3181,7 +3181,7 @@ TEST_CASE( "GreaterThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
-    auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto                     lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = GreaterThan( lScope, lX, lY );
 
@@ -3214,7 +3214,7 @@ TEST_CASE( "GreaterThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = GreaterThan( lScope, lX, lY );
 
@@ -3239,8 +3239,8 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = GreaterThanOrEqual( lScope, lX, lY );
     lScope.Run( lResult0 );
@@ -3269,7 +3269,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
@@ -3303,7 +3303,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lY = ConstantScalarValue( lScope, 0.245f );
 
     auto lResult0 = GreaterThanOrEqual( lScope, lX, lY );
@@ -3331,7 +3331,7 @@ TEST_CASE( "GreaterThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
-    auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto                     lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = GreaterThanOrEqual( lScope, lX, lY );
 
@@ -3364,7 +3364,7 @@ TEST_CASE( "GreaterThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = GreaterThanOrEqual( lScope, lX, lY );
 
@@ -3391,10 +3391,10 @@ TEST_CASE( "Where Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
     lScope.Run( lResult0 );
@@ -3429,9 +3429,9 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.27986534f, 0.31490728f };
     auto                     lY = VectorValue( lScope, lConstants );
@@ -3468,9 +3468,9 @@ TEST_CASE( "Where Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lY = ConstantScalarValue( lScope, 0.245f );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
@@ -3504,12 +3504,12 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
 
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
 
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
 
@@ -3548,7 +3548,7 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
 
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants0{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants0 );
@@ -3590,7 +3590,7 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
@@ -3626,10 +3626,10 @@ TEST_CASE( "Where Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
-    auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
+    auto lY = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
 
@@ -3660,7 +3660,7 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
 
@@ -3697,7 +3697,7 @@ TEST_CASE( "Where Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
     sDataInitializerComponent lInitializer0( lValues0 );
-    auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
+    auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = ConstantScalarValue( lScope, 0.9234587f );
     auto lY = ConstantScalarValue( lScope, 0.1324978f );
@@ -3769,7 +3769,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
     auto lEnd   = VectorValue( lScope, lSliceEnd );
@@ -3847,7 +3847,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
     auto lEnd   = VectorValue( lScope, lSliceEnd );
@@ -3925,7 +3925,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
     auto lEnd   = ConstantScalarValue( lScope, lSliceEnd );
@@ -4003,7 +4003,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
     auto lEnd   = ConstantScalarValue( lScope, lSliceEnd );
@@ -4084,7 +4084,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
     auto lEnd   = VectorValue( lScope, lSliceEnd );
@@ -4165,7 +4165,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
     auto lEnd   = VectorValue( lScope, lSliceEnd );
@@ -4246,7 +4246,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
     auto lEnd   = ConstantScalarValue( lScope, lSliceEnd );
@@ -4327,7 +4327,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
     auto lEnd   = ConstantScalarValue( lScope, lSliceEnd );
@@ -4405,7 +4405,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
     auto lEnd   = ConstantScalarValue( lScope, lSliceEnd );
@@ -4490,7 +4490,7 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = CountTrue( lScope, lInputTensor );
     lScope.Run( lResult0 );
@@ -4572,7 +4572,7 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = CountNonZero( lScope, lInputTensor );
     lScope.Run( lResult0 );
@@ -4654,7 +4654,7 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = CountZero( lScope, lInputTensor );
     lScope.Run( lResult0 );
@@ -4685,7 +4685,7 @@ TEST_CASE( "Floor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 2, 7, 256 };
     std::vector<uint32_t> lDim3{ 3, 5, 512 };
 
-    auto lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+    auto lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Floor( lScope, lOpNode );
     lScope.Run( lResult0 );
@@ -4713,7 +4713,7 @@ TEST_CASE( "Ceiling", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 2, 7, 256 };
     std::vector<uint32_t> lDim3{ 3, 5, 512 };
 
-    auto lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+    auto lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Ceil( lScope, lOpNode );
     lScope.Run( lResult0 );
@@ -4741,7 +4741,7 @@ TEST_CASE( "Absolute value", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 2, 7, 256 };
     std::vector<uint32_t> lDim3{ 3, 5, 512 };
 
-    auto lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+    auto lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Abs( lScope, lOpNode );
     lScope.Run( lResult0 );
@@ -4769,7 +4769,7 @@ TEST_CASE( "Square roots", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 12, 17, 23 };
     std::vector<uint32_t> lDim3{ 13, 15, 52 };
 
-    auto lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+    auto lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Sqrt( lScope, lOpNode );
     lScope.Run( lResult0 );
@@ -4805,7 +4805,7 @@ TEST_CASE( "Rounding", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lDim2{ 12, 17, 23 };
     std::vector<uint32_t> lDim3{ 13, 15, 52 };
 
-    auto lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+    auto lOpNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Round( lScope, lOpNode );
     lScope.Run( lResult0 );
@@ -4887,7 +4887,7 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     auto lResult0 = Diff( lScope, lInputTensor, 1 );
     lScope.Run( lResult0 );
@@ -4965,7 +4965,7 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     auto lFillValue = ConstantScalarValue( lScope, static_cast<int64_t>( 121212 ) );
     auto lResult0   = Shift( lScope, lInputTensor, -1, lFillValue );
@@ -5050,7 +5050,7 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     auto lFillValue = ConstantScalarValue( lScope, static_cast<int64_t>( 121212 ) );
     auto lResult0   = Shift( lScope, lInputTensor, -3, lFillValue );
@@ -5170,10 +5170,10 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
     lKernelValues.insert( lKernelValues.end(), lKernel3.begin(), lKernel3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( int64_t ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( int64_t ) ) );
 
     auto lResult0 = Conv1D( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
@@ -5289,10 +5289,10 @@ TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     lKernelValues.insert( lKernelValues.end(), lKernel3.begin(), lKernel3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( uint32_t ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint32_t ) ) );
 
     auto lResult0 = Conv1D( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
@@ -5400,10 +5400,10 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     lKernelValues.insert( lKernelValues.end(), lKernel3.begin(), lKernel3.end() );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( uint32_t ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint32_t ) ) );
 
     auto lResult0 = HCat( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
@@ -5455,10 +5455,10 @@ TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Add( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Add( lScope, lKernelensor, lInputTensor );
@@ -5515,10 +5515,10 @@ TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Multiply( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Multiply( lScope, lKernelensor, lInputTensor );
@@ -5578,10 +5578,10 @@ TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<float> lKernelValues = ConcatenateVectors( std::vector<std::vector<float>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( float ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Divide( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Divide( lScope, lKernelensor, lInputTensor );
@@ -5643,10 +5643,10 @@ TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Subtract( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Subtract( lScope, lKernelensor, lInputTensor );
@@ -5704,10 +5704,10 @@ TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lKernelValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( uint8_t ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = And( lScope, lInputTensor, lKernelensor );
     auto lResult1 = And( lScope, lKernelensor, lInputTensor );
@@ -5763,10 +5763,10 @@ TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lKernelValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( uint8_t ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = Or( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Or( lScope, lKernelensor, lInputTensor );
@@ -5822,10 +5822,10 @@ TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = BitwiseAnd( lScope, lInputTensor, lKernelensor );
     auto lResult1 = BitwiseAnd( lScope, lKernelensor, lInputTensor );
@@ -5881,10 +5881,10 @@ TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = BitwiseOr( lScope, lInputTensor, lKernelensor );
     auto lResult1 = BitwiseOr( lScope, lKernelensor, lInputTensor );
@@ -5941,10 +5941,10 @@ TEMPLATE_TEST_CASE( "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uin
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Equal( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Equal( lScope, lKernelensor, lInputTensor );
@@ -6008,10 +6008,10 @@ TEMPLATE_TEST_CASE( "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = LessThan( lScope, lInputTensor, lKernelensor );
     auto lResult1 = LessThan( lScope, lKernelensor, lInputTensor );
@@ -6082,10 +6082,10 @@ TEMPLATE_TEST_CASE( "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uin
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
     sDataInitializerComponent lInputInitializer( lInputValues );
-    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
+    auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     sDataInitializerComponent lKernelInitializer( lKernelValues );
-    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, sTensorShape( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
+    auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = LessThanOrEqual( lScope, lInputTensor, lKernelensor );
     auto lResult1 = LessThanOrEqual( lScope, lKernelensor, lInputTensor );

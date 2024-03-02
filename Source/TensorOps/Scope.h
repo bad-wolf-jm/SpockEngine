@@ -96,7 +96,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given vector of values
     ///
@@ -109,7 +109,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given data
     ///
@@ -121,7 +121,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with uniformly distributed random values
     ///
@@ -131,7 +131,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with normally distributed random values
     ///
@@ -141,7 +141,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MemoryBuffer initialized with the given vector
     ///
@@ -630,7 +630,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Reshape( scope_t &aScope, graph_node_t const &aArray, Cuda::sTensorShape &aNewShape );
+    graph_node_t Reshape( scope_t &aScope, graph_node_t const &aArray, Cuda::tensor_shape_t &aNewShape );
 
     /// @brief Relayout the input @ref MultiTensor
     ///

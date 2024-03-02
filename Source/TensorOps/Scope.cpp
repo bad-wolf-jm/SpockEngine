@@ -230,7 +230,7 @@ namespace SE::TensorOps
                         lBroadcastInfo.mBroadcastDimension    = VectorValue( aScope, lBroadcastShape.GetDimension( -1 ) );
                         lBroadcastInfo.mMaxBroadcastDimension = lBroadcastShape.mMaxDimensions[lBroadcastShape.mRank - 1];
 
-                        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lBroadcastShape.mShape, SizeOf( aType ) ) );
+                        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lBroadcastShape.mShape, SizeOf( aType ) ) );
                     }
                     else if( lRightShape.mRank == lLeftShape.mRank - 1 )
                     {
@@ -248,7 +248,7 @@ namespace SE::TensorOps
                         lBroadcastInfo.mBroadcastDimension    = VectorValue( aScope, lBroadcastShape.GetDimension( -1 ) );
                         lBroadcastInfo.mMaxBroadcastDimension = lBroadcastShape.mMaxDimensions[lBroadcastShape.mRank - 1];
 
-                        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lBroadcastShape.mShape, SizeOf( aType ) ) );
+                        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lBroadcastShape.mShape, SizeOf( aType ) ) );
                     }
                     else
                     {
@@ -258,13 +258,13 @@ namespace SE::TensorOps
                 else
                 {
                     auto lShape = lOperandData.mLeftOperand.Get<sMultiTensorComponent>().Shape().mShape;
-                    lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aType ) ) );
+                    lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aType ) ) );
                 }
             }
             else
             {
                 auto lShape = lOperandData.mLeftOperand.Get<sMultiTensorComponent>().Shape().mShape;
-                lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aType ) ) );
+                lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aType ) ) );
             }
         }
         else
@@ -275,7 +275,7 @@ namespace SE::TensorOps
             }
 
             auto lShape = lOperandData.mRightOperand.Get<sMultiTensorComponent>().Shape().mShape;
-            lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aType ) ) );
+            lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aType ) ) );
         }
 
         if( lNewEntity.Has<sBroadcastInfoComponent>() )
@@ -429,7 +429,7 @@ namespace SE::TensorOps
 
         vector_t<vector_t<uint32_t>> lOutputShape = aX.Get<sMultiTensorComponent>().Shape().mShape;
 
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape, SizeOf( scalar_type_t::UINT8 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lOutputShape, SizeOf( scalar_type_t::UINT8 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sInIntervalOperationController>();
 
         return lNewEntity;
@@ -494,7 +494,7 @@ namespace SE::TensorOps
 
         auto lShape = aCondition.Get<sMultiTensorComponent>().Shape().mShape;
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lShape, SizeOf( aValueIfTrue.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lShape, SizeOf( aValueIfTrue.Get<sTypeComponent>().mValue ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sWhereOperationController>();
 
@@ -530,7 +530,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, aScaling } );
 
         auto &lShape = lOperandData.mArray.Get<sMultiTensorComponent>().Shape().mShape;
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aOutputType ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aOutputType ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sToFixedPointOperationController>();
 
@@ -563,7 +563,7 @@ namespace SE::TensorOps
         }
 
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sArrayOperationController>();
 
         return lNewEntity;
@@ -597,7 +597,7 @@ namespace SE::TensorOps
         }
 
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sArrayOperationController>();
 
         return lNewEntity;
@@ -635,7 +635,7 @@ namespace SE::TensorOps
         }
 
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lOutputShape, SizeOf( aLeft.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape, SizeOf( aLeft.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sARangeOperationController>();
 
         return lNewEntity;
@@ -669,7 +669,7 @@ namespace SE::TensorOps
         }
 
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lOutputShape, SizeOf( aLeft.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape, SizeOf( aLeft.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sLinearSpaceOperationController>();
 
         return lNewEntity;
@@ -681,18 +681,18 @@ namespace SE::TensorOps
         assert( ( aY.HasAny<sMultiTensorComponent, sScalarNodeComponent, sScalarValueVectorComponent>() ) );
 
         assert( aX.Has<sMultiTensorComponent>() || aY.Has<sMultiTensorComponent>() );
-        assert( aTextures.Has<sVectorValueComponent<Cuda::TextureSampler2D::DeviceData>>() );
+        assert( aTextures.Has<sVectorValueComponent<Cuda::texture_sampler2d_t::DeviceData>>() );
 
         if( aX.Has<sMultiTensorComponent>() && aY.Has<sMultiTensorComponent>() )
             assert( SameShape( aX, aY ) );
 
         if( aX.Has<sMultiTensorComponent>() )
             assert( aX.Get<sMultiTensorComponent>().Shape().CountLayers() ==
-                    aTextures.Get<sVectorValueComponent<Cuda::TextureSampler2D::DeviceData>>().mValue.size() );
+                    aTextures.Get<sVectorValueComponent<Cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
 
         if( aY.Has<sMultiTensorComponent>() )
             assert( aY.Get<sMultiTensorComponent>().Shape().CountLayers() ==
-                    aTextures.Get<sVectorValueComponent<Cuda::TextureSampler2D::DeviceData>>().mValue.size() );
+                    aTextures.Get<sVectorValueComponent<Cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
 
         assert( SameType( aX, aY ) );
 
@@ -751,7 +751,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sMultiTensorComponent>(
             aScope.mPool, aArray.Get<sMultiTensorComponent>().mValue.GetMemoryBuffer(),
-            sTensorShape( vector_t<vector_t<uint32_t>>{ lOutputDimension }, static_cast<size_t>( lInputShape.mElementSize ) ) );
+            tensor_shape_t( vector_t<vector_t<uint32_t>>{ lOutputDimension }, static_cast<size_t>( lInputShape.mElementSize ) ) );
 
         return lNewEntity;
     }
@@ -777,7 +777,7 @@ namespace SE::TensorOps
 
         lNewEntity.Add<sTypeComponent>( aArray.Get<sTypeComponent>() );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, aArray.Get<sMultiTensorComponent>().mValue.GetMemoryBuffer(),
-                                               sTensorShape( lOutputShape, static_cast<size_t>( lInputShape.mElementSize ) ) );
+                                               tensor_shape_t( lOutputShape, static_cast<size_t>( lInputShape.mElementSize ) ) );
 
         return lNewEntity;
     }
@@ -919,7 +919,7 @@ namespace SE::TensorOps
             vector_t<graph_node_t>{ aArray, lOperandData.mBegin, lOperandData.mEnd, lOperandData.mBlockSizes, lOperandData.mElementCount } );
 
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sArraySliceOperationController>();
 
         return lNewEntity;
@@ -983,7 +983,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sOperandComponent>(
             vector_t<graph_node_t>{ aArray, lOperandData.mBegin, lOperandData.mEnd, lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<sMultiTensorComponent>( aScope.mPool,
-                                               sTensorShape( lOutputShape.mShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape.mShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sArraySummationOperationController>();
 
         return lNewEntity;
@@ -1009,7 +1009,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountTrueOperationController>();
 
         return lNewEntity;
@@ -1036,7 +1036,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountZeroOperationController>();
 
         return lNewEntity;
@@ -1063,7 +1063,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountNonZeroOperationController>();
 
         return lNewEntity;
@@ -1137,7 +1137,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sFloorNodeComponent>( sFloorNodeComponent{ aArray } );
 
         auto lShape = aArray.Get<sMultiTensorComponent>().Shape().mShape;
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sFloorOperationController>();
 
@@ -1156,7 +1156,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sCeilNodeComponent>( sCeilNodeComponent{ aArray } );
 
         auto lShape = aArray.Get<sMultiTensorComponent>().Shape().mShape;
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCeilOperationController>();
 
@@ -1177,7 +1177,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sAbsNodeComponent>( sAbsNodeComponent{ aArray } );
 
         auto lShape = aArray.Get<sMultiTensorComponent>().Shape().mShape;
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sAbsOperationController>();
 
@@ -1195,7 +1195,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sSqrtNodeComponent>( sSqrtNodeComponent{ aArray } );
 
         auto lShape = aArray.Get<sMultiTensorComponent>().Shape().mShape;
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sSqrtOperationController>();
 
@@ -1213,7 +1213,7 @@ namespace SE::TensorOps
         lNewEntity.Add<sRoundNodeComponent>( sRoundNodeComponent{ aArray } );
 
         auto lShape = aArray.Get<sMultiTensorComponent>().Shape().mShape;
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, tensor_shape_t( lShape, SizeOf( aArray.Get<sTypeComponent>().mValue ) ) );
 
         lNewEntity.Add<sGraphOperationComponent>().Bind<sRoundOperationController>();
 

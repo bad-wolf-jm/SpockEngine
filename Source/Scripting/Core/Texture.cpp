@@ -13,11 +13,11 @@ namespace SE::Core
 {
     using namespace sol;
 
-    sTextureCreateInfo ParseCreateInfo( sol::table aTable )
+    texture_create_info_t ParseCreateInfo( sol::table aTable )
     {
-        sTextureCreateInfo lCreateInfo{};
-        lCreateInfo.mType      = aTable["type"].valid() ? aTable["type"] : eTextureType::TEXTURE_2D;
-        lCreateInfo.mFormat    = aTable["color_format"].valid() ? aTable["color_format"] : eColorFormat::UNDEFINED;
+        texture_create_info_t lCreateInfo{};
+        lCreateInfo.mType      = aTable["type"].valid() ? aTable["type"] : texture_type_t::TEXTURE_2D;
+        lCreateInfo.mFormat    = aTable["color_format"].valid() ? aTable["color_format"] : color_format_t::UNDEFINED;
         lCreateInfo.mWidth     = aTable["width"].valid() ? aTable["width"] : 0;
         lCreateInfo.mHeight    = aTable["height"].valid() ? aTable["height"] : 0;
         lCreateInfo.mDepth     = aTable["depth"].valid() ? aTable["depth"] : 0;
@@ -26,10 +26,10 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    sImageData ParseImageData( sol::table aTable )
+    image_data_t ParseImageData( sol::table aTable )
     {
-        sImageData lImageData{};
-        lImageData.mFormat = aTable["color_format"].valid() ? aTable["color_format"] : eColorFormat::UNDEFINED;
+        image_data_t lImageData{};
+        lImageData.mFormat = aTable["color_format"].valid() ? aTable["color_format"] : color_format_t::UNDEFINED;
         lImageData.mWidth  = aTable["width"].valid() ? aTable["width"] : 0;
         lImageData.mHeight = aTable["height"].valid() ? aTable["height"] : 0;
 
@@ -59,13 +59,13 @@ namespace SE::Core
         return lImageData;
     }
 
-    sTextureSamplingInfo ParseSamplerInfo( sol::table aTable )
+    texture_sampling_info_t ParseSamplerInfo( sol::table aTable )
     {
-        sTextureSamplingInfo lSamplingInfo{};
-        lSamplingInfo.mFilter = aTable["minification"].valid() ? aTable["minification"] : eSamplerFilter::LINEAR;
+        texture_sampling_info_t lSamplingInfo{};
+        lSamplingInfo.mFilter = aTable["minification"].valid() ? aTable["minification"] : sampler_filter_t::LINEAR;
         // lSamplingInfo.mMagnification = aTable["magnification"].valid() ? aTable["magnification"] : eSamplerFilter::LINEAR;
-        lSamplingInfo.mMipFilter = aTable["mip"].valid() ? aTable["mip"] : eSamplerMipmap::LINEAR;
-        lSamplingInfo.mWrapping  = aTable["wrapping"].valid() ? aTable["wrapping"] : eSamplerWrapping::CLAMP_TO_BORDER;
+        lSamplingInfo.mMipFilter = aTable["mip"].valid() ? aTable["mip"] : sampler_mipmap_t::LINEAR;
+        lSamplingInfo.mWrapping  = aTable["wrapping"].valid() ? aTable["wrapping"] : sampler_wrapping_t::CLAMP_TO_BORDER;
 
         auto lScaling = aTable.get<sol::table>( "scaling" );
         if( !lScaling.valid() )
@@ -105,61 +105,61 @@ namespace SE::Core
 
     void RequireTexture( sol::table &aScriptingState )
     {
-        aScriptingState.new_enum( "eTextureType", "TEXTURE_2D", eTextureType::TEXTURE_2D, "TEXTURE_3D", eTextureType::TEXTURE_3D );
+        aScriptingState.new_enum( "eTextureType", "TEXTURE_2D", texture_type_t::TEXTURE_2D, "TEXTURE_3D", texture_type_t::TEXTURE_3D );
 
         // clang-format off
         aScriptingState.new_enum( "eColorFormat",
-            "UNDEFINED",           eColorFormat::UNDEFINED,
-            "R32_FLOAT",           eColorFormat::R32_FLOAT,
-            "RG32_FLOAT",          eColorFormat::RG32_FLOAT,
-            "RGB32_FLOAT",         eColorFormat::RGB32_FLOAT,
-            "RGBA32_FLOAT",        eColorFormat::RGBA32_FLOAT,
-            "R16_FLOAT",           eColorFormat::R16_FLOAT,
-            "RG16_FLOAT",          eColorFormat::RG16_FLOAT,
-            "RGB16_FLOAT",         eColorFormat::RGB16_FLOAT,
-            "RGBA16_FLOAT",        eColorFormat::RGBA16_FLOAT,
-            "R8_UNORM",            eColorFormat::R8_UNORM,
-            "RG8_UNORM",           eColorFormat::RG8_UNORM,
-            "RGB8_UNORM",          eColorFormat::RGB8_UNORM,
-            "RGBA8_UNORM",         eColorFormat::RGBA8_UNORM,
-            "D16_UNORM",           eColorFormat::D16_UNORM,
-            "X8_D24_UNORM_PACK32", eColorFormat::X8_D24_UNORM_PACK32,
-            "D32_SFLOAT",          eColorFormat::D32_SFLOAT,
-            "S8_UINT",             eColorFormat::S8_UINT,
-            "D16_UNORM_S8_UINT",   eColorFormat::D16_UNORM_S8_UINT,
-            "D24_UNORM_S8_UINT",   eColorFormat::D24_UNORM_S8_UINT,
-            "D32_UNORM_S8_UINT",   eColorFormat::D32_UNORM_S8_UINT,
-            "BGR8_SRGB",           eColorFormat::BGR8_SRGB,
-            "BGRA8_SRGB",          eColorFormat::BGRA8_SRGB );
+            "UNDEFINED",           color_format_t::UNDEFINED,
+            "R32_FLOAT",           color_format_t::R32_FLOAT,
+            "RG32_FLOAT",          color_format_t::RG32_FLOAT,
+            "RGB32_FLOAT",         color_format_t::RGB32_FLOAT,
+            "RGBA32_FLOAT",        color_format_t::RGBA32_FLOAT,
+            "R16_FLOAT",           color_format_t::R16_FLOAT,
+            "RG16_FLOAT",          color_format_t::RG16_FLOAT,
+            "RGB16_FLOAT",         color_format_t::RGB16_FLOAT,
+            "RGBA16_FLOAT",        color_format_t::RGBA16_FLOAT,
+            "R8_UNORM",            color_format_t::R8_UNORM,
+            "RG8_UNORM",           color_format_t::RG8_UNORM,
+            "RGB8_UNORM",          color_format_t::RGB8_UNORM,
+            "RGBA8_UNORM",         color_format_t::RGBA8_UNORM,
+            "D16_UNORM",           color_format_t::D16_UNORM,
+            "X8_D24_UNORM_PACK32", color_format_t::X8_D24_UNORM_PACK32,
+            "D32_SFLOAT",          color_format_t::D32_SFLOAT,
+            "S8_UINT",             color_format_t::S8_UINT,
+            "D16_UNORM_S8_UINT",   color_format_t::D16_UNORM_S8_UINT,
+            "D24_UNORM_S8_UINT",   color_format_t::D24_UNORM_S8_UINT,
+            "D32_UNORM_S8_UINT",   color_format_t::D32_UNORM_S8_UINT,
+            "BGR8_SRGB",           color_format_t::BGR8_SRGB,
+            "BGRA8_SRGB",          color_format_t::BGRA8_SRGB );
         // clang-format on
 
-        aScriptingState.new_enum( "eSamplerFilter", "NEAREST", eSamplerFilter::NEAREST, "LINEAR", eSamplerFilter::LINEAR );
-        aScriptingState.new_enum( "eSamplerMipmap", "NEAREST", eSamplerMipmap::NEAREST, "LINEAR", eSamplerMipmap::LINEAR );
+        aScriptingState.new_enum( "eSamplerFilter", "NEAREST", sampler_filter_t::NEAREST, "LINEAR", sampler_filter_t::LINEAR );
+        aScriptingState.new_enum( "eSamplerMipmap", "NEAREST", sampler_mipmap_t::NEAREST, "LINEAR", sampler_mipmap_t::LINEAR );
 
         // clang-format off
         aScriptingState.new_enum( "eSamplerWrapping",
-            "REPEAT",          eSamplerWrapping::REPEAT,
-            "MIRRORED_REPEAT", eSamplerWrapping::MIRRORED_REPEAT,
-            "CLAMP_TO_EDGE",   eSamplerWrapping::CLAMP_TO_EDGE,
-            "CLAMP_TO_BORDER", eSamplerWrapping::CLAMP_TO_BORDER,
-            "MIRROR_CLAMP_TO_BORDER", eSamplerWrapping::MIRROR_CLAMP_TO_BORDER );
+            "REPEAT",          sampler_wrapping_t::REPEAT,
+            "MIRRORED_REPEAT", sampler_wrapping_t::MIRRORED_REPEAT,
+            "CLAMP_TO_EDGE",   sampler_wrapping_t::CLAMP_TO_EDGE,
+            "CLAMP_TO_BORDER", sampler_wrapping_t::CLAMP_TO_BORDER,
+            "MIRROR_CLAMP_TO_BORDER", sampler_wrapping_t::MIRROR_CLAMP_TO_BORDER );
         // clang-format on
 
-        auto lTextureData2DType = aScriptingState.new_usertype<TextureData2D>( "TextureData2D" );
+        auto lTextureData2DType = aScriptingState.new_usertype<texture_data2d_t>( "TextureData2D" );
 
         // clang-format off
         lTextureData2DType[call_constructor] = factories(
-            []( sol::table aCreateInfo ) { return TextureData2D( ParseCreateInfo(aCreateInfo) ); },
-            []( sol::table aCreateInfo, sol::table aImageData ){ return TextureData2D( ParseCreateInfo( aCreateInfo ), ParseImageData( aImageData ) ); },
+            []( sol::table aCreateInfo ) { return texture_data2d_t( ParseCreateInfo(aCreateInfo) ); },
+            []( sol::table aCreateInfo, sol::table aImageData ){ return texture_data2d_t( ParseCreateInfo( aCreateInfo ), ParseImageData( aImageData ) ); },
             []( std::string const &aImagePath )
             {
-                sTextureCreateInfo lCreateInfo{};
-                return TextureData2D( lCreateInfo, fs::path(aImagePath) );
+                texture_create_info_t lCreateInfo{};
+                return texture_data2d_t( lCreateInfo, fs::path(aImagePath) );
             }
         );
         // clang-format on
 
-        lTextureData2DType["get_image_data"] = [&]( TextureData2D &aSelf, sol::this_state aScriptState )
+        lTextureData2DType["get_image_data"] = [&]( texture_data2d_t &aSelf, sol::this_state aScriptState )
         {
             sol::table lDataTable( aScriptState, sol::new_table{} );
             auto       lImageData = aSelf.GetImageData();
@@ -193,11 +193,11 @@ namespace SE::Core
             return lDataTable;
         };
 
-        auto lTextureSampler2DType = aScriptingState.new_usertype<TextureSampler2D>( "TextureSampler2D" );
+        auto lTextureSampler2DType = aScriptingState.new_usertype<texture_data_sampler2d_t>( "TextureSampler2D" );
 
         lTextureSampler2DType[call_constructor] =
-            factories( []( TextureData2D const &aTexture, sol::table aCreateInfo )
-                       { return TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+            factories( []( texture_data2d_t const &aTexture, sol::table aCreateInfo )
+                       { return texture_data_sampler2d_t( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
 
         // lTextureSampler2DType["fetch"] = []( TextureSampler2D &aSelf, float x, float y ) { return aSelf.Fetch( x, y ); };
     }

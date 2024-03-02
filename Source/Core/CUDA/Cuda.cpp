@@ -38,31 +38,31 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaMemcpy( aDestination, aSource, aSize, cudaMemcpyDeviceToHost ) );
     }
 
-    void MallocArray( Array *aDestination, eColorFormat aFormat, size_t aWidth, size_t aHeight )
+    void MallocArray( array_t *aDestination, color_format_t aFormat, size_t aWidth, size_t aHeight )
     {
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( aFormat );
         CUDA_ASSERT( cudaMallocArray( aDestination, &lTextureFormat, aWidth, aHeight, cudaArrayDefault ) );
     }
 
-    void FreeArray( Array *aDestination )
+    void FreeArray( array_t *aDestination )
     {
         if( nullptr != aDestination ) CUDA_ASSERT( cudaFreeArray( *aDestination ) );
 
         *aDestination = nullptr;
     }
 
-    void ArrayCopyHostToDevice( Array aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize )
+    void ArrayCopyHostToDevice( array_t aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize )
     {
         CUDA_ASSERT( cudaMemcpyToArray( aDestination, aWidthOffset, aHeightOffset, aSource, aSize, cudaMemcpyHostToDevice ) );
     }
 
-    void ArrayCopyDeviceToHost( Array aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize )
+    void ArrayCopyDeviceToHost( array_t aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize )
     {
         CUDA_ASSERT( cudaMemcpyFromArray( aDestination, reinterpret_cast<cudaArray_const_t>( aSource ), aWidthOffset, aHeightOffset,
                                           aSize, cudaMemcpyDeviceToHost ) );
     }
 
-    void ImportExternalMemory( ExternalMemory *aDestination, void *aExternalBuffer, size_t aSize )
+    void ImportExternalMemory( external_memory_t *aDestination, void *aExternalBuffer, size_t aSize )
     {
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
         lCudaExternalMemoryHandleDesc.type                = cudaExternalMemoryHandleTypeOpaqueWin32;
@@ -73,14 +73,14 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaImportExternalMemory( aDestination, &lCudaExternalMemoryHandleDesc ) );
     }
 
-    void DestroyExternalMemory( ExternalMemory *aDestination )
+    void DestroyExternalMemory( external_memory_t *aDestination )
     {
         if( nullptr != *aDestination ) CUDA_ASSERT( cudaDestroyExternalMemory( *aDestination ) );
 
         *aDestination = nullptr;
     }
 
-    void GetMappedMipmappedArray( MipmappedArray *aDestination, ExternalMemory aExternalMemoryHandle, eColorFormat aFormat,
+    void GetMappedMipmappedArray( mipmapped_array_t *aDestination, external_memory_t aExternalMemoryHandle, color_format_t aFormat,
                                   int32_t aWidth, int32_t aHeight )
     {
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
@@ -95,7 +95,7 @@ namespace SE::Cuda
             cudaExternalMemoryGetMappedMipmappedArray( aDestination, aExternalMemoryHandle, &lExternalMemoryMipmappedArrayDesc ) );
     }
 
-    void FreeMipmappedArray( MipmappedArray *aDestination )
+    void FreeMipmappedArray( mipmapped_array_t *aDestination )
     {
         if( nullptr != *aDestination )
             CUDA_ASSERT( cudaFreeMipmappedArray( reinterpret_cast<cudaMipmappedArray_t>( *aDestination ) ) );
@@ -103,12 +103,12 @@ namespace SE::Cuda
         *aDestination = nullptr;
     }
 
-    void GeMipmappedArrayLevel( Array *aDestination, MipmappedArray aMipMappedArray, uint32_t aLevel )
+    void GeMipmappedArrayLevel( array_t *aDestination, mipmapped_array_t aMipMappedArray, uint32_t aLevel )
     {
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( aDestination, aMipMappedArray, aLevel ) );
     }
 
-    void CreateTextureObject( TextureObject *aDestination, Array aDataArray, sTextureSamplingInfo aSpec )
+    void CreateTextureObject( texture_object_t *aDestination, array_t aDataArray, texture_sampling_info_t aSpec )
     {
         cudaResourceDesc lResourceDescription{};
         memset( &lResourceDescription, 0, sizeof( cudaResourceDesc ) );
@@ -144,7 +144,7 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaCreateTextureObject( aDestination, &lResourceDescription, &lTextureDescription, NULL ) );
     }
 
-    void FreeTextureObject( TextureObject *aDestination )
+    void FreeTextureObject( texture_object_t *aDestination )
     {
         if( 0 != *aDestination ) CUDA_ASSERT( cudaDestroyTextureObject( *aDestination ) );
 

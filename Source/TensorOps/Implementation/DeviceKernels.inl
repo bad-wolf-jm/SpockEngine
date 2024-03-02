@@ -1525,7 +1525,7 @@ namespace SE::TensorOps::Kernels
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aY, memory_buffer_t aTextures )
     {
         uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
-        Cuda::TextureSampler2D::DeviceData lTex   = aTextures.DataAs<Cuda::TextureSampler2D::DeviceData>()[blockIdx.x];
+        Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
 
@@ -1541,7 +1541,7 @@ namespace SE::TensorOps::Kernels
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aY, memory_buffer_t aTextures )
     {
         uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
-        Cuda::TextureSampler2D::DeviceData lTex   = aTextures.DataAs<Cuda::TextureSampler2D::DeviceData>()[blockIdx.x];
+        Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
 
@@ -1556,7 +1556,7 @@ namespace SE::TensorOps::Kernels
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, multi_tensor_t aX, float aY, memory_buffer_t aTextures )
     {
         uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
-        Cuda::TextureSampler2D::DeviceData lTex   = aTextures.DataAs<Cuda::TextureSampler2D::DeviceData>()[blockIdx.x];
+        Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
 
@@ -1571,7 +1571,7 @@ namespace SE::TensorOps::Kernels
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, memory_buffer_t aX, multi_tensor_t aY, memory_buffer_t aTextures )
     {
         uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
-        Cuda::TextureSampler2D::DeviceData lTex   = aTextures.DataAs<Cuda::TextureSampler2D::DeviceData>()[blockIdx.x];
+        Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
 
@@ -1586,7 +1586,7 @@ namespace SE::TensorOps::Kernels
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, float aX, multi_tensor_t aY, memory_buffer_t aTextures )
     {
         uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
-        Cuda::TextureSampler2D::DeviceData lTex   = aTextures.DataAs<Cuda::TextureSampler2D::DeviceData>()[blockIdx.x];
+        Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
 

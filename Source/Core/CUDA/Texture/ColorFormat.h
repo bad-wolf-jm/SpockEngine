@@ -15,7 +15,7 @@ namespace SE::Core
 {
 
     /// @brief Enumeration type for the various color formats in use
-    enum class eColorFormat : uint32_t
+    enum class color_format_t : uint32_t
     {
         UNDEFINED           = 0,
         R32_FLOAT           = 1,
@@ -41,8 +41,8 @@ namespace SE::Core
         BGRA8_SRGB          = 21
     };
 
-    eColorFormat ToLtseFormat( VkFormat C );
-    VkFormat     ToVkFormat( eColorFormat C );
-    uint8_t      GetPixelSize( eColorFormat aColorFormat );
+    color_format_t ToLtseFormat( VkFormat C );
+    VkFormat       ToVkFormat( color_format_t C );
+    uint8_t        GetPixelSize( color_format_t aColorFormat );
 
 } // namespace SE::Core

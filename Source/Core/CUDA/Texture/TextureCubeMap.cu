@@ -12,14 +12,14 @@
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    TextureSamplerCubeMap::TextureSamplerCubeMap( ref_t<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
+    texture_sampler_cubemap_t::texture_sampler_cubemap_t( ref_t<texture2d_t> &aTexture, const texture_sampling_info_t &aSamplingSpec )
         : mTexture{ aTexture }
         , mSpec{ aSamplingSpec }
     {
         InitializeTextureSampler();
     }
 
-    void TextureSamplerCubeMap::InitializeTextureSampler()
+    void texture_sampler_cubemap_t::InitializeTextureSampler()
     {
         CreateTextureObject( &( mDeviceData.mTextureObject ), mTexture->mInternalCudaArray, mSpec );
     }

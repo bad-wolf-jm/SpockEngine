@@ -11,7 +11,7 @@
 
 namespace SE::Cuda
 {
-    sTensorShape::sTensorShape( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize )
+    tensor_shape_t::tensor_shape_t( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize )
     {
         if( aShape.size() == 0 ) return;
 
@@ -28,7 +28,7 @@ namespace SE::Cuda
         UpdateMetadata();
     }
 
-    sTensorShape::sTensorShape( vector_t<uint32_t> const &aShape, size_t aElementSize )
+    tensor_shape_t::tensor_shape_t( vector_t<uint32_t> const &aShape, size_t aElementSize )
     {
         if( aShape.size() == 0 ) return;
 
@@ -42,7 +42,7 @@ namespace SE::Cuda
         UpdateMetadata();
     }
 
-    void sTensorShape::UpdateMetadata()
+    void tensor_shape_t::UpdateMetadata()
     {
         mMaxBufferSize = 0;
 
@@ -77,7 +77,7 @@ namespace SE::Cuda
         mByteSize = lCurrentOffset;
     }
 
-    vector_t<uint32_t> const sTensorShape::GetDimension( int32_t i ) const
+    vector_t<uint32_t> const tensor_shape_t::GetDimension( int32_t i ) const
     {
         vector_t<uint32_t> lDimension;
 
@@ -99,7 +99,7 @@ namespace SE::Cuda
         return lDimension;
     }
 
-    void sTensorShape::InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension )
+    void tensor_shape_t::InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension )
     {
         if( aDimension.size() != CountLayers() )
             throw std::out_of_range(
@@ -114,7 +114,7 @@ namespace SE::Cuda
         UpdateMetadata();
     }
 
-    void sTensorShape::Flatten( int32_t aToDimension )
+    void tensor_shape_t::Flatten( int32_t aToDimension )
     {
         if( aToDimension <= 0 ) aToDimension += mRank;
 
@@ -133,7 +133,7 @@ namespace SE::Cuda
         UpdateMetadata();
     }
 
-    void sTensorShape::Trim( int32_t aToDimension )
+    void tensor_shape_t::Trim( int32_t aToDimension )
     {
         if( aToDimension == 0 ) return;
 
@@ -150,16 +150,16 @@ namespace SE::Cuda
         UpdateMetadata();
     }
 
-    bool operator==( const sBufferSizeInfo &lLhs, const sBufferSizeInfo &lRhs )
+    bool operator==( const buffer_size_info_t &lLhs, const buffer_size_info_t &lRhs )
     {
         return ( lLhs.mSize == lRhs.mSize ) && ( lLhs.mOffset == lRhs.mOffset );
     }
 
-    bool sTensorShape::operator==( const sTensorShape &lRhs ) { return ( mShape == lRhs.mShape ); }
+    bool tensor_shape_t::operator==( const tensor_shape_t &lRhs ) { return ( mShape == lRhs.mShape ); }
 
-    bool sTensorShape::operator!=( const sTensorShape &lRhs ) { return ( mShape != lRhs.mShape ); }
+    bool tensor_shape_t::operator!=( const tensor_shape_t &lRhs ) { return ( mShape != lRhs.mShape ); }
 
-    void sTensorShape::SyncDeviceData()
+    void tensor_shape_t::SyncDeviceData()
     {
         vector_t<uint32_t> lDimensions( mLayerCount * mRank );
         uint32_t              k = 0;
@@ -176,23 +176,23 @@ namespace SE::Cuda
         mDeviceSideData.mBufferSizes.Upload( mBufferSizes );
     }
 
-    multi_tensor_t::multi_tensor_t( memory_pool_t &aMemoryPool, const sTensorShape &aShape )
+    multi_tensor_t::multi_tensor_t( memory_pool_t &aMemoryPool, const tensor_shape_t &aShape )
         : mShape{ aShape }
     {
         mMemoryBuffer                         = aMemoryPool.Allocate( mShape.mByteSize );
         mShape.mDeviceSideData.mShape         = aMemoryPool.Allocate( mShape.mLayerCount * mShape.mRank * sizeof( uint32_t ) );
         mShape.mDeviceSideData.mMaxDimensions = aMemoryPool.Allocate( mShape.mRank * sizeof( uint32_t ) );
-        mShape.mDeviceSideData.mBufferSizes   = aMemoryPool.Allocate( mShape.mLayerCount * sizeof( sBufferSizeInfo ) );
+        mShape.mDeviceSideData.mBufferSizes   = aMemoryPool.Allocate( mShape.mLayerCount * sizeof( buffer_size_info_t ) );
         mShape.SyncDeviceData();
     }
 
-    multi_tensor_t::multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const sTensorShape &aShape )
+    multi_tensor_t::multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const tensor_shape_t &aShape )
         : mShape{ aShape }
     {
         mMemoryBuffer                         = aMemoryBuffer;
         mShape.mDeviceSideData.mShape         = aMemoryPool.Allocate( mShape.mLayerCount * mShape.mRank * sizeof( uint32_t ) );
         mShape.mDeviceSideData.mMaxDimensions = aMemoryPool.Allocate( mShape.mRank * sizeof( uint32_t ) );
-        mShape.mDeviceSideData.mBufferSizes   = aMemoryPool.Allocate( mShape.mLayerCount * sizeof( sBufferSizeInfo ) );
+        mShape.mDeviceSideData.mBufferSizes   = aMemoryPool.Allocate( mShape.mLayerCount * sizeof( buffer_size_info_t ) );
         mShape.SyncDeviceData();
     }
 

@@ -57,7 +57,7 @@ namespace SE::Core
 
     void OpenTensorLibrary( sol::table &aScriptingState )
     {
-        auto lTensorShapeType = aScriptingState.new_usertype<Cuda::sTensorShape>( "TensorShape" );
+        auto lTensorShapeType = aScriptingState.new_usertype<Cuda::tensor_shape_t>( "TensorShape" );
 
         // clang-format off
         lTensorShapeType[call_constructor] = factories(
@@ -78,13 +78,13 @@ namespace SE::Core
                     }
                 }
 
-                return Cuda::sTensorShape( lShape, aElementSize );
+                return Cuda::tensor_shape_t( lShape, aElementSize );
             } );
         // clang-format on
 
-        lTensorShapeType["get_dimension"] = []( Cuda::sTensorShape &aSelf, int32_t i ) { return aSelf.GetDimension( i ); };
-        lTensorShapeType["trim"]          = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Trim( i ); };
-        lTensorShapeType["flatten"]       = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Flatten( i ); };
+        lTensorShapeType["get_dimension"] = []( Cuda::tensor_shape_t &aSelf, int32_t i ) { return aSelf.GetDimension( i ); };
+        lTensorShapeType["trim"]          = []( Cuda::tensor_shape_t &aSelf, int32_t i ) { aSelf.Trim( i ); };
+        lTensorShapeType["flatten"]       = []( Cuda::tensor_shape_t &aSelf, int32_t i ) { aSelf.Flatten( i ); };
 
         auto lMemoryPoolType        = aScriptingState.new_usertype<Cuda::memory_pool_t>( "MemoryPool", constructors<Cuda::memory_pool_t( uint32_t aMemorySize )>() );
         lMemoryPoolType["reset"]    = []( Cuda::memory_pool_t &aSelf ) { aSelf.Reset(); };
@@ -279,19 +279,19 @@ namespace SE::Core
 
         // clang-format off
         lOpsModule["MultiTensorValue"] = overload(
-            []( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::sTensorShape const &aShape ) {
+            []( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             }
         );

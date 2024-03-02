@@ -833,7 +833,7 @@ TEST_CASE( "LUA TensorShape", "[CORE_SCRIPTING]" )
 
     scriptingEngine.Execute( "value = Cuda.TensorShape({{1, 2}, {3, 4}, {5, 6}}, 123)" );
 
-    auto lTensorShape = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lTensorShape = scriptingEngine.Get<tensor_shape_t>( "value" );
 
     REQUIRE( lTensorShape.CountLayers() == 3 );
     REQUIRE( lTensorShape.mRank == 2 );
@@ -880,7 +880,7 @@ value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
 value:trim( 1 )
 )" );
 
-    auto lDimension0 = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lDimension0 = scriptingEngine.Get<tensor_shape_t>( "value" );
     REQUIRE( lDimension0.mShape == std::vector<std::vector<uint32_t>>{ { 1 }, { 3 }, { 5 } } );
 
     scriptingEngine.Execute( R"(
@@ -888,7 +888,7 @@ value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
 value:trim( -1 )
 )" );
 
-    auto lDimension1 = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lDimension1 = scriptingEngine.Get<tensor_shape_t>( "value" );
     REQUIRE( lDimension1.mShape == std::vector<std::vector<uint32_t>>{ { 1, 2 }, { 3, 4 }, { 5, 6 } } );
 
     scriptingEngine.Execute( R"(
@@ -896,7 +896,7 @@ value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
 value:trim( -2 )
 )" );
 
-    auto lDimension2 = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lDimension2 = scriptingEngine.Get<tensor_shape_t>( "value" );
     REQUIRE( lDimension2.mShape == std::vector<std::vector<uint32_t>>{ { 1 }, { 3 }, { 5 } } );
 }
 
@@ -909,7 +909,7 @@ value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
 value:flatten( 3 )
 )" );
 
-    auto lDimension0 = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lDimension0 = scriptingEngine.Get<tensor_shape_t>( "value" );
     REQUIRE( lDimension0.mShape == std::vector<std::vector<uint32_t>>{ { 18 }, { 96 }, { 210 } } );
 
     scriptingEngine.Execute( R"(
@@ -917,7 +917,7 @@ value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
 value:flatten( -1 )
 )" );
 
-    auto lDimension1 = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lDimension1 = scriptingEngine.Get<tensor_shape_t>( "value" );
     REQUIRE( lDimension1.mShape == std::vector<std::vector<uint32_t>>{ { 2, 9 }, { 12, 8 }, { 30, 7 } } );
 
     scriptingEngine.Execute( R"(
@@ -925,7 +925,7 @@ value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
 value:flatten( -2 )
 )" );
 
-    auto lDimension2 = scriptingEngine.Get<sTensorShape>( "value" );
+    auto lDimension2 = scriptingEngine.Get<tensor_shape_t>( "value" );
     REQUIRE( lDimension2.mShape == std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } } );
 }
 
@@ -1002,7 +1002,7 @@ TEST_CASE( "LUA MultiTensor fetch_at", "[CORE_SCRIPTING]" )
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
-    auto lShape  = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
+    auto lShape  = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
     auto lTensor = multi_tensor_t( lPool, lShape );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
@@ -1043,7 +1043,7 @@ TEST_CASE( "LUA MultiTensor fetch_flattened", "[CORE_SCRIPTING]" )
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
-    auto lShape  = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
+    auto lShape  = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
     auto lTensor = multi_tensor_t( lPool, lShape );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
@@ -1068,7 +1068,7 @@ TEST_CASE( "LUA MultiTensor upload", "[CORE_SCRIPTING]" )
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
-    auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
+    auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
     auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
@@ -1096,7 +1096,7 @@ TEST_CASE( "LUA MultiTensor upload layers", "[CORE_SCRIPTING]" )
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
-    auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
+    auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
     auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
@@ -1156,9 +1156,9 @@ TEST_CASE( "LUA TextureData", "[CORE_SCRIPTING]" )
         depth        = 1,
         mip_levels   = 1})
 )" );
-    auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
-    REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
-    REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA32_FLOAT );
+    auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+    REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+    REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA32_FLOAT );
     REQUIRE( lTexture.mSpec.mWidth == 128 );
 }
 
@@ -1182,9 +1182,9 @@ pixel_data = {
     pixel_data   = { 1, 2, 3, 4 } }
 value = Core.TextureData2D(create_info, pixel_data)
 )" );
-    auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
-    REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
-    REQUIRE( lTexture.mSpec.mFormat == eColorFormat::R8_UNORM );
+    auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+    REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+    REQUIRE( lTexture.mSpec.mFormat == color_format_t::R8_UNORM );
     REQUIRE( lTexture.mSpec.mWidth == 2 );
 
     auto lPixelData = lTexture.GetImageData();
@@ -1201,17 +1201,17 @@ TEST_CASE( "LUA TextureData load from file", "[CORE_SCRIPTING]" )
 
     scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx"))" );
     {
-        auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
-        REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
-        REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGB8_UNORM );
+        auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+        REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+        REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGB8_UNORM );
         REQUIRE( lTexture.mSpec.mWidth == 256 );
     }
 
     scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png"))" );
     {
-        auto lTexture = scriptingEngine.Get<TextureData2D>( "value" );
-        REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
-        REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
+        auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+        REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+        REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
         REQUIRE( lTexture.mSpec.mWidth == 256 );
     }
 }
@@ -1225,7 +1225,7 @@ TEST_CASE( "LUA TextureData get image data from texture", "[CORE_SCRIPTING]" )
     value = texture:get_image_data()
 )" );
     auto lImageData = scriptingEngine.Get<sol::table>( "value" );
-    REQUIRE( lImageData.get<eColorFormat>( "color_format" ) == eColorFormat::RGB8_UNORM );
+    REQUIRE( lImageData.get<color_format_t>( "color_format" ) == color_format_t::RGB8_UNORM );
     REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
     REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
 }
@@ -1238,7 +1238,7 @@ TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
     value = Core.load_image("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 )" );
     auto lImageData = scriptingEngine.Get<sol::table>( "value" );
-    REQUIRE( lImageData.get<eColorFormat>( "color_format" ) == eColorFormat::RGBA8_UNORM );
+    REQUIRE( lImageData.get<color_format_t>( "color_format" ) == color_format_t::RGBA8_UNORM );
     REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
     REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
 }
@@ -1263,7 +1263,7 @@ TEST_CASE( "LUA TextureSampler", "[CORE_SCRIPTING]" )
     value = Core.TextureSampler2D(texture, sampler_create_info)
 )" );
 
-    auto lTextureSampler = scriptingEngine.Get<SE::Core::TextureSampler2D>( "value" );
+    auto lTextureSampler = scriptingEngine.Get<SE::Core::texture_data_sampler2d_t>( "value" );
     REQUIRE( lTextureSampler.mSamplingSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
     REQUIRE( lTextureSampler.mSamplingSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
     REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
@@ -1284,8 +1284,8 @@ TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
     value = Cuda.Texture2D(texture_create_info, texture:get_image_data())
 )" );
 
-    auto &lCudaTexture = scriptingEngine.GetRef<SE::Cuda::Texture2D>( "value" );
-    REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
+    auto &lCudaTexture = scriptingEngine.GetRef<SE::Cuda::texture2d_t>( "value" );
+    REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
     REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
     REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
 }
@@ -1317,7 +1317,7 @@ TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
     value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
 )" );
 
-    auto &lCudaTextureSampler = scriptingEngine.GetRef<SE::Cuda::TextureSampler2D>( "value" );
+    auto &lCudaTextureSampler = scriptingEngine.GetRef<SE::Cuda::texture_sampler2d_t>( "value" );
     REQUIRE( lCudaTextureSampler.mSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
     REQUIRE( lCudaTextureSampler.mSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
     REQUIRE( lCudaTextureSampler.mSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
@@ -1435,7 +1435,7 @@ TEST_CASE( "LUA MultiTensorValue initialized with data", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine scriptingEngine{};
 
-    auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
+    auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
     auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
     auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );

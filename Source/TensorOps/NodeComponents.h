@@ -25,7 +25,7 @@ namespace SE::TensorOps
     using MultiTensor  = SE::Cuda::multi_tensor_t;
     using MemoryBuffer = SE::Cuda::memory_buffer_t;
     using MemoryPool   = SE::Cuda::memory_pool_t;
-    using sTensorShape = SE::Cuda::sTensorShape;
+    using sTensorShape = SE::Cuda::tensor_shape_t;
 
     using graph_node_t = SE::Core::Entity;
 

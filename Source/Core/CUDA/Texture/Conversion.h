@@ -14,8 +14,8 @@
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
 
-#include "Core/Logging.h"
 #include "Core/Definitions.h"
+#include "Core/Logging.h"
 
 #include "Core/Math/Types.h"
 
@@ -25,7 +25,7 @@ namespace SE::Cuda
 {
     using namespace SE::Core;
 
-    cudaChannelFormatDesc  ToCudaChannelDesc( eColorFormat aColorFormat );
-    cudaTextureAddressMode ToCudaAddressMode( eSamplerWrapping aAddressMode );
-    cudaTextureFilterMode  ToCudaFilterMode( eSamplerFilter aFilterMode );
+    cudaChannelFormatDesc  ToCudaChannelDesc( color_format_t aColorFormat );
+    cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping_t aAddressMode );
+    cudaTextureFilterMode  ToCudaFilterMode( sampler_filter_t aFilterMode );
 } // namespace SE::Cuda

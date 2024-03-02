@@ -14,44 +14,58 @@ using namespace SE::Core;
 namespace SE::Cuda
 {
     /// @brief Convert our internal color format into a CUDA channel description
-    cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat )
+    cudaChannelFormatDesc ToCudaChannelDesc( color_format_t aColorFormat )
     {
         switch( aColorFormat )
         {
-        case eColorFormat::R32_FLOAT: return cudaCreateChannelDesc( 32, 0, 0, 0, cudaChannelFormatKindFloat );
-        case eColorFormat::RG32_FLOAT: return cudaCreateChannelDesc( 32, 32, 0, 0, cudaChannelFormatKindFloat );
-        case eColorFormat::RGB32_FLOAT: return cudaCreateChannelDesc( 32, 32, 32, 0, cudaChannelFormatKindFloat );
-        case eColorFormat::RGBA32_FLOAT: return cudaCreateChannelDesc( 32, 32, 32, 32, cudaChannelFormatKindFloat );
-        case eColorFormat::R8_UNORM: return cudaCreateChannelDesc( 8, 0, 0, 0, cudaChannelFormatKindUnsigned );
-        case eColorFormat::RG8_UNORM: return cudaCreateChannelDesc( 8, 8, 0, 0, cudaChannelFormatKindUnsigned );
-        case eColorFormat::RGB8_UNORM: return cudaCreateChannelDesc( 8, 8, 8, 0, cudaChannelFormatKindUnsigned );
-        case eColorFormat::RGBA8_UNORM:
-        default: return cudaCreateChannelDesc( 8, 8, 8, 8, cudaChannelFormatKindUnsigned );
+        case color_format_t::R32_FLOAT:
+            return cudaCreateChannelDesc( 32, 0, 0, 0, cudaChannelFormatKindFloat );
+        case color_format_t::RG32_FLOAT:
+            return cudaCreateChannelDesc( 32, 32, 0, 0, cudaChannelFormatKindFloat );
+        case color_format_t::RGB32_FLOAT:
+            return cudaCreateChannelDesc( 32, 32, 32, 0, cudaChannelFormatKindFloat );
+        case color_format_t::RGBA32_FLOAT:
+            return cudaCreateChannelDesc( 32, 32, 32, 32, cudaChannelFormatKindFloat );
+        case color_format_t::R8_UNORM:
+            return cudaCreateChannelDesc( 8, 0, 0, 0, cudaChannelFormatKindUnsigned );
+        case color_format_t::RG8_UNORM:
+            return cudaCreateChannelDesc( 8, 8, 0, 0, cudaChannelFormatKindUnsigned );
+        case color_format_t::RGB8_UNORM:
+            return cudaCreateChannelDesc( 8, 8, 8, 0, cudaChannelFormatKindUnsigned );
+        case color_format_t::RGBA8_UNORM:
+        default:
+            return cudaCreateChannelDesc( 8, 8, 8, 8, cudaChannelFormatKindUnsigned );
         }
     }
 
     /// @brief Convert our wrapping descriptor into a CUDA wrapping descriptor
-    cudaTextureAddressMode ToCudaAddressMode( eSamplerWrapping aAddressMode )
+    cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping_t aAddressMode )
     {
         switch( aAddressMode )
         {
-        case eSamplerWrapping::REPEAT: return cudaAddressModeWrap;
-        case eSamplerWrapping::MIRRORED_REPEAT: return cudaAddressModeMirror;
-        case eSamplerWrapping::CLAMP_TO_EDGE: return cudaAddressModeClamp;
-        case eSamplerWrapping::CLAMP_TO_BORDER:
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
-        default: return cudaAddressModeBorder;
+        case sampler_wrapping_t::REPEAT:
+            return cudaAddressModeWrap;
+        case sampler_wrapping_t::MIRRORED_REPEAT:
+            return cudaAddressModeMirror;
+        case sampler_wrapping_t::CLAMP_TO_EDGE:
+            return cudaAddressModeClamp;
+        case sampler_wrapping_t::CLAMP_TO_BORDER:
+        case sampler_wrapping_t::MIRROR_CLAMP_TO_BORDER:
+        default:
+            return cudaAddressModeBorder;
         }
     }
 
     /// @brief Convert our filtering descriptor into a CUDA filtering descriptor
-    cudaTextureFilterMode ToCudaFilterMode( eSamplerFilter aFilterMode )
+    cudaTextureFilterMode ToCudaFilterMode( sampler_filter_t aFilterMode )
     {
         switch( aFilterMode )
         {
-        case eSamplerFilter::NEAREST: return cudaFilterModePoint;
-        case eSamplerFilter::LINEAR:
-        default: return cudaFilterModeLinear;
+        case sampler_filter_t::NEAREST:
+            return cudaFilterModePoint;
+        case sampler_filter_t::LINEAR:
+        default:
+            return cudaFilterModeLinear;
         }
     }
 } // namespace SE::Cuda

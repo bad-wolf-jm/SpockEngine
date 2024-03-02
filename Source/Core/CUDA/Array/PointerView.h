@@ -36,15 +36,15 @@ namespace SE::Cuda::Internal
     /// This class can be passed directly to Cuda kernels. However, it should be constructed and
     /// initialized on the host side.
     ///
-    struct sGPUDevicePointerView
+    struct gpu_device_pointer_view_t
     {
-        RawPointer mDevicePointer = 0; //!< Pointer to an area of GPU memory
+        raw_pointer_t mDevicePointer = 0; //!< Pointer to an area of GPU memory
 
         /// @brief Default constructor
-        sGPUDevicePointerView() = default;
+        gpu_device_pointer_view_t() = default;
 
         /// @brief Copy constructor
-        sGPUDevicePointerView( const sGPUDevicePointerView & ) = default;
+        gpu_device_pointer_view_t( const gpu_device_pointer_view_t & ) = default;
 
         /// @brief View on the a portion of the buffer.
         ///
@@ -57,7 +57,7 @@ namespace SE::Cuda::Internal
         /// @param aOffset   Offset into the buffer where the view should start, in bytes.
         /// @param aParent Reference to the underlying device pointer handle.
         ///
-        sGPUDevicePointerView( size_t aSize, size_t aOffset, sGPUDevicePointerView const &aParent )
+        gpu_device_pointer_view_t( size_t aSize, size_t aOffset, gpu_device_pointer_view_t const &aParent )
             : mSize{ aSize }
         {
             if( ( aSize + aOffset ) > aParent.Size() )
@@ -76,8 +76,8 @@ namespace SE::Cuda::Internal
         /// @param aSize The presumed size of the memory buffer pointed to by `aParent`, in bytes.
         /// @param aParent Reference ot the parent buffer.
         ///
-        sGPUDevicePointerView( size_t aSize, sGPUDevicePointerView const &aParent )
-            : sGPUDevicePointerView( aSize, 0, aParent )
+        gpu_device_pointer_view_t( size_t aSize, gpu_device_pointer_view_t const &aParent )
+            : gpu_device_pointer_view_t( aSize, 0, aParent )
         {
         }
 
@@ -89,10 +89,10 @@ namespace SE::Cuda::Internal
         /// @param aSize The presumed size of the memory buffer pointed to by `aDevicePointer`, in bytes.
         /// @param aDevicePointer An already allocated pointer to device memory.
         ///
-        sGPUDevicePointerView( size_t aSize, void *aDevicePointer )
+        gpu_device_pointer_view_t( size_t aSize, void *aDevicePointer )
             : mSize{ aSize }
         {
-            mDevicePointer = (RawPointer)aDevicePointer;
+            mDevicePointer = (raw_pointer_t)aDevicePointer;
         }
 
         /// @brief Upload data to the device at a given offset.
@@ -286,13 +286,13 @@ namespace SE::Cuda::Internal
         }
 
         /// @brief Number of elements in the buffer.
-        RawPointer RawDevicePtr() const { return mDevicePointer; }
+        raw_pointer_t RawDevicePtr() const { return mDevicePointer; }
 
       protected:
         size_t mSize = 0;
 
         /** @brief Trivial constructor. The device pointer member should be set in a subclass */
-        sGPUDevicePointerView( size_t aSize )
+        gpu_device_pointer_view_t( size_t aSize )
             : mSize{ aSize }
         {
         }
@@ -302,18 +302,18 @@ namespace SE::Cuda::Internal
     ///
     /// @brief Simple wrapper around a RawPointer which can allocate memory on the device.
     ///
-    struct sGPUDevicePointer : public sGPUDevicePointerView
+    struct gpu_device_pointer_t : public gpu_device_pointer_view_t
     {
-        sGPUDevicePointer()                            = default;
-        sGPUDevicePointer( const sGPUDevicePointer & ) = default;
+        gpu_device_pointer_t()                            = default;
+        gpu_device_pointer_t( const gpu_device_pointer_t & ) = default;
 
-        sGPUDevicePointer( size_t aSize )
+        gpu_device_pointer_t( size_t aSize )
         {
             mSize = aSize;
             CUDA_ASSERT( cudaMalloc( (void **)&mDevicePointer, aSize ) );
         }
 
-        ~sGPUDevicePointer() = default;
+        ~gpu_device_pointer_t() = default;
 
         /// @brief Free the allocated memory.
         void Dispose()

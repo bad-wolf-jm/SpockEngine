@@ -14,8 +14,8 @@
 
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
-#include "Core/Logging.h"
 #include "Core/Definitions.h"
+#include "Core/Logging.h"
 
 #include "Core/Math/Types.h"
 
@@ -28,7 +28,7 @@ namespace SE::Cuda
 
     using namespace SE::Core;
 
-    class TextureSamplerCubeMap;
+    class texture_sampler_cubemap_t;
 
     /** \class TextureSamplerCubeMap
      *
@@ -39,15 +39,15 @@ namespace SE::Cuda
      * represent data in arbitrary rectangles, we add a scaling parameter which allow sampling parameters
      * in more general rectangles.
      */
-    class TextureSamplerCubeMap
+    class texture_sampler_cubemap_t
     {
       public:
-        sTextureSamplingInfo mSpec{};            //!< Copy of the specification structure used to create the texture
-        ref_t<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
+        texture_sampling_info_t mSpec{};            //!< Copy of the specification structure used to create the texture
+        ref_t<texture2d_t>      mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
         {
-            TextureObject mTextureObject = 0; //!< Cuda-side sampler object
+            texture_object_t mTextureObject = 0; //!< Cuda-side sampler object
 
             math::vec2 mScaling = { 1.0f, 1.0f };
             math::vec2 mOffset  = { 0.0f, 0.0f };
@@ -66,17 +66,17 @@ namespace SE::Cuda
         } mDeviceData;
 
         /** @brief Default constructor */
-        TextureSamplerCubeMap() = default;
+        texture_sampler_cubemap_t() = default;
 
         /** @brief Default destructor */
-        ~TextureSamplerCubeMap() = default;
+        ~texture_sampler_cubemap_t() = default;
 
         /** @brief Create a new sampler for the given texture and configuration
          *
          * @param aTexture Texture to sample
          * @param aSamplingInfo Sampling data
          */
-        TextureSamplerCubeMap( ref_t<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
+        texture_sampler_cubemap_t( ref_t<texture2d_t> &aTexture, const texture_sampling_info_t &aSamplingInfo );
 
         void InitializeTextureSampler();
     };

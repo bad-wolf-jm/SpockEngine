@@ -34,12 +34,12 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             std::memcpy( reinterpret_cast<void *>( lPixelDataVector.data() ), reinterpret_cast<void *>( lImageData ),
                          16 * sizeof( uint32_t ) );
 
-            sTextureCreateInfo lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
+            texture_create_info_t lTextureCreateInfo{};
+            lTextureCreateInfo.mFormat = color_format_t::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 4;
             lTextureCreateInfo.mHeight = 4;
-            Texture2D lTexture( lTextureCreateInfo, lPixelDataVector );
-            REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
+            texture2d_t lTexture( lTextureCreateInfo, lPixelDataVector );
+            REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
         }
 
         {
@@ -48,12 +48,12 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             std::memcpy( reinterpret_cast<void *>( lPixelDataVector.data() ), reinterpret_cast<void *>( lImageData ),
                          16 * sizeof( float ) );
 
-            sTextureCreateInfo lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = eColorFormat::R32_FLOAT;
+            texture_create_info_t lTextureCreateInfo{};
+            lTextureCreateInfo.mFormat = color_format_t::R32_FLOAT;
             lTextureCreateInfo.mWidth  = 4;
             lTextureCreateInfo.mHeight = 4;
-            Texture2D lTexture( lTextureCreateInfo, lPixelDataVector );
-            REQUIRE( lTexture.mSpec.mFormat == eColorFormat::R32_FLOAT );
+            texture2d_t lTexture( lTextureCreateInfo, lPixelDataVector );
+            REQUIRE( lTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
         }
     }
 
@@ -64,33 +64,33 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                                         0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
                                         0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
 
-            sImageData lImageDataStruct{};
-            lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
+            image_data_t lImageDataStruct{};
+            lImageDataStruct.mFormat    = color_format_t::RGBA8_UNORM;
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = std::vector<uint8_t>(
                 reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
-            sTextureCreateInfo lCudaTextureCreateInfo{};
-            Texture2D          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
-            REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
+            texture_create_info_t lCudaTextureCreateInfo{};
+            texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
+            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
         }
 
         {
             float lImageData[16] = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
-            sImageData lImageDataStruct{};
-            lImageDataStruct.mFormat    = eColorFormat::R32_FLOAT;
+            image_data_t lImageDataStruct{};
+            lImageDataStruct.mFormat    = color_format_t::R32_FLOAT;
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
             lImageDataStruct.mPixelData = std::vector<uint8_t>(
                 reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
-            sTextureCreateInfo lCudaTextureCreateInfo{};
-            Texture2D          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
-            REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::R32_FLOAT );
+            texture_create_info_t lCudaTextureCreateInfo{};
+            texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
+            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
         }
     }
 
@@ -101,40 +101,40 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                                         0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
                                         0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
 
-            sImageData lImageDataStruct{};
-            lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
+            image_data_t lImageDataStruct{};
+            lImageDataStruct.mFormat    = color_format_t::RGBA8_UNORM;
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = std::vector<uint8_t>(
                 reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
-            sTextureCreateInfo lTextureCreateInfo{};
+            texture_create_info_t lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
-            TextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
+            texture_data2d_t lTexture( lTextureCreateInfo, lImageDataStruct );
 
-            sTextureCreateInfo lCudaTextureCreateInfo{};
-            Texture2D          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
-            REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
+            texture_create_info_t lCudaTextureCreateInfo{};
+            texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
+            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
         }
 
         {
             float lImageData[16] = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
-            sImageData lImageDataStruct{};
-            lImageDataStruct.mFormat    = eColorFormat::R32_FLOAT;
+            image_data_t lImageDataStruct{};
+            lImageDataStruct.mFormat    = color_format_t::R32_FLOAT;
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
             lImageDataStruct.mPixelData = std::vector<uint8_t>(
                 reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
-            sTextureCreateInfo lTextureCreateInfo{};
+            texture_create_info_t lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
-            TextureData2D      lTexture( lTextureCreateInfo, lImageDataStruct );
-            sTextureCreateInfo lCudaTextureCreateInfo{};
-            Texture2D          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
-            REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::R32_FLOAT );
+            texture_data2d_t      lTexture( lTextureCreateInfo, lImageDataStruct );
+            texture_create_info_t lCudaTextureCreateInfo{};
+            texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
+            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
         }
     }
 
@@ -148,18 +148,18 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             std::memcpy( reinterpret_cast<void *>( lPixelDataVector.data() ), reinterpret_cast<void *>( lImageData ),
                          9 * sizeof( uint32_t ) );
 
-            sTextureCreateInfo lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
+            texture_create_info_t lTextureCreateInfo{};
+            lTextureCreateInfo.mFormat = color_format_t::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 3;
             lTextureCreateInfo.mHeight = 3;
-            ref_t<Texture2D> lTexture  = New<Texture2D>( lTextureCreateInfo, lPixelDataVector );
+            ref_t<texture2d_t> lTexture  = New<texture2d_t>( lTextureCreateInfo, lPixelDataVector );
 
-            sTextureSamplingInfo lSamplingInfo{};
+            texture_sampling_info_t lSamplingInfo{};
             lSamplingInfo.mNormalizedValues        = true;
-            Cuda::TextureSampler2D lTextureSampler = Cuda::TextureSampler2D( lTexture, lSamplingInfo );
+            Cuda::texture_sampler2d_t lTextureSampler = Cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
 
-            REQUIRE( lTextureSampler.mSpec.mFilter == eSamplerFilter::LINEAR );
-            REQUIRE( lTextureSampler.mSpec.mWrapping == eSamplerWrapping::CLAMP_TO_BORDER );
+            REQUIRE( lTextureSampler.mSpec.mFilter == sampler_filter_t::LINEAR );
+            REQUIRE( lTextureSampler.mSpec.mWrapping == sampler_wrapping_t::CLAMP_TO_BORDER );
             REQUIRE( lTextureSampler.mSpec.mBorderColor[0] == 0.0f );
             REQUIRE( lTextureSampler.mSpec.mBorderColor[1] == 0.0f );
             REQUIRE( lTextureSampler.mSpec.mBorderColor[2] == 0.0f );
@@ -176,16 +176,16 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             std::memcpy( reinterpret_cast<void *>( lPixelDataVector.data() ), reinterpret_cast<void *>( lImageData ),
                          9 * sizeof( uint32_t ) );
 
-            sTextureCreateInfo lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
+            texture_create_info_t lTextureCreateInfo{};
+            lTextureCreateInfo.mFormat = color_format_t::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 3;
             lTextureCreateInfo.mHeight = 3;
-            ref_t<Texture2D> lTexture  = New<Texture2D>( lTextureCreateInfo, lPixelDataVector );
+            ref_t<texture2d_t> lTexture  = New<texture2d_t>( lTextureCreateInfo, lPixelDataVector );
 
-            sTextureSamplingInfo lSamplingInfo{};
+            texture_sampling_info_t lSamplingInfo{};
             lSamplingInfo.mScaling                 = std::array<float, 2>{ 3.0f, 4.0f };
             lSamplingInfo.mNormalizedValues        = true;
-            Cuda::TextureSampler2D lTextureSampler = Cuda::TextureSampler2D( lTexture, lSamplingInfo );
+            Cuda::texture_sampler2d_t lTextureSampler = Cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
 
             REQUIRE( TestUtils::VectorEqual( lTextureSampler.mSpec.mScaling, std::array<float, 2>{ 3.0f, 4.0f } ) );
         }

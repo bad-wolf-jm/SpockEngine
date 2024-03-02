@@ -19,16 +19,16 @@ namespace SE::Cuda
 {
 
     /// @brief Buffer offset structure
-    struct sBufferSizeInfo
+    struct buffer_size_info_t
     {
         uint32_t mSize   = 0; //!< Size of current buffer
         uint32_t mOffset = 0; //!< Offset of current buffer
 
-        sBufferSizeInfo()                          = default;
-        sBufferSizeInfo( const sBufferSizeInfo & ) = default;
+        buffer_size_info_t()                          = default;
+        buffer_size_info_t( const buffer_size_info_t & ) = default;
     };
 
-    bool operator==( const sBufferSizeInfo &lLhs, const sBufferSizeInfo &aRhs );
+    bool operator==( const buffer_size_info_t &lLhs, const buffer_size_info_t &aRhs );
 
     /// @brief Shape of a gemeralized tensor.
     ///
@@ -42,7 +42,7 @@ namespace SE::Cuda
     ///   sTensorShape lTestTensor({{1, 2, 3}, {4, 5, 6}}, sizeof(math::vec3));
     /// @endcode
     ///
-    struct sTensorShape
+    struct tensor_shape_t
     {
         vector_t<vector_t<uint32_t>> mShape         = {}; //!< Shape
         vector_t<vector_t<uint32_t>> mStrides       = {}; //!< Strides
@@ -52,7 +52,7 @@ namespace SE::Cuda
         vector_t<uint32_t>              mMaxDimensions = {}; //!< Pointwise maximum of the elements in the shape vector
         uint32_t                           mMaxBufferSize = 0;  //!< Size, in bytes, of the largest tensor.
         size_t                             mByteSize      = 0;  //!< Size, in bytes, of the entire tensor
-        vector_t<sBufferSizeInfo>       mBufferSizes = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
+        vector_t<buffer_size_info_t>       mBufferSizes = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
 
         struct
         {
@@ -61,10 +61,10 @@ namespace SE::Cuda
             memory_buffer_t mBufferSizes{};
         } mDeviceSideData; //!< Data shared with GPU.
 
-        sTensorShape()                       = default;
-        sTensorShape( const sTensorShape & ) = default;
+        tensor_shape_t()                       = default;
+        tensor_shape_t( const tensor_shape_t & ) = default;
 
-        ~sTensorShape() = default;
+        ~tensor_shape_t() = default;
 
         /// @brief Constructs a tensor shape from the data provided.
         ///
@@ -72,7 +72,7 @@ namespace SE::Cuda
         /// @param aShape       Vector of individual tensor dimensions.  All elements of `aShape` should have the same size.
         /// @param aElementSize Size, in bytes, of individual tensor elements.
         ///
-        sTensorShape( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize );
+        tensor_shape_t( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize );
 
         /// @brief Constructs a tensor shape of rank 1 from the data provided.
         ///
@@ -82,7 +82,7 @@ namespace SE::Cuda
         /// @param aShape       Vector of individual tensor dimensions.  All elements of `aShape` should have the same size.
         /// @param aElementSize Size, in bytes, of individual tensor elements.
         ///
-        sTensorShape( vector_t<uint32_t> const &aShape, size_t aElementSize );
+        tensor_shape_t( vector_t<uint32_t> const &aShape, size_t aElementSize );
 
         /** @brief Returns the number of layers in the sTensorShape*/
         size_t CountLayers() const { return mLayerCount; }
@@ -152,7 +152,7 @@ namespace SE::Cuda
         void InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension );
 
         /// @brief Retrieves the size and offset, in bytes of the i-th layer of the sTensorShape
-        sBufferSizeInfo const &GetBufferSize( uint32_t i ) const
+        buffer_size_info_t const &GetBufferSize( uint32_t i ) const
         {
             if( i >= CountLayers() )
                 throw std::out_of_range(
@@ -162,17 +162,17 @@ namespace SE::Cuda
 
         /// @brief Retrieves the size and offset, of the i-th layer of the sTensorShape
         template <typename _Ty>
-        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF sBufferSizeInfo GetBufferSizeAs( uint32_t i ) const
+        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF buffer_size_info_t GetBufferSizeAs( uint32_t i ) const
         {
 #ifdef __CUDACC__
-            auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[i];
-            return sBufferSizeInfo{ lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
+            auto lData = mDeviceSideData.mBufferSizes.DataAs<buffer_size_info_t>()[i];
+            return buffer_size_info_t{ lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
                                     lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #else
             if( i >= CountLayers() )
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
-            return sBufferSizeInfo{ mBufferSizes[i].mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
+            return buffer_size_info_t{ mBufferSizes[i].mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
                                     mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #endif
         }
@@ -181,7 +181,7 @@ namespace SE::Cuda
         SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t aLayer, uint32_t i ) const
         {
 #ifdef __CUDACC__
-            auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[aLayer];
+            auto lData = mDeviceSideData.mBufferSizes.DataAs<buffer_size_info_t>()[aLayer];
             return ( i * sizeof( _AsType ) ) < lData.mSize;
 #else
             if( aLayer >= CountLayers() )
@@ -193,9 +193,9 @@ namespace SE::Cuda
         }
 
         /// @brief Retrieves the size and offset vectors
-        vector_t<sBufferSizeInfo> GetTypedBufferSizes() const
+        vector_t<buffer_size_info_t> GetTypedBufferSizes() const
         {
-            vector_t<sBufferSizeInfo> lReturn( mBufferSizes.begin(), mBufferSizes.end() );
+            vector_t<buffer_size_info_t> lReturn( mBufferSizes.begin(), mBufferSizes.end() );
             for( auto &x : lReturn )
             {
                 x.mSize /= mElementSize;
@@ -204,8 +204,8 @@ namespace SE::Cuda
             return lReturn;
         }
 
-        bool operator!=( const sTensorShape &aRhs );
-        bool operator==( const sTensorShape &aRhs );
+        bool operator!=( const tensor_shape_t &aRhs );
+        bool operator==( const tensor_shape_t &aRhs );
 
         /// @brief Upload the dimension data to the GPU.
         ///
@@ -257,7 +257,7 @@ namespace SE::Cuda
         /// @param aMemoryPool The memory pool from which to allocate the tensor
         /// @param aShape      The shape of the tensor to allocate
         ///
-        multi_tensor_t( memory_pool_t &aMemoryPool, const sTensorShape &aShape );
+        multi_tensor_t( memory_pool_t &aMemoryPool, const tensor_shape_t &aShape );
 
         /// @brief Create a generalized tensor of the given shape using a preallocated buffer from a memory pool
         ///
@@ -265,10 +265,10 @@ namespace SE::Cuda
         /// @param aMemoryBuffer Preallocated buffer to hold data
         /// @param aShape      The shape of the tensor to allocate
         ///
-        multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const sTensorShape &aShape );
+        multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const tensor_shape_t &aShape );
 
         /// @brief Retrieves the shape of the tensor
-        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF sTensorShape &Shape() { return mShape; }
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF tensor_shape_t &Shape() { return mShape; }
 
         /// @brief Retrieve a pointer to the i-th layer
         ///
@@ -279,7 +279,7 @@ namespace SE::Cuda
         template <typename _Ty>
         SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF _Ty *DeviceBufferAt( uint32_t i ) const
         {
-            sBufferSizeInfo lBufferSize = mShape.GetBufferSizeAs<_Ty>( i );
+            buffer_size_info_t lBufferSize = mShape.GetBufferSizeAs<_Ty>( i );
             return DataAs<_Ty>() + lBufferSize.mOffset;
         }
 
@@ -395,7 +395,7 @@ namespace SE::Cuda
         memory_buffer_t &GetMemoryBuffer() { return mMemoryBuffer; }
 
       private:
-        sTensorShape mShape{};        //!< Shape of the tensor
+        tensor_shape_t mShape{};        //!< Shape of the tensor
         memory_buffer_t mMemoryBuffer{}; //!< Memory buffer assigned to the tensor
     };
 
