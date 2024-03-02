@@ -27,7 +27,6 @@
 
 namespace SE::TensorOps::Kernels
 {
-
     using namespace SE::Cuda;
 
     template <typename _Ty>
