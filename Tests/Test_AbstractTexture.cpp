@@ -166,7 +166,7 @@ class TestTextureData2D : public TextureData2D
 
 TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
 {
-    fs::path lTestDataRoot( "C:\\GitLab\\LTSimulationEngine\\Tests\\Data" );
+    fs::path lTestDataRoot( "C:\\GitLab\\SpockEngine\\Tests\\Data" );
 
     SECTION( "Texture creation" )
     {
