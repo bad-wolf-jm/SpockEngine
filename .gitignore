@@ -1,0 +1,16 @@
+Build/
+Docs/
+Programs/TestOtdrProject/Lib/
+Assets/
+Saved/
+Resources/
+Saved/
+Tests/Scripts/create_fpga_test/.ltl_work
+Tests/Scripts/create_fpga_test/.fpga_work
+/mono/
+Assets/
+Shaders/Embedded
+run_tool.bat
+.vs/
+bin/
+obj/
