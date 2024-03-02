@@ -8,57 +8,57 @@
 
 namespace SE::Core
 {
-    // template <typename _Ty>
-    // struct NumericArray
-    // {
-    //     vector_t<_Ty> mArray = {};
+    template <typename _Ty>
+    struct NumericArray
+    {
+        vector_t<_Ty> mArray = {};
 
-    //     void Append( _Ty aValue )
-    //     {
-    //         mArray.push_back( aValue );
-    //     }
-    //     size_t Length()
-    //     {
-    //         return mArray.size();
-    //     }
-    // };
+        void Append( _Ty aValue )
+        {
+            mArray.push_back( aValue );
+        }
+        size_t Length()
+        {
+            return mArray.size();
+        }
+    };
 
-    // using U8Array  = NumericArray<uint8_t>;
-    // using U16Array = NumericArray<uint16_t>;
-    // using U32Array = NumericArray<uint32_t>;
-    // using U64Array = NumericArray<uint64_t>;
+    using U8Array  = NumericArray<uint8_t>;
+    using U16Array = NumericArray<uint16_t>;
+    using U32Array = NumericArray<uint32_t>;
+    using U64Array = NumericArray<uint64_t>;
 
-    // using I8Array  = NumericArray<int8_t>;
-    // using I16Array = NumericArray<int16_t>;
-    // using I32Array = NumericArray<int32_t>;
-    // using I64Array = NumericArray<int64_t>;
+    using I8Array  = NumericArray<int8_t>;
+    using I16Array = NumericArray<int16_t>;
+    using I32Array = NumericArray<int32_t>;
+    using I64Array = NumericArray<int64_t>;
 
-    // using F32Array = NumericArray<float>;
-    // using F64Array = NumericArray<double>;
+    using F32Array = NumericArray<float>;
+    using F64Array = NumericArray<double>;
 
-    // using UVec2Array = NumericArray<math::uvec2>;
-    // using UVec3Array = NumericArray<math::uvec3>;
-    // using UVec4Array = NumericArray<math::uvec4>;
+    using UVec2Array = NumericArray<math::uvec2>;
+    using UVec3Array = NumericArray<math::uvec3>;
+    using UVec4Array = NumericArray<math::uvec4>;
 
-    // using IVec2Array = NumericArray<math::ivec2>;
-    // using IVec3Array = NumericArray<math::ivec3>;
-    // using IVec4Array = NumericArray<math::ivec4>;
+    using IVec2Array = NumericArray<math::ivec2>;
+    using IVec3Array = NumericArray<math::ivec3>;
+    using IVec4Array = NumericArray<math::ivec4>;
 
-    // using Vec2Array = NumericArray<math::vec2>;
-    // using Vec3Array = NumericArray<math::vec3>;
-    // using Vec4Array = NumericArray<math::vec4>;
+    using Vec2Array = NumericArray<math::vec2>;
+    using Vec3Array = NumericArray<math::vec3>;
+    using Vec4Array = NumericArray<math::vec4>;
 
-    // using Mat3Array = NumericArray<math::mat3>;
-    // using Mat4Array = NumericArray<math::mat4>;
+    using Mat3Array = NumericArray<math::mat3>;
+    using Mat4Array = NumericArray<math::mat4>;
 
-    // template <typename _Ty>
-    // struct StructureArray
-    // {
-    //     vector_t<_Ty> mArray = {};
-    // };
+    template <typename _Ty>
+    struct StructureArray
+    {
+        vector_t<_Ty> mArray = {};
+    };
 
-    // using TextureArray = StructureArray<math::mat3>;
+    using TextureArray = StructureArray<math::mat3>;
 
-    // void DefineArrayTypes( sol::table &aModule );
+    void DefineArrayTypes( sol::table &aModule );
 
 } // namespace SE::Core

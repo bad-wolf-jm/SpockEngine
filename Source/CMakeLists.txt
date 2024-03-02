@@ -6,7 +6,7 @@ message(STATUS ${SHADER_EMBEDDED_FILES})
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-add_library(LTSimulationEngineRuntime SHARED
+add_library(LTSimulationEngineRuntime STATIC
     Core/Logging.cpp
 
     Core/CUDA/Cuda.cpp
@@ -18,11 +18,21 @@ add_library(LTSimulationEngineRuntime SHARED
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
 
-
     TensorOps/Implementation/KernelLaunchers.cu
     TensorOps/NodeControllers.cpp
     TensorOps/ScalarTypes.cpp
     TensorOps/Scope.cpp
+
+    Scripting/Core/Module.cpp
+    Scripting/Core/Texture.cpp
+    Scripting/Core/Vector.cpp
+    Scripting/Cuda/Tensor.cpp
+    Scripting/Cuda/Texture.cpp
+    Scripting/Entities/EntityRegistry.cpp
+    Scripting/Math/MatrixTypes.cpp
+    Scripting/Math/VectorTypes.cpp
+    Scripting/ArrayTypes.cpp
+    Scripting/ScriptingEngine.cpp
 )
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
@@ -32,10 +42,13 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     Bcrypt
     ${CUDA_LIBRARIES}
     ${CUDA_CUDA_LIBRARY}
-    CUDA::curand    
+    CUDA::curand 
+    lua::lua
 )
 
 target_compile_definitions(LTSimulationEngineRuntime PUBLIC LTSimulationEngineRuntime )
 target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
-    $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
+    $<$<COMPILE_LANGUAGE:CXX>:/bigobj>)
+
+    # /wd4068

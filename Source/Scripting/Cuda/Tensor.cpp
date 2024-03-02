@@ -1,6 +1,6 @@
 #include "Tensor.h"
 
-#include "Core/Memory.h"
+#include "Core/Definitions.h"
 #include "Core/CUDA/Array/MultiTensor.h"
 
 #include "TensorOps/ScalarTypes.h"
