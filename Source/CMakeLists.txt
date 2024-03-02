@@ -8,7 +8,6 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 add_library(LTSimulationEngineRuntime SHARED
     Core/Logging.cpp
-    Core/String.cpp
 
     Core/CUDA/Cuda.cpp
     Core/CUDA/Array/MultiTensor.cu
@@ -25,9 +24,6 @@ add_library(LTSimulationEngineRuntime SHARED
     TensorOps/ScalarTypes.cpp
     TensorOps/Scope.cpp
 )
-
-
-# set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
     fmt
