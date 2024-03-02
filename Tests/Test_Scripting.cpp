@@ -2,8 +2,8 @@
 
 #include "TestUtils.h"
 
-#include "Core/Math/Types.h"
 #include "Core/CUDA/Texture/TextureData.h"
+#include "Core/Math/Types.h"
 
 #include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/CUDA/Texture/Texture2D.h"
@@ -160,116 +160,116 @@ value = value0:dot(value1)
     REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec2{ 1.0f, 2.0f }, vec2{ 3.0f, 6.0f } ) );
 }
 
-// TEST_CASE( "LUA Vec3 type", "[CORE_SCRIPTING]" )
-// {
-//     ScriptingEngine lScriptingEngine{};
+TEST_CASE( "LUA Vec3 type", "[CORE_SCRIPTING]" )
+{
+    ScriptingEngine lScriptingEngine{};
 
-//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0)" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
+    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0)" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec3{1.0, 2.0, 3.0}" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
+    lScriptingEngine.Execute( "value = Math.vec3{1.0, 2.0, 3.0}" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec3{ x=1.0, y=2.0, z=3.0 }" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
+    lScriptingEngine.Execute( "value = Math.vec3{ x=1.0, y=2.0, z=3.0 }" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
 
-//     lScriptingEngine.Execute( R"(
-// value = Math.vec3(0.0, 0.0, 0.0)
-// value.x = 3.0
-// value.y = 4.0
-// value.z = 1.0
-// )" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 3.0f, 4.0f, 1.0f } );
+    lScriptingEngine.Execute( R"(
+value = Math.vec3(0.0, 0.0, 0.0)
+value.x = 3.0
+value.y = 4.0
+value.z = 1.0
+)" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 3.0f, 4.0f, 1.0f } );
 
-//     lScriptingEngine.Execute( R"(
-// value0 = Math.vec3(1.0, 2.0, 3.0)
-// value1 = Math.vec3(0.5, .25, .125)
-// value = value0 + value1
-// )" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.5f, 2.25f, 3.125f } );
+    lScriptingEngine.Execute( R"(
+value0 = Math.vec3(1.0, 2.0, 3.0)
+value1 = Math.vec3(0.5, .25, .125)
+value = value0 + value1
+)" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.5f, 2.25f, 3.125f } );
 
-//     lScriptingEngine.Execute( R"(
-// value = Math.vec3(1.0, 2.0, 3.0) * 2.0
-// )" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
+    lScriptingEngine.Execute( R"(
+value = Math.vec3(1.0, 2.0, 3.0) * 2.0
+)" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
 
-//     lScriptingEngine.Execute( "value = 2.0 * Math.vec3(1.0, 2.0, 3.0)" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
+    lScriptingEngine.Execute( "value = 2.0 * Math.vec3(1.0, 2.0, 3.0)" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):normalize()" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == normalize( vec3{ 1.0f, 2.0f, 3.0f } ) );
+    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):normalize()" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == normalize( vec3{ 1.0f, 2.0f, 3.0f } ) );
 
-//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length()" );
-//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec3{ 1.0f, 2.0f, 3.0f } ) );
-//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length2()" );
-//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec3{ 1.0f, 2.0f, 3.0f } ) );
+    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length()" );
+    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec3{ 1.0f, 2.0f, 3.0f } ) );
+    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length2()" );
+    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec3{ 1.0f, 2.0f, 3.0f } ) );
 
-//     lScriptingEngine.Execute( R"(
-// value0 = Math.vec3(1.0, 2.0, 3.0)
-// value1 = Math.vec3(3.0, 6.0, 9.0)
-// value = value0:dot(value1)
-// )" );
-//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 6.0f, 9.0f } ) );
+    lScriptingEngine.Execute( R"(
+value0 = Math.vec3(1.0, 2.0, 3.0)
+value1 = Math.vec3(3.0, 6.0, 9.0)
+value = value0:dot(value1)
+)" );
+    REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 6.0f, 9.0f } ) );
 
-//     lScriptingEngine.Execute( R"(
-// value0 = Math.vec3(1.0, 2.0, 3.0)
-// value1 = Math.vec3(3.0, 1.0, 2.0)
-// value = value0:cross(value1)
-// )" );
-//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == cross( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 1.0f, 2.0f } ) );
-// }
+    lScriptingEngine.Execute( R"(
+value0 = Math.vec3(1.0, 2.0, 3.0)
+value1 = Math.vec3(3.0, 1.0, 2.0)
+value = value0:cross(value1)
+)" );
+    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == cross( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 1.0f, 2.0f } ) );
+}
 
-// TEST_CASE( "LUA Vec4 type", "[CORE_SCRIPTING]" )
-// {
-//     ScriptingEngine lScriptingEngine{};
+TEST_CASE( "LUA Vec4 type", "[CORE_SCRIPTING]" )
+{
+    ScriptingEngine lScriptingEngine{};
 
-//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0)" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
+    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0)" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec4{1.0, 2.0, 3.0, 4.0}" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
+    lScriptingEngine.Execute( "value = Math.vec4{1.0, 2.0, 3.0, 4.0}" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec4{ x=1.0, y=2.0, z=3.0, w=4.0 }" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
+    lScriptingEngine.Execute( "value = Math.vec4{ x=1.0, y=2.0, z=3.0, w=4.0 }" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
 
-//     lScriptingEngine.Execute( R"(
-// value = Math.vec4(0.0, 0.0, 0.0, 0.0)
-// value.x = 3.0
-// value.y = 4.0
-// value.z = 1.0
-// value.w = 2.0
-// )" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 3.0f, 4.0f, 1.0f, 2.0f } );
+    lScriptingEngine.Execute( R"(
+value = Math.vec4(0.0, 0.0, 0.0, 0.0)
+value.x = 3.0
+value.y = 4.0
+value.z = 1.0
+value.w = 2.0
+)" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 3.0f, 4.0f, 1.0f, 2.0f } );
 
-//     lScriptingEngine.Execute( R"(
-// value0 = Math.vec4(1.0, 2.0, 3.0, 4.0)
-// value1 = Math.vec4(0.5, .25, .125, .225)
-// value = value0 + value1
-// )" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.5f, 2.25f, 3.125f, 4.225f } );
+    lScriptingEngine.Execute( R"(
+value0 = Math.vec4(1.0, 2.0, 3.0, 4.0)
+value1 = Math.vec4(0.5, .25, .125, .225)
+value = value0 + value1
+)" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.5f, 2.25f, 3.125f, 4.225f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0) * 2.0" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
+    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0) * 2.0" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
 
-//     lScriptingEngine.Execute( "value = 2.0 * Math.vec4(1.0, 2.0, 3.0, 4.0)" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
+    lScriptingEngine.Execute( "value = 2.0 * Math.vec4(1.0, 2.0, 3.0, 4.0)" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
 
-//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):normalize()" );
-//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == normalize( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
+    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):normalize()" );
+    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == normalize( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
 
-//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length()" );
-//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
+    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length()" );
+    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
 
-//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length2()" );
-//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
+    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length2()" );
+    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
 
-//     lScriptingEngine.Execute( R"(
-// value0 = Math.vec4(1.0, 2.0, 3.0, 1.2)
-// value1 = Math.vec4(3.0, 6.0, 9.0, 1.25)
-// value = value0:dot(value1)
-// )" );
-//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec4{ 1.0f, 2.0f, 3.0f, 1.2f }, vec4{ 3.0f, 6.0f, 9.0f, 1.25f } ) );
-// }
+    lScriptingEngine.Execute( R"(
+value0 = Math.vec4(1.0, 2.0, 3.0, 1.2)
+value1 = Math.vec4(3.0, 6.0, 9.0, 1.25)
+value = value0:dot(value1)
+)" );
+    REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec4{ 1.0f, 2.0f, 3.0f, 1.2f }, vec4{ 3.0f, 6.0f, 9.0f, 1.25f } ) );
+}
 
 TEST_CASE( "LUA iVec2 type", "[CORE_SCRIPTING]" )
 {
@@ -737,8 +737,8 @@ entity0 = registry:create_entity()
 
 TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 {
-    EntityCollection  lRegistry{};
-    ScriptingEngine lScriptingEngine{};
+    EntityCollection lRegistry{};
+    ScriptingEngine  lScriptingEngine{};
 
     lScriptingEngine.Define( "registry0", &lRegistry );
     lScriptingEngine.Execute( "entity0 = registry0:create_entity()" );
@@ -750,7 +750,7 @@ TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 {
     EntityCollection lRegistry{};
-    auto           lEntity0 = lRegistry.CreateEntity();
+    auto             lEntity0 = lRegistry.CreateEntity();
 
     ScriptingEngine lScriptingEngine{};
     auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
@@ -787,9 +787,9 @@ TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 {
-    EntityCollection  lRegistry{};
-    ScriptingEngine lScriptingEngine{};
-    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    EntityCollection lRegistry{};
+    ScriptingEngine  lScriptingEngine{};
+    auto             x       = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
     lScriptingEngine.Define( "registry", &lRegistry );
@@ -806,9 +806,9 @@ TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "LUA OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
-    EntityCollection  lRegistry{};
-    ScriptingEngine lScriptingEngine{};
-    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    EntityCollection lRegistry{};
+    ScriptingEngine  lScriptingEngine{};
+    auto             x       = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
     lScriptingEngine.Define( "registry", &lRegistry );
@@ -828,9 +828,9 @@ entity0:add(dtypes.ComponentA())
 
 TEST_CASE( "LUA OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
-    EntityCollection  lRegistry{};
-    ScriptingEngine lScriptingEngine{};
-    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    EntityCollection lRegistry{};
+    ScriptingEngine  lScriptingEngine{};
+    auto             x       = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
     lScriptingEngine.Define( "registry", &lRegistry );
@@ -1183,38 +1183,38 @@ TEST_CASE( "LUA TextureData", "[CORE_SCRIPTING]" )
     REQUIRE( lTexture.mSpec.mWidth == 128 );
 }
 
-// TEST_CASE( "LUA TextureData from image data", "[CORE_SCRIPTING]" )
-// {
-//     ScriptingEngine lScriptingEngine{};
+TEST_CASE( "LUA TextureData from image data", "[CORE_SCRIPTING]" )
+{
+    ScriptingEngine lScriptingEngine{};
 
-//     lScriptingEngine.Execute( R"(
-// create_info = {
-//     type         = Core.eTextureType.TEXTURE_2D,
-//     color_format = Core.eColorFormat.R8_UNORM,
-//     width        = 2,
-//     height       = 2,
-//     depth        = 1,
-//     mip_levels = 1 }
+    lScriptingEngine.Execute( R"(
+create_info = {
+    type         = Core.eTextureType.TEXTURE_2D,
+    color_format = Core.eColorFormat.R8_UNORM,
+    width        = 2,
+    height       = 2,
+    depth        = 1,
+    mip_levels = 1 }
 
-// pixel_data = {
-//     color_format = Core.eColorFormat.R8_UNORM,
-//     width        = 2,
-//     height       = 2,
-//     pixel_data   = { 1, 2, 3, 4 } }
-// value = Core.TextureData2D(create_info, pixel_data)
-// )" );
-//     auto lTexture = lScriptingEngine.Get<TextureData2D>( "value" );
-//     REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
-//     REQUIRE( lTexture.mSpec.mFormat == eColorFormat::R8_UNORM );
-//     REQUIRE( lTexture.mSpec.mWidth == 2 );
+pixel_data = {
+    color_format = Core.eColorFormat.R8_UNORM,
+    width        = 2,
+    height       = 2,
+    pixel_data   = { 1, 2, 3, 4 } }
+value = Core.TextureData2D(create_info, pixel_data)
+)" );
+    auto lTexture = lScriptingEngine.Get<TextureData2D>( "value" );
+    REQUIRE( lTexture.mSpec.mType == eTextureType::TEXTURE_2D );
+    REQUIRE( lTexture.mSpec.mFormat == eColorFormat::R8_UNORM );
+    REQUIRE( lTexture.mSpec.mWidth == 2 );
 
-//     auto lPixelData = lTexture.GetImageData();
-//     REQUIRE( lPixelData.mByteSize == 4 );
-//     REQUIRE( lPixelData.mWidth == 2 );
-//     REQUIRE( lPixelData.mHeight == 2 );
-//     REQUIRE( lPixelData.mPixelData[0] == 1 );
-//     REQUIRE( lPixelData.mPixelData[1] == 2 );
-// }
+    auto lPixelData = lTexture.GetImageData();
+    REQUIRE( lPixelData.mByteSize == 4 );
+    REQUIRE( lPixelData.mWidth == 2 );
+    REQUIRE( lPixelData.mHeight == 2 );
+    REQUIRE( lPixelData.mPixelData[0] == 1 );
+    REQUIRE( lPixelData.mPixelData[1] == 2 );
+}
 
 TEST_CASE( "LUA TextureData load from file", "[CORE_SCRIPTING]" )
 {
@@ -1292,56 +1292,56 @@ TEST_CASE( "LUA TextureSampler", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
 {
-//     ScriptingEngine lScriptingEngine{};
+    ScriptingEngine lScriptingEngine{};
 
-//     lScriptingEngine.Execute( R"(
-//     texture = Core.TextureData2D("Tests/Data/kueken7_srgb8.png")
+    lScriptingEngine.Execute( R"(
+    texture = Core.TextureData2D("Tests/Data/kueken7_srgb8.png")
 
-//     texture_create_info = {
-//         filter_mode = Core.eSamplerFilter.NEAREST,
-//         wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
-//     }
+    texture_create_info = {
+        filter_mode = Core.eSamplerFilter.NEAREST,
+        wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
+    }
 
-//     value = Cuda.Texture2D(texture_create_info, texture:get_image_data())
-// )" );
+    value = Cuda.Texture2D(texture_create_info, texture:get_image_data())
+)" );
 
-//     auto &lCudaTexture = lScriptingEngine.GetRef<SE::Cuda::Texture2D>( "value" );
-//     REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
-//     REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
-//     REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
+    auto &lCudaTexture = lScriptingEngine.GetRef<SE::Cuda::Texture2D>( "value" );
+    REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
+    REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
+    REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
 }
 
 TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
 
-//     lScriptingEngine.Execute( R"(
-//     texture = Core.TextureData2D("Tests/Data/kueken7_srgb8.png")
+    lScriptingEngine.Execute( R"(
+    texture = Core.TextureData2D("Tests/Data/kueken7_srgb8.png")
 
-//     texture_create_info = {
-//         filter_mode = Core.eSamplerFilter.NEAREST,
-//         wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
-//     }
+    texture_create_info = {
+        filter_mode = Core.eSamplerFilter.NEAREST,
+        wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
+    }
 
-//     tex2d = Cuda.Texture2D(texture_create_info, texture:get_image_data())
+    tex2d = Cuda.Texture2D(texture_create_info, texture:get_image_data())
 
-//     sampler_create_info = {
-//         minification  = Core.eSamplerFilter.NEAREST,
-//         magnification = Core.eSamplerFilter.NEAREST,
-//         mip           = Core.eSamplerMipmap.NEAREST,
-//         wrapping      = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER,
-//         offset        = { x = 3.0, y = 4.0 },
-//         scaling       = { x = 5.0, y = 6.0 },
-//         border_color  = { r = 0.1, g = 0.2, b = 0.3, a = 0.4}
-//     }
+    sampler_create_info = {
+        minification  = Core.eSamplerFilter.NEAREST,
+        magnification = Core.eSamplerFilter.NEAREST,
+        mip           = Core.eSamplerMipmap.NEAREST,
+        wrapping      = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER,
+        offset        = { x = 3.0, y = 4.0 },
+        scaling       = { x = 5.0, y = 6.0 },
+        border_color  = { r = 0.1, g = 0.2, b = 0.3, a = 0.4}
+    }
 
-//     value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
-// )" );
+    value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
+)" );
 
-    // auto &lCudaTextureSampler = lScriptingEngine.GetRef<SE::Cuda::TextureSampler2D>( "value" );
-    // REQUIRE( lCudaTextureSampler.mSamplingSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
-    // REQUIRE( lCudaTextureSampler.mSamplingSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
-    // REQUIRE( lCudaTextureSampler.mSamplingSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
+    auto &lCudaTextureSampler = lScriptingEngine.GetRef<SE::Cuda::TextureSampler2D>( "value" );
+    REQUIRE( lCudaTextureSampler.mSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
+    REQUIRE( lCudaTextureSampler.mSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
+    REQUIRE( lCudaTextureSampler.mSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
 }
 
 TEST_CASE( "LUA sConstantValueInitializerComponent", "[CORE_SCRIPTING]" )

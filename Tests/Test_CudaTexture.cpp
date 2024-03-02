@@ -152,7 +152,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lTextureCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 3;
             lTextureCreateInfo.mHeight = 3;
-            ref_t<Texture2D> lTexture    = New<Texture2D>( lTextureCreateInfo, lPixelDataVector );
+            ref_t<Texture2D> lTexture  = New<Texture2D>( lTextureCreateInfo, lPixelDataVector );
 
             sTextureSamplingInfo lSamplingInfo{};
             lSamplingInfo.mNormalizedValues        = true;
@@ -180,7 +180,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lTextureCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 3;
             lTextureCreateInfo.mHeight = 3;
-            ref_t<Texture2D> lTexture    = New<Texture2D>( lTextureCreateInfo, lPixelDataVector );
+            ref_t<Texture2D> lTexture  = New<Texture2D>( lTextureCreateInfo, lPixelDataVector );
 
             sTextureSamplingInfo lSamplingInfo{};
             lSamplingInfo.mScaling                 = std::array<float, 2>{ 3.0f, 4.0f };

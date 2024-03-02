@@ -23,9 +23,15 @@ class TestTextureData : public TextureData
     TestTextureData( sTextureCreateInfo &a_CreateInfo, fs::path &a_ImagePath )
         : TextureData( a_CreateInfo, a_ImagePath ){};
 
-    gli::texture &GetTexture() { return mInternalTexture; }
+    gli::texture &GetTexture()
+    {
+        return mInternalTexture;
+    }
 
-    math::ivec2 GetTextureExtent2() { return math::ivec2{ mInternalTexture.extent().x, mInternalTexture.extent().y }; }
+    math::ivec2 GetTextureExtent2()
+    {
+        return math::ivec2{ mInternalTexture.extent().x, mInternalTexture.extent().y };
+    }
     math::ivec3 GetTextureExtent3()
     {
         return math::ivec3{ mInternalTexture.extent().x, mInternalTexture.extent().y, mInternalTexture.extent().z };
@@ -155,9 +161,15 @@ class TestTextureData2D : public TextureData2D
     TestTextureData2D( sTextureCreateInfo &a_CreateInfo, fs::path &a_ImagePath )
         : TextureData2D( a_CreateInfo, a_ImagePath ){};
 
-    gli::texture2d &GetTexture() { return mInternalTexture2d; }
+    gli::texture2d &GetTexture()
+    {
+        return mInternalTexture2d;
+    }
 
-    math::ivec2 GetTextureExtent2() { return math::ivec2{ mInternalTexture.extent().x, mInternalTexture.extent().y }; }
+    math::ivec2 GetTextureExtent2()
+    {
+        return math::ivec2{ mInternalTexture.extent().x, mInternalTexture.extent().y };
+    }
     math::ivec3 GetTextureExtent3()
     {
         return math::ivec3{ mInternalTexture.extent().x, mInternalTexture.extent().y, mInternalTexture.extent().z };

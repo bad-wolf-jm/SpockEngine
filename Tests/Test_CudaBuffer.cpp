@@ -18,7 +18,6 @@
 #include "Core/CUDA/Array/PointerView.h"
 #include "Core/Math/Types.h"
 
-
 using namespace SE::Cuda;
 using namespace TestUtils;
 
@@ -234,7 +233,10 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     MultiTensor lTestTensor;
 
-    SECTION( "Initial size is 0" ) { REQUIRE( lTestTensor.Size() == 0 ); }
+    SECTION( "Initial size is 0" )
+    {
+        REQUIRE( lTestTensor.Size() == 0 );
+    }
 
     SECTION( "Multi tensors are created with the appropriate shape" )
     {
@@ -312,12 +314,15 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         uint32_t lDim2Offset = lDim1Size;
         uint32_t lDim3Offset = lDim1Size + lDim2Size;
 
-        REQUIRE( lTestTensor.Shape().GetBufferSize( 0 ) == sBufferSizeInfo{ lDim1Size * static_cast<uint32_t>( sizeof( math::vec3 ) ),
-                                                               lDim1Offset * static_cast<uint32_t>( sizeof( math::vec3 ) ) } );
-        REQUIRE( lTestTensor.Shape().GetBufferSize( 1 ) == sBufferSizeInfo{ lDim2Size * static_cast<uint32_t>( sizeof( math::vec3 ) ),
-                                                               lDim2Offset * static_cast<uint32_t>( sizeof( math::vec3 ) ) } );
-        REQUIRE( lTestTensor.Shape().GetBufferSize( 2 ) == sBufferSizeInfo{ lDim3Size * static_cast<uint32_t>( sizeof( math::vec3 ) ),
-                                                               lDim3Offset * static_cast<uint32_t>( sizeof( math::vec3 ) ) } );
+        REQUIRE( lTestTensor.Shape().GetBufferSize( 0 ) ==
+                 sBufferSizeInfo{ lDim1Size * static_cast<uint32_t>( sizeof( math::vec3 ) ),
+                                  lDim1Offset * static_cast<uint32_t>( sizeof( math::vec3 ) ) } );
+        REQUIRE( lTestTensor.Shape().GetBufferSize( 1 ) ==
+                 sBufferSizeInfo{ lDim2Size * static_cast<uint32_t>( sizeof( math::vec3 ) ),
+                                  lDim2Offset * static_cast<uint32_t>( sizeof( math::vec3 ) ) } );
+        REQUIRE( lTestTensor.Shape().GetBufferSize( 2 ) ==
+                 sBufferSizeInfo{ lDim3Size * static_cast<uint32_t>( sizeof( math::vec3 ) ),
+                                  lDim3Offset * static_cast<uint32_t>( sizeof( math::vec3 ) ) } );
     }
 
     SECTION( "The largest dimension is calculated correctly" )
