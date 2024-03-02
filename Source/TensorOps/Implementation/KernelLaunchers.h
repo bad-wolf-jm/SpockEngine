@@ -41,7 +41,7 @@ namespace SE::TensorOps
     /// @param aArray Generalized tensor to process
     /// @param aConstant Value to fill the buffer with
     ///
-    void ConstantFill( eScalarType aTensorElementType, MultiTensor &aArray, ScalarValue &aInitialValue );
+    void ConstantFill( scalar_type_t aTensorElementType, MultiTensor &aArray, scalar_value_t &aInitialValue );
 
     /// @brief Fill @ref MultiTensor with a constant value
     ///
@@ -52,9 +52,9 @@ namespace SE::TensorOps
     /// @param aArray Generalized tensor to process
     /// @param aConstants Vector of values to fill the buffer with
     ///
-    void ConstantFill( eScalarType aTensorElementType, MultiTensor &aArray, MemoryBuffer &aInitialValues );
-    void RandomUniformFill( eScalarType aTensorElementType, MultiTensor &aArray );
-    void RandomNormalFill( eScalarType aTensorElementType, MultiTensor &aArray, ScalarValue &a_Mu, ScalarValue &a_Sigma );
+    void ConstantFill( scalar_type_t aTensorElementType, MultiTensor &aArray, MemoryBuffer &aInitialValues );
+    void RandomUniformFill( scalar_type_t aTensorElementType, MultiTensor &aArray );
+    void RandomNormalFill( scalar_type_t aTensorElementType, MultiTensor &aArray, scalar_value_t &a_Mu, scalar_value_t &a_Sigma );
 
     /// @brief Add a single scalar to all elements of a tensor
     ///
@@ -65,7 +65,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void AddOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
+    void AddOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
 
     /// @brief Pointwise addition of two @ref MultiTensors
     ///
@@ -76,8 +76,8 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void AddOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void AddOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void AddOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void AddOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                 eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                 uint32_t aMaxBroadcastSizes );
 
@@ -91,7 +91,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstants Elements to add to `aArray`
     ///
-    void AddOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void AddOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
 
     /// @brief Pointwise multiplication of two @ref MultiTensors
     ///
@@ -102,8 +102,8 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void MultiplyOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void MultiplyOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void MultiplyOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void MultiplyOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                      eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes );
 
@@ -117,7 +117,7 @@ namespace SE::TensorOps
     /// @param aConstants Elements to add to `aArray`
     /// @param aOut Output tensor.
     ///
-    void MultiplyOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void MultiplyOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
 
     /// @brief Multiply the elements of an array by a single scalar
     ///
@@ -128,7 +128,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void MultiplyOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
+    void MultiplyOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
 
     /// @brief Subtract the elements of an array from a scalar
     ///
@@ -139,7 +139,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void SubtractOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
+    void SubtractOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
 
     /// @brief Subtract a scalar from every element of an array
     ///
@@ -150,7 +150,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void SubtractOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
+    void SubtractOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
 
     /// @brief Pointwise subtraction of two arrays
     ///
@@ -161,8 +161,8 @@ namespace SE::TensorOps
     /// @param aConstant Element to add to `aArray`
     /// @param aOut Output tensor.
     ///
-    void SubtractOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void SubtractOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void SubtractOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void SubtractOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                      eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes );
 
@@ -176,7 +176,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstants Elements to add to `aArray`
     ///
-    void SubtractOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void SubtractOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Subtract the elements of a vector of values from the elements of a multi-tensor
     ///
@@ -188,7 +188,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstants Elements to add to `aArray`
     ///
-    void SubtractOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void SubtractOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
 
     /// @brief Divide the elements of an array by a scalar
     ///
@@ -199,7 +199,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void DivideOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
+    void DivideOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
 
     /// @brief Divide a scalar by every element of an array
     ///
@@ -210,7 +210,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void DivideOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
+    void DivideOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
 
     /// @brief Pointwise division of twu multitensors
     ///
@@ -221,8 +221,8 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstant Element to add to `aArray`
     ///
-    void DivideOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void DivideOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void DivideOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void DivideOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                    eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                    uint32_t aMaxBroadcastSizes );
 
@@ -236,7 +236,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstants Elements to add to `aArray`
     ///
-    void DivideOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void DivideOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
 
     /// @brief Divide the elements of a vector of values from the elements of a multi-tensor
     ///
@@ -248,7 +248,7 @@ namespace SE::TensorOps
     /// @param aArray Left operand
     /// @param aConstants Elements to add to `aArray`
     ///
-    void DivideOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void DivideOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Conjunction operators
     ///
@@ -261,14 +261,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void AndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void AndOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void AndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void AndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void AndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void AndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void AndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void AndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                 eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                 uint32_t aMaxBroadcastSizes );
-    void AndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void AndOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void AndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void AndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Disjunction operators
     ///
@@ -281,14 +281,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void OrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void OrOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void OrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void OrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void OrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void OrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void OrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void OrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                uint32_t aMaxBroadcastSizes );
-    void OrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void OrOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void OrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void OrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Negation operator
     ///
@@ -298,7 +298,7 @@ namespace SE::TensorOps
     /// @param aOut Output tensor.
     /// @param aOperand Operand
     ///
-    void NotOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aOperand );
+    void NotOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aOperand );
 
     /// @brief Bitwise conjunction operators
     ///
@@ -311,14 +311,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void BitwiseAndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void BitwiseAndOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void BitwiseAndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void BitwiseAndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void BitwiseAndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void BitwiseAndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void BitwiseAndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void BitwiseAndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                        eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                        uint32_t aMaxBroadcastSizes );
-    void BitwiseAndOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void BitwiseAndOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void BitwiseAndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void BitwiseAndOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Bitwise disjunction operators
     ///
@@ -331,14 +331,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void BitwiseOrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void BitwiseOrOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void BitwiseOrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void BitwiseOrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void BitwiseOrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void BitwiseOrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void BitwiseOrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void BitwiseOrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                       eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                       uint32_t aMaxBroadcastSizes );
-    void BitwiseOrOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void BitwiseOrOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void BitwiseOrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void BitwiseOrOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Bitwise negation operators
     ///
@@ -348,7 +348,7 @@ namespace SE::TensorOps
     /// @param aOut Output tensor.
     /// @param aOperand Operand
     ///
-    void BitwiseNotOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aOperand );
+    void BitwiseNotOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aOperand );
 
     /// @brief Check whether a value lies in an interval
     ///
@@ -364,23 +364,23 @@ namespace SE::TensorOps
     /// @param aStrictLower Should the comparison with the lower bound be strict?
     /// @param aStrictUpper Should the comparison with the upper bound be strict?
     ///
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MultiTensor &aLower, MultiTensor &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MultiTensor &aLower, MultiTensor &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MultiTensor &aLower, MemoryBuffer &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MultiTensor &aLower, MemoryBuffer &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MultiTensor &aLower, ScalarValue &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MultiTensor &aLower, scalar_value_t &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aLower, MultiTensor &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aLower, MultiTensor &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aLower, MemoryBuffer &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aLower, MemoryBuffer &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aLower, ScalarValue &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aLower, scalar_value_t &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, ScalarValue &aLower, MultiTensor &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, scalar_value_t &aLower, MultiTensor &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, ScalarValue &aLower, MemoryBuffer &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, scalar_value_t &aLower, MemoryBuffer &aUpper,
                        bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aX, ScalarValue &aLower, ScalarValue &aUpper,
+    void InIntervalOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aX, scalar_value_t &aLower, scalar_value_t &aUpper,
                        bool aStrictLower, bool aStrictUpper );
 
     /// @brief Test equaliy between tensors
@@ -392,14 +392,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void EqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void EqualOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void EqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void EqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void EqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void EqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void EqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void EqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                   eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                   uint32_t aMaxBroadcastSizes );
-    void EqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void EqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void EqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void EqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Test whether a tensor is pointwise less than another tensor
     ///
@@ -410,14 +410,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void LessThanOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void LessThanOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void LessThanOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void LessThanOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void LessThanOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void LessThanOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void LessThanOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void LessThanOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                      eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize, MemoryBuffer &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes );
-    void LessThanOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void LessThanOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void LessThanOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void LessThanOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Test whether a tensor is pointwise less than or equal to another tensor
     ///
@@ -428,14 +428,14 @@ namespace SE::TensorOps
     /// @param aLeft Left operand
     /// @param aRight Right operand
     ///
-    void LessThanOrEqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight );
-    void LessThanOrEqualOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight );
-    void LessThanOrEqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-    void LessThanOrEqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void LessThanOrEqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
+    void LessThanOrEqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+    void LessThanOrEqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
+    void LessThanOrEqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                             eBroadcastHint aBroadcastHint, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize,
                             MemoryBuffer &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
-    void LessThanOrEqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-    void LessThanOrEqualOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+    void LessThanOrEqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
+    void LessThanOrEqualOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
 
     /// @brief Choose values from one tensor or another based on a given boolean condition
     ///
@@ -447,24 +447,24 @@ namespace SE::TensorOps
     /// @param aValueIfTrue Value to use if condition is true
     /// @param aValueIfFalse Value to use if condition is false
     ///
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MultiTensor &aValueIfTrue,
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MultiTensor &aValueIfTrue,
                   MultiTensor &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MultiTensor &aValueIfTrue,
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MultiTensor &aValueIfTrue,
                   MemoryBuffer &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MultiTensor &aValueIfTrue,
-                  ScalarValue &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MemoryBuffer &aValueIfTrue,
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MultiTensor &aValueIfTrue,
+                  scalar_value_t &aValueIfFalse );
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MemoryBuffer &aValueIfTrue,
                   MultiTensor &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MemoryBuffer &aValueIfTrue,
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MemoryBuffer &aValueIfTrue,
                   MemoryBuffer &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MemoryBuffer &aValueIfTrue,
-                  ScalarValue &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, ScalarValue &aValueIfTrue,
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, MemoryBuffer &aValueIfTrue,
+                  scalar_value_t &aValueIfFalse );
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, scalar_value_t &aValueIfTrue,
                   MultiTensor &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, ScalarValue &aValueIfTrue,
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, scalar_value_t &aValueIfTrue,
                   MemoryBuffer &aValueIfFalse );
-    void WhereOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, ScalarValue &aValueIfTrue,
-                  ScalarValue &aValueIfFalse );
+    void WhereOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aCondition, scalar_value_t &aValueIfTrue,
+                  scalar_value_t &aValueIfFalse );
 
     /// @brief Computes a set of ranges of values with a regular step.
     ///
@@ -478,7 +478,7 @@ namespace SE::TensorOps
     /// @param aRight Upper bounds
     /// @param aDelta Range step
     ///
-    void ARangeOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MemoryBuffer &aRight, MemoryBuffer &aDelta,
+    void ARangeOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MemoryBuffer &aRight, MemoryBuffer &aDelta,
                    uint32_t aMaxSubdivisions );
 
     /// @brief Repeat each element of a multi-tensor.
@@ -493,7 +493,7 @@ namespace SE::TensorOps
     /// @param aArray Array to repeat
     /// @param aRepetitions Nummber of repetitions
     ///
-    void RepeatOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &Array, MemoryBuffer &aRepetitions,
+    void RepeatOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &Array, MemoryBuffer &aRepetitions,
                    uint32_t aMaxRepetitions );
 
     /// @brief Repeat each layer of a multi-tensor.
@@ -508,7 +508,7 @@ namespace SE::TensorOps
     /// @param aArray Array to repeat
     /// @param aRepetitions Nummber of repetitions
     ///
-    void TileOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &Array, MemoryBuffer &aRepetitions,
+    void TileOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &Array, MemoryBuffer &aRepetitions,
                  uint32_t aMaxRepetitions );
 
     /// @brief Computes evenly spaced numbers in the intervals specified by two tensors
@@ -522,7 +522,7 @@ namespace SE::TensorOps
     /// @param aArray Array to repeat
     /// @param aRepetitions Nummber of repetitions
     ///
-    void LinearSpaceOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void LinearSpaceOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                         MemoryBuffer &Subdivisions, uint32_t aMaxSubdivisions );
 
     /// @brief Computes the pointwise mix of two tensors
@@ -534,7 +534,7 @@ namespace SE::TensorOps
     /// @param aRepetitions Nummber of repetitions
     /// @param aOut Output tensor.
     ///
-    void MixOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aB, MultiTensor &t );
+    void MixOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aB, MultiTensor &t );
 
     /// @brief Testure sampling
     ///
@@ -548,9 +548,9 @@ namespace SE::TensorOps
     ///
     void Sample2DOp( MultiTensor &aOut, MultiTensor &aX, MultiTensor &aY, MemoryBuffer &aTextures );
     void Sample2DOp( MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aY, MemoryBuffer &aTextures );
-    void Sample2DOp( MultiTensor &aOut, MultiTensor &aX, ScalarValue &aY, MemoryBuffer &aTextures );
+    void Sample2DOp( MultiTensor &aOut, MultiTensor &aX, scalar_value_t &aY, MemoryBuffer &aTextures );
     void Sample2DOp( MultiTensor &aOut, MemoryBuffer &aX, MultiTensor &aY, MemoryBuffer &aTextures );
-    void Sample2DOp( MultiTensor &aOut, ScalarValue &aX, MultiTensor &aY, MemoryBuffer &aTextures );
+    void Sample2DOp( MultiTensor &aOut, scalar_value_t &aX, MultiTensor &aY, MemoryBuffer &aTextures );
 
     /// @brief Fixed point conversion
     ///
@@ -561,8 +561,8 @@ namespace SE::TensorOps
     /// @param aArray Array to repeat
     /// @param aRepetitions Nummber of repetitions
     ///
-    void ToFixedPointOp( eScalarType aTensorElementType, MultiTensor &aOut, eScalarType a_OutputElementType, MultiTensor &Array,
-                         ScalarValue &Scaling );
+    void ToFixedPointOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_type_t a_OutputElementType, MultiTensor &Array,
+                         scalar_value_t &Scaling );
 
     /// @brief Affine transformation
     ///
@@ -575,7 +575,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift tensor
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aX, MultiTensor &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aX, MultiTensor &aB );
 
     /// @brief Affine transformation
     ///
@@ -589,7 +589,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift vector
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aX, MemoryBuffer &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aX, MemoryBuffer &aB );
 
     /// @brief Affine transformation
     ///
@@ -602,7 +602,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aX, ScalarValue &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aA, MultiTensor &aX, scalar_value_t &aB );
 
     /// @brief Affine transformation
     ///
@@ -616,7 +616,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift tensor
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aA, MultiTensor &aX, MultiTensor &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aA, MultiTensor &aX, MultiTensor &aB );
 
     /// @brief Affine transformation
     ///
@@ -630,7 +630,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift vector
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aA, MultiTensor &aX, MemoryBuffer &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aA, MultiTensor &aX, MemoryBuffer &aB );
 
     /// @brief Affine transformation
     ///
@@ -645,7 +645,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aA, MultiTensor &aX, ScalarValue &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aA, MultiTensor &aX, scalar_value_t &aB );
 
     /// @brief Affine transformation
     ///
@@ -659,7 +659,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aA, MultiTensor &aX, MultiTensor &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aA, MultiTensor &aX, MultiTensor &aB );
 
     /// @brief Affine transformation
     ///
@@ -673,7 +673,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aA, MultiTensor &aX, MemoryBuffer &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aA, MultiTensor &aX, MemoryBuffer &aB );
 
     /// @brief Affine transformation
     ///
@@ -687,7 +687,7 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aA, MultiTensor &aX, ScalarValue &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aA, MultiTensor &aX, scalar_value_t &aB );
 
     /// @brief Floor
     ///
@@ -718,7 +718,7 @@ namespace SE::TensorOps
     /// @param aOut Output tensor.
     /// @param aX Tensor to transform
     ///
-    void AbsOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX );
+    void AbsOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX );
 
     /// @brief Square root
     ///
@@ -729,7 +729,7 @@ namespace SE::TensorOps
     /// @param aOut Output tensor.
     /// @param aX Tensor to transform
     ///
-    void SqrtOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX );
+    void SqrtOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX );
 
     /// @brief Round
     ///
@@ -740,7 +740,7 @@ namespace SE::TensorOps
     /// @param aOut Output tensor.
     /// @param aX Tensor to transform
     ///
-    void RoundOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX );
+    void RoundOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX );
 
     /// @brief Count the number of true elements
     ///
@@ -768,7 +768,7 @@ namespace SE::TensorOps
     /// @param aElementCount Length of the last dimension of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void CountNonZeroOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBlockSizes,
+    void CountNonZeroOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBlockSizes,
                          MemoryBuffer &aElementCount, uint32_t aMaxBlockSize );
 
     /// @brief Count the number of zero elements
@@ -783,7 +783,7 @@ namespace SE::TensorOps
     /// @param aElementCount Length of the last dimension of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void CountZeroOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBlockSizes,
+    void CountZeroOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBlockSizes,
                       MemoryBuffer &aElementCount, uint32_t aMaxBlockSize );
 
     /// @brief Sum the elements of a given tensor along the last dimension
@@ -800,7 +800,7 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void ArraySummationOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBegin,
+    void ArraySummationOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBegin,
                            MemoryBuffer &aEnd, MemoryBuffer &aElementCount, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief Slice the last dimension of a given tensor
@@ -817,7 +817,7 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void ArraySliceOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBegin, MemoryBuffer &aEnd,
+    void ArraySliceOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX, MemoryBuffer &aBegin, MemoryBuffer &aEnd,
                        MemoryBuffer &aElementCount, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief Finite differences along the last dimension of a given tensor
@@ -833,7 +833,7 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void DiffOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX, uint32_t aCount, MemoryBuffer &aElementCount,
+    void DiffOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX, uint32_t aCount, MemoryBuffer &aElementCount,
                  MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief Shifts along the last dimension of a given tensor
@@ -849,7 +849,7 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void ShiftOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aX, int32_t aCount, ScalarValue &aFillValue,
+    void ShiftOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aX, int32_t aCount, scalar_value_t &aFillValue,
                   MemoryBuffer &aElementCount, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief One-dimensional convolution along the last dimension
@@ -869,7 +869,7 @@ namespace SE::TensorOps
     /// @param aBlockSizes1 Product of the lengths of the first rank-1 dimensions of the convolution kernel
     /// @param aMaxBlockSize1 Maximum value of the `aBlockSizes1` parameter
     ///
-    void Conv1DOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aArray0, MemoryBuffer &aElementCount0,
+    void Conv1DOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aArray0, MemoryBuffer &aElementCount0,
                    MemoryBuffer &aBlockSizes0, uint32_t aMaxElementCount0, uint32_t aMaxBlockSize0, MultiTensor &aArray1,
                    MemoryBuffer &aElementCount1, MemoryBuffer &aBlockSizes1, uint32_t aMaxBlockSize1 );
 
@@ -887,7 +887,7 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor `aArray0`
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void HCatOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aArray0, MemoryBuffer &aElementCount0,
+    void HCatOp( scalar_type_t aOutputElementType, MultiTensor &aOut, MultiTensor &aArray0, MemoryBuffer &aElementCount0,
                  MultiTensor &aArray1, MemoryBuffer &aElementCount1, MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize );
 
 } // namespace SE::TensorOps

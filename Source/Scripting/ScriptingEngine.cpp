@@ -1,6 +1,7 @@
 #include "ScriptingEngine.h"
 
 #include "Core/Logging.h"
+#include "Core/Definitions.h"
 #include "Core/Math/Types.h"
 #include "Cuda/Tensor.h"
 // #include "Math/Module.h"
@@ -43,16 +44,16 @@ namespace SE::Core
 
         // clang-format off
         ScriptState.new_enum( "types",
-            "float32", TensorOps::eScalarType::FLOAT32,
-            "float64", TensorOps::eScalarType::FLOAT64,
-            "uint8",   TensorOps::eScalarType::UINT8,
-            "uint16",  TensorOps::eScalarType::UINT16,
-            "uint32",  TensorOps::eScalarType::UINT32,
-            "uint64",  TensorOps::eScalarType::UINT64,
-            "int8",    TensorOps::eScalarType::INT8,
-            "int16",   TensorOps::eScalarType::INT16,
-            "int32",   TensorOps::eScalarType::INT32,
-            "int64",   TensorOps::eScalarType::INT64  );
+            "float32", scalar_type_t::FLOAT32,
+            "float64", scalar_type_t::FLOAT64,
+            "uint8",   scalar_type_t::UINT8,
+            "uint16",  scalar_type_t::UINT16,
+            "uint32",  scalar_type_t::UINT32,
+            "uint64",  scalar_type_t::UINT64,
+            "int8",    scalar_type_t::INT8,
+            "int16",   scalar_type_t::INT16,
+            "int32",   scalar_type_t::INT32,
+            "int64",   scalar_type_t::INT64  );
         // clang-format on
 
         auto lMathModule       = ScriptState["Math"].get_or_create<sol::table>();

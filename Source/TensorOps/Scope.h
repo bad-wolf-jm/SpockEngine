@@ -163,7 +163,7 @@ namespace SE::TensorOps
         auto &l_Buffer = l_NewEntity.Add<sVectorBufferComponent>();
         l_Buffer.mSize = aValue.size() * sizeof( _Ty );
 
-        if constexpr( std::is_same_v<_Ty, ScalarValue> )
+        if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
             l_NewEntity.Add<sTypeComponent>( TypeOf( aValue[0] ) );
         }
@@ -183,10 +183,10 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, vector_t<_Ty> const &aValue )
+    OpNode ScalarVectorValue( Scope &aScope, scalar_type_t aType, vector_t<_Ty> const &aValue )
     {
         uint32_t                 lSize = aValue.size();
-        vector_t<ScalarValue> lValues( lSize );
+        vector_t<scalar_value_t> lValues( lSize );
         for( uint32_t i = 0; i < lSize; i++ )
         {
             lValues[i] = aValue[i];
@@ -591,7 +591,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode ToFixedPoint( Scope &aScope, eScalarType aOutputType, OpNode const &aArray, OpNode const &aScaling );
+    OpNode ToFixedPoint( Scope &aScope, scalar_type_t aOutputType, OpNode const &aArray, OpNode const &aScaling );
 
     /// @brief Collapse a @ref MultiTensor into a @ref MultiTensor having only one layer
     ///

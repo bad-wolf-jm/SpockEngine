@@ -513,7 +513,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Random uniform initializer (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -533,7 +533,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Random uniform initializer (double)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT64;
+        lInitializer.mType = scalar_type_t::FLOAT64;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -553,7 +553,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Random normal initializer (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -573,7 +573,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Random normal initializer (double)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT64;
+        lInitializer.mType = scalar_type_t::FLOAT64;
         lInitializer.mMean = (double)0.0;
         lInitializer.mStd  = (double)1.0;
 
@@ -601,7 +601,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Add scalar to array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -629,7 +629,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Add array to array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -654,13 +654,13 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Add array to vector (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
         auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        std::vector<ScalarValue> lConstants{ 3.123f, 4.345f };
+        std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Add( lScope, lOpNode, lOpSNode );
         auto                     lResult1 = Add( lScope, lOpSNode, lOpNode );
@@ -718,7 +718,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Multiply scalar by array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -744,7 +744,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Multiply array by array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -768,13 +768,13 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Multiply array by vector (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
         auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        std::vector<ScalarValue> lConstants{ 3.123f, 4.345f };
+        std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Multiply( lScope, lOpNode, lOpSNode );
         auto                     lResult1 = Multiply( lScope, lOpSNode, lOpNode );
@@ -832,7 +832,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Subtract scalar from array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -860,13 +860,13 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Subtract vector from array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
         auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        std::vector<ScalarValue> lConstants{ 3.123f, 4.345f };
+        std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Subtract( lScope, lOpNode, lOpSNode );
         auto                     lResult1 = Subtract( lScope, lOpSNode, lOpNode );
@@ -924,7 +924,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Subtract array from array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -948,13 +948,13 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Divide vector by array (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
         auto                     lOpNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
-        std::vector<ScalarValue> lConstants{ 3.123f, 4.345f };
+        std::vector<scalar_value_t> lConstants{ 3.123f, 4.345f };
         auto                     lOpSNode = VectorValue( lScope, lConstants );
         auto                     lResult0 = Divide( lScope, lOpNode, lOpSNode );
         auto                     lResult1 = Divide( lScope, lOpSNode, lOpNode );
@@ -1110,7 +1110,7 @@ TEST_CASE( "Tensor AND Vector", "[CORE_COMPUTATION_GRAPH]" )
     sDataInitializerComponent lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    std::vector<ScalarValue> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
+    std::vector<scalar_value_t> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
 
     auto lResult0 = And( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1246,7 +1246,7 @@ TEST_CASE( "Tensor OR Vector", "[CORE_COMPUTATION_GRAPH]" )
     sDataInitializerComponent lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    std::vector<ScalarValue> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
+    std::vector<scalar_value_t> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
 
     auto lResult0 = Or( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1407,7 +1407,7 @@ TEST_CASE( "Tensor BITWISE_AND Vector", "[CORE_COMPUTATION_GRAPH]" )
     sDataInitializerComponent lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
-    std::vector<ScalarValue> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
+    std::vector<scalar_value_t> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
 
     auto lResult0 = BitwiseAnd( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1523,7 +1523,7 @@ TEST_CASE( "Tensor BITWISE_OR Vector", "[CORE_COMPUTATION_GRAPH]" )
     sDataInitializerComponent lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
-    std::vector<ScalarValue> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
+    std::vector<scalar_value_t> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
     auto                     lOpNodeRight = VectorValue( lScope, lConstants );
 
     auto lResult0 = BitwiseOr( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1620,7 +1620,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform tensor/tensor/tensor (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 12 };
         std::vector<uint32_t> lDim2{ 8, 16 };
@@ -1648,13 +1648,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform tensor/tensor/vector (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 12 };
         std::vector<uint32_t> lDim2{ 8, 16 };
 
         std::vector<float>       lBValues{ 2.142983764918237649f, 3.234987659834765f };
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1686,7 +1686,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform tensor/tensor/scalar (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 12 };
         std::vector<uint32_t> lDim2{ 8, 16 };
@@ -1720,7 +1720,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform vector/tensor/tensor (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
         std::vector<uint32_t> lDim2{ 8, 64 };
@@ -1728,11 +1728,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lAValues{ 1.109238740928374f, 2.12398471982364f };
         std::vector<float> lBValues{ 2.142983764918237649f, 3.234987659834765f };
 
-        std::vector<ScalarValue> lA( 5 );
+        std::vector<scalar_value_t> lA( 5 );
         lA[0] = lAValues[0];
         lA[1] = lAValues[1];
 
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1764,7 +1764,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform vector/tensor/vector (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
         std::vector<uint32_t> lDim2{ 8, 64 };
@@ -1772,11 +1772,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lAValues{ 1.109238740928374f, 2.12398471982364f };
         std::vector<float> lBValues{ 2.142983764918237649f, 3.234987659834765f };
 
-        std::vector<ScalarValue> lA( 5 );
+        std::vector<scalar_value_t> lA( 5 );
         lA[0] = lAValues[0];
         lA[1] = lAValues[1];
 
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1807,7 +1807,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform vector/tensor/scalar (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
         std::vector<uint32_t> lDim2{ 8, 64 };
@@ -1815,11 +1815,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lAValues{ 1.109238740928374f, 2.12398471982364f };
         std::vector<float> lBValues{ 2.142983764918237649f, 3.234987659834765f };
 
-        std::vector<ScalarValue> lA( 5 );
+        std::vector<scalar_value_t> lA( 5 );
         lA[0] = lAValues[0];
         lA[1] = lAValues[1];
 
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1851,7 +1851,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform scalar/tensor/tensor (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
         std::vector<uint32_t> lDim2{ 8, 64 };
@@ -1859,11 +1859,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lAValues{ 1.109238740928374f, 2.12398471982364f };
         std::vector<float> lBValues{ 2.142983764918237649f, 3.234987659834765f };
 
-        std::vector<ScalarValue> lA( 5 );
+        std::vector<scalar_value_t> lA( 5 );
         lA[0] = lAValues[0];
         lA[1] = lAValues[1];
 
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1896,7 +1896,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform scalar/tensor/vector (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 2 };
         std::vector<uint32_t> lDim2{ 8, 6 };
@@ -1904,11 +1904,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lAValues{ 1.109238740928374f, 2.12398471982364f };
         std::vector<float> lBValues{ 2.142983764918237649f, 3.234987659834765f };
 
-        std::vector<ScalarValue> lA( 5 );
+        std::vector<scalar_value_t> lA( 5 );
         lA[0] = lAValues[0];
         lA[1] = lAValues[1];
 
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1940,7 +1940,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Affine transform scalar/tensor/scalar (float)" )
     {
         sRandomUniformInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
         std::vector<uint32_t> lDim2{ 8, 64 };
@@ -1948,11 +1948,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lAValues{ 1.109238740928374f, 2.12398471982364f };
         std::vector<float> lBValues{ 2.142983764918237649f, 3.234987659834765f };
 
-        std::vector<ScalarValue> lA( 5 );
+        std::vector<scalar_value_t> lA( 5 );
         lA[0] = lAValues[0];
         lA[1] = lAValues[1];
 
-        std::vector<ScalarValue> lB( 5 );
+        std::vector<scalar_value_t> lB( 5 );
         lB[0] = lBValues[0];
         lB[1] = lBValues[1];
 
@@ -1991,7 +1991,7 @@ TEST_CASE( "Mix node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Mix tensors (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -2025,7 +2025,7 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Linear space allocation (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -2124,9 +2124,9 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lBValues{ 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };
         std::vector<float> lDValues{ 0.01f, .02f, .03f, .04f, .05f };
 
-        auto lNodeA  = ScalarVectorValue( lScope, eScalarType::FLOAT32, lAValues );
-        auto lNodeB  = ScalarVectorValue( lScope, eScalarType::FLOAT32, lBValues );
-        auto lNode_D = ScalarVectorValue( lScope, eScalarType::FLOAT32, lDValues );
+        auto lNodeA  = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lAValues );
+        auto lNodeB  = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lBValues );
+        auto lNode_D = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lDValues );
 
         auto lResult0 = ARange( lScope, lNodeA, lNodeB, lNode_D );
         REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 5 );
@@ -2149,9 +2149,9 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lBValues{ 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };
         std::vector<float> lDValues{ 0.01f, .02f, .03f, .04f, .05f };
 
-        auto lNodeA  = ScalarVectorValue( lScope, eScalarType::FLOAT32, lAValues );
-        auto lNodeB  = ScalarVectorValue( lScope, eScalarType::FLOAT32, lBValues );
-        auto lNode_D = ScalarVectorValue( lScope, eScalarType::FLOAT32, lDValues );
+        auto lNodeA  = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lAValues );
+        auto lNodeB  = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lBValues );
+        auto lNode_D = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lDValues );
 
         auto lResult0 = ARange( lScope, lNodeA, lNodeB, lNode_D );
 
@@ -2180,9 +2180,9 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lBValues{ 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };
         std::vector<float> lDValues{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
-        auto lNodeA  = ScalarVectorValue( lScope, eScalarType::FLOAT32, lAValues );
-        auto lNodeB  = ScalarVectorValue( lScope, eScalarType::FLOAT32, lBValues );
-        auto lNode_D = ScalarVectorValue( lScope, eScalarType::FLOAT32, lDValues );
+        auto lNodeA  = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lAValues );
+        auto lNodeB  = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lBValues );
+        auto lNode_D = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lDValues );
 
         auto lResult0 = ARange( lScope, lNodeA, lNodeB, lNode_D );
 
@@ -2214,7 +2214,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Repeat node allocation (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -2236,7 +2236,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim2{ 3, 4 };
 
         sRandomNormalInitializerComponent lInitializer0{};
-        lInitializer0.mType = eScalarType::FLOAT32;
+        lInitializer0.mType = scalar_type_t::FLOAT32;
 
         auto lNodeA = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -2300,7 +2300,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
     SECTION( "Tile node allocation (float)" )
     {
         sRandomNormalInitializerComponent lInitializer{};
-        lInitializer.mType = eScalarType::FLOAT32;
+        lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -2322,7 +2322,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim2{ 3, 4 };
 
         sRandomNormalInitializerComponent lInitializer0{};
-        lInitializer0.mType = eScalarType::FLOAT32;
+        lInitializer0.mType = scalar_type_t::FLOAT32;
 
         auto lNodeA = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -2376,7 +2376,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 5, 23, 42 };
 
@@ -2423,7 +2423,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 23, 42 };
     std::vector<uint32_t> lDim2{ 23, 42 };
@@ -2470,7 +2470,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 21, 42 };
     std::vector<uint32_t> lDim2{ 25, 40 };
@@ -2530,7 +2530,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomUniformInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 21, 42 };
     std::vector<uint32_t> lDim2{ 25, 40 };
@@ -2595,7 +2595,7 @@ TEST_CASE( "InInterval Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2627,7 +2627,7 @@ TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2635,7 +2635,7 @@ TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lLowerBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lUpperBound = VectorValue( lScope, lConstants );
     auto                     lResult0    = InInterval( lScope, lOpNode, lLowerBound, lUpperBound, false, false );
 
@@ -2664,7 +2664,7 @@ TEST_CASE( "InInterval Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2692,7 +2692,7 @@ TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2700,7 +2700,7 @@ TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lOpNode     = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
     auto lUpperBound = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lLowerBound = VectorValue( lScope, lConstants );
     auto                     lResult0    = InInterval( lScope, lOpNode, lLowerBound, lUpperBound, false, false );
 
@@ -2729,7 +2729,7 @@ TEST_CASE( "InInterval Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2757,7 +2757,7 @@ TEST_CASE( "InInterval Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2784,7 +2784,7 @@ TEST_CASE( "LessThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2814,14 +2814,14 @@ TEST_CASE( "LessThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
     auto                     lResult0 = LessThan( lScope, lX, lY );
 
@@ -2848,7 +2848,7 @@ TEST_CASE( "LessThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2874,12 +2874,12 @@ TEST_CASE( "LessThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
     auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -2908,7 +2908,7 @@ TEST_CASE( "LessThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2934,7 +2934,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -2964,14 +2964,14 @@ TEST_CASE( "LessThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
     auto                     lResult0 = LessThanOrEqual( lScope, lX, lY );
 
@@ -2998,7 +2998,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3024,12 +3024,12 @@ TEST_CASE( "LessThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
     auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -3058,7 +3058,7 @@ TEST_CASE( "LessThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3084,7 +3084,7 @@ TEST_CASE( "GreaterThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3114,14 +3114,14 @@ TEST_CASE( "GreaterThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
     auto                     lResult0 = GreaterThan( lScope, lX, lY );
 
@@ -3148,7 +3148,7 @@ TEST_CASE( "GreaterThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3174,12 +3174,12 @@ TEST_CASE( "GreaterThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
     auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -3208,7 +3208,7 @@ TEST_CASE( "GreaterThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3234,7 +3234,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3264,14 +3264,14 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY       = VectorValue( lScope, lConstants );
     auto                     lResult0 = GreaterThanOrEqual( lScope, lX, lY );
 
@@ -3298,7 +3298,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3324,12 +3324,12 @@ TEST_CASE( "GreaterThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
     auto                     lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -3358,7 +3358,7 @@ TEST_CASE( "GreaterThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3384,7 +3384,7 @@ TEST_CASE( "Where Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3418,7 +3418,7 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3433,7 +3433,7 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lX = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.27986534f, 0.31490728f };
+    std::vector<scalar_value_t> lConstants{ 0.27986534f, 0.31490728f };
     auto                     lY = VectorValue( lScope, lConstants );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
@@ -3461,7 +3461,7 @@ TEST_CASE( "Where Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3491,7 +3491,7 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3506,7 +3506,7 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
 
     auto lY = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( float ) ) );
@@ -3536,7 +3536,7 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3550,10 +3550,10 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    std::vector<ScalarValue> lConstants0{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants0{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants0 );
 
-    std::vector<ScalarValue> lConstants1{ 0.26534f, 0.19048265f };
+    std::vector<scalar_value_t> lConstants1{ 0.26534f, 0.19048265f };
     auto                     lY = VectorValue( lScope, lConstants1 );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
@@ -3579,7 +3579,7 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3592,7 +3592,7 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     sDataInitializerComponent lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, sTensorShape( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lX = VectorValue( lScope, lConstants );
     auto                     lY = ConstantScalarValue( lScope, 0.245f );
 
@@ -3619,7 +3619,7 @@ TEST_CASE( "Where Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3649,7 +3649,7 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3664,7 +3664,7 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
 
-    std::vector<ScalarValue> lConstants{ 0.2345f, 0.345f };
+    std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
     auto                     lY = VectorValue( lScope, lConstants );
 
     auto lResult0 = Where( lScope, lCondition, lX, lY );
@@ -3690,7 +3690,7 @@ TEST_CASE( "Where Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
@@ -3719,7 +3719,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto lSliceStart = std::vector<uint32_t>{ 15, 27, 400 };
     auto lSliceEnd   = std::vector<uint32_t>{ 81, 59, 510 };
@@ -3797,7 +3797,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 25;
     auto     lSliceEnd   = std::vector<uint32_t>{ 81, 59, 51 };
@@ -3875,7 +3875,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto     lSliceStart = std::vector<uint32_t>{ 15, 27, 39 };
     uint32_t lSliceEnd   = 65;
@@ -3953,7 +3953,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 15;
     uint32_t lSliceEnd   = 65;
@@ -4031,7 +4031,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto lSliceStart = std::vector<uint32_t>{ 15, 27, 400 };
     auto lSliceEnd   = std::vector<uint32_t>{ 81, 59, 510 };
@@ -4112,7 +4112,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 25;
     auto     lSliceEnd   = std::vector<uint32_t>{ 81, 59, 51 };
@@ -4193,7 +4193,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto     lSliceStart = std::vector<uint32_t>{ 15, 27, 39 };
     uint32_t lSliceEnd   = 65;
@@ -4274,7 +4274,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 15;
     uint32_t lSliceEnd   = 65;
@@ -4355,7 +4355,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 15;
     uint32_t lSliceEnd   = 65;
@@ -4433,7 +4433,7 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
     std::vector<uint8_t>  lValues1;
@@ -4515,7 +4515,7 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
     std::vector<uint64_t> lValues1;
@@ -4597,7 +4597,7 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
     std::vector<uint64_t> lValues1;
@@ -4679,7 +4679,7 @@ TEST_CASE( "Floor", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 500 };
     std::vector<uint32_t> lDim2{ 2, 7, 256 };
@@ -4707,7 +4707,7 @@ TEST_CASE( "Ceiling", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 500 };
     std::vector<uint32_t> lDim2{ 2, 7, 256 };
@@ -4735,7 +4735,7 @@ TEST_CASE( "Absolute value", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 500 };
     std::vector<uint32_t> lDim2{ 2, 7, 256 };
@@ -4763,7 +4763,7 @@ TEST_CASE( "Square roots", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 17, 12, 51 };
     std::vector<uint32_t> lDim2{ 12, 17, 23 };
@@ -4799,7 +4799,7 @@ TEST_CASE( "Rounding", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 17, 12, 51 };
     std::vector<uint32_t> lDim2{ 12, 17, 23 };
@@ -4834,7 +4834,7 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
     std::vector<int64_t>  lValues1;
@@ -4912,7 +4912,7 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
     std::vector<int64_t>  lValues1;
@@ -4991,7 +4991,7 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
     std::vector<int64_t>  lValues1;
@@ -5076,7 +5076,7 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
     Scope  lScope( lPoolSize );
 
     sRandomNormalInitializerComponent lInitializer{};
-    lInitializer.mType = eScalarType::FLOAT32;
+    lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 124 };
     std::vector<int64_t>  lValues1;

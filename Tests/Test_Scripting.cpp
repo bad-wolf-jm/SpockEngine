@@ -34,7 +34,7 @@ len0 = value:length()
 len1 = #value
 )" );
     {
-        auto x = scriptingEngine.Get<U8Array>( "value" );
+        auto x = scriptingEngine.Get<u8_array_t>( "value" );
         REQUIRE( x.Length() == 1 );
         REQUIRE( x.mArray[0] == 123 );
 
@@ -51,7 +51,7 @@ value1:append(211)
 value0:append(value1)
 )" );
     {
-        auto x = scriptingEngine.Get<U8Array>( "value0" );
+        auto x = scriptingEngine.Get<u8_array_t>( "value0" );
         REQUIRE( x.Length() == 2 );
         REQUIRE( ( ( x.mArray[0] == 123 ) && ( x.mArray[1] == 211 ) ) );
     }
@@ -60,7 +60,7 @@ value0:append(value1)
 value0 = Core.U8Array{1, 2, 3, 4, 5, 6, 7, 8, 9}
 )" );
     {
-        auto x = scriptingEngine.Get<U8Array>( "value0" );
+        auto x = scriptingEngine.Get<u8_array_t>( "value0" );
         REQUIRE( x.mArray == std::vector<uint8_t>{ 1, 2, 3, 4, 5, 6, 7, 8, 9 } );
     }
 
@@ -70,7 +70,7 @@ value1 = Core.U8Array{10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 value0:append(value1)
 )" );
     {
-        auto x = scriptingEngine.Get<U8Array>( "value0" );
+        auto x = scriptingEngine.Get<u8_array_t>( "value0" );
         REQUIRE( x.mArray == std::vector<uint8_t>{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 } );
     }
 }

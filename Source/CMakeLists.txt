@@ -8,6 +8,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 add_library(LTSimulationEngineRuntime STATIC
     Core/Logging.cpp
+    Core/Definitions.cpp
 
     Core/CUDA/Cuda.cpp
     Core/CUDA/Array/MultiTensor.cu
@@ -20,7 +21,6 @@ add_library(LTSimulationEngineRuntime STATIC
 
     TensorOps/Implementation/KernelLaunchers.cu
     TensorOps/NodeControllers.cpp
-    TensorOps/ScalarTypes.cpp
     TensorOps/Scope.cpp
 
     Scripting/Core/Texture.cpp

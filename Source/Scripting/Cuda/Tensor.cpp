@@ -22,7 +22,7 @@ namespace SE::Core
         template <typename _Ty> auto MakeUploadFunction()
         {
             return overload(
-                []( Cuda::MultiTensor &aSelf, NumericArray<_Ty> &aValues )
+                []( Cuda::MultiTensor &aSelf, numeric_array_t<_Ty> &aValues )
                 {
                     aSelf.Upload( aValues.mArray );
 
@@ -34,7 +34,7 @@ namespace SE::Core
 
                     return aSelf;
                 },
-                []( Cuda::MultiTensor &aSelf, NumericArray<_Ty> &aValues, uint32_t aLayer )
+                []( Cuda::MultiTensor &aSelf, numeric_array_t<_Ty> &aValues, uint32_t aLayer )
                 {
                     aSelf.Upload( aValues.mArray, aLayer );
 
@@ -182,48 +182,49 @@ namespace SE::Core
 
         // clang-format off
         lOpsModule.new_enum( "eScalarType",
-            "FLOAT32", eScalarType::FLOAT32,
-            "FLOAT64", eScalarType::FLOAT64,
-            "UINT8",   eScalarType::UINT8,
-            "UINT16",  eScalarType::UINT16,
-            "UINT32",  eScalarType::UINT32,
-            "UINT64",  eScalarType::UINT64,
-            "INT8",    eScalarType::INT8,
-            "INT16",   eScalarType::INT16,
-            "INT32",   eScalarType::INT32,
-            "INT64",   eScalarType::INT64,
-            "UNKNOWN", eScalarType::UNKNOWN  );
+            "FLOAT32", scalar_type_t::FLOAT32,
+            "FLOAT64", scalar_type_t::FLOAT64,
+            "UINT8",   scalar_type_t::UINT8,
+            "UINT16",  scalar_type_t::UINT16,
+            "UINT32",  scalar_type_t::UINT32,
+            "UINT64",  scalar_type_t::UINT64,
+            "INT8",    scalar_type_t::INT8,
+            "INT16",   scalar_type_t::INT16,
+            "INT32",   scalar_type_t::INT32,
+            "INT64",   scalar_type_t::INT64,
+            "UNKNOWN", scalar_type_t::UNKNOWN  );
         // clang-format on
 
         DeclarePrimitiveType<sMultiTensorComponent>( lOpsModule, "sMultiTensorComponent" );
 
         // clang-format off
         auto lConstantInitializerComponent = lOpsModule.new_usertype<sConstantValueInitializerComponent>("sConstantValueInitializerComponent");
-        lConstantInitializerComponent[call_constructor] = [](eScalarType aType, double value)
+        lConstantInitializerComponent[call_constructor] = [](scalar_type_t aType, double value)
         {
             switch(aType)
             {
-            case eScalarType::FLOAT32:
+            case scalar_type_t::FLOAT32:
                 return sConstantValueInitializerComponent{ static_cast<float>(value) };
-            case eScalarType::FLOAT64:
+            case scalar_type_t::FLOAT64:
                 return sConstantValueInitializerComponent{ static_cast<double>(value) };
-            case eScalarType::UINT8:
+            case scalar_type_t::UINT8:
                 return sConstantValueInitializerComponent{ static_cast<uint8_t>(value) };
-            case eScalarType::UINT16:
+            case scalar_type_t::UINT16:
                 return sConstantValueInitializerComponent{ static_cast<uint16_t>(value) };
-            case eScalarType::UINT32:
+            case scalar_type_t::UINT32:
                 return sConstantValueInitializerComponent{ static_cast<uint32_t>(value) };
-            case eScalarType::UINT64:
+            case scalar_type_t::UINT64:
                 return sConstantValueInitializerComponent{ static_cast<uint64_t>(value) };
-            case eScalarType::INT8:
+            case scalar_type_t::INT8:
                 return sConstantValueInitializerComponent{ static_cast<int8_t>(value) };
-            case eScalarType::INT16:
+            case scalar_type_t::INT16:
                 return sConstantValueInitializerComponent{ static_cast<int16_t>(value) };
-            case eScalarType::INT32:
+            case scalar_type_t::INT32:
                 return sConstantValueInitializerComponent{ static_cast<int32_t>(value) };
-            case eScalarType::INT64:
+            case scalar_type_t::INT64:
                 return sConstantValueInitializerComponent{ static_cast<int64_t>(value) };
-            case eScalarType::UNKNOWN:
+            case scalar_type_t::UNKNOWN:
+            default:
                 break;
             }
         };
@@ -262,14 +263,14 @@ namespace SE::Core
         // clang-format on
 
         auto lRandomUniformInitializerComponent              = lOpsModule.new_usertype<sRandomUniformInitializerComponent>( "sRandomUniformInitializerComponent" );
-        lRandomUniformInitializerComponent[call_constructor] = []( eScalarType value ) { return sRandomUniformInitializerComponent{ value }; };
+        lRandomUniformInitializerComponent[call_constructor] = []( scalar_type_t value ) { return sRandomUniformInitializerComponent{ value }; };
 
         auto lRandomNormalInitializerComponent              = lOpsModule.new_usertype<sRandomNormalInitializerComponent>( "sRandomNormalInitializerComponent" );
-        lRandomNormalInitializerComponent[call_constructor] = []( eScalarType value, double mean, double std )
+        lRandomNormalInitializerComponent[call_constructor] = []( scalar_type_t value, double mean, double std )
         {
             switch( value )
             {
-            case eScalarType::FLOAT64:
+            case scalar_type_t::FLOAT64:
                 return sRandomNormalInitializerComponent{ value, mean, std };
             default:
                 return sRandomNormalInitializerComponent{ value, static_cast<float>( mean ), static_cast<float>( std ) };

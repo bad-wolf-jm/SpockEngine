@@ -9,7 +9,7 @@
 namespace SE::Core
 {
     template <typename _Ty>
-    struct NumericArray
+    struct numeric_array_t
     {
         vector_t<_Ty> mArray = {};
 
@@ -17,47 +17,48 @@ namespace SE::Core
         {
             mArray.push_back( aValue );
         }
+
         size_t Length()
         {
             return mArray.size();
         }
     };
 
-    using U8Array  = NumericArray<uint8_t>;
-    using U16Array = NumericArray<uint16_t>;
-    using U32Array = NumericArray<uint32_t>;
-    using U64Array = NumericArray<uint64_t>;
+    using u8_array_t  = numeric_array_t<uint8_t>;
+    using u16_array_t = numeric_array_t<uint16_t>;
+    using u32_array_t = numeric_array_t<uint32_t>;
+    using u64_array_t = numeric_array_t<uint64_t>;
 
-    using I8Array  = NumericArray<int8_t>;
-    using I16Array = NumericArray<int16_t>;
-    using I32Array = NumericArray<int32_t>;
-    using I64Array = NumericArray<int64_t>;
+    using i8_array_t  = numeric_array_t<int8_t>;
+    using i16_array_t = numeric_array_t<int16_t>;
+    using i32_array_t = numeric_array_t<int32_t>;
+    using i64_array_t = numeric_array_t<int64_t>;
 
-    using F32Array = NumericArray<float>;
-    using F64Array = NumericArray<double>;
+    using f32_array_t = numeric_array_t<float>;
+    using f64_array_t = numeric_array_t<double>;
 
-    using UVec2Array = NumericArray<math::uvec2>;
-    using UVec3Array = NumericArray<math::uvec3>;
-    using UVec4Array = NumericArray<math::uvec4>;
+    using uint2_array_t = numeric_array_t<math::uvec2>;
+    using uint3_array_t = numeric_array_t<math::uvec3>;
+    using uint4_array_t = numeric_array_t<math::uvec4>;
 
-    using IVec2Array = NumericArray<math::ivec2>;
-    using IVec3Array = NumericArray<math::ivec3>;
-    using IVec4Array = NumericArray<math::ivec4>;
+    using int2_array_t = numeric_array_t<math::ivec2>;
+    using int3_array_t = numeric_array_t<math::ivec3>;
+    using int4_array_t = numeric_array_t<math::ivec4>;
 
-    using Vec2Array = NumericArray<math::vec2>;
-    using Vec3Array = NumericArray<math::vec3>;
-    using Vec4Array = NumericArray<math::vec4>;
+    using float2_array_t = numeric_array_t<math::vec2>;
+    using float3_array_t = numeric_array_t<math::vec3>;
+    using float4_array_t = numeric_array_t<math::vec4>;
 
-    using Mat3Array = NumericArray<math::mat3>;
-    using Mat4Array = NumericArray<math::mat4>;
+    using float3x3_array_t = numeric_array_t<math::mat3>;
+    using float4x4_array_t = numeric_array_t<math::mat4>;
 
     template <typename _Ty>
-    struct StructureArray
+    struct structure_array_t
     {
         vector_t<_Ty> mArray = {};
     };
 
-    using TextureArray = StructureArray<math::mat3>;
+    using TextureArray = structure_array_t<math::mat3>;
 
     void DefineArrayTypes( sol::table &aModule );
 

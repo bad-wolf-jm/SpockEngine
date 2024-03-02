@@ -141,7 +141,7 @@ namespace SE::TensorOps
 
     using sU32VectorComponent         = sVectorValueComponent<uint32_t>;
     using sF32VectorComponent         = sVectorValueComponent<float>;
-    using sScalarValueVectorComponent = sVectorValueComponent<ScalarValue>;
+    using sScalarValueVectorComponent = sVectorValueComponent<scalar_value_t>;
 
     /// @brief sTypeComponent
     ///
@@ -149,10 +149,10 @@ namespace SE::TensorOps
     ///
     struct sTypeComponent
     {
-        eScalarType mValue = eScalarType::UNKNOWN; //!< Type information
+        scalar_type_t mValue = scalar_type_t::UNKNOWN; //!< Type information
 
         sTypeComponent() = default;
-        sTypeComponent( eScalarType a_Value )
+        sTypeComponent( scalar_type_t a_Value )
             : mValue{ a_Value } {};
         sTypeComponent( const sTypeComponent & ) = default;
     };
@@ -321,7 +321,7 @@ namespace SE::TensorOps
     ///
     struct sScalarNodeComponent
     {
-        ScalarValue mValue = 0.0f;
+        scalar_value_t mValue = 0.0f;
 
         sScalarNodeComponent()                               = default;
         sScalarNodeComponent( const sScalarNodeComponent & ) = default;
@@ -334,7 +334,7 @@ namespace SE::TensorOps
     ///
     struct sConstantValueInitializerComponent
     {
-        ScalarValue mValue = 0.0f; //!< Value to initialize the @ref MultiTensor with.
+        scalar_value_t mValue = 0.0f; //!< Value to initialize the @ref MultiTensor with.
 
         sConstantValueInitializerComponent() = default;
         template <typename _Ty>
@@ -353,7 +353,7 @@ namespace SE::TensorOps
     ///
     struct sVectorInitializerComponent
     {
-        vector_t<ScalarValue> mValue = {}; //!< Vector of values
+        vector_t<scalar_value_t> mValue = {}; //!< Vector of values
         MemoryBuffer             mData;       //!< GPU representation of the data of values
 
         sVectorInitializerComponent() = default;
@@ -362,7 +362,7 @@ namespace SE::TensorOps
         sVectorInitializerComponent( vector_t<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
-            mValue               = vector_t<ScalarValue>( lVectorSize );
+            mValue               = vector_t<scalar_value_t>( lVectorSize );
 
             for( uint32_t i = 0; i < lVectorSize; i++ )
             {
@@ -382,7 +382,7 @@ namespace SE::TensorOps
 
     struct sDataInitializerComponent
     {
-        vector_t<ScalarValue> mValue = {}; //!< Vector of values
+        vector_t<scalar_value_t> mValue = {}; //!< Vector of values
 
         sDataInitializerComponent() = default;
 
@@ -390,7 +390,7 @@ namespace SE::TensorOps
         sDataInitializerComponent( vector_t<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
-            mValue               = vector_t<ScalarValue>( lVectorSize );
+            mValue               = vector_t<scalar_value_t>( lVectorSize );
 
             for( uint32_t i = 0; i < lVectorSize; i++ )
             {
@@ -408,7 +408,7 @@ namespace SE::TensorOps
     ///
     struct sRandomUniformInitializerComponent
     {
-        eScalarType mType = eScalarType::FLOAT32; //!< Type
+        scalar_type_t mType = scalar_type_t::FLOAT32; //!< Type
 
         sRandomUniformInitializerComponent()                                             = default;
         sRandomUniformInitializerComponent( const sRandomUniformInitializerComponent & ) = default;
@@ -421,9 +421,9 @@ namespace SE::TensorOps
     ///
     struct sRandomNormalInitializerComponent
     {
-        eScalarType mType = eScalarType::FLOAT32; //!< Type
-        ScalarValue mMean = 0.0f;                 //!< Expected value
-        ScalarValue mStd  = 1.0f;                 //!< Standard deviation
+        scalar_type_t mType = scalar_type_t::FLOAT32; //!< Type
+        scalar_value_t mMean = 0.0f;                 //!< Expected value
+        scalar_value_t mStd  = 1.0f;                 //!< Standard deviation
 
         sRandomNormalInitializerComponent()                                            = default;
         sRandomNormalInitializerComponent( const sRandomNormalInitializerComponent & ) = default;
@@ -478,7 +478,7 @@ namespace SE::TensorOps
     ///
     struct sToFixedPointNodeComponent
     {
-        eScalarType mOutputType = eScalarType::UINT32; //!< Integer type to use to engode the fixed point decimal numbers
+        scalar_type_t mOutputType = scalar_type_t::UINT32; //!< Integer type to use to engode the fixed point decimal numbers
         OpNode      mArray{};                          //!< Input tensor/
         OpNode      mScaling{};                        //!< Scaling factor.
 

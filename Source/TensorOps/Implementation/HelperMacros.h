@@ -21,34 +21,34 @@
     {                                                \
         switch( type )                               \
         {                                            \
-        case eScalarType::FLOAT32:                   \
+        case scalar_type_t::FLOAT32:                   \
             target_fname<float> args;                \
             break;                                   \
-        case eScalarType::FLOAT64:                   \
+        case scalar_type_t::FLOAT64:                   \
             target_fname<double> args;               \
             break;                                   \
-        case eScalarType::UINT8:                     \
+        case scalar_type_t::UINT8:                     \
             target_fname<uint8_t> args;              \
             break;                                   \
-        case eScalarType::UINT16:                    \
+        case scalar_type_t::UINT16:                    \
             target_fname<uint16_t> args;             \
             break;                                   \
-        case eScalarType::UINT32:                    \
+        case scalar_type_t::UINT32:                    \
             target_fname<uint32_t> args;             \
             break;                                   \
-        case eScalarType::UINT64:                    \
+        case scalar_type_t::UINT64:                    \
             target_fname<uint64_t> args;             \
             break;                                   \
-        case eScalarType::INT8:                      \
+        case scalar_type_t::INT8:                      \
             target_fname<int8_t> args;               \
             break;                                   \
-        case eScalarType::INT16:                     \
+        case scalar_type_t::INT16:                     \
             target_fname<int16_t> args;              \
             break;                                   \
-        case eScalarType::INT32:                     \
+        case scalar_type_t::INT32:                     \
             target_fname<int32_t> args;              \
             break;                                   \
-        case eScalarType::INT64:                     \
+        case scalar_type_t::INT64:                     \
         default:                                     \
             target_fname<int64_t> args;              \
         }                                            \
@@ -59,28 +59,28 @@
     {                                                           \
         switch( aType )                                         \
         {                                                       \
-        case eScalarType::UINT8:                                \
+        case scalar_type_t::UINT8:                                \
             aTargetFname<uint8_t> aArgs;                        \
             break;                                              \
-        case eScalarType::UINT16:                               \
+        case scalar_type_t::UINT16:                               \
             aTargetFname<uint16_t> aArgs;                       \
             break;                                              \
-        case eScalarType::UINT32:                               \
+        case scalar_type_t::UINT32:                               \
             aTargetFname<uint32_t> aArgs;                       \
             break;                                              \
-        case eScalarType::UINT64:                               \
+        case scalar_type_t::UINT64:                               \
             aTargetFname<uint64_t> aArgs;                       \
             break;                                              \
-        case eScalarType::INT8:                                 \
+        case scalar_type_t::INT8:                                 \
             aTargetFname<int8_t> aArgs;                         \
             break;                                              \
-        case eScalarType::INT16:                                \
+        case scalar_type_t::INT16:                                \
             aTargetFname<int16_t> aArgs;                        \
             break;                                              \
-        case eScalarType::INT32:                                \
+        case scalar_type_t::INT32:                                \
             aTargetFname<int32_t> aArgs;                        \
             break;                                              \
-        case eScalarType::INT64:                                \
+        case scalar_type_t::INT64:                                \
         default:                                                \
             aTargetFname<int64_t> aArgs;                        \
         }                                                       \
@@ -91,27 +91,27 @@
     {                                                         \
         switch( aType )                                       \
         {                                                     \
-        case eScalarType::UINT8:                              \
-        case eScalarType::UINT16:                             \
-        case eScalarType::UINT32:                             \
-        case eScalarType::UINT64:                             \
+        case scalar_type_t::UINT8:                              \
+        case scalar_type_t::UINT16:                             \
+        case scalar_type_t::UINT32:                             \
+        case scalar_type_t::UINT64:                             \
             break;                                            \
-        case eScalarType::FLOAT32:                            \
+        case scalar_type_t::FLOAT32:                            \
             aTargetFname<float> aArgs;                        \
             break;                                            \
-        case eScalarType::FLOAT64:                            \
+        case scalar_type_t::FLOAT64:                            \
             aTargetFname<double> aArgs;                       \
             break;                                            \
-        case eScalarType::INT8:                               \
+        case scalar_type_t::INT8:                               \
             aTargetFname<int8_t> aArgs;                       \
             break;                                            \
-        case eScalarType::INT16:                              \
+        case scalar_type_t::INT16:                              \
             aTargetFname<int16_t> aArgs;                      \
             break;                                            \
-        case eScalarType::INT32:                              \
+        case scalar_type_t::INT32:                              \
             aTargetFname<int32_t> aArgs;                      \
             break;                                            \
-        case eScalarType::INT64:                              \
+        case scalar_type_t::INT64:                              \
         default:                                              \
             aTargetFname<int64_t> aArgs;                      \
         }                                                     \
@@ -137,7 +137,7 @@ namespace SE::TensorOps::Private
     constexpr uint32_t ThreadsPerBlock = 1024;
 
     template <typename _Type>
-    vector_t<_Type> Resolve( vector_t<ScalarValue> const &aValue )
+    vector_t<_Type> Resolve( vector_t<scalar_value_t> const &aValue )
     {
         vector_t<_Type> lValue( aValue.size() );
         for( uint32_t i = 0; i < aValue.size(); i++ )

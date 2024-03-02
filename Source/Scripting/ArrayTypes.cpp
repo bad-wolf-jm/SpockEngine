@@ -7,18 +7,18 @@ namespace SE::Core
         template <typename _Ty>
         void NewArrayType( sol::table &aModule, std::string aName )
         {
-            auto lNewType = aModule.new_usertype<NumericArray<_Ty>>( aName );
+            auto lNewType = aModule.new_usertype<numeric_array_t<_Ty>>( aName );
 
             // clang-format off
             lNewType[sol::call_constructor] = sol::factories(
                 []() {
-                    return NumericArray<_Ty>{};
+                    return numeric_array_t<_Ty>{};
                 },
                 [](uint32_t aSize) {
-                    return NumericArray<_Ty>{vector_t<_Ty>(aSize)};
+                    return numeric_array_t<_Ty>{vector_t<_Ty>(aSize)};
                 },
                 [](uint32_t aSize, _Ty aValue) {
-                    return NumericArray<_Ty>{vector_t<_Ty>(aSize, aValue)};
+                    return numeric_array_t<_Ty>{vector_t<_Ty>(aSize, aValue)};
                 },
                 [](sol::table aArrayData) {
                     vector_t<_Ty> lArray{};
@@ -26,17 +26,17 @@ namespace SE::Core
                     for( uint32_t i = 0; i < lArrayDataSize; i++ )
                         lArray.push_back( aArrayData.get<_Ty>( i + 1 ) );
 
-                    return NumericArray<_Ty>{lArray};
+                    return numeric_array_t<_Ty>{lArray};
                 }
             );
             // clang-format on
 
             // clang-format off
             lNewType["append"] = sol::overload(
-                [](NumericArray<_Ty> &aSelf, _Ty aValue) {
+                [](numeric_array_t<_Ty> &aSelf, _Ty aValue) {
                     aSelf.mArray.push_back(aValue);
                 },
-                [](NumericArray<_Ty> &aSelf, NumericArray<_Ty> aValue) {
+                [](numeric_array_t<_Ty> &aSelf, numeric_array_t<_Ty> aValue) {
                     aSelf.mArray.insert(aSelf.mArray.end(), aValue.mArray.begin(), aValue.mArray.end());
                 }
             );
@@ -44,19 +44,19 @@ namespace SE::Core
 
             // clang-format off
             lNewType["insert"] = sol::overload(
-                [](NumericArray<_Ty> &aSelf, _Ty aValue, uint32_t aPosition) {
+                [](numeric_array_t<_Ty> &aSelf, _Ty aValue, uint32_t aPosition) {
                     aSelf.mArray.insert(aSelf.mArray.begin() + aPosition, aValue);
                 },
-                [](NumericArray<_Ty> &aSelf, NumericArray<_Ty> aValue, uint32_t aPosition) {
+                [](numeric_array_t<_Ty> &aSelf, numeric_array_t<_Ty> aValue, uint32_t aPosition) {
                     aSelf.mArray.insert(aSelf.mArray.begin() + aPosition, aValue.mArray.begin(), aValue.mArray.end());
                 }
             );
             // clang-format on
 
-            // &NumericArray<_Ty>::Append;
-            lNewType["length"] = &NumericArray<_Ty>::Length;
+            // &numeric_array_t<_Ty>::Append;
+            lNewType["length"] = &numeric_array_t<_Ty>::Length;
 
-            lNewType[sol::meta_method::length] = &NumericArray<_Ty>::Length;
+            lNewType[sol::meta_method::length] = &numeric_array_t<_Ty>::Length;
         }
     } // namespace
 

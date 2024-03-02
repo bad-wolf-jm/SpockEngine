@@ -179,12 +179,12 @@ namespace SE::TensorOps
         }
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         AddOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                       sBroadcastInfoComponent &aBroadcast )
     {
         AddOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -192,32 +192,32 @@ namespace SE::TensorOps
                aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, ScalarValue &aConstant )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant )
     {
         AddOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant, MultiTensor &aIn )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn )
     {
         AddOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
     {
         AddOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
     {
         AddOp( aTensorElementType, aOut, aRight, aLeft );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                            sBroadcastInfoComponent &aBroadcast )
     {
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -225,36 +225,36 @@ namespace SE::TensorOps
                     aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn,
-                                           ScalarValue &aConstant )
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn,
+                                           scalar_value_t &aConstant )
     {
         MultiplyOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant,
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant,
                                            MultiTensor &aIn )
     {
         MultiplyOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                            MemoryBuffer &aRight )
     {
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
                                            MultiTensor &aRight )
     {
         MultiplyOp( aTensorElementType, aOut, aRight, aLeft );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                            sBroadcastInfoComponent &aBroadcast )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -262,41 +262,41 @@ namespace SE::TensorOps
                     aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn,
-                                           ScalarValue &aConstant )
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn,
+                                           scalar_value_t &aConstant )
     {
         SubtractOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant,
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant,
                                            MultiTensor &aIn )
     {
         SubtractOp( aTensorElementType, aOut, aConstant, aIn );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                            MemoryBuffer &aRight )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
                                            MultiTensor &aRight )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, ScalarValue &aConstant )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant )
     {
         DivideOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                          sBroadcastInfoComponent &aBroadcast )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -304,27 +304,27 @@ namespace SE::TensorOps
                   aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant, MultiTensor &aIn )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn )
     {
         DivideOp( aTensorElementType, aOut, aConstant, aIn );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                       sBroadcastInfoComponent &aBroadcast )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -332,32 +332,32 @@ namespace SE::TensorOps
                aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                      sBroadcastInfoComponent &aBroadcast )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -365,22 +365,22 @@ namespace SE::TensorOps
               aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
@@ -394,13 +394,13 @@ namespace SE::TensorOps
         NotOp( lElementType, lValue, lOperandData.mOperand.Get<sMultiTensorComponent>().mValue );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                              MultiTensor &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                              MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -408,37 +408,37 @@ namespace SE::TensorOps
                       aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
-                                             ScalarValue &aRight )
+    void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                             scalar_value_t &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft,
+    void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft,
                                              MultiTensor &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                              MemoryBuffer &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+    void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
                                              MultiTensor &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                             MultiTensor &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                             sBroadcastInfoComponent &aBroadcast )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -446,25 +446,25 @@ namespace SE::TensorOps
                      aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
-                                            ScalarValue &aRight )
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                            scalar_value_t &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft,
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft,
                                             MultiTensor &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                             MemoryBuffer &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
                                             MultiTensor &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
@@ -565,12 +565,12 @@ namespace SE::TensorOps
         }
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                         sBroadcastInfoComponent &aBroadcast )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -578,32 +578,32 @@ namespace SE::TensorOps
                  aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
                                            sBroadcastInfoComponent &aBroadcast )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -611,35 +611,35 @@ namespace SE::TensorOps
                     aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                            MemoryBuffer &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
                                            MultiTensor &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                                   MultiTensor &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                                   MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
@@ -647,25 +647,25 @@ namespace SE::TensorOps
                            aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
-                                                  ScalarValue &aRight )
+    void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                                  scalar_value_t &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft,
+    void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft,
                                                   MultiTensor &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+    void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
                                                   MemoryBuffer &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+    void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
                                                   MultiTensor &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );

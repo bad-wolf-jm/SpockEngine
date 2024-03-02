@@ -195,7 +195,7 @@ namespace SE::TensorOps
         return ( aLeft.Get<sVectorValueComponent<T>>().mValue.size() == aRight.Get<sVectorValueComponent<T>>().mValue.size() );
     }
 
-    OpNode BinaryOperation( Scope &aScope, eScalarType aType, OpNode const &aLeft, OpNode const &aRight )
+    OpNode BinaryOperation( Scope &aScope, scalar_type_t aType, OpNode const &aLeft, OpNode const &aRight )
     {
         assert( aLeft.Has<sTypeComponent>() );
         assert( aRight.Has<sTypeComponent>() );
@@ -330,7 +330,7 @@ namespace SE::TensorOps
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
-        assert( aLeft.Get<sTypeComponent>().mValue == eScalarType::UINT8 );
+        assert( aLeft.Get<sTypeComponent>().mValue == scalar_type_t::UINT8 );
 
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sAndOperationController>();
@@ -342,7 +342,7 @@ namespace SE::TensorOps
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
-        assert( aLeft.Get<sTypeComponent>().mValue == eScalarType::UINT8 );
+        assert( aLeft.Get<sTypeComponent>().mValue == scalar_type_t::UINT8 );
 
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sOrOperationController>();
@@ -353,7 +353,7 @@ namespace SE::TensorOps
     OpNode Not( Scope &aScope, OpNode const &aOperand )
     {
         assert( ( aOperand.Has<sTypeComponent>() ) );
-        assert( aOperand.Get<sTypeComponent>().mValue == eScalarType::UINT8 );
+        assert( aOperand.Get<sTypeComponent>().mValue == scalar_type_t::UINT8 );
 
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sNotOperationComponent>( sNotOperationComponent{ aOperand } );
@@ -370,8 +370,8 @@ namespace SE::TensorOps
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
-        assert( ( aLeft.Get<sTypeComponent>().mValue >= eScalarType::UINT8 ) &&
-                ( aLeft.Get<sTypeComponent>().mValue <= eScalarType::INT64 ) );
+        assert( ( aLeft.Get<sTypeComponent>().mValue >= scalar_type_t::UINT8 ) &&
+                ( aLeft.Get<sTypeComponent>().mValue <= scalar_type_t::INT64 ) );
 
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sBitwiseAndOperationController>();
@@ -383,8 +383,8 @@ namespace SE::TensorOps
     {
         assert( ( aLeft.Has<sTypeComponent>() ) && ( aRight.Has<sTypeComponent>() ) );
         assert( SameType( aLeft, aRight ) );
-        assert( ( aLeft.Get<sTypeComponent>().mValue >= eScalarType::UINT8 ) &&
-                ( aLeft.Get<sTypeComponent>().mValue <= eScalarType::INT64 ) );
+        assert( ( aLeft.Get<sTypeComponent>().mValue >= scalar_type_t::UINT8 ) &&
+                ( aLeft.Get<sTypeComponent>().mValue <= scalar_type_t::INT64 ) );
 
         auto lNewEntity = BinaryOperation( aScope, aLeft, aRight );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sBitwiseOrOperationController>();
@@ -395,8 +395,8 @@ namespace SE::TensorOps
     OpNode BitwiseNot( Scope &aScope, OpNode const &aOperand )
     {
         assert( ( aOperand.Has<sTypeComponent>() ) );
-        assert( ( aOperand.Get<sTypeComponent>().mValue >= eScalarType::UINT8 ) &&
-                ( aOperand.Get<sTypeComponent>().mValue <= eScalarType::INT64 ) );
+        assert( ( aOperand.Get<sTypeComponent>().mValue >= scalar_type_t::UINT8 ) &&
+                ( aOperand.Get<sTypeComponent>().mValue <= scalar_type_t::INT64 ) );
 
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sBitwiseNotOperationComponent>( sBitwiseNotOperationComponent{ aOperand } );
@@ -425,11 +425,11 @@ namespace SE::TensorOps
             sInIntervalOperationComponent{ aX, aLower, aUpper, aStrictLower, aStrictUpper } );
 
         lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aX, aLower, aUpper } );
-        lNewEntity.Add<sTypeComponent>( eScalarType::UINT8 );
+        lNewEntity.Add<sTypeComponent>( scalar_type_t::UINT8 );
 
         vector_t<vector_t<uint32_t>> lOutputShape = aX.Get<sMultiTensorComponent>().Shape().mShape;
 
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape, SizeOf( eScalarType::UINT8 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape, SizeOf( scalar_type_t::UINT8 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sInIntervalOperationController>();
 
         return lNewEntity;
@@ -440,7 +440,7 @@ namespace SE::TensorOps
         assert( ( aX.Has<sTypeComponent>() ) && ( aY.Has<sTypeComponent>() ) );
         assert( SameType( aX, aY ) );
 
-        auto lNewEntity = BinaryOperation( aScope, eScalarType::UINT8, aX, aY );
+        auto lNewEntity = BinaryOperation( aScope, scalar_type_t::UINT8, aX, aY );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sEqualOperationController>();
 
         return lNewEntity;
@@ -451,7 +451,7 @@ namespace SE::TensorOps
         assert( ( aX.Has<sTypeComponent>() ) && ( aY.Has<sTypeComponent>() ) );
         assert( SameType( aX, aY ) );
 
-        auto lNewEntity = BinaryOperation( aScope, eScalarType::UINT8, aX, aY );
+        auto lNewEntity = BinaryOperation( aScope, scalar_type_t::UINT8, aX, aY );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sLessThanOperationController>();
 
         return lNewEntity;
@@ -462,7 +462,7 @@ namespace SE::TensorOps
         assert( ( aX.Has<sTypeComponent>() ) && ( aY.Has<sTypeComponent>() ) );
         assert( SameType( aX, aY ) );
 
-        auto lNewEntity = BinaryOperation( aScope, eScalarType::UINT8, aX, aY );
+        auto lNewEntity = BinaryOperation( aScope, scalar_type_t::UINT8, aX, aY );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sLessThanOrEqualOperationController>();
 
         return lNewEntity;
@@ -484,7 +484,7 @@ namespace SE::TensorOps
                 ( aValueIfFalse.Has<sTypeComponent>() ) );
         assert( ( aValueIfTrue.HasAny<sMultiTensorComponent, sScalarValueVectorComponent, sScalarNodeComponent>() ) );
         assert( ( aValueIfFalse.HasAny<sMultiTensorComponent, sScalarValueVectorComponent, sScalarNodeComponent>() ) );
-        assert( ( aCondition.Get<sTypeComponent>().mValue == eScalarType::UINT8 ) );
+        assert( ( aCondition.Get<sTypeComponent>().mValue == scalar_type_t::UINT8 ) );
         assert( SameType( aValueIfTrue, aValueIfFalse ) );
 
         auto lNewEntity = aScope.CreateNode();
@@ -518,7 +518,7 @@ namespace SE::TensorOps
         return lNewEntity;
     }
 
-    OpNode ToFixedPoint( Scope &aScope, eScalarType aOutputType, OpNode const &aArray, OpNode const &aScaling )
+    OpNode ToFixedPoint( Scope &aScope, scalar_type_t aOutputType, OpNode const &aArray, OpNode const &aScaling )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
         assert( ( aScaling.HasAll<sTypeComponent, sScalarNodeComponent>() ) );
@@ -611,11 +611,11 @@ namespace SE::TensorOps
 
         assert( SameType( aLeft, aRight ) );
         assert( SameType( aLeft, aDelta ) );
-        assert( SameLength<ScalarValue>( aLeft, aRight ) );
-        assert( SameLength<ScalarValue>( aLeft, aDelta ) );
+        assert( SameLength<scalar_value_t>( aLeft, aRight ) );
+        assert( SameLength<scalar_value_t>( aLeft, aDelta ) );
 
-        assert( ( aLeft.Get<sTypeComponent>().mValue == eScalarType::FLOAT32 ) ||
-                ( aLeft.Get<sTypeComponent>().mValue == eScalarType::FLOAT64 ) );
+        assert( ( aLeft.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) ||
+                ( aLeft.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT64 ) );
 
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sARangeComponent>( sARangeComponent{ aLeft, aRight, aDelta } );
@@ -650,8 +650,8 @@ namespace SE::TensorOps
 
         assert( aLeft.Get<sMultiTensorComponent>().Shape().CountLayers() == aSubdivisions.Get<sU32VectorComponent>().mValue.size() );
         assert( SameType( aLeft, aRight ) );
-        assert( ( aLeft.Get<sTypeComponent>().mValue == eScalarType::FLOAT32 ) ||
-                ( aLeft.Get<sTypeComponent>().mValue == eScalarType::FLOAT64 ) );
+        assert( ( aLeft.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) ||
+                ( aLeft.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT64 ) );
 
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sLinearSpaceComponent>( sLinearSpaceComponent{ aLeft, aRight, aSubdivisions } );
@@ -696,7 +696,7 @@ namespace SE::TensorOps
 
         assert( SameType( aX, aY ) );
 
-        assert( aX.Get<sTypeComponent>().mValue == eScalarType::FLOAT32 );
+        assert( aX.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 );
 
         auto  lNewEntity   = aScope.CreateNode();
         auto &lOperandData = lNewEntity.Add<sSample2DComponent>( sSample2DComponent{ aX, aY, aTextures } );
@@ -995,7 +995,7 @@ namespace SE::TensorOps
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sTypeComponent>( sTypeComponent{ eScalarType::UINT32 } );
+        lNewEntity.Add<sTypeComponent>( sTypeComponent{ scalar_type_t::UINT32 } );
         auto &lOperandData  = lNewEntity.Add<sCountTrueNodeComponent>();
         lOperandData.mArray = aArray;
 
@@ -1009,7 +1009,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( eScalarType::UINT32 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountTrueOperationController>();
 
         return lNewEntity;
@@ -1021,7 +1021,7 @@ namespace SE::TensorOps
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sTypeComponent>( sTypeComponent{ eScalarType::UINT32 } );
+        lNewEntity.Add<sTypeComponent>( sTypeComponent{ scalar_type_t::UINT32 } );
         auto &lOperandData  = lNewEntity.Add<sCountZeroNodeComponent>();
         lOperandData.mArray = aArray;
 
@@ -1036,7 +1036,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( eScalarType::UINT32 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountZeroOperationController>();
 
         return lNewEntity;
@@ -1048,7 +1048,7 @@ namespace SE::TensorOps
 
         auto lNewEntity = aScope.CreateNode();
 
-        lNewEntity.Add<sTypeComponent>( sTypeComponent{ eScalarType::UINT32 } );
+        lNewEntity.Add<sTypeComponent>( sTypeComponent{ scalar_type_t::UINT32 } );
         auto &lOperandData  = lNewEntity.Add<sCountNonZeroNodeComponent>();
         lOperandData.mArray = aArray;
 
@@ -1063,7 +1063,7 @@ namespace SE::TensorOps
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<sOperandComponent>( vector_t<OpNode>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( eScalarType::UINT32 ) ) );
+        lNewEntity.Add<sMultiTensorComponent>( aScope.mPool, sTensorShape( lOutputShape.mShape, SizeOf( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<sGraphOperationComponent>().Bind<sCountNonZeroOperationController>();
 
         return lNewEntity;
@@ -1128,7 +1128,7 @@ namespace SE::TensorOps
     OpNode Floor( Scope &aScope, OpNode const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
-        assert( ( aArray.Get<sTypeComponent>().mValue == eScalarType::FLOAT32 ) );
+        assert( ( aArray.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) );
 
         auto lNewEntity = aScope.CreateNode();
 
@@ -1147,7 +1147,7 @@ namespace SE::TensorOps
     OpNode Ceil( Scope &aScope, OpNode const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
-        assert( ( aArray.Get<sTypeComponent>().mValue == eScalarType::FLOAT32 ) );
+        assert( ( aArray.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) );
 
         auto lNewEntity = aScope.CreateNode();
 
@@ -1166,9 +1166,9 @@ namespace SE::TensorOps
     OpNode Abs( Scope &aScope, OpNode const &aArray )
     {
         assert( ( aArray.HasAll<sTypeComponent, sMultiTensorComponent>() ) );
-        assert( ( aArray.Get<sTypeComponent>().mValue == eScalarType::FLOAT32 ) ||
-                ( ( aArray.Get<sTypeComponent>().mValue >= eScalarType::INT8 ) &&
-                  ( aArray.Get<sTypeComponent>().mValue <= eScalarType::INT64 ) ) );
+        assert( ( aArray.Get<sTypeComponent>().mValue == scalar_type_t::FLOAT32 ) ||
+                ( ( aArray.Get<sTypeComponent>().mValue >= scalar_type_t::INT8 ) &&
+                  ( aArray.Get<sTypeComponent>().mValue <= scalar_type_t::INT64 ) ) );
 
         auto lNewEntity = aScope.CreateNode();
 
