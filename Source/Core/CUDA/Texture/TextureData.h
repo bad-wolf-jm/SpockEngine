@@ -14,7 +14,7 @@
 
 #include <gli/gli.hpp>
 
-#include "Core/Vector.h"
+#include "Core/Definitions.h"
 
 #include "ColorFormat.h"
 #include "TextureTypes.h"

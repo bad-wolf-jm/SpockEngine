@@ -10,8 +10,7 @@
 #include <variant>
 
 #include "Core/Logging.h"
-#include "Core/Memory.h"
-#include "Core/Vector.h"
+#include "Core/Definitions.h"
 
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"

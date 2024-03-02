@@ -14,8 +14,7 @@
 #include <string>
 
 #include "Core/Math/Types.h"
-#include "Core/String.h"
-#include "Core/Vector.h"
+#include "Core/Definitions.h"
 
 // #include "DotNet/Runtime.h"
 #include "Entity.h"

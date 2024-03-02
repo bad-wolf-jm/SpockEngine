@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "String.h"
-#include "Vector.h"
+#include "Definitions.h"
 #include <filesystem>
 #include <fmt/core.h>
 #include <fstream>

@@ -14,7 +14,7 @@
 
 #include "../ScalarTypes.h"
 #include "Core/Logging.h"
-#include "Core/Vector.h"
+#include "Core/Definitions.h"
 
 #define DISPATCH_BY_TYPE( type, target_fname, args ) \
     do                                               \

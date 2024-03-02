@@ -13,7 +13,7 @@
 #include <memory>
 
 #include "ColorFormat.h"
-#include "Core/Vector.h"
+#include "Core/Definitions.h"
 
 namespace fs = std::filesystem;
 

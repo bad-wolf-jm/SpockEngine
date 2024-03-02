@@ -15,7 +15,7 @@
 #include "Core/CUDA/Texture/TextureTypes.h"
 
 #include "Core/Logging.h"
-#include "Core/Memory.h"
+#include "Core/Definitions.h"
 
 #include "Core/Math/Types.h"
 

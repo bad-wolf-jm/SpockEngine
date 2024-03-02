@@ -11,8 +11,8 @@
 #include "Core/CUDA/Cuda.h"
 #include <vector>
 
+#include "Core/Definitions.h"
 #include "Core/CUDA/CudaAssert.h"
-#include "Core/Vector.h"
 
 /** \namespace SE::Cuda::Internal
  *

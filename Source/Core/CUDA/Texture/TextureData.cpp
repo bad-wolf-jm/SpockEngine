@@ -13,8 +13,7 @@
 #define STBI_NO_THREAD_LOCALS
 #include "stb_image.h"
 
-#include "Core/Core.h"
-#include "Core/Memory.h"
+#include "Core/Definitions.h"
 
 #include "TextureData.h"
 
