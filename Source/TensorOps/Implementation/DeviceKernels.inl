@@ -68,7 +68,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void AddArrayToArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight )
+    CUDA_KERNEL_DEFINITION void Add( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -83,9 +83,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void AddArrayToArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                 broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                 memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void Add( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
+                                     memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -122,7 +121,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void AddScalarToArray( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void Add( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -135,7 +134,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void AddArrayToVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstants )
+    CUDA_KERNEL_DEFINITION void Add( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstants )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -149,7 +148,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void MultiplyArrayByArray( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void Multiply( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -164,9 +163,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void MultiplyArrayByArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                      broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                      memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void Multiply( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                          broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
+                                          memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -203,7 +202,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void MultiplyScalarByArray( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void Multiply( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -217,7 +216,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void MultiplyArrayByVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void Multiply( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -231,20 +230,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void SubtractArrayFromScalar( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
-    {
-        uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
-        int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
-
-        RETURN_UNLESS( aArray.Shape().InBounds<_Ty>( lLayer, i ) );
-
-        _Ty *lArray = aArray.DeviceBufferAt<_Ty>( lLayer );
-        _Ty *lOut   = aOut.DeviceBufferAt<_Ty>( lLayer );
-        lOut[i]     = aConstant - lArray[i];
-    }
-
-    template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void SubtractScalarFromArray( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void Subtract( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -257,7 +243,20 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void SubtractArrayFromArray( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void Subtract( multi_tensor_t aOut, _Ty aConstant, multi_tensor_t aArray )
+    {
+        uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
+        int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
+
+        RETURN_UNLESS( aArray.Shape().InBounds<_Ty>( lLayer, i ) );
+
+        _Ty *lArray = aArray.DeviceBufferAt<_Ty>( lLayer );
+        _Ty *lOut   = aOut.DeviceBufferAt<_Ty>( lLayer );
+        lOut[i]     = aConstant - lArray[i];
+    }
+
+    template <typename _Ty>
+    CUDA_KERNEL_DEFINITION void Subtract( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -271,9 +270,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void SubtractArrayFromArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                        broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                        memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void Subtract( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                          broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
+                                          memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -310,7 +309,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void SubtractVectorFromArray( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void Subtract( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -324,7 +323,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void SubtractArrayFromVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void Subtract( multi_tensor_t aOut, memory_buffer_t aConstant, multi_tensor_t aArray )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -338,7 +337,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void DivideArrayByScalar( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void Divide( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -352,7 +351,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void DivideScalarByArray( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void Divide( multi_tensor_t aOut, _Ty aConstant, multi_tensor_t aArray )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -366,7 +365,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void DivideArrayFromArray( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void Divide( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -381,9 +380,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void DivideArrayFromArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                      broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                      memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void Divide( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                        broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -420,7 +418,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void DivideArrayByVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void Divide( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -434,7 +432,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void DivideVectorByArray( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void Divide( multi_tensor_t aOut, memory_buffer_t aConstant, multi_tensor_t aArray )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -447,7 +445,7 @@ namespace SE::TensorOps::Kernels
         lOut[i] = aConstant.DataAs<_Ty>()[blockIdx.x] / lIn[i];
     }
 
-    CUDA_KERNEL_DEFINITION void AndTensorScalar( multi_tensor_t aOut, multi_tensor_t aArray, uint8_t aConstant )
+    CUDA_KERNEL_DEFINITION void And( multi_tensor_t aOut, multi_tensor_t aArray, uint8_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -460,7 +458,7 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( aConstant && lArray[i] );
     }
 
-    CUDA_KERNEL_DEFINITION void AndTensorTensor( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void And( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -474,9 +472,8 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( lArray[i] && lConstant[i] );
     }
 
-    CUDA_KERNEL_DEFINITION void AndTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                 broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                 memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void And( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
+                                     memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -512,7 +509,7 @@ namespace SE::TensorOps::Kernels
         }
     }
 
-    CUDA_KERNEL_DEFINITION void AndTensorVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void And( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -525,7 +522,7 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( lIn[i] && aConstant.DataAs<uint8_t>()[blockIdx.x] );
     }
 
-    CUDA_KERNEL_DEFINITION void OrTensorScalar( multi_tensor_t aOut, multi_tensor_t aArray, uint8_t aConstant )
+    CUDA_KERNEL_DEFINITION void Or( multi_tensor_t aOut, multi_tensor_t aArray, uint8_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -538,7 +535,7 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( aConstant || lArray[i] );
     }
 
-    CUDA_KERNEL_DEFINITION void OrTensorTensor( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void Or( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -552,8 +549,8 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( lArray[i] || lConstant[i] );
     }
 
-    CUDA_KERNEL_DEFINITION void OrTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
-                                                memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void Or( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
+                                    memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -589,7 +586,7 @@ namespace SE::TensorOps::Kernels
         }
     }
 
-    CUDA_KERNEL_DEFINITION void OrTensorVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void Or( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -602,7 +599,7 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( lIn[i] || aConstant.DataAs<uint8_t>()[blockIdx.x] );
     }
 
-    CUDA_KERNEL_DEFINITION void NotTensor( multi_tensor_t aOut, multi_tensor_t aArray )
+    CUDA_KERNEL_DEFINITION void Not( multi_tensor_t aOut, multi_tensor_t aArray )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -616,7 +613,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseAndTensorScalar( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void BitwiseAnd( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -630,9 +627,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseAndTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                        broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                        memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void BitwiseAnd( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                            broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
+                                            memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -669,7 +666,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseAndTensorTensor( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void BitwiseAnd( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -684,7 +681,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseAnd_Tensor_Vector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void BitwiseAnd( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -698,7 +695,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseOrTensorScalar( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
+    CUDA_KERNEL_DEFINITION void BitwiseOr( multi_tensor_t aOut, multi_tensor_t aArray, _Ty aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -712,7 +709,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseOrTensorTensor( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
+    CUDA_KERNEL_DEFINITION void BitwiseOr( multi_tensor_t aOut, multi_tensor_t aArray, multi_tensor_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -727,9 +724,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseOrTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                       broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
-                                                       memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void BitwiseOr( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                           broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
+                                           memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -766,7 +763,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseOrTensorVector( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
+    CUDA_KERNEL_DEFINITION void BitwiseOr( multi_tensor_t aOut, multi_tensor_t aArray, memory_buffer_t aConstant )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -780,7 +777,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void BitwiseNotTensor( multi_tensor_t aOut, multi_tensor_t aArray )
+    CUDA_KERNEL_DEFINITION void Bitwise( multi_tensor_t aOut, multi_tensor_t aArray )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -794,8 +791,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalTensorTensor( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aLower, multi_tensor_t aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aLower, multi_tensor_t aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -814,8 +811,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalTensorVector( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aLower, memory_buffer_t aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aLower, memory_buffer_t aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -834,8 +831,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalTensorScalar( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aLower, _Ty aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aLower, _Ty aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -853,8 +850,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalVectorTensor( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aLower, multi_tensor_t aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aLower, multi_tensor_t aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -873,8 +870,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalVectorVector( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aLower, memory_buffer_t aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aLower, memory_buffer_t aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -893,8 +890,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalVectorScalar( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aLower, _Ty aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aLower, _Ty aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -912,8 +909,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalScalarTensor( multi_tensor_t aOut, multi_tensor_t aX, _Ty aLower, multi_tensor_t aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, _Ty aLower, multi_tensor_t aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -931,8 +928,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalScalarVector( multi_tensor_t aOut, multi_tensor_t aX, _Ty aLower, memory_buffer_t aUpper,
-                                                        bool aStrictLower, bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, _Ty aLower, memory_buffer_t aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -950,8 +947,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void InIntervalScalarScalar( multi_tensor_t aOut, multi_tensor_t aX, _Ty aLower, _Ty aUpper, bool aStrictLower,
-                                                        bool aStrictUpper )
+    CUDA_KERNEL_DEFINITION void InInterval( multi_tensor_t aOut, multi_tensor_t aX, _Ty aLower, _Ty aUpper, bool aStrictLower,
+                                            bool aStrictUpper )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1012,8 +1009,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void EqualOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
-                                         memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void EqualOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                         broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
+                                         memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -1094,8 +1092,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void LessThanOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
-                                            memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
+    CUDA_KERNEL_DEFINITION void LessThanOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                            broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
+                                            memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
@@ -1434,7 +1433,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void WhereScalarScalar( multi_tensor_t aOut, multi_tensor_t aCondition, _Ty aValueIfTrue, _Ty aValueIfFalse )
+    CUDA_KERNEL_DEFINITION void WhereScalarScalar( multi_tensor_t aOut, multi_tensor_t aCondition, _Ty aValueIfTrue,
+                                                   _Ty aValueIfFalse )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1485,7 +1485,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void LinearSpace( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, memory_buffer_t aSubdivisions )
+    CUDA_KERNEL_DEFINITION void LinearSpace( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
+                                             memory_buffer_t aSubdivisions )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         uint32_t N      = aSubdivisions.DataAs<uint32_t>()[blockIdx.x];
@@ -1524,7 +1525,7 @@ namespace SE::TensorOps::Kernels
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, multi_tensor_t aX, multi_tensor_t aY, memory_buffer_t aTextures )
     {
-        uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
+        uint32_t                              lLayer = static_cast<uint32_t>( blockIdx.x );
         Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1540,7 +1541,7 @@ namespace SE::TensorOps::Kernels
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aY, memory_buffer_t aTextures )
     {
-        uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
+        uint32_t                              lLayer = static_cast<uint32_t>( blockIdx.x );
         Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1555,7 +1556,7 @@ namespace SE::TensorOps::Kernels
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, multi_tensor_t aX, float aY, memory_buffer_t aTextures )
     {
-        uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
+        uint32_t                              lLayer = static_cast<uint32_t>( blockIdx.x );
         Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1570,7 +1571,7 @@ namespace SE::TensorOps::Kernels
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, memory_buffer_t aX, multi_tensor_t aY, memory_buffer_t aTextures )
     {
-        uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
+        uint32_t                              lLayer = static_cast<uint32_t>( blockIdx.x );
         Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1585,7 +1586,7 @@ namespace SE::TensorOps::Kernels
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t aOut, float aX, multi_tensor_t aY, memory_buffer_t aTextures )
     {
-        uint32_t                           lLayer = static_cast<uint32_t>( blockIdx.x );
+        uint32_t                              lLayer = static_cast<uint32_t>( blockIdx.x );
         Cuda::texture_sampler2d_t::DeviceData lTex   = aTextures.DataAs<Cuda::texture_sampler2d_t::DeviceData>()[blockIdx.x];
 
         int i = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1815,7 +1816,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void CountZero( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aBlockSizes, memory_buffer_t aElementCount )
+    CUDA_KERNEL_DEFINITION void CountZero( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aBlockSizes,
+                                           memory_buffer_t aElementCount )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1838,7 +1840,8 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void CountNonZero( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aBlockSizes, memory_buffer_t aElementCount )
+    CUDA_KERNEL_DEFINITION void CountNonZero( multi_tensor_t aOut, multi_tensor_t aX, memory_buffer_t aBlockSizes,
+                                              memory_buffer_t aElementCount )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
@@ -1989,8 +1992,9 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void Conv1D( multi_tensor_t aOut, multi_tensor_t aArray0, memory_buffer_t aElementCount0, memory_buffer_t aBlockSizes0,
-                                        multi_tensor_t aArray1, memory_buffer_t aElementCount1, memory_buffer_t aBlockSizes1 )
+    CUDA_KERNEL_DEFINITION void Conv1D( multi_tensor_t aOut, multi_tensor_t aArray0, memory_buffer_t aElementCount0,
+                                        memory_buffer_t aBlockSizes0, multi_tensor_t aArray1, memory_buffer_t aElementCount1,
+                                        memory_buffer_t aBlockSizes1 )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i      = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;

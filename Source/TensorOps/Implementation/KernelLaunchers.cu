@@ -166,7 +166,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AddArrayToArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Add<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     template <typename _Ty>
@@ -179,7 +179,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AddArrayToArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Add<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
     template <typename _ScalarType>
@@ -190,7 +190,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aArray.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AddScalarToArray<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aArray, std::get<_ScalarType>( aConstant ) );
+        Kernels::Add<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aArray, std::get<_ScalarType>( aConstant ) );
     }
 
     template <typename _Ty>
@@ -201,7 +201,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AddArrayToVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Add<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
@@ -235,7 +235,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::MultiplyScalarByArray<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_ScalarType>( aConstant ) );
+        Kernels::Multiply<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_ScalarType>( aConstant ) );
     }
 
     template <typename _Ty>
@@ -246,7 +246,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::MultiplyArrayByArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Multiply<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     template <typename _Ty>
@@ -259,7 +259,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::MultiplyArrayByArray<_Ty>
+        Kernels::Multiply<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
@@ -271,7 +271,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::MultiplyArrayByVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Multiply<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
@@ -305,7 +305,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::SubtractArrayFromScalar<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Subtract<<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aConstant ), aIn );
     }
 
     template <typename _Ty>
@@ -316,7 +316,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::SubtractScalarFromArray<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Subtract<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
     }
 
     template <typename _Ty>
@@ -327,7 +327,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::SubtractVectorFromArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Subtract<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     template <typename _Ty>
@@ -338,7 +338,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::SubtractArrayFromArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Subtract<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     template <typename _Ty>
@@ -351,7 +351,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::SubtractArrayFromArray<_Ty>
+        Kernels::Subtract<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
@@ -363,7 +363,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::SubtractArrayFromVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Subtract<_Ty><<<lGridDim, lBlockDim>>>( aOut, aConstant, aIn );
     }
 
     void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
@@ -407,7 +407,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::DivideArrayByScalar<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
     }
 
     template <typename _Ty>
@@ -418,7 +418,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::DivideScalarByArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aConstant ), aIn );
     }
 
     template <typename _Ty>
@@ -429,7 +429,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::DivideArrayFromArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     template <typename _Ty>
@@ -442,7 +442,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::DivideArrayFromArray<_Ty>
+        Kernels::Divide<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
@@ -454,7 +454,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::DivideArrayByVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     template <typename _Ty>
@@ -465,7 +465,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::DivideVectorByArray<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aConstant, aIn );
     }
 
     void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
@@ -508,7 +508,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AndTensorScalar<<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<uint8_t>( aRight ) );
+        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<uint8_t>( aRight ) );
     }
 
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
@@ -525,7 +525,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AndTensorTensor<<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
@@ -535,7 +535,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AndTensorTensor<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
     }
 
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
@@ -545,7 +545,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::AndTensorVector<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
     }
 
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
@@ -560,7 +560,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::OrTensorScalar<<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<uint8_t>( aRight ) );
+        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<uint8_t>( aRight ) );
     }
 
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
@@ -575,7 +575,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::OrTensorTensor<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
     }
 
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
@@ -587,7 +587,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::OrTensorTensor<<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
@@ -597,7 +597,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::OrTensorVector<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
     }
 
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
@@ -612,7 +612,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aOperand.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::NotTensor<<<lGridDim, lBlockDim>>>( aOut, aOperand );
+        Kernels::Not<<<lGridDim, lBlockDim>>>( aOut, aOperand );
     }
 
     template <typename _Ty>
@@ -623,7 +623,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseAndTensorScalar<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::BitwiseAnd<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
     }
 
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
@@ -646,7 +646,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseAndTensorTensor<_Ty>
+        Kernels::BitwiseAnd<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
@@ -667,7 +667,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseAndTensorTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::BitwiseAnd<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
@@ -683,7 +683,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseAnd_Tensor_Vector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::BitwiseAnd<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
@@ -704,7 +704,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOrTensorScalar<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::BitwiseOr<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
     }
 
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
@@ -725,7 +725,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOrTensorTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::BitwiseOr<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
@@ -743,7 +743,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOrTensorTensor<_Ty>
+        Kernels::BitwiseOr<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
     }
 
@@ -764,7 +764,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOrTensorVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::BitwiseOr<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
     }
 
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
@@ -785,7 +785,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseNotTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn );
+        Kernels::Bitwise<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn );
     }
 
     void BitwiseNotOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aOperand )
@@ -1105,7 +1105,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalTensorTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
     }
 
     void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, multi_tensor_t &aUpper,
@@ -1123,7 +1123,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalTensorVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
     }
 
     void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, memory_buffer_t &aUpper,
@@ -1141,7 +1141,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalTensorScalar<_Ty>
+        Kernels::InInterval<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aX, aLower, std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
     }
 
@@ -1160,7 +1160,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalVectorTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
     }
 
     void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, multi_tensor_t &aUpper,
@@ -1178,7 +1178,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalVectorVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
     }
 
     void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, memory_buffer_t &aUpper,
@@ -1196,7 +1196,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalVectorScalar<_Ty>
+        Kernels::InInterval<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aX, aLower, std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
     }
 
@@ -1215,7 +1215,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalScalarTensor<_Ty>
+        Kernels::InInterval<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aX, std::get<_Ty>( aLower ), aUpper, aStrictLower, aStrictUpper );
     }
 
@@ -1234,7 +1234,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalScalarVector<_Ty>
+        Kernels::InInterval<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aX, std::get<_Ty>( aLower ), aUpper, aStrictLower, aStrictUpper );
     }
 
@@ -1253,7 +1253,7 @@ namespace SE::TensorOps
         dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
         dim3 lBlockDim( Private::ThreadsPerBlock );
 
-        Kernels::InIntervalScalarScalar<_Ty>
+        Kernels::InInterval<_Ty>
             <<<lGridDim, lBlockDim>>>( aOut, aX, std::get<_Ty>( aLower ), std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
     }
 
