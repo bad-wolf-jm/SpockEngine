@@ -23,24 +23,24 @@ namespace SE::Core::Internal
     /// @tparam ParentType Always set to `SE::Core::EntityCollection`
     ///
     template <typename ParentType>
-    class Entity
+    class entity_t
     {
       public:
         /// @brief Default constructor.
-        Entity() = default;
+        entity_t() = default;
 
         /// @brief Copy constructor.
-        Entity( const Entity &aOther ) = default;
+        entity_t( const entity_t &aOther ) = default;
 
         /// @brief Construct a `NULL` entity.
-        Entity( ParentType aParentRegistry )
+        entity_t( ParentType aParentRegistry )
             : mEntityHandle( entt::null )
             , mParentRegistry( aParentRegistry )
         {
         }
 
         /// @brief Wrap constructor.
-        Entity( entt::entity const aHandle, ParentType aParentRegistry )
+        entity_t( entt::entity const aHandle, ParentType aParentRegistry )
             : mEntityHandle( aHandle )
             , mParentRegistry( aParentRegistry )
         {
@@ -275,13 +275,13 @@ namespace SE::Core::Internal
         /// @since
         ///
         template <typename _ComponentType>
-        void Adjoin( Entity aEntityToBind ) const
+        void Adjoin( entity_t aEntityToBind ) const
         {
             if( !aEntityToBind ) return;
 
             if( !( aEntityToBind.Has<_ComponentType>() ) ) return;
 
-            AddOrReplace<sJoin<ParentType, _ComponentType>>( aEntityToBind );
+            AddOrReplace<join_t<ParentType, _ComponentType>>( aEntityToBind );
         }
 
         /// @brief Checks whether an entity is valid.
@@ -300,16 +300,16 @@ namespace SE::Core::Internal
         ParentType GetRegistry() const { return mParentRegistry; };
 
         /// @brief Test for equality of two `Entity` instance.
-        bool operator==( const Entity &aOther ) const
+        bool operator==( const entity_t &aOther ) const
         {
             return ( mEntityHandle == aOther.mEntityHandle ) && ( mParentRegistry == aOther.mParentRegistry );
         }
 
         /// @brief Test for difference between two `Entity` instance.
-        bool operator!=( const Entity &aOther ) const { return !( *this == aOther ); }
+        bool operator!=( const entity_t &aOther ) const { return !( *this == aOther ); }
 
         /// @brief Test for difference between two `Entity` instance.
-        Entity &operator=( Entity const &aOther )
+        entity_t &operator=( entity_t const &aOther )
         {
             mEntityHandle   = aOther.mEntityHandle;
             mParentRegistry = aOther.mParentRegistry;

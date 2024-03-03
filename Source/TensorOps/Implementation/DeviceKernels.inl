@@ -84,7 +84,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void AddArrayToArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                 eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                 broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                  memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -100,7 +100,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -108,7 +108,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] + lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -165,7 +165,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void MultiplyArrayByArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                      eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                      broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                       memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -181,7 +181,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -189,7 +189,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] * lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -272,7 +272,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void SubtractArrayFromArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                        eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                        broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                         memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -288,7 +288,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -296,7 +296,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] - lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -382,7 +382,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void DivideArrayFromArray( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                      eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                      broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                       memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -398,7 +398,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -406,7 +406,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] / lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -475,7 +475,7 @@ namespace SE::TensorOps::Kernels
     }
 
     CUDA_KERNEL_DEFINITION void AndTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                 eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                 broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                  memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -491,7 +491,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             uint8_t *lLeft  = aLeft.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y;
             uint8_t *lRight = aRight.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -499,7 +499,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = ( lLeft[0] && lRight[i] );
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             uint8_t *lLeft  = aLeft.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y * lBroadcastSize;
             uint8_t *lRight = aRight.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y;
@@ -552,7 +552,7 @@ namespace SE::TensorOps::Kernels
         lOut[i] = ( lArray[i] || lConstant[i] );
     }
 
-    CUDA_KERNEL_DEFINITION void OrTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, eBroadcastHint aBroadcastHint,
+    CUDA_KERNEL_DEFINITION void OrTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
                                                 memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -568,7 +568,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             uint8_t *lLeft  = aLeft.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y;
             uint8_t *lRight = aRight.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -576,7 +576,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = ( lLeft[0] || lRight[i] );
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             uint8_t *lLeft  = aLeft.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y * lBroadcastSize;
             uint8_t *lRight = aRight.DeviceBufferAt<uint8_t>( lLayer ) + blockIdx.y;
@@ -631,7 +631,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void BitwiseAndTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                        eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                        broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                         memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -647,7 +647,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -655,7 +655,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] & lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -728,7 +728,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void BitwiseOrTensorTensor( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                       eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                       broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                        memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -744,7 +744,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -752,7 +752,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] | lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -1012,7 +1012,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void EqualOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, eBroadcastHint aBroadcastHint,
+    CUDA_KERNEL_DEFINITION void EqualOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
                                          memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -1028,7 +1028,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -1036,7 +1036,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] == lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -1094,7 +1094,7 @@ namespace SE::TensorOps::Kernels
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void LessThanOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, eBroadcastHint aBroadcastHint,
+    CUDA_KERNEL_DEFINITION void LessThanOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight, broadcast_hint_t aBroadcastHint,
                                             memory_buffer_t aBlockSizes, memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -1110,7 +1110,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -1118,7 +1118,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] < lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
@@ -1206,7 +1206,7 @@ namespace SE::TensorOps::Kernels
 
     template <typename _Ty>
     CUDA_KERNEL_DEFINITION void LessThanOrEqualOp( multi_tensor_t aOut, multi_tensor_t aLeft, multi_tensor_t aRight,
-                                                   eBroadcastHint aBroadcastHint, memory_buffer_t aBlockSizes,
+                                                   broadcast_hint_t aBroadcastHint, memory_buffer_t aBlockSizes,
                                                    memory_buffer_t aBroadcastSizes )
     {
         uint32_t lLayer = static_cast<uint32_t>( blockIdx.x );
@@ -1222,7 +1222,7 @@ namespace SE::TensorOps::Kernels
 
         switch( aBroadcastHint )
         {
-        case eBroadcastHint::LEFT:
+        case broadcast_hint_t::LEFT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
@@ -1230,7 +1230,7 @@ namespace SE::TensorOps::Kernels
             lOut[i] = lLeft[0] <= lRight[i];
         }
         break;
-        case eBroadcastHint::RIGHT:
+        case broadcast_hint_t::RIGHT:
         {
             _Ty *lLeft  = aLeft.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y * lBroadcastSize;
             _Ty *lRight = aRight.DeviceBufferAt<_Ty>( lLayer ) + blockIdx.y;

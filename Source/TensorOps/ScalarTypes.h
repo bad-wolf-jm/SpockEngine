@@ -14,7 +14,7 @@ using namespace SE::Core;
 
 namespace SE::TensorOps
 {
-    enum class eBroadcastHint : uint8_t
+    enum class broadcast_hint_t : uint8_t
     {
         LEFT  = 0,
         RIGHT = 1,

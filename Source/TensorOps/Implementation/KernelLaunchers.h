@@ -78,7 +78,7 @@ namespace SE::TensorOps
     ///
     void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                 uint32_t aMaxBroadcastSizes );
 
     /// @brief Add a list of scalars to all elements of a tensor
@@ -104,7 +104,7 @@ namespace SE::TensorOps
     ///
     void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes );
 
     /// @brief Multiply the elements of a tensor by a vector of values
@@ -163,7 +163,7 @@ namespace SE::TensorOps
     ///
     void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes );
 
     /// @brief Subtract elements of a multi-tensor from the elements of a vector
@@ -223,7 +223,7 @@ namespace SE::TensorOps
     ///
     void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                   eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                   broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                    uint32_t aMaxBroadcastSizes );
 
     /// @brief Divide the elements of a multi-tensor by the elements of a vector
@@ -265,7 +265,7 @@ namespace SE::TensorOps
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                 uint32_t aMaxBroadcastSizes );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
@@ -285,7 +285,7 @@ namespace SE::TensorOps
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-               eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+               broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                uint32_t aMaxBroadcastSizes );
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
@@ -315,7 +315,7 @@ namespace SE::TensorOps
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                       eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                       broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                        uint32_t aMaxBroadcastSizes );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
@@ -335,7 +335,7 @@ namespace SE::TensorOps
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                      eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                      broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                       uint32_t aMaxBroadcastSizes );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
@@ -396,7 +396,7 @@ namespace SE::TensorOps
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                  eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                  broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                   uint32_t aMaxBroadcastSizes );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
@@ -414,7 +414,7 @@ namespace SE::TensorOps
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
@@ -432,7 +432,7 @@ namespace SE::TensorOps
     void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                            eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                            broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
                             memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
     void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );

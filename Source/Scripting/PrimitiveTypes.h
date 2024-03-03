@@ -86,50 +86,50 @@ namespace SE::Core
             aM.Upload<_Ty>( lArray, aOffset );
         }
 
-        template <typename _Ty> auto Valid( Entity &aEntity ) { return aEntity.IsValid(); }
+        template <typename _Ty> auto Valid( entity_t &aEntity ) { return aEntity.IsValid(); }
 
-        template <typename _Ty> auto Add( Entity &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty> auto Add( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Add<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto AddOrReplace( Entity &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty> auto AddOrReplace( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.AddOrReplace<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto Replace( Entity &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty> auto Replace( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Replace<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto TryAdd( Entity &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty> auto TryAdd( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.TryAdd<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto Tag( Entity &aEntity ) { aEntity.Tag<_Ty>(); }
-        template <typename _Ty> auto Untag( Entity &aEntity ) { aEntity.Untag<_Ty>(); }
+        template <typename _Ty> auto Tag( entity_t &aEntity ) { aEntity.Tag<_Ty>(); }
+        template <typename _Ty> auto Untag( entity_t &aEntity ) { aEntity.Untag<_Ty>(); }
 
-        template <typename _Ty> auto Get( Entity &aEntity, sol::this_state aScriptState )
+        template <typename _Ty> auto Get( entity_t &aEntity, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Get<_Ty>();
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto TryGet( Entity &aEntity, sol::this_state aScriptState )
+        template <typename _Ty> auto TryGet( entity_t &aEntity, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.TryGet<_Ty>( _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto Has( Entity &aEntity ) { return aEntity.Has<_Ty>(); }
-        template <typename _Ty> auto Remove( Entity &aEntity ) { aEntity.Remove<_Ty>(); }
-        template <typename _Ty> auto TryRemove( Entity &aEntity ) { aEntity.TryRemove<_Ty>(); }
+        template <typename _Ty> auto Has( entity_t &aEntity ) { return aEntity.Has<_Ty>(); }
+        template <typename _Ty> auto Remove( entity_t &aEntity ) { aEntity.Remove<_Ty>(); }
+        template <typename _Ty> auto TryRemove( entity_t &aEntity ) { aEntity.TryRemove<_Ty>(); }
     } // namespace
 
     [[nodiscard]] entt::id_type GetTypeID( const sol::table &aObject );

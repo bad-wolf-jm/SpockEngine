@@ -91,7 +91,7 @@ namespace SE::Core
         lMemoryPoolType["allocate"] = []( Cuda::memory_pool_t &aSelf, int32_t aBytes ) { return aSelf.Allocate( aBytes ); };
 
         auto lMultiTensorType =
-            aScriptingState.new_usertype<Cuda::multi_tensor_t>( "MultiTensor", constructors<Cuda::multi_tensor_t( Cuda::MemoryPool & aMemoryPool, const Cuda::sTensorShape &aShape )>() );
+            aScriptingState.new_usertype<Cuda::multi_tensor_t>( "MultiTensor", constructors<Cuda::multi_tensor_t( Cuda::memory_pool_t & aMemoryPool, const Cuda::tensor_shape_t &aShape )>() );
         lMultiTensorType["size"]    = []( Cuda::multi_tensor_t &aSelf ) { return aSelf.Size(); };
         lMultiTensorType["size_as"] = []( Cuda::multi_tensor_t &aSelf, const sol::object &aTypeOrID )
         {
@@ -195,103 +195,103 @@ namespace SE::Core
             "UNKNOWN", scalar_type_t::UNKNOWN  );
         // clang-format on
 
-        DeclarePrimitiveType<sMultiTensorComponent>( lOpsModule, "sMultiTensorComponent" );
+        DeclarePrimitiveType<multi_tensor_value_t>( lOpsModule, "sMultiTensorComponent" );
 
         // clang-format off
-        auto lConstantInitializerComponent = lOpsModule.new_usertype<sConstantValueInitializerComponent>("sConstantValueInitializerComponent");
+        auto lConstantInitializerComponent = lOpsModule.new_usertype<constant_value_initializer_t>("sConstantValueInitializerComponent");
         lConstantInitializerComponent[call_constructor] = [](scalar_type_t aType, double value)
         {
             switch(aType)
             {
             case scalar_type_t::FLOAT32:
-                return sConstantValueInitializerComponent{ static_cast<float>(value) };
+                return constant_value_initializer_t{ static_cast<float>(value) };
             case scalar_type_t::FLOAT64:
-                return sConstantValueInitializerComponent{ static_cast<double>(value) };
+                return constant_value_initializer_t{ static_cast<double>(value) };
             case scalar_type_t::UINT8:
-                return sConstantValueInitializerComponent{ static_cast<uint8_t>(value) };
+                return constant_value_initializer_t{ static_cast<uint8_t>(value) };
             case scalar_type_t::UINT16:
-                return sConstantValueInitializerComponent{ static_cast<uint16_t>(value) };
+                return constant_value_initializer_t{ static_cast<uint16_t>(value) };
             case scalar_type_t::UINT32:
-                return sConstantValueInitializerComponent{ static_cast<uint32_t>(value) };
+                return constant_value_initializer_t{ static_cast<uint32_t>(value) };
             case scalar_type_t::UINT64:
-                return sConstantValueInitializerComponent{ static_cast<uint64_t>(value) };
+                return constant_value_initializer_t{ static_cast<uint64_t>(value) };
             case scalar_type_t::INT8:
-                return sConstantValueInitializerComponent{ static_cast<int8_t>(value) };
+                return constant_value_initializer_t{ static_cast<int8_t>(value) };
             case scalar_type_t::INT16:
-                return sConstantValueInitializerComponent{ static_cast<int16_t>(value) };
+                return constant_value_initializer_t{ static_cast<int16_t>(value) };
             case scalar_type_t::INT32:
-                return sConstantValueInitializerComponent{ static_cast<int32_t>(value) };
+                return constant_value_initializer_t{ static_cast<int32_t>(value) };
             case scalar_type_t::INT64:
-                return sConstantValueInitializerComponent{ static_cast<int64_t>(value) };
+                return constant_value_initializer_t{ static_cast<int64_t>(value) };
             case scalar_type_t::UNKNOWN:
             default:
                 break;
             }
         };
 
-        auto lVectorInitializerComponent = lOpsModule.new_usertype<sVectorInitializerComponent>( "sVectorInitializerComponent" );
+        auto lVectorInitializerComponent = lOpsModule.new_usertype<vector_initializer_t>( "sVectorInitializerComponent" );
 
         // clang-format off
         lVectorInitializerComponent[call_constructor] = factories(
-            []( vector_t<float> value)    { return sVectorInitializerComponent{ value }; },
-            []( vector_t<double> value)   { return sVectorInitializerComponent{ value }; },
-            []( vector_t<uint8_t> value)  { return sVectorInitializerComponent{ value }; },
-            []( vector_t<uint16_t> value) { return sVectorInitializerComponent{ value }; },
-            []( vector_t<uint32_t> value) { return sVectorInitializerComponent{ value }; },
-            []( vector_t<uint64_t> value) { return sVectorInitializerComponent{ value }; },
-            []( vector_t<int8_t>  value)  { return sVectorInitializerComponent{ value }; },
-            []( vector_t<int16_t> value)  { return sVectorInitializerComponent{ value }; },
-            []( vector_t<int32_t> value)  { return sVectorInitializerComponent{ value }; },
-            []( vector_t<int64_t> value)  { return sVectorInitializerComponent{ value }; }
+            []( vector_t<float> value)    { return vector_initializer_t{ value }; },
+            []( vector_t<double> value)   { return vector_initializer_t{ value }; },
+            []( vector_t<uint8_t> value)  { return vector_initializer_t{ value }; },
+            []( vector_t<uint16_t> value) { return vector_initializer_t{ value }; },
+            []( vector_t<uint32_t> value) { return vector_initializer_t{ value }; },
+            []( vector_t<uint64_t> value) { return vector_initializer_t{ value }; },
+            []( vector_t<int8_t>  value)  { return vector_initializer_t{ value }; },
+            []( vector_t<int16_t> value)  { return vector_initializer_t{ value }; },
+            []( vector_t<int32_t> value)  { return vector_initializer_t{ value }; },
+            []( vector_t<int64_t> value)  { return vector_initializer_t{ value }; }
         );
         // clang-format on
 
-        auto lDataInitializerComponent = lOpsModule.new_usertype<sDataInitializerComponent>( "sDataInitializerComponent" );
+        auto lDataInitializerComponent = lOpsModule.new_usertype<data_initializer_t>( "sDataInitializerComponent" );
         // clang-format off
         lDataInitializerComponent[call_constructor] = factories(
-            []( vector_t<float> value)    { return sDataInitializerComponent{ value }; },
-            []( vector_t<double> value)   { return sDataInitializerComponent{ value }; },
-            []( vector_t<uint8_t> value)  { return sDataInitializerComponent{ value }; },
-            []( vector_t<uint16_t> value) { return sDataInitializerComponent{ value }; },
-            []( vector_t<uint32_t> value) { return sDataInitializerComponent{ value }; },
-            []( vector_t<uint64_t> value) { return sDataInitializerComponent{ value }; },
-            []( vector_t<int8_t>  value)  { return sDataInitializerComponent{ value }; },
-            []( vector_t<int16_t> value)  { return sDataInitializerComponent{ value }; },
-            []( vector_t<int32_t> value)  { return sDataInitializerComponent{ value }; },
-            []( vector_t<int64_t> value)  { return sDataInitializerComponent{ value }; }
+            []( vector_t<float> value)    { return data_initializer_t{ value }; },
+            []( vector_t<double> value)   { return data_initializer_t{ value }; },
+            []( vector_t<uint8_t> value)  { return data_initializer_t{ value }; },
+            []( vector_t<uint16_t> value) { return data_initializer_t{ value }; },
+            []( vector_t<uint32_t> value) { return data_initializer_t{ value }; },
+            []( vector_t<uint64_t> value) { return data_initializer_t{ value }; },
+            []( vector_t<int8_t>  value)  { return data_initializer_t{ value }; },
+            []( vector_t<int16_t> value)  { return data_initializer_t{ value }; },
+            []( vector_t<int32_t> value)  { return data_initializer_t{ value }; },
+            []( vector_t<int64_t> value)  { return data_initializer_t{ value }; }
         );
         // clang-format on
 
-        auto lRandomUniformInitializerComponent              = lOpsModule.new_usertype<sRandomUniformInitializerComponent>( "sRandomUniformInitializerComponent" );
-        lRandomUniformInitializerComponent[call_constructor] = []( scalar_type_t value ) { return sRandomUniformInitializerComponent{ value }; };
+        auto lRandomUniformInitializerComponent              = lOpsModule.new_usertype<random_uniform_initializer_t>( "sRandomUniformInitializerComponent" );
+        lRandomUniformInitializerComponent[call_constructor] = []( scalar_type_t value ) { return random_uniform_initializer_t{ value }; };
 
-        auto lRandomNormalInitializerComponent              = lOpsModule.new_usertype<sRandomNormalInitializerComponent>( "sRandomNormalInitializerComponent" );
+        auto lRandomNormalInitializerComponent              = lOpsModule.new_usertype<random_normal_initializer_t>( "sRandomNormalInitializerComponent" );
         lRandomNormalInitializerComponent[call_constructor] = []( scalar_type_t value, double mean, double std )
         {
             switch( value )
             {
             case scalar_type_t::FLOAT64:
-                return sRandomNormalInitializerComponent{ value, mean, std };
+                return random_normal_initializer_t{ value, mean, std };
             default:
-                return sRandomNormalInitializerComponent{ value, static_cast<float>( mean ), static_cast<float>( std ) };
+                return random_normal_initializer_t{ value, static_cast<float>( mean ), static_cast<float>( std ) };
             }
         };
 
         // clang-format off
         lOpsModule["MultiTensorValue"] = overload(
-            []( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
+            []( scope_t &aScope, constant_value_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
+            []( scope_t &aScope, vector_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
+            []( scope_t &aScope, data_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
+            []( scope_t &aScope, random_uniform_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             },
-            []( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
+            []( scope_t &aScope, random_normal_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
                 return MultiTensorValue( aScope, aInitializer, aShape );
             }
         );

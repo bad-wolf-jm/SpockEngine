@@ -170,7 +170,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void AddArrayToArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void AddArrayToArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                                      memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                                      uint32_t aMaxBroadcastSizes )
     {
@@ -210,7 +210,7 @@ namespace SE::TensorOps
     }
 
     void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                 uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, AddArrayToArrayImpl,
@@ -250,7 +250,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void MultiplyArrayByArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void MultiplyArrayByArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                                           memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                                           uint32_t aMaxBroadcastSizes )
     {
@@ -285,7 +285,7 @@ namespace SE::TensorOps
     }
 
     void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, MultiplyArrayByArrayImpl,
@@ -342,7 +342,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void SubtractArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void SubtractArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                                             memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                                             uint32_t aMaxBroadcastSizes )
     {
@@ -382,7 +382,7 @@ namespace SE::TensorOps
     }
 
     void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, SubtractArrayfromArrayImpl,
@@ -433,7 +433,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void DivideArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void DivideArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                                           memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                                           uint32_t aMaxBroadcastSizes )
     {
@@ -484,7 +484,7 @@ namespace SE::TensorOps
     }
 
     void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                   eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                   broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                    uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, DivideArrayfromArrayImpl,
@@ -517,7 +517,7 @@ namespace SE::TensorOps
     }
 
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-                eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                 uint32_t aMaxBroadcastSizes )
     {
         int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
@@ -579,7 +579,7 @@ namespace SE::TensorOps
     }
 
     void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-               eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+               broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                uint32_t aMaxBroadcastSizes )
     {
         int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
@@ -638,7 +638,7 @@ namespace SE::TensorOps
 
     template <typename _Ty>
     static void BitwiseAnd_Tensor_Tensor_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-                                               eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                                               broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
                                                memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes )
     {
         int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
@@ -651,7 +651,7 @@ namespace SE::TensorOps
     }
 
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                       eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                       broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                        uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_INTEGRAL_TYPE(
@@ -735,7 +735,7 @@ namespace SE::TensorOps
 
     template <typename _Ty>
     static void BitwiseOr_Tensor_Tensor_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-                                              eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                                              broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
                                               memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes )
     {
         int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
@@ -748,7 +748,7 @@ namespace SE::TensorOps
     }
 
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                      eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                      broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                       uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_INTEGRAL_TYPE(
@@ -810,7 +810,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void EqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void EqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                              memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                              uint32_t aMaxBroadcastSizes )
     {
@@ -823,7 +823,7 @@ namespace SE::TensorOps
     }
 
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                  eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                  broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                   uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl,
@@ -911,7 +911,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void LessThanOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void LessThanOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                                 memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                                 uint32_t aMaxBroadcastSizes )
     {
@@ -924,7 +924,7 @@ namespace SE::TensorOps
     }
 
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                      uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl,
@@ -1012,7 +1012,7 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, eBroadcastHint aBroadcastHint,
+    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
                                        memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
                                        uint32_t aMaxBroadcastSizes )
     {
@@ -1025,7 +1025,7 @@ namespace SE::TensorOps
     }
 
     void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                            eBroadcastHint aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                            broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
                             memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes )
     {
         DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl,

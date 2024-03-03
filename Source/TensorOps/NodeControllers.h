@@ -21,25 +21,25 @@ namespace SE::TensorOps
     ///
     /// Performs all necessary oeprations to initialize a constant multitensor.
     ///
-    struct sMultiTensorRunner : public sGraphOperationController
+    struct sMultiTensorRunner : public graph_operation_controller_t
     {
         void Run();
     };
 
     template <typename T>
-    static inline void ResolveAndUpload( sDataInitializerComponent const &aComponent, MultiTensor const &aOut )
+    static inline void ResolveAndUpload( data_initializer_t const &aComponent, multi_tensor_t const &aOut )
     {
         aOut.Upload( Private::Resolve<T>( aComponent.mValue ) );
     }
 
     template <typename T>
-    static inline void ResolveAndUpload( sVectorInitializerComponent const &aComponent )
+    static inline void ResolveAndUpload( vector_initializer_t const &aComponent )
     {
         aComponent.mData.Upload( Private::Resolve<T>( aComponent.mValue ) );
     }
 
     template <typename T>
-    static inline void ResolveAndUpload( MemoryBuffer &aData, vector_t<scalar_value_t> const &aValue )
+    static inline void ResolveAndUpload( memory_buffer_t &aData, vector_t<scalar_value_t> const &aValue )
     {
         aData.Upload( Private::Resolve<T>( aValue ) );
     }
@@ -51,12 +51,12 @@ namespace SE::TensorOps
     /// @tparam _Ty Type of vector elements/
     ///
     template <typename _Ty>
-    struct VectorRunner : public sGraphOperationController
+    struct VectorRunner : public graph_operation_controller_t
     {
         void Run()
         {
-            auto &lData  = Get<sVectorBufferComponent>().mValue;
-            auto &lValue = Get<sVectorValueComponent<_Ty>>().mValue;
+            auto &lData  = Get<vector_buffer_t>().mValue;
+            auto &lValue = Get<vector_value_t<_Ty>>().mValue;
             if constexpr( std::is_same<_Ty, scalar_value_t>::value )
             {
                 DISPATCH_BY_TYPE( TypeOf( lValue[0] ), ResolveAndUpload, ( lData, lValue ) );
@@ -73,18 +73,18 @@ namespace SE::TensorOps
     /// Base class for binary operation nodes. This controller simply dispatches method calls to the proper implementation of binary
     /// operations.
     ///
-    struct sBinaryOperationController : public sGraphOperationController
+    struct sBinaryOperationController : public graph_operation_controller_t
     {
         void Run();
 
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                         sBroadcastInfoComponent &aBroadcast )                                                        = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                         broadcast_info_t &aBroadcast )                                                        = 0;
 
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight ) = 0;
     };
 
     /// @brief sBinaryBooleanOperationController
@@ -92,18 +92,18 @@ namespace SE::TensorOps
     /// Base class for binary operation nodes. This controller simply dispatches method calls to the proper implementation of binary
     /// operations.
     ///
-    struct sBinaryBooleanOperationController : public sGraphOperationController
+    struct sBinaryBooleanOperationController : public graph_operation_controller_t
     {
         void Run();
 
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                         sBroadcastInfoComponent &aBroadcast )                                                        = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                         broadcast_info_t &aBroadcast )                                                        = 0;
 
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight ) = 0;
-        virtual void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight ) = 0;
+        virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight ) = 0;
     };
 
     /// @brief sAddOperationController
@@ -115,14 +115,14 @@ namespace SE::TensorOps
         sAddOperationController()                                  = default;
         sAddOperationController( const sAddOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @struct sMultiplyOperationController
@@ -135,14 +135,14 @@ namespace SE::TensorOps
         sMultiplyOperationController()                                       = default;
         sMultiplyOperationController( const sMultiplyOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @struct sSubtractOperationController
@@ -155,14 +155,14 @@ namespace SE::TensorOps
         sSubtractOperationController()                                       = default;
         sSubtractOperationController( const sSubtractOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @struct sDivideOperationController
@@ -175,14 +175,14 @@ namespace SE::TensorOps
         sDivideOperationController()                                     = default;
         sDivideOperationController( const sDivideOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sAndOperationController
@@ -195,14 +195,14 @@ namespace SE::TensorOps
         sAndOperationController()                                  = default;
         sAndOperationController( const sAndOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sOrOperationController
@@ -215,21 +215,21 @@ namespace SE::TensorOps
         sOrOperationController()                                 = default;
         sOrOperationController( const sOrOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sNotOperationController
     ///
     /// Negation
     ///
-    struct sNotOperationController : public sGraphOperationController
+    struct sNotOperationController : public graph_operation_controller_t
     {
       public:
         sNotOperationController()                                  = default;
@@ -248,14 +248,14 @@ namespace SE::TensorOps
         sBitwiseAndOperationController()                                         = default;
         sBitwiseAndOperationController( const sBitwiseAndOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sBitwiseOrOperationController
@@ -268,21 +268,21 @@ namespace SE::TensorOps
         sBitwiseOrOperationController()                                        = default;
         sBitwiseOrOperationController( const sBitwiseOrOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, scalar_value_t &aConstant );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aConstant, MultiTensor &aIn );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sNotOperationController
     ///
     /// Bitwise negation
     ///
-    struct sBitwiseNotOperationController : public sGraphOperationController
+    struct sBitwiseNotOperationController : public graph_operation_controller_t
     {
       public:
         sBitwiseNotOperationController()                                         = default;
@@ -295,7 +295,7 @@ namespace SE::TensorOps
     ///
     /// Check whether the values in a given tensor lie between two given values
     ///
-    struct sInIntervalOperationController : public sGraphOperationController
+    struct sInIntervalOperationController : public graph_operation_controller_t
     {
       public:
         sInIntervalOperationController()                                         = default;
@@ -314,14 +314,14 @@ namespace SE::TensorOps
         sEqualOperationController()                                    = default;
         sEqualOperationController( const sEqualOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sLessThanOperationController
@@ -334,14 +334,14 @@ namespace SE::TensorOps
         sLessThanOperationController()                                       = default;
         sLessThanOperationController( const sLessThanOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sLessThanOrEqualOperationController
@@ -354,22 +354,22 @@ namespace SE::TensorOps
         sLessThanOrEqualOperationController()                                              = default;
         sLessThanOrEqualOperationController( const sLessThanOrEqualOperationController & ) = default;
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
-                 sBroadcastInfoComponent &aBroadcast );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+                 broadcast_info_t &aBroadcast );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, scalar_value_t &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, scalar_value_t &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
 
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight );
-        void Op( scalar_type_t aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
+        void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
     };
 
     /// @brief sWhereOperationController
     ///
     /// Choose values according to boolean condition
     ///
-    struct sWhereOperationController : public sGraphOperationController
+    struct sWhereOperationController : public graph_operation_controller_t
     {
       public:
         sWhereOperationController()                                    = default;
@@ -382,7 +382,7 @@ namespace SE::TensorOps
     ///
     /// Addition
     ///
-    struct sARangeOperationController : public sGraphOperationController
+    struct sARangeOperationController : public graph_operation_controller_t
     {
         void Run();
     };
@@ -391,7 +391,7 @@ namespace SE::TensorOps
     ///
     /// Controller for tiling and repetition of tensors/
     ///
-    struct sArrayOperationController : public sGraphOperationController
+    struct sArrayOperationController : public graph_operation_controller_t
     {
         void Run();
     };
@@ -400,7 +400,7 @@ namespace SE::TensorOps
     ///
     /// Linear space
     ///
-    struct sLinearSpaceOperationController : public sGraphOperationController
+    struct sLinearSpaceOperationController : public graph_operation_controller_t
     {
         void Run();
     };
@@ -409,7 +409,7 @@ namespace SE::TensorOps
     ///
     /// Mix
     ///
-    struct sMixOperationController : public sGraphOperationController
+    struct sMixOperationController : public graph_operation_controller_t
     {
         void OnCreate()
         {
@@ -424,7 +424,7 @@ namespace SE::TensorOps
     ///
     /// Texture sampling
     ///
-    struct sSample2DOperationController : public sGraphOperationController
+    struct sSample2DOperationController : public graph_operation_controller_t
     {
         void Run();
     };
@@ -433,7 +433,7 @@ namespace SE::TensorOps
     ///
     /// Fixed point arithmetic conversion
     ///
-    struct sToFixedPointOperationController : public sGraphOperationController
+    struct sToFixedPointOperationController : public graph_operation_controller_t
     {
         void Run();
     };
@@ -442,91 +442,91 @@ namespace SE::TensorOps
     ///
     /// Affine transformation
     ///
-    struct sAffineNodeController : public sGraphOperationController
+    struct sAffineNodeController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Array slicing
-    struct sArraySliceOperationController : public sGraphOperationController
+    struct sArraySliceOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Array summation
-    struct sArraySummationOperationController : public sGraphOperationController
+    struct sArraySummationOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Count true elements
-    struct sCountTrueOperationController : public sGraphOperationController
+    struct sCountTrueOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Count non-zero elements
-    struct sCountNonZeroOperationController : public sGraphOperationController
+    struct sCountNonZeroOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Count zero elements
-    struct sCountZeroOperationController : public sGraphOperationController
+    struct sCountZeroOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief 1D convolution
-    struct sConv1DOperationController : public sGraphOperationController
+    struct sConv1DOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Floor
-    struct sFloorOperationController : public sGraphOperationController
+    struct sFloorOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Ceiling
-    struct sCeilOperationController : public sGraphOperationController
+    struct sCeilOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Absolute value
-    struct sAbsOperationController : public sGraphOperationController
+    struct sAbsOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Square root
-    struct sSqrtOperationController : public sGraphOperationController
+    struct sSqrtOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Round root
-    struct sRoundOperationController : public sGraphOperationController
+    struct sRoundOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Finite difference
-    struct sDiffOperationController : public sGraphOperationController
+    struct sDiffOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief Shift operator
-    struct sShiftOperationController : public sGraphOperationController
+    struct sShiftOperationController : public graph_operation_controller_t
     {
         void Run();
     };
 
     /// @brief HCat operator
-    struct sHCatOperationController : public sGraphOperationController
+    struct sHCatOperationController : public graph_operation_controller_t
     {
         void Run();
     };

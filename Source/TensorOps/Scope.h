@@ -26,11 +26,11 @@
 
 namespace SE::TensorOps
 {
-    using graph_node_t = SE::Core::Entity;
+    using graph_node_t = SE::Core::entity_t;
 
     struct scope_t
     {
-        MemoryPool mPool{}; //!< Memory pool
+        memory_pool_t mPool{}; //!< Memory pool
 
         /// @brief Default constructor
         scope_t() = default;
@@ -77,13 +77,13 @@ namespace SE::TensorOps
         void Run( vector_t<graph_node_t> const &aNode );
 
         /// @brief Access the underlying nodes registry
-        SE::Core::EntityCollection &GetNodesRegistry()
+        SE::Core::entity_registry_t &GetNodesRegistry()
         {
             return mNodesRegistry;
         };
 
       private:
-        SE::Core::EntityCollection mNodesRegistry{};     //!< Underlying node database
+        SE::Core::entity_registry_t mNodesRegistry{};     //!< Underlying node database
         std::optional<string_t> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<string_t, graph_node_t> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };
@@ -96,7 +96,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sConstantValueInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, constant_value_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given vector of values
     ///
@@ -109,7 +109,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sVectorInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, vector_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given data
     ///
@@ -121,7 +121,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sDataInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, data_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with uniformly distributed random values
     ///
@@ -131,7 +131,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sRandomUniformInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, random_uniform_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MultiTensor initialized with normally distributed random values
     ///
@@ -141,7 +141,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, sRandomNormalInitializerComponent const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &aScope, random_normal_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
 
     /// @brief Create a constant @ref MemoryBuffer initialized with the given vector
     ///
@@ -157,18 +157,18 @@ namespace SE::TensorOps
     {
         auto l_NewEntity = aScope.CreateNode();
 
-        auto &l_Value  = l_NewEntity.Add<sVectorValueComponent<_Ty>>();
+        auto &l_Value  = l_NewEntity.Add<vector_value_t<_Ty>>();
         l_Value.mValue = aValue;
 
-        auto &l_Buffer = l_NewEntity.Add<sVectorBufferComponent>();
+        auto &l_Buffer = l_NewEntity.Add<vector_buffer_t>();
         l_Buffer.mSize = aValue.size() * sizeof( _Ty );
 
         if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
-            l_NewEntity.Add<sTypeComponent>( TypeOf( aValue[0] ) );
+            l_NewEntity.Add<type_t>( TypeOf( aValue[0] ) );
         }
 
-        l_NewEntity.Add<sGraphOperationComponent>().Bind<VectorRunner<_Ty>>();
+        l_NewEntity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
 
         return l_NewEntity;
     }
@@ -208,10 +208,10 @@ namespace SE::TensorOps
     {
         auto l_NewEntity = aScope.CreateNode();
 
-        auto &l_Value  = l_NewEntity.Add<sScalarNodeComponent>();
+        auto &l_Value  = l_NewEntity.Add<scalar_node_t>();
         l_Value.mValue = aValue;
 
-        l_NewEntity.Add<sTypeComponent>( TypeOf( l_Value.mValue ) );
+        l_NewEntity.Add<type_t>( TypeOf( l_Value.mValue ) );
 
         return l_NewEntity;
     }
@@ -642,7 +642,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Relayout( scope_t &aScope, graph_node_t const &aArray, sTensorShape &aNewLayout );
+    graph_node_t Relayout( scope_t &aScope, graph_node_t const &aArray, tensor_shape_t &aNewLayout );
 
     /// @brief Flatten the input @ref MultiTensor
     ///

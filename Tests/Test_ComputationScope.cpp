@@ -144,7 +144,7 @@ TEST_CASE( "VectorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = VectorValue<uint32_t>( lScope, lValue );
         lScope.Run( lNode );
 
-        REQUIRE( lNode.Get<sVectorBufferComponent>().mValue.SizeAs<uint32_t>() == lValue.size() );
+        REQUIRE( lNode.Get<vector_buffer_t>().mValue.SizeAs<uint32_t>() == lValue.size() );
     }
 
     SECTION( "Node initialization" )
@@ -154,7 +154,7 @@ TEST_CASE( "VectorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = VectorValue<uint32_t>( lScope, lValue );
         lScope.Run( lNode );
 
-        auto lBuffer2 = lNode.Get<sVectorBufferComponent>().mValue.Fetch<uint32_t>();
+        auto lBuffer2 = lNode.Get<vector_buffer_t>().mValue.Fetch<uint32_t>();
         REQUIRE( lBuffer2 == lValue );
     }
 }
@@ -166,7 +166,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Node allocation" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = (uint8_t)3;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -175,15 +175,15 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( int8_t ) ) );
         lScope.Run( lNode );
 
-        auto lBuffer1 = lNode.Get<sMultiTensorComponent>().mValue.BufferAt( 0 );
-        auto lBuffer2 = lNode.Get<sMultiTensorComponent>().mValue.BufferAt( 1 );
+        auto lBuffer1 = lNode.Get<multi_tensor_value_t>().mValue.BufferAt( 0 );
+        auto lBuffer2 = lNode.Get<multi_tensor_value_t>().mValue.BufferAt( 1 );
         REQUIRE( lBuffer1.Size() == Prod( lDim1 ) );
         REQUIRE( lBuffer2.Size() == Prod( lDim2 ) );
     }
 
     SECTION( "Constant initializer (float)" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = 3.0f;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -192,8 +192,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
-        std::vector<float> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( auto &v : lExpectedValues )
         {
             v = 3.0f;
@@ -203,7 +203,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Constant initializer (double)" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = (double)3.0f;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -212,8 +212,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
-        std::vector<double> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<double>() );
-        std::vector<double> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<double>();
+        std::vector<double> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<double>() );
+        std::vector<double> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<double>();
         for( auto &v : lExpectedValues )
         {
             v = 3.0f;
@@ -223,7 +223,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Constant initializer (uint8_t)" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = (uint8_t)3;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -232,8 +232,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint8_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint8_t>() );
-        std::vector<uint8_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<uint8_t>() );
+        std::vector<uint8_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         for( auto &v : lExpectedValues )
         {
             v = 3;
@@ -243,7 +243,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Constant initializer (uint16_t)" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = (uint16_t)256;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -252,8 +252,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint16_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint16_t>() );
-        std::vector<uint16_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint16_t>();
+        std::vector<uint16_t> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<uint16_t>() );
+        std::vector<uint16_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint16_t>();
         for( auto &v : lExpectedValues )
         {
             v = 256;
@@ -263,7 +263,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Constant initializer (uint32_t)" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = (uint32_t)1000000;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -272,8 +272,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint32_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint32_t>() );
-        std::vector<uint32_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+        std::vector<uint32_t> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<uint32_t>() );
+        std::vector<uint32_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
         for( auto &v : lExpectedValues )
         {
             v = 1000000;
@@ -283,7 +283,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Constant initializer (uint64_t)" )
     {
-        sConstantValueInitializerComponent lInitializer{};
+        constant_value_initializer_t lInitializer{};
         lInitializer.mValue = (uint64_t)10000000000;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -292,8 +292,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint64_t> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<uint64_t>() );
-        std::vector<uint64_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+        std::vector<uint64_t> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<uint64_t>() );
+        std::vector<uint64_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
         for( auto &v : lExpectedValues )
         {
             v = 10000000000;
@@ -303,7 +303,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Vector initializer (float)" )
     {
-        sVectorInitializerComponent lInitializer( std::vector<float>{ 4.0f, 5.0f } );
+        vector_initializer_t lInitializer( std::vector<float>{ 4.0f, 5.0f } );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -317,13 +317,13 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::fill( lExpectedValues1.begin(), lExpectedValues1.end(), 5.0f );
         lExpectedValues0.insert( lExpectedValues0.end(), lExpectedValues1.begin(), lExpectedValues1.end() );
 
-        std::vector<float> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues0 ) );
     }
 
     SECTION( "Vector initializer (double)" )
     {
-        sVectorInitializerComponent lInitializer( std::vector<double>{ 4.0, 5.0 } );
+        vector_initializer_t lInitializer( std::vector<double>{ 4.0, 5.0 } );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -336,14 +336,14 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::fill( lExpectedValues0.begin(), lExpectedValues0.end(), (double)4.0 );
         std::fill( lExpectedValues1.begin(), lExpectedValues1.end(), (double)5.0 );
         lExpectedValues0.insert( lExpectedValues0.end(), lExpectedValues1.begin(), lExpectedValues1.end() );
-        std::vector<double> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<double>();
+        std::vector<double> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<double>();
 
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues0 ) );
     }
 
     SECTION( "Vector initializer (uint8_t)" )
     {
-        sVectorInitializerComponent lInitializer( std::vector<uint8_t>{ 4, 5 } );
+        vector_initializer_t lInitializer( std::vector<uint8_t>{ 4, 5 } );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -357,13 +357,13 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::fill( lExpectedValues1.begin(), lExpectedValues1.end(), (uint8_t)5 );
         lExpectedValues0.insert( lExpectedValues0.end(), lExpectedValues1.begin(), lExpectedValues1.end() );
 
-        std::vector<uint8_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues0 ) );
     }
 
     SECTION( "Vector initializer (uint16_t)" )
     {
-        sVectorInitializerComponent lInitializer( std::vector<uint16_t>{ 256, 512 } );
+        vector_initializer_t lInitializer( std::vector<uint16_t>{ 256, 512 } );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -376,13 +376,13 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::fill( lExpectedValues0.begin(), lExpectedValues0.end(), (uint16_t)256 );
         std::fill( lExpectedValues1.begin(), lExpectedValues1.end(), (uint16_t)512 );
         lExpectedValues0.insert( lExpectedValues0.end(), lExpectedValues1.begin(), lExpectedValues1.end() );
-        std::vector<uint16_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint16_t>();
+        std::vector<uint16_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint16_t>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues0 ) );
     }
 
     SECTION( "Vector initializer (uint32_t)" )
     {
-        sVectorInitializerComponent lInitializer( std::vector<uint32_t>{ 1234567, 7654321 } );
+        vector_initializer_t lInitializer( std::vector<uint32_t>{ 1234567, 7654321 } );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -395,13 +395,13 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::fill( lExpectedValues0.begin(), lExpectedValues0.end(), (uint32_t)1234567 );
         std::fill( lExpectedValues1.begin(), lExpectedValues1.end(), (uint32_t)7654321 );
         lExpectedValues0.insert( lExpectedValues0.end(), lExpectedValues1.begin(), lExpectedValues1.end() );
-        std::vector<uint32_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+        std::vector<uint32_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues0 ) );
     }
 
     SECTION( "Vector initializer (uint64_t)" )
     {
-        sVectorInitializerComponent lInitializer( std::vector<uint64_t>{ 1234567890, 987654321 } );
+        vector_initializer_t lInitializer( std::vector<uint64_t>{ 1234567890, 987654321 } );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -414,7 +414,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::fill( lExpectedValues0.begin(), lExpectedValues0.end(), (uint64_t)1234567890 );
         std::fill( lExpectedValues1.begin(), lExpectedValues1.end(), (uint64_t)987654321 );
         lExpectedValues0.insert( lExpectedValues0.end(), lExpectedValues1.begin(), lExpectedValues1.end() );
-        std::vector<uint64_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+        std::vector<uint64_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues0 ) );
     }
 
@@ -422,7 +422,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
     {
         std::vector<float>        lExpectedValues{ 4.0f,  5.0f,  6.0f,  7.0f,  8.0f,  9.0f,  10.0f, 11.0f,
                                             12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f, 19.0f };
-        sDataInitializerComponent lInitializer( lExpectedValues );
+        data_initializer_t lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -430,7 +430,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
-        std::vector<float> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lExpectedValues, lTensorValues ) );
     }
 
@@ -438,7 +438,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
     {
         std::vector<double>       lExpectedValues{ 4.0,  5.0,  6.0,  7.0,  8.0,  9.0,  10.0, 11.0,
                                              12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0 };
-        sDataInitializerComponent lInitializer( lExpectedValues );
+        data_initializer_t lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -446,14 +446,14 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
-        std::vector<double> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<double>();
+        std::vector<double> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<double>();
         REQUIRE( VectorEqual( lExpectedValues, lTensorValues ) );
     }
 
     SECTION( "Data initializer (uint8_t)" )
     {
         std::vector<uint8_t>      lExpectedValues{ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-        sDataInitializerComponent lInitializer( lExpectedValues );
+        data_initializer_t lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -461,14 +461,14 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint8_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( VectorEqual( lExpectedValues, lTensorValues ) );
     }
 
     SECTION( "Data initializer (uint16_t)" )
     {
         std::vector<uint16_t>     lExpectedValues{ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-        sDataInitializerComponent lInitializer( lExpectedValues );
+        data_initializer_t lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -476,14 +476,14 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint16_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint16_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint16_t>();
+        std::vector<uint16_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint16_t>();
         REQUIRE( VectorEqual( lExpectedValues, lTensorValues ) );
     }
 
     SECTION( "Data initializer (uint32_t)" )
     {
         std::vector<uint32_t>     lExpectedValues{ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-        sDataInitializerComponent lInitializer( lExpectedValues );
+        data_initializer_t lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -491,14 +491,14 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint32_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint32_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+        std::vector<uint32_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
         REQUIRE( VectorEqual( lExpectedValues, lTensorValues ) );
     }
 
     SECTION( "Data initializer (uint64_t)" )
     {
         std::vector<uint64_t>     lExpectedValues{ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-        sDataInitializerComponent lInitializer( lExpectedValues );
+        data_initializer_t lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
@@ -506,13 +506,13 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
         lScope.Run( lNode );
 
-        std::vector<uint64_t> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+        std::vector<uint64_t> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
         REQUIRE( VectorEqual( lExpectedValues, lTensorValues ) );
     }
 
     SECTION( "Random uniform initializer (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -521,8 +521,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
-        std::vector<float> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( auto &v : lExpectedValues )
         {
             v = 0.0f;
@@ -532,7 +532,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Random uniform initializer (double)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT64;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -541,8 +541,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
-        std::vector<double> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<double>() );
-        std::vector<double> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<double>();
+        std::vector<double> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<double>() );
+        std::vector<double> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<double>();
         for( auto &v : lExpectedValues )
         {
             v = 0.0;
@@ -552,7 +552,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Random normal initializer (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -561,8 +561,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         lScope.Run( lNode );
 
-        std::vector<float> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( auto &v : lExpectedValues )
         {
             v = 0.0f;
@@ -572,7 +572,7 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Random normal initializer (double)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT64;
         lInitializer.mMean = (double)0.0;
         lInitializer.mStd  = (double)1.0;
@@ -583,8 +583,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( double ) ) );
         lScope.Run( lNode );
 
-        std::vector<double> lExpectedValues( lNode.Get<sMultiTensorComponent>().mValue.SizeAs<double>() );
-        std::vector<double> lTensorValues = lNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<double>();
+        std::vector<double> lExpectedValues( lNode.Get<multi_tensor_value_t>().mValue.SizeAs<double>() );
+        std::vector<double> lTensorValues = lNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<double>();
         for( auto &v : lExpectedValues )
         {
             v = 0.0;
@@ -600,7 +600,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Add scalar to array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -614,10 +614,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
         lScope.Run( { lResult0, lResult1 } );
 
-        std::vector<float> lLeftTensorValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lLeftTensorValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
         {
             lExpectedValues[i] = lLeftTensorValues[i] + 1.234f;
@@ -628,7 +628,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Add array to array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -640,10 +640,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
         lScope.Run( lResult0 );
 
-        std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lRightTensorValues = lOpSNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lRightTensorValues = lOpSNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
         {
             lExpectedValues[i] = lLeftTensorValues[i] + lRightTensorValues[i];
@@ -653,7 +653,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Add array to vector (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -667,10 +667,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         lScope.Run( { lResult0, lResult1 } );
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] + lRightTensorValues;
@@ -679,10 +679,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] + lRightTensorValues;
@@ -691,10 +691,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] + lRightTensorValues;
@@ -703,10 +703,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] + lRightTensorValues;
@@ -717,7 +717,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Multiply scalar by array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -729,10 +729,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult1 = Multiply( lScope, lOpSNode, lOpNode );
         lScope.Run( { lResult0, lResult1 } );
 
-        std::vector<float> lLeftTensorValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lLeftTensorValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
         {
             lExpectedValues[i] = lLeftTensorValues[i] * 1.234f;
@@ -743,7 +743,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Multiply array by array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -754,10 +754,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Multiply( lScope, lOpNode, lOpSNode );
         lScope.Run( lResult0 );
 
-        std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lRightTensorValues = lOpSNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lRightTensorValues = lOpSNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
         {
             lExpectedValues[i] = lLeftTensorValues[i] * lRightTensorValues[i];
@@ -767,7 +767,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Multiply array by vector (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -781,10 +781,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         lScope.Run( { lResult0, lResult1 } );
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] * lRightTensorValues;
@@ -793,10 +793,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] * lRightTensorValues;
@@ -805,10 +805,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] * lRightTensorValues;
@@ -817,10 +817,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] * lRightTensorValues;
@@ -831,7 +831,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Subtract scalar from array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -843,11 +843,11 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult1 = Subtract( lScope, lOpSNode, lOpNode );
         lScope.Run( { lResult0, lResult1 } );
 
-        std::vector<float> lLeftTensorValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues0( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lExpectedValues1( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lLeftTensorValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues0( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lExpectedValues1( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
         {
             lExpectedValues0[i] = lLeftTensorValues[i] - 1.234f;
@@ -859,7 +859,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Subtract vector from array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -873,10 +873,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         lScope.Run( { lResult0, lResult1 } );
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] - lRightTensorValues;
@@ -885,10 +885,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] - lRightTensorValues;
@@ -897,10 +897,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lRightTensorValues - lLeftTensorValues[i];
@@ -909,10 +909,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lRightTensorValues - lLeftTensorValues[i];
@@ -923,7 +923,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Subtract array from array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -934,10 +934,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Subtract( lScope, lOpNode, lOpSNode );
         lScope.Run( lResult0 );
 
-        std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lRightTensorValues = lOpSNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lRightTensorValues = lOpSNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
         {
             lExpectedValues[i] = lLeftTensorValues[i] - lRightTensorValues[i];
@@ -947,7 +947,7 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Divide vector by array (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -961,10 +961,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         lScope.Run( { lResult0, lResult1 } );
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] / lRightTensorValues;
@@ -973,10 +973,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lLeftTensorValues[i] / lRightTensorValues;
@@ -985,10 +985,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             float              lRightTensorValues = std::get<float>( lConstants[0] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lRightTensorValues / lLeftTensorValues[i];
@@ -997,10 +997,10 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
         }
 
         {
-            std::vector<float> lLeftTensorValues  = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lLeftTensorValues  = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             float              lRightTensorValues = std::get<float>( lConstants[1] );
             std::vector<float> lExpectedValues( lLeftTensorValues.size() );
-            std::vector<float> lTensorValues = lResult1.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lTensorValues = lResult1.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             for( uint32_t i = 0; i < lLeftTensorValues.size(); i++ )
             {
                 lExpectedValues[i] = lRightTensorValues / lLeftTensorValues[i];
@@ -1041,20 +1041,20 @@ TEMPLATE_TEST_CASE( "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t,
     std::vector<TestType> lInputValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lValues1 ), ConcatenateVectors( lValues2 ), ConcatenateVectors( lValues3 ) } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Divide( lScope, lInputTensor, lScalarNode );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1400 } );
     REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 700 } );
     REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 200 } );
 
-    std::vector<TestType> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues );
 }
 
@@ -1069,13 +1069,13 @@ TEST_CASE( "Tensor AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues01 = RandomBool( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<uint8_t> lValues1  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues11 = RandomBool( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
-    sDataInitializerComponent lInitializer1( lValues1 );
+    data_initializer_t lInitializer1( lValues1 );
     auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = And( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1087,10 +1087,10 @@ TEST_CASE( "Tensor AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
     {
         lExpectedValues[i] = ( lValues0[i] && lValues1[i] );
     }
-    std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues0 == lExpectedValues );
 
-    std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues1 == lExpectedValues );
 }
 
@@ -1107,7 +1107,7 @@ TEST_CASE( "Tensor AND Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
@@ -1131,10 +1131,10 @@ TEST_CASE( "Tensor AND Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lExpectedValues0.insert( lExpectedValues0.end(), ExpectedValues1.begin(), ExpectedValues1.end() );
 
-    std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues0 == lExpectedValues0 );
 
-    std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues1 == lExpectedValues0 );
 }
 
@@ -1151,7 +1151,7 @@ TEST_CASE( "Tensor AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     {
@@ -1164,10 +1164,10 @@ TEST_CASE( "Tensor AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint8_t> lExpectedValues( lValues0.size() );
         std::fill( lExpectedValues.begin(), lExpectedValues.end(), static_cast<uint8_t>( 0 ) );
 
-        std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues0 == lExpectedValues );
 
-        std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues1 == lExpectedValues );
     }
 
@@ -1185,10 +1185,10 @@ TEST_CASE( "Tensor AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues[i] = lValues0[i];
         }
 
-        std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues0 == lExpectedValues );
 
-        std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues1 == lExpectedValues );
     }
 }
@@ -1204,13 +1204,13 @@ TEST_CASE( "Tensor OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues01 = RandomBool( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<uint8_t> lValues1  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues11 = RandomBool( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
-    sDataInitializerComponent lInitializer1( lValues1 );
+    data_initializer_t lInitializer1( lValues1 );
     auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = Or( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1223,10 +1223,10 @@ TEST_CASE( "Tensor OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
         lExpectedValues[i] = ( lValues0[i] || lValues1[i] );
     }
 
-    std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues0 == lExpectedValues );
 
-    std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues1 == lExpectedValues );
 }
 
@@ -1243,7 +1243,7 @@ TEST_CASE( "Tensor OR Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint8_t>( 0 ), static_cast<uint8_t>( 1 ) };
@@ -1267,10 +1267,10 @@ TEST_CASE( "Tensor OR Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lExpectedValues0.insert( lExpectedValues0.end(), ExpectedValues1.begin(), ExpectedValues1.end() );
 
-    std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues0 == lExpectedValues0 );
 
-    std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lTensorValues1 == lExpectedValues0 );
 }
 
@@ -1287,7 +1287,7 @@ TEST_CASE( "Tensor OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     {
@@ -1300,10 +1300,10 @@ TEST_CASE( "Tensor OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint8_t> lExpectedValues( lValues0.size() );
         std::fill( lExpectedValues.begin(), lExpectedValues.end(), static_cast<uint8_t>( 1 ) );
 
-        std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues0 == lExpectedValues );
 
-        std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues1 == lExpectedValues );
     }
 
@@ -1321,10 +1321,10 @@ TEST_CASE( "Tensor OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues[i] = lValues0[i];
         }
 
-        std::vector<uint8_t> lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues0 == lExpectedValues );
 
-        std::vector<uint8_t> lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+        std::vector<uint8_t> lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
         REQUIRE( lTensorValues1 == lExpectedValues );
     }
 }
@@ -1340,13 +1340,13 @@ TEST_CASE( "NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0  = RandomBool( 29 * 12 * 23 );
     std::vector<uint8_t> lValues01 = RandomBool( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = Not( lScope, lOpNodeLeft );
     lScope.Run( lResult0 );
 
-    std::vector<uint8_t> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues( lValues0.size() );
     for( uint32_t i = 0; i < lValues0.size(); i++ )
     {
@@ -1366,13 +1366,13 @@ TEST_CASE( "Tensor BITWISE_AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lValues0  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues01 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lValues1  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues11 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
-    sDataInitializerComponent lInitializer1( lValues1 );
+    data_initializer_t lInitializer1( lValues1 );
     auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = BitwiseAnd( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1384,10 +1384,10 @@ TEST_CASE( "Tensor BITWISE_AND Tensor", "[CORE_COMPUTATION_GRAPH]" )
     {
         lExpectedValues[i] = ( lValues0[i] & lValues1[i] );
     }
-    auto lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues0 == lExpectedValues );
 
-    auto lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues1 == lExpectedValues );
 }
 
@@ -1404,7 +1404,7 @@ TEST_CASE( "Tensor BITWISE_AND Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
@@ -1428,10 +1428,10 @@ TEST_CASE( "Tensor BITWISE_AND Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lExpectedValues0.insert( lExpectedValues0.end(), ExpectedValues1.begin(), ExpectedValues1.end() );
 
-    auto lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues0 == lExpectedValues0 );
 
-    auto lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues1 == lExpectedValues0 );
 }
 
@@ -1448,7 +1448,7 @@ TEST_CASE( "Tensor BITWISE_AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lOpNodeRight = ConstantScalarValue( lScope, static_cast<uint64_t>( 0x1b34d765ef12acac ) );
@@ -1463,10 +1463,10 @@ TEST_CASE( "Tensor BITWISE_AND Scalar", "[CORE_COMPUTATION_GRAPH]" )
         lExpectedValues[i] = ( lValues0[i] & static_cast<uint64_t>( 0x1b34d765ef12acac ) );
     }
 
-    auto lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues0 == lExpectedValues );
 
-    auto lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues1 == lExpectedValues );
 }
 
@@ -1481,13 +1481,13 @@ TEST_CASE( "Tensor BITWISE_OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lValues0  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues01 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lValues1  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues11 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues1.insert( lValues1.end(), lValues11.begin(), lValues11.end() );
-    sDataInitializerComponent lInitializer1( lValues1 );
+    data_initializer_t lInitializer1( lValues1 );
     auto lOpNodeRight = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = BitwiseOr( lScope, lOpNodeLeft, lOpNodeRight );
@@ -1500,10 +1500,10 @@ TEST_CASE( "Tensor BITWISE_OR Tensor", "[CORE_COMPUTATION_GRAPH]" )
         lExpectedValues[i] = ( lValues0[i] | lValues1[i] );
     }
 
-    auto lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues0 == lExpectedValues );
 
-    auto lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues1 == lExpectedValues );
 }
 
@@ -1520,7 +1520,7 @@ TEST_CASE( "Tensor BITWISE_OR Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ static_cast<uint64_t>( 0x1b34d765ef12acac ), static_cast<uint64_t>( 0x1b34d065ef120cfc ) };
@@ -1544,10 +1544,10 @@ TEST_CASE( "Tensor BITWISE_OR Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lExpectedValues0.insert( lExpectedValues0.end(), ExpectedValues1.begin(), ExpectedValues1.end() );
 
-    auto lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues0 == lExpectedValues0 );
 
-    auto lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues1 == lExpectedValues0 );
 }
 
@@ -1564,7 +1564,7 @@ TEST_CASE( "Tensor BITWISE_OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lValues0;
     lValues0.insert( lValues0.end(), Values00.begin(), Values00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lOpNodeRight = ConstantScalarValue( lScope, static_cast<uint64_t>( 0x1b34d765ef12acac ) );
@@ -1579,10 +1579,10 @@ TEST_CASE( "Tensor BITWISE_OR Scalar", "[CORE_COMPUTATION_GRAPH]" )
         lExpectedValues[i] = ( lValues0[i] | static_cast<uint64_t>( 0x1b34d765ef12acac ) );
     }
 
-    auto lTensorValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues0 == lExpectedValues );
 
-    auto lTensorValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto lTensorValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lTensorValues1 == lExpectedValues );
 }
 
@@ -1597,13 +1597,13 @@ TEST_CASE( "BITWISE_NOT Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lValues0  = RandomNumber<uint64_t>( 29 * 12 * 23 );
     auto lValues01 = RandomNumber<uint64_t>( 33 * 14 * 13 );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lOpNodeLeft = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = BitwiseNot( lScope, lOpNodeLeft );
     lScope.Run( lResult0 );
 
-    auto                  lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    auto                  lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     std::vector<uint64_t> lExpectedValues( lValues0.size() );
     for( uint32_t i = 0; i < lValues0.size(); i++ )
     {
@@ -1619,7 +1619,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Affine transform tensor/tensor/tensor (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 12 };
@@ -1632,22 +1632,22 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = AffineTransform( lScope, lNodeA, lNodeX, lNodeB );
         lScope.Run( lResult0 );
 
-        std::vector<float> lValues_A = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lValues_X = lNodeX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lValues_B = lNodeB.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lNodeX.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
+        std::vector<float> lValues_A = lNodeA.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lValues_X = lNodeX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lValues_B = lNodeB.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lNodeX.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
         for( uint32_t i = 0; i < lValues_X.size(); i++ )
         {
             lExpectedValues[i] = lValues_X[i] * lValues_A[i] + lValues_B[i];
         }
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform tensor/tensor/vector (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 12 };
@@ -1668,9 +1668,9 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lBValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lA    = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lA    = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1679,13 +1679,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform tensor/tensor/scalar (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 12 };
@@ -1700,11 +1700,11 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         lScope.Run( lResult0 );
 
         std::vector<float> lExpectedValues = {};
-        for( uint32_t i = 0; i < lNodeX.Get<sMultiTensorComponent>().Shape().CountLayers(); i++ )
+        for( uint32_t i = 0; i < lNodeX.Get<multi_tensor_value_t>().Shape().CountLayers(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lA    = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lA    = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1713,13 +1713,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform vector/tensor/tensor (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
@@ -1746,9 +1746,9 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
-            std::vector<float> lB    = lNodeB.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
+            std::vector<float> lB    = lNodeB.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1757,13 +1757,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform vector/tensor/vector (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
@@ -1790,8 +1790,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1800,13 +1800,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform vector/tensor/scalar (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
@@ -1834,8 +1834,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1844,13 +1844,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform scalar/tensor/tensor (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
@@ -1878,9 +1878,9 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
-            std::vector<float> lB    = lNodeB.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
+            std::vector<float> lB    = lNodeB.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1889,13 +1889,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform scalar/tensor/vector (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 2 };
@@ -1923,8 +1923,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1933,13 +1933,13 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
     SECTION( "Affine transform scalar/tensor/scalar (float)" )
     {
-        sRandomUniformInitializerComponent lInitializer{};
+        random_uniform_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 8, 22 };
@@ -1968,8 +1968,8 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
-            std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
             {
@@ -1978,7 +1978,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 }
@@ -1990,7 +1990,7 @@ TEST_CASE( "Mix node", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Mix tensors (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -2003,15 +2003,15 @@ TEST_CASE( "Mix node", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Mix( lScope, lNodeA, lNodeB, lNode_T );
         lScope.Run( lResult0 );
 
-        std::vector<float> lValues_A = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lValues_B = lNodeB.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lValues_T = lNode_T.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lExpectedValues( lNodeA.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
+        std::vector<float> lValues_A = lNodeA.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lValues_B = lNodeB.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lValues_T = lNode_T.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lExpectedValues( lNodeA.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
         for( uint32_t i = 0; i < lValues_A.size(); i++ )
         {
             lExpectedValues[i] = ( 1.0f - lValues_T[i] ) * lValues_A[i] + lValues_T[i] * lValues_B[i];
         }
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
@@ -2024,7 +2024,7 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Linear space allocation (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -2037,9 +2037,9 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto &lResult0 = LinearSpace( lScope, lNodeA, lNodeB, lNode_S );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 32 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 64 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 32 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 64 } );
     }
 
     SECTION( "Linear space (float)" )
@@ -2048,12 +2048,12 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        sConstantValueInitializerComponent lInitializer0{};
+        constant_value_initializer_t lInitializer0{};
         lInitializer0.mValue = 0.5f;
 
         auto lNodeA = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
-        sConstantValueInitializerComponent lInitializer1{};
+        constant_value_initializer_t lInitializer1{};
         lInitializer1.mValue = 1.5f;
         auto lNodeB          = MultiTensorValue( lScope, lInitializer1, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
 
@@ -2065,8 +2065,8 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
 
         {
             constexpr uint32_t lSubdivisions = 32;
-            std::vector<float> lValues_A     = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-            std::vector<float> lValues_B     = lNodeB.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lValues_A     = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lValues_B     = lNodeB.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             std::vector<float> lExpectedValues1( Prod( lDim1 ) * lSubdivisions );
             uint32_t           x = 0;
             uint32_t           y = 0;
@@ -2083,14 +2083,14 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
                     x++;
                 }
             }
-            std::vector<float> lB1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lB1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             REQUIRE( VectorEqual( lB1, lExpectedValues1 ) );
         }
 
         {
             constexpr uint32_t lSubdivisions = 64;
-            std::vector<float> lValues_A     = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-            std::vector<float> lValues_B     = lNodeB.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lValues_A     = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lValues_B     = lNodeB.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             std::vector<float> lExpectedValues1( Prod( lDim2 ) * lSubdivisions );
             uint32_t           x = 0;
             uint32_t           y = 0;
@@ -2107,7 +2107,7 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
                     x++;
                 }
             }
-            std::vector<float> lB1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lB1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             REQUIRE( VectorEqual( lB1, lExpectedValues1 ) );
         }
     }
@@ -2129,17 +2129,17 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode_D = ScalarVectorValue( lScope, scalar_type_t::FLOAT32, lDValues );
 
         auto lResult0 = ARange( lScope, lNodeA, lNodeB, lNode_D );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 5 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 5 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[0] - lAValues[0] ) / lDValues[0] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[1] - lAValues[1] ) / lDValues[1] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[2] - lAValues[2] ) / lDValues[2] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[3] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[3] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[3] - lAValues[3] ) / lDValues[3] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[4] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[4] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[4] - lAValues[4] ) / lDValues[4] ) ) } );
     }
 
@@ -2170,7 +2170,7 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 
@@ -2201,7 +2201,7 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
             lExpectedValues.insert( lExpectedValues.end(), lValues.begin(), lValues.end() );
         }
 
-        std::vector<float> lTensorValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues, lExpectedValues ) );
     }
 }
@@ -2213,7 +2213,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Repeat node allocation (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -2225,9 +2225,9 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto lResult0 = Repeat( lScope, lNodeA, lNode_S );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 3 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 5 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 3 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 5 } );
     }
 
     SECTION( "Repeat (float)" )
@@ -2235,7 +2235,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        sRandomNormalInitializerComponent lInitializer0{};
+        random_normal_initializer_t lInitializer0{};
         lInitializer0.mType = scalar_type_t::FLOAT32;
 
         auto lNodeA = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
@@ -2248,7 +2248,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
 
         {
             constexpr uint32_t lSubdivisions = 3;
-            std::vector<float> lValues_A     = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lValues_A     = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             std::vector<float> lExpectedValues1( Prod( lDim1 ) * lSubdivisions );
             uint32_t           x = 0;
             uint32_t           y = 0;
@@ -2264,13 +2264,13 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
                     x++;
                 }
             }
-            std::vector<float> lB1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lB1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             REQUIRE( VectorEqual( lB1, lExpectedValues1 ) );
         }
 
         {
             constexpr uint32_t lSubdivisions = 5;
-            std::vector<float> lValues_A     = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lValues_A     = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             std::vector<float> lExpectedValues1( Prod( lDim2 ) * lSubdivisions );
             uint32_t           x = 0;
             uint32_t           y = 0;
@@ -2286,7 +2286,7 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
                     x++;
                 }
             }
-            std::vector<float> lB1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lB1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             REQUIRE( VectorEqual( lB1, lExpectedValues1 ) );
         }
     }
@@ -2299,7 +2299,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Tile node allocation (float)" )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        random_normal_initializer_t lInitializer{};
         lInitializer.mType = scalar_type_t::FLOAT32;
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -2311,9 +2311,9 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto lResult0 = Tile( lScope, lNodeA, lNode_S );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 3, 2, 2 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 5, 3, 4 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 3, 2, 2 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 5, 3, 4 } );
     }
 
     SECTION( "Tile (float)" )
@@ -2321,7 +2321,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        sRandomNormalInitializerComponent lInitializer0{};
+        random_normal_initializer_t lInitializer0{};
         lInitializer0.mType = scalar_type_t::FLOAT32;
 
         auto lNodeA = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
@@ -2334,7 +2334,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
 
         {
             constexpr uint32_t lSubdivisions = 7;
-            std::vector<float> lValues_A     = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lValues_A     = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             std::vector<float> lExpectedValues1( Prod( lDim1 ) * lSubdivisions );
             uint32_t           x = 0;
             uint32_t           y = 0;
@@ -2346,13 +2346,13 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
                     y++;
                 }
             }
-            std::vector<float> lB1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+            std::vector<float> lB1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
             REQUIRE( VectorEqual( lB1, lExpectedValues1 ) );
         }
 
         {
             constexpr uint32_t lSubdivisions = 11;
-            std::vector<float> lValues_A     = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lValues_A     = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             std::vector<float> lExpectedValues1( Prod( lDim2 ) * lSubdivisions );
             uint32_t           x = 0;
             uint32_t           y = 0;
@@ -2364,7 +2364,7 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
                     y++;
                 }
             }
-            std::vector<float> lB1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+            std::vector<float> lB1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
             REQUIRE( VectorEqual( lB1, lExpectedValues1 ) );
         }
     }
@@ -2375,7 +2375,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomUniformInitializerComponent lInitializer{};
+    random_uniform_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 5, 23, 42 };
@@ -2386,7 +2386,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             MultiTensorValue( lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
+        REQUIRE( lResult0.Get<type_t>().mValue == lNodeA.Get<type_t>().mValue );
     }
 
     SECTION( "Expanding multi-tensors gives the correct dimension" )
@@ -2395,12 +2395,12 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             MultiTensorValue( lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == ( lDim1.size() - 1 ) );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == lDim1[0] );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[3] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == ( lDim1.size() - 1 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == lDim1[0] );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[3] == std::vector<uint32_t>{ 23, 42 } );
     }
 
     SECTION( "Expanding multi-tensors does not change values" )
@@ -2411,8 +2411,8 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
         lScope.Run( lResult0 );
 
-        std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues0 = lNodeA.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues0, lTensorValues0 ) );
     }
 }
@@ -2422,7 +2422,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomUniformInitializerComponent lInitializer{};
+    random_uniform_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 23, 42 };
@@ -2436,7 +2436,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
                                           tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
+        REQUIRE( lResult0.Get<type_t>().mValue == lNodeA.Get<type_t>().mValue );
     }
 
     SECTION( "Collapsing multi-tensors gives the correct dimension" )
@@ -2445,9 +2445,9 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 4, 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 4, 23, 42 } );
     }
 
     SECTION( "Collapsing multi-tensors does not change values" )
@@ -2458,8 +2458,8 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
         lScope.Run( lResult0 );
 
-        std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues0 = lNodeA.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues0, lTensorValues0 ) );
     }
 }
@@ -2469,7 +2469,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomUniformInitializerComponent lInitializer{};
+    random_uniform_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 21, 42 };
@@ -2486,7 +2486,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
+        REQUIRE( lResult0.Get<type_t>().mValue == lNodeA.Get<type_t>().mValue );
     }
 
     SECTION( "Reshaping multi-tensors gives the correct dimension" )
@@ -2500,11 +2500,11 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == lODim1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == lODim2 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2] == lODim3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == lODim1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == lODim2 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2] == lODim3 );
     }
 
     SECTION( "Reshaping multi-tensors does not change values" )
@@ -2518,8 +2518,8 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
-        std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues0 = lNodeA.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues0, lTensorValues0 ) );
     }
 }
@@ -2529,7 +2529,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomUniformInitializerComponent lInitializer{};
+    random_uniform_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 21, 42 };
@@ -2541,7 +2541,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lNodeA   = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Flatten( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
+        REQUIRE( lResult0.Get<type_t>().mValue == lNodeA.Get<type_t>().mValue );
     }
 
     SECTION( "Flattening multi-tensors gives the correct dimension" )
@@ -2555,11 +2555,11 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Flatten( lScope, lNodeA );
         lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0][0] == Prod( lODim1 ) );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1][0] == Prod( lODim2 ) );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2][0] == Prod( lODim3 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0][0] == Prod( lODim1 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1][0] == Prod( lODim2 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2][0] == Prod( lODim3 ) );
     }
 
     SECTION( "Flattening multi-tensors does not change values" )
@@ -2573,8 +2573,8 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Flatten( lScope, lNodeA );
         lScope.Run( lResult0 );
 
-        std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        std::vector<float> lTensorValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues0 = lNodeA.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+        std::vector<float> lTensorValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
         REQUIRE( VectorEqual( lTensorValues0, lTensorValues0 ) );
     }
 }
@@ -2594,7 +2594,7 @@ TEST_CASE( "InInterval Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2607,12 +2607,12 @@ TEST_CASE( "InInterval Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lLowerBoundValues = lLowerBound.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lUpperBoundValues = lUpperBound.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lLowerBoundValues = lLowerBound.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lUpperBoundValues = lUpperBound.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
-    std::vector<uint8_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
-    std::vector<uint8_t> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
+    std::vector<uint8_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
 
     for( uint32_t i = 0; i < lExpectedValues.size(); i++ )
     {
@@ -2626,7 +2626,7 @@ TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2641,17 +2641,17 @@ TEST_CASE( "InInterval Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<float>   lLowerBoundValues0 = lLowerBound.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0     = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lXValues0          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float>   lLowerBoundValues0 = lLowerBound.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0     = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lLowerBoundValues0[i] <= lXValues0[i] ) && ( lXValues0[i] <= std::get<float>( lConstants[0] ) );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lXValues1          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<float>   lLowerBoundValues1 = lLowerBound.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1     = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lXValues1          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float>   lLowerBoundValues1 = lLowerBound.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1     = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( lLowerBoundValues1[i] <= lXValues1[i] ) && ( lXValues1[i] <= std::get<float>( lConstants[1] ) );
@@ -2663,7 +2663,7 @@ TEST_CASE( "InInterval Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2677,9 +2677,9 @@ TEST_CASE( "InInterval Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float>   lLowerBoundValues0 = lLowerBound.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0     = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float>   lLowerBoundValues0 = lLowerBound.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0     = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lLowerBoundValues0[i] <= lXValues0[i] ) && ( lXValues0[i] <= 0.245f );
@@ -2691,7 +2691,7 @@ TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2706,17 +2706,17 @@ TEST_CASE( "InInterval Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<float>   lUpperBoundValues0 = lUpperBound.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0     = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lXValues0          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float>   lUpperBoundValues0 = lUpperBound.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0     = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( std::get<float>( lConstants[0] ) <= lXValues0[i] ) && ( lXValues0[i] <= lUpperBoundValues0[i] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lXValues1          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<float>   lUpperBoundValues1 = lUpperBound.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1     = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lXValues1          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float>   lUpperBoundValues1 = lUpperBound.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1     = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( std::get<float>( lConstants[1] ) <= lXValues1[i] ) && ( lXValues1[i] <= lUpperBoundValues1[i] );
@@ -2728,7 +2728,7 @@ TEST_CASE( "InInterval Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2742,9 +2742,9 @@ TEST_CASE( "InInterval Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0          = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float>   lUpperBoundValues0 = lUpperBound.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0     = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0          = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float>   lUpperBoundValues0 = lUpperBound.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0     = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( 0.245f <= lXValues0[i] ) && ( lXValues0[i] <= lUpperBoundValues0[i] );
@@ -2756,7 +2756,7 @@ TEST_CASE( "InInterval Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2770,8 +2770,8 @@ TEST_CASE( "InInterval Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0      = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( 0.245f <= lXValues0[i] ) && ( lXValues0[i] <= 0.75f );
@@ -2783,7 +2783,7 @@ TEST_CASE( "LessThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2795,10 +2795,10 @@ TEST_CASE( "LessThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = LessThan( lScope, lX, lY );
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lYValues = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lYValues = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
-    std::vector<uint8_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues( lResultValues.size() );
 
     for( uint32_t i = 0; i < lExpectedValues.size(); i++ )
@@ -2813,7 +2813,7 @@ TEST_CASE( "LessThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2827,15 +2827,15 @@ TEST_CASE( "LessThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] < std::get<float>( lConstants[0] ) );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lXValues1      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lXValues1      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( lXValues1[i] < std::get<float>( lConstants[1] ) );
@@ -2847,7 +2847,7 @@ TEST_CASE( "LessThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2860,8 +2860,8 @@ TEST_CASE( "LessThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] < 0.245f );
@@ -2873,7 +2873,7 @@ TEST_CASE( "LessThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2887,15 +2887,15 @@ TEST_CASE( "LessThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( std::get<float>( lConstants[0] ) < lYValues0[i] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lYValues1      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lYValues1      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( std::get<float>( lConstants[1] ) < lYValues1[i] );
@@ -2907,7 +2907,7 @@ TEST_CASE( "LessThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2920,8 +2920,8 @@ TEST_CASE( "LessThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( 0.245f < lYValues0[i] );
@@ -2933,7 +2933,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2945,10 +2945,10 @@ TEST_CASE( "LessThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = LessThanOrEqual( lScope, lX, lY );
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lYValues = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lYValues = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
-    std::vector<uint8_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues( lResultValues.size() );
 
     for( uint32_t i = 0; i < lExpectedValues.size(); i++ )
@@ -2963,7 +2963,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -2977,15 +2977,15 @@ TEST_CASE( "LessThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] <= std::get<float>( lConstants[0] ) );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lXValues1      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lXValues1      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( lXValues1[i] <= std::get<float>( lConstants[1] ) );
@@ -2997,7 +2997,7 @@ TEST_CASE( "LessThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3010,8 +3010,8 @@ TEST_CASE( "LessThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] <= 0.245f );
@@ -3023,7 +3023,7 @@ TEST_CASE( "LessThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3037,15 +3037,15 @@ TEST_CASE( "LessThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( std::get<float>( lConstants[0] ) <= lYValues0[i] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lYValues1      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lYValues1      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( std::get<float>( lConstants[1] ) <= lYValues1[i] );
@@ -3057,7 +3057,7 @@ TEST_CASE( "LessThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3070,8 +3070,8 @@ TEST_CASE( "LessThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( 0.245f <= lYValues0[i] );
@@ -3083,7 +3083,7 @@ TEST_CASE( "GreaterThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3095,10 +3095,10 @@ TEST_CASE( "GreaterThan Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = GreaterThan( lScope, lX, lY );
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lYValues = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lYValues = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
-    std::vector<uint8_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues( lResultValues.size() );
 
     for( uint32_t i = 0; i < lExpectedValues.size(); i++ )
@@ -3113,7 +3113,7 @@ TEST_CASE( "GreaterThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3127,15 +3127,15 @@ TEST_CASE( "GreaterThan Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] > std::get<float>( lConstants[0] ) );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lXValues1      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lXValues1      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( lXValues1[i] > std::get<float>( lConstants[1] ) );
@@ -3147,7 +3147,7 @@ TEST_CASE( "GreaterThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3160,8 +3160,8 @@ TEST_CASE( "GreaterThan Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] > 0.245f );
@@ -3173,7 +3173,7 @@ TEST_CASE( "GreaterThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3187,15 +3187,15 @@ TEST_CASE( "GreaterThan Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( std::get<float>( lConstants[0] ) > lYValues0[i] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lYValues1      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lYValues1      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( std::get<float>( lConstants[1] ) > lYValues1[i] );
@@ -3207,7 +3207,7 @@ TEST_CASE( "GreaterThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3220,8 +3220,8 @@ TEST_CASE( "GreaterThan Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( 0.245f > lYValues0[i] );
@@ -3233,7 +3233,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3245,10 +3245,10 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = GreaterThanOrEqual( lScope, lX, lY );
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lYValues = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lYValues = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
-    std::vector<uint8_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues( lResultValues.size() );
 
     for( uint32_t i = 0; i < lExpectedValues.size(); i++ )
@@ -3263,7 +3263,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3277,15 +3277,15 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] >= std::get<float>( lConstants[0] ) );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lXValues1      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lXValues1      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( lXValues1[i] >= std::get<float>( lConstants[1] ) );
@@ -3297,7 +3297,7 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3310,8 +3310,8 @@ TEST_CASE( "GreaterThanOrEqual Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( lXValues0[i] >= 0.245f );
@@ -3323,7 +3323,7 @@ TEST_CASE( "GreaterThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3337,15 +3337,15 @@ TEST_CASE( "GreaterThanOrEqual Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 0 );
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 0 );
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( std::get<float>( lConstants[0] ) >= lYValues0[i] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float>   lYValues1      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<uint8_t> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<uint8_t>( 1 );
+    std::vector<float>   lYValues1      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<uint8_t> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<uint8_t>( 1 );
     std::vector<uint8_t> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = ( std::get<float>( lConstants[1] ) >= lYValues1[i] );
@@ -3357,7 +3357,7 @@ TEST_CASE( "GreaterThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3370,8 +3370,8 @@ TEST_CASE( "GreaterThanOrEqual Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float>   lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<float>   lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     std::vector<uint8_t> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = ( 0.245f >= lYValues0[i] );
@@ -3383,14 +3383,14 @@ TEST_CASE( "Where Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
@@ -3399,10 +3399,10 @@ TEST_CASE( "Where Tensor_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Where( lScope, lCondition, lX, lY );
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lYValues = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lYValues = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
 
-    std::vector<float> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     std::vector<float> lExpectedValues( lResultValues.size() );
 
     for( uint32_t i = 0; i < lExpectedValues.size(); i++ )
@@ -3417,7 +3417,7 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3428,7 +3428,7 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
@@ -3440,15 +3440,15 @@ TEST_CASE( "Where Tensor_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues00[i] ? lXValues0[i] : std::get<float>( lConstants[0] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float> lXValues1      = lX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<float> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lXValues1      = lX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
     std::vector<float> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = lValues01[i] ? lXValues1[i] : std::get<float>( lConstants[1] );
@@ -3460,14 +3460,14 @@ TEST_CASE( "Where Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = MultiTensorValue( lScope, lInitializer, tensor_shape_t( { lDim1, lDim2 }, sizeof( float ) ) );
@@ -3477,8 +3477,8 @@ TEST_CASE( "Where Tensor_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues0      = lX.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lXValues0      = lX.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues0[i] ? lXValues0[i] : 0.245f;
@@ -3490,7 +3490,7 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3502,7 +3502,7 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
 
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
@@ -3515,15 +3515,15 @@ TEST_CASE( "Where Vector_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lXValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lXValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues00[i] ? std::get<float>( lConstants[0] ) : lXValues0[i];
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float> lXValues1      = lY.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
-    std::vector<float> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lXValues1      = lY.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
     std::vector<float> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = lValues01[i] ? std::get<float>( lConstants[1] ) : lXValues1[i];
@@ -3535,7 +3535,7 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3546,7 +3546,7 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
 
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
@@ -3560,13 +3560,13 @@ TEST_CASE( "Where Vector_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues00[i] ? std::get<float>( lConstants0[0] ) : std::get<float>( lConstants1[0] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
     std::vector<float> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = lValues01[i] ? std::get<float>( lConstants0[1] ) : std::get<float>( lConstants1[1] );
@@ -3578,7 +3578,7 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3589,7 +3589,7 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     std::vector<scalar_value_t> lConstants{ 0.2345f, 0.345f };
@@ -3600,13 +3600,13 @@ TEST_CASE( "Where Vector_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues00[i] ? std::get<float>( lConstants[0] ) : 0.245f;
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
     std::vector<float> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = lValues01[i] ? std::get<float>( lConstants[1] ) : 0.245f;
@@ -3618,14 +3618,14 @@ TEST_CASE( "Where Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
@@ -3635,8 +3635,8 @@ TEST_CASE( "Where Scalar_Tensor", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lYValues0      = lY.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lYValues0      = lY.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues0[i] ? 0.245f : lYValues0[i];
@@ -3648,7 +3648,7 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
@@ -3659,7 +3659,7 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lValues0;
     lValues0.insert( lValues0.end(), lValues00.begin(), lValues00.end() );
     lValues0.insert( lValues0.end(), lValues01.begin(), lValues01.end() );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = ConstantScalarValue( lScope, 0.245f );
@@ -3671,13 +3671,13 @@ TEST_CASE( "Where Scalar_Vector", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 0 );
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 0 );
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues00[i] ? 0.245f : std::get<float>( lConstants[0] );
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float> lResultValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( 1 );
+    std::vector<float> lResultValues1 = lResult0.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( 1 );
     std::vector<float> lExpectedValues1( lResultValues1.size() );
     for( uint32_t i = 0; i < lExpectedValues1.size(); i++ )
         lExpectedValues1[i] = lValues01[i] ? 0.245f : std::get<float>( lConstants[1] );
@@ -3689,14 +3689,14 @@ TEST_CASE( "Where Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 128 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 12, 23 };
     std::vector<uint32_t> lDim2{ 13, 24 };
 
     auto                      lValues0 = RandomBool( 12 * 23 + 13 * 24 );
-    sDataInitializerComponent lInitializer0( lValues0 );
+    data_initializer_t lInitializer0( lValues0 );
     auto lCondition = MultiTensorValue( lScope, lInitializer0, tensor_shape_t( { lDim1, lDim2 }, sizeof( uint8_t ) ) );
 
     auto lX = ConstantScalarValue( lScope, 0.9234587f );
@@ -3706,7 +3706,7 @@ TEST_CASE( "Where Scalar_Scalar", "[CORE_COMPUTATION_GRAPH]" )
 
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     std::vector<float> lExpectedValues0( lResultValues0.size() );
     for( uint32_t i = 0; i < lExpectedValues0.size(); i++ )
         lExpectedValues0[i] = lValues0[i] ? 0.9234587f : 0.1324978f;
@@ -3718,7 +3718,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto lSliceStart = std::vector<uint32_t>{ 15, 27, 400 };
@@ -3768,7 +3768,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
@@ -3777,7 +3777,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart[0] + 1 } );
@@ -3787,7 +3787,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -3796,7 +3796,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 25;
@@ -3846,7 +3846,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
@@ -3855,7 +3855,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart + 1 } );
@@ -3865,7 +3865,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -3874,7 +3874,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto     lSliceStart = std::vector<uint32_t>{ 15, 27, 39 };
@@ -3924,7 +3924,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
@@ -3933,7 +3933,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart[0] + 1 } );
@@ -3943,7 +3943,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -3952,7 +3952,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 15;
@@ -4002,7 +4002,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
@@ -4011,7 +4011,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart + 1 } );
@@ -4021,7 +4021,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4030,7 +4030,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto lSliceStart = std::vector<uint32_t>{ 15, 27, 400 };
@@ -4083,7 +4083,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
@@ -4092,7 +4092,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4102,7 +4102,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4111,7 +4111,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 25;
@@ -4164,7 +4164,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
@@ -4173,7 +4173,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4183,7 +4183,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4192,7 +4192,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     auto     lSliceStart = std::vector<uint32_t>{ 15, 27, 39 };
@@ -4245,7 +4245,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = VectorValue( lScope, lSliceStart );
@@ -4254,7 +4254,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4264,7 +4264,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4273,7 +4273,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 15;
@@ -4326,7 +4326,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
@@ -4335,7 +4335,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4345,7 +4345,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4354,7 +4354,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     uint32_t lSliceStart = 15;
@@ -4404,7 +4404,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lStart = ConstantScalarValue( lScope, lSliceStart );
@@ -4413,7 +4413,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4423,7 +4423,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint64_t>();
+    std::vector<uint64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4432,7 +4432,7 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
@@ -4489,13 +4489,13 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = CountTrue( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4505,7 +4505,7 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint32_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+    std::vector<uint32_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4514,7 +4514,7 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
@@ -4571,13 +4571,13 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = CountNonZero( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4587,7 +4587,7 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint32_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+    std::vector<uint32_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4596,7 +4596,7 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
@@ -4653,13 +4653,13 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint64_t ) ) );
 
     auto lResult0 = CountZero( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4669,7 +4669,7 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint32_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+    std::vector<uint32_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4678,7 +4678,7 @@ TEST_CASE( "Floor", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 500 };
@@ -4690,9 +4690,9 @@ TEST_CASE( "Floor", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Floor( lScope, lOpNode );
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-    std::vector<float> lOpNodeValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+    std::vector<float> lOpNodeValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     for( uint32_t i = 0; i < lOpNodeValues.size(); i++ )
     {
         lExpectedValues[i] = std::floor( lOpNodeValues[i] );
@@ -4706,7 +4706,7 @@ TEST_CASE( "Ceiling", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 500 };
@@ -4718,9 +4718,9 @@ TEST_CASE( "Ceiling", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Ceil( lScope, lOpNode );
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-    std::vector<float> lOpNodeValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+    std::vector<float> lOpNodeValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     for( uint32_t i = 0; i < lOpNodeValues.size(); i++ )
     {
         lExpectedValues[i] = std::ceil( lOpNodeValues[i] );
@@ -4734,7 +4734,7 @@ TEST_CASE( "Absolute value", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 500 };
@@ -4746,9 +4746,9 @@ TEST_CASE( "Absolute value", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Abs( lScope, lOpNode );
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-    std::vector<float> lOpNodeValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+    std::vector<float> lOpNodeValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     for( uint32_t i = 0; i < lOpNodeValues.size(); i++ )
     {
         lExpectedValues[i] = std::abs( lOpNodeValues[i] );
@@ -4762,7 +4762,7 @@ TEST_CASE( "Square roots", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 17, 12, 51 };
@@ -4774,9 +4774,9 @@ TEST_CASE( "Square roots", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Sqrt( lScope, lOpNode );
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-    std::vector<float> lOpNodeValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+    std::vector<float> lOpNodeValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     for( uint32_t i = 0; i < lOpNodeValues.size(); i++ )
     {
         lExpectedValues[i] = std::sqrt( lOpNodeValues[i] );
@@ -4798,7 +4798,7 @@ TEST_CASE( "Rounding", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 17, 12, 51 };
@@ -4810,9 +4810,9 @@ TEST_CASE( "Rounding", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Round( lScope, lOpNode );
     lScope.Run( lResult0 );
 
-    std::vector<float> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-    std::vector<float> lExpectedValues( lOpNode.Get<sMultiTensorComponent>().mValue.SizeAs<float>() );
-    std::vector<float> lOpNodeValues = lOpNode.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    std::vector<float> lExpectedValues( lOpNode.Get<multi_tensor_value_t>().mValue.SizeAs<float>() );
+    std::vector<float> lOpNodeValues = lOpNode.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     for( uint32_t i = 0; i < lOpNodeValues.size(); i++ )
     {
         lExpectedValues[i] = std::round( lOpNodeValues[i] );
@@ -4833,7 +4833,7 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
@@ -4886,13 +4886,13 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     auto lResult0 = Diff( lScope, lInputTensor, 1 );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
@@ -4902,7 +4902,7 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<int64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<int64_t>();
+    std::vector<int64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<int64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4911,7 +4911,7 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
@@ -4964,14 +4964,14 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     auto lFillValue = ConstantScalarValue( lScope, static_cast<int64_t>( 121212 ) );
     auto lResult0   = Shift( lScope, lInputTensor, -1, lFillValue );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
@@ -4981,7 +4981,7 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<int64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<int64_t>();
+    std::vector<int64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<int64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -4990,7 +4990,7 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 1024 };
@@ -5049,14 +5049,14 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
     lInputValues.insert( lInputValues.end(), lValues2.begin(), lValues2.end() );
     lInputValues.insert( lInputValues.end(), lValues3.begin(), lValues3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
     auto lFillValue = ConstantScalarValue( lScope, static_cast<int64_t>( 121212 ) );
     auto lResult0   = Shift( lScope, lInputTensor, -3, lFillValue );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
@@ -5066,7 +5066,7 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<int64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<int64_t>();
+    std::vector<int64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<int64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -5075,7 +5075,7 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
     size_t lPoolSize = 3 * 1024 * 1024;
     scope_t  lScope( lPoolSize );
 
-    sRandomNormalInitializerComponent lInitializer{};
+    random_normal_initializer_t lInitializer{};
     lInitializer.mType = scalar_type_t::FLOAT32;
 
     std::vector<uint32_t> lDim1{ 7, 3, 124 };
@@ -5169,16 +5169,16 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
     lKernelValues.insert( lKernelValues.end(), lKernel2.begin(), lKernel2.end() );
     lKernelValues.insert( lKernelValues.end(), lKernel3.begin(), lKernel3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( int64_t ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( int64_t ) ) );
 
     auto lResult0 = Conv1D( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5188,7 +5188,7 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<int64_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<int64_t>();
+    std::vector<int64_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<int64_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -5288,16 +5288,16 @@ TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     lKernelValues.insert( lKernelValues.end(), lKernel2.begin(), lKernel2.end() );
     lKernelValues.insert( lKernelValues.end(), lKernel3.begin(), lKernel3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint32_t ) ) );
 
     auto lResult0 = Conv1D( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5307,7 +5307,7 @@ TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint32_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+    std::vector<uint32_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -5399,16 +5399,16 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     lKernelValues.insert( lKernelValues.end(), lKernel2.begin(), lKernel2.end() );
     lKernelValues.insert( lKernelValues.end(), lKernel3.begin(), lKernel3.end() );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint32_t ) ) );
 
     auto lResult0 = HCat( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 + 34 } );
@@ -5418,7 +5418,7 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
 
-    std::vector<uint32_t> lResultValues = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint32_t>();
+    std::vector<uint32_t> lResultValues = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint32_t>();
     REQUIRE( lResultValues == lExpectedValues );
 }
 
@@ -5454,17 +5454,17 @@ TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Add( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Add( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5474,10 +5474,10 @@ TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
 
-    std::vector<TestType> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<TestType> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -5514,17 +5514,17 @@ TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Multiply( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Multiply( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5534,10 +5534,10 @@ TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
 
-    std::vector<TestType> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<TestType> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -5577,17 +5577,17 @@ TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<float> lKernelValues = ConcatenateVectors( std::vector<std::vector<float>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( float ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( float ) ) );
 
     auto lResult0 = Divide( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Divide( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5599,10 +5599,10 @@ TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<float> lExpectedValues1 = ConcatenateVectors( std::vector<std::vector<float>>{
         ConcatenateVectors( lExpectedValues11 ), ConcatenateVectors( lExpectedValues12 ), ConcatenateVectors( lExpectedValues13 ) } );
 
-    std::vector<float> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<float> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+    std::vector<float> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
     REQUIRE( lResultValues1 == lExpectedValues1 );
 }
 
@@ -5642,17 +5642,17 @@ TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Subtract( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Subtract( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5664,10 +5664,10 @@ TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t
     std::vector<TestType> lExpectedValues1 = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues11 ), ConcatenateVectors( lExpectedValues12 ), ConcatenateVectors( lExpectedValues13 ) } );
 
-    std::vector<TestType> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<TestType> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues1 == lExpectedValues1 );
 }
 
@@ -5703,17 +5703,17 @@ TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<uint8_t> lKernelValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = And( lScope, lInputTensor, lKernelensor );
     auto lResult1 = And( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5723,10 +5723,10 @@ TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lExpectedValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
 
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<uint8_t> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -5762,17 +5762,17 @@ TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
 
     std::vector<uint8_t> lKernelValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( uint8_t ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( uint8_t ) ) );
 
     auto lResult0 = Or( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Or( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5782,10 +5782,10 @@ TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
     std::vector<uint8_t> lExpectedValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
 
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<uint8_t> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -5821,17 +5821,17 @@ TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = BitwiseAnd( lScope, lInputTensor, lKernelensor );
     auto lResult1 = BitwiseAnd( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5841,10 +5841,10 @@ TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
 
-    std::vector<TestType> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<TestType> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -5880,17 +5880,17 @@ TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = BitwiseOr( lScope, lInputTensor, lKernelensor );
     auto lResult1 = BitwiseOr( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5900,10 +5900,10 @@ TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
 
-    std::vector<TestType> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<TestType> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<TestType>();
+    std::vector<TestType> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -5940,17 +5940,17 @@ TEMPLATE_TEST_CASE( "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uin
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = Equal( lScope, lInputTensor, lKernelensor );
     auto lResult1 = Equal( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5963,10 +5963,10 @@ TEMPLATE_TEST_CASE( "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uin
     std::vector<uint8_t> lExpectedValues{};
     for( auto x : lExpectedValues0 )
         lExpectedValues.push_back( static_cast<uint8_t>( x != 0 ) );
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues0 == lExpectedValues );
 
-    std::vector<uint8_t> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
@@ -6007,17 +6007,17 @@ TEMPLATE_TEST_CASE( "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = LessThan( lScope, lInputTensor, lKernelensor );
     auto lResult1 = LessThan( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -6036,10 +6036,10 @@ TEMPLATE_TEST_CASE( "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
     for( auto x : lExpectedValues10 )
         lExpectedValues1.push_back( static_cast<uint8_t>( x != 0 ) );
 
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<uint8_t> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues1 == lExpectedValues1 );
 }
 
@@ -6081,17 +6081,17 @@ TEMPLATE_TEST_CASE( "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uin
 
     std::vector<TestType> lKernelValues = ConcatenateVectors( std::vector<std::vector<TestType>>{ lKernel1, lKernel2, lKernel3 } );
 
-    sDataInitializerComponent lInputInitializer( lInputValues );
+    data_initializer_t lInputInitializer( lInputValues );
     auto lInputTensor = MultiTensorValue( lScope, lInputInitializer, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( TestType ) ) );
 
-    sDataInitializerComponent lKernelInitializer( lKernelValues );
+    data_initializer_t lKernelInitializer( lKernelValues );
     auto lKernelensor = MultiTensorValue( lScope, lKernelInitializer, tensor_shape_t( { lKDim1, lKDim2, lKDim3 }, sizeof( TestType ) ) );
 
     auto lResult0 = LessThanOrEqual( lScope, lInputTensor, lKernelensor );
     auto lResult1 = LessThanOrEqual( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
+    auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -6110,9 +6110,9 @@ TEMPLATE_TEST_CASE( "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uin
     for( auto x : lExpectedValues10 )
         lExpectedValues1.push_back( static_cast<uint8_t>( x != 0 ) );
 
-    std::vector<uint8_t> lResultValues0 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues0 == lExpectedValues0 );
 
-    std::vector<uint8_t> lResultValues1 = lResult1.Get<sMultiTensorComponent>().mValue.FetchFlattened<uint8_t>();
+    std::vector<uint8_t> lResultValues1 = lResult1.Get<multi_tensor_value_t>().mValue.FetchFlattened<uint8_t>();
     REQUIRE( lResultValues1 == lExpectedValues1 );
 }

@@ -16,39 +16,39 @@ namespace SE::Core
 
     void RequireEntityType( sol::table &aScriptingState )
     {
-        auto lEntityType = aScriptingState.new_usertype<Entity>( "Entity", constructors<Entity()>() );
+        auto lEntityType = aScriptingState.new_usertype<entity_t>( "Entity", constructors<entity_t()>() );
 
-        lEntityType["tag"] = []( Entity &aSelf, const sol::object &aTypeOrID ) -> sol::object
+        lEntityType["tag"] = []( entity_t &aSelf, const sol::object &aTypeOrID ) -> sol::object
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Tag"_hs, aSelf );
             return sol::lua_nil_t{};
         };
 
-        lEntityType["untag"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["untag"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Untag"_hs, aSelf );
             return sol::lua_nil_t{};
         };
 
-        lEntityType["has"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["has"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Has"_hs, &aSelf );
             return lMaybeAny ? lMaybeAny.cast<bool>() : false;
         };
 
-        lEntityType["get"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["get"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Get"_hs, &aSelf );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["try_get"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["try_get"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryGet"_hs, &aSelf );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["add"] = []( Entity &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        lEntityType["add"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
         {
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
@@ -57,7 +57,7 @@ namespace SE::Core
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["replace"] = []( Entity &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        lEntityType["replace"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
         {
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
@@ -66,7 +66,7 @@ namespace SE::Core
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["add_or_replace"] = []( Entity &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        lEntityType["add_or_replace"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
         {
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
@@ -75,7 +75,7 @@ namespace SE::Core
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["try_add"] = []( Entity &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        lEntityType["try_add"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
         {
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
@@ -84,13 +84,13 @@ namespace SE::Core
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["remove"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["remove"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Remove"_hs, aSelf );
             return sol::lua_nil_t{};
         };
 
-        lEntityType["try_remove"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["try_remove"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryRemove"_hs, aSelf );
             return sol::lua_nil_t{};
@@ -99,20 +99,20 @@ namespace SE::Core
 
     void RequireEntityRegistry( sol::table &aScriptingState )
     {
-        auto lRegistryType = aScriptingState.new_usertype<EntityCollection>( "Registry", constructors<EntityCollection()>() );
+        auto lRegistryType = aScriptingState.new_usertype<entity_registry_t>( "Registry", constructors<entity_registry_t()>() );
 
         lRegistryType["create_entity"] =
-            overload( []( EntityCollection &aSelf ) { return aSelf.CreateEntity(); }, []( EntityCollection &aSelf, std::string aName ) { return aSelf.CreateEntity( aName ); },
-                      []( EntityCollection &aSelf, Entity &aParent, std::string aName ) { return aSelf.CreateEntity( aParent, aName ); } );
+            overload( []( entity_registry_t &aSelf ) { return aSelf.CreateEntity(); }, []( entity_registry_t &aSelf, std::string aName ) { return aSelf.CreateEntity( aName ); },
+                      []( entity_registry_t &aSelf, entity_t &aParent, std::string aName ) { return aSelf.CreateEntity( aParent, aName ); } );
 
-        lRegistryType["create_entity_with_relationship"] = overload( []( EntityCollection &aSelf ) { return aSelf.CreateEntityWithRelationship(); },
-                                                                     []( EntityCollection &aSelf, std::string aName ) { return aSelf.CreateEntityWithRelationship( aName ); } );
+        lRegistryType["create_entity_with_relationship"] = overload( []( entity_registry_t &aSelf ) { return aSelf.CreateEntityWithRelationship(); },
+                                                                     []( entity_registry_t &aSelf, std::string aName ) { return aSelf.CreateEntityWithRelationship( aName ); } );
 
-        lRegistryType["destroy_entity"] = []( EntityCollection &aSelf, Entity &aEntity ) { aSelf.DestroyEntity( aEntity ); };
+        lRegistryType["destroy_entity"] = []( entity_registry_t &aSelf, entity_t &aEntity ) { aSelf.DestroyEntity( aEntity ); };
 
-        lRegistryType["set_parent"] = []( EntityCollection &aSelf, Entity &aEntity, Entity &aParentEntity ) { aSelf.SetParent( aEntity, aParentEntity ); };
+        lRegistryType["set_parent"] = []( entity_registry_t &aSelf, entity_t &aEntity, entity_t &aParentEntity ) { aSelf.SetParent( aEntity, aParentEntity ); };
 
-        lRegistryType["clear"] = []( EntityCollection &aSelf ) { aSelf.Clear(); };
+        lRegistryType["clear"] = []( entity_registry_t &aSelf ) { aSelf.Clear(); };
     }
 
     void OpenEntityRegistry( sol::state &aScriptingState )

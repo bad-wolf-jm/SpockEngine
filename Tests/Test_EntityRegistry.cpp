@@ -39,14 +39,14 @@ struct ComponentD
 
 TEST_CASE( "Create registry", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     REQUIRE( true );
 }
 
 TEST_CASE( "Create entities without a name", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     auto lEntity1 = lRegistry.CreateEntity();
@@ -67,17 +67,17 @@ TEST_CASE( "Create entities without a name", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Create entities with a name", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity( "NAME" );
 
-    REQUIRE( lEntity0.Has<sTag>() );
-    REQUIRE( lEntity0.Get<sTag>().mValue == "NAME" );
+    REQUIRE( lEntity0.Has<tag_t>() );
+    REQUIRE( lEntity0.Get<tag_t>().mValue == "NAME" );
 }
 
 TEST_CASE( "Add components 1", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     REQUIRE( !lEntity0.Has<ComponentA>() );
@@ -95,38 +95,38 @@ TEST_CASE( "Add components 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Create entities with relationship", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntityWithRelationship();
     auto lEntity1 = lRegistry.CreateEntityWithRelationship( "NAME" );
 
-    REQUIRE( lEntity0.Has<sRelationshipComponent>() );
+    REQUIRE( lEntity0.Has<relationship_compoment_t>() );
 
-    REQUIRE( lEntity1.Has<sRelationshipComponent>() );
-    REQUIRE( lEntity1.Has<sTag>() );
-    REQUIRE( lEntity1.Get<sTag>().mValue == "NAME" );
+    REQUIRE( lEntity1.Has<relationship_compoment_t>() );
+    REQUIRE( lEntity1.Has<tag_t>() );
+    REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME" );
 }
 
 TEST_CASE( "Create entities with a parent", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     auto lEntity1 = lRegistry.CreateEntity( lEntity0, "NAME" );
 
-    REQUIRE( lEntity0.Has<sRelationshipComponent>() );
-    REQUIRE( lEntity1.Has<sRelationshipComponent>() );
-    REQUIRE( lEntity1.Has<sTag>() );
-    REQUIRE( lEntity1.Get<sTag>().mValue == "NAME" );
+    REQUIRE( lEntity0.Has<relationship_compoment_t>() );
+    REQUIRE( lEntity1.Has<relationship_compoment_t>() );
+    REQUIRE( lEntity1.Has<tag_t>() );
+    REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME" );
 
-    REQUIRE( lEntity1.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( lEntity0.Get<sRelationshipComponent>().mChildren.size() == 1 );
-    REQUIRE( lEntity0.Get<sRelationshipComponent>().mChildren[0] == lEntity1 );
+    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 1 );
+    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren[0] == lEntity1 );
 }
 
 TEST_CASE( "Destroy entities", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     lRegistry.DestroyEntity( lEntity0 );
@@ -136,7 +136,7 @@ TEST_CASE( "Destroy entities", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Adding components twice throws exception", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto  lEntity0    = lRegistry.CreateEntity();
     auto &lComponentA = lEntity0.Add<ComponentA>();
@@ -145,7 +145,7 @@ TEST_CASE( "Adding components twice throws exception", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Removing component that is not there throws exception", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     REQUIRE_THROWS( ( lEntity0.Remove<ComponentA>() ) );
@@ -153,7 +153,7 @@ TEST_CASE( "Removing component that is not there throws exception", "[CORE_ENTIT
 
 TEST_CASE( "TryRemove", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
 
@@ -167,7 +167,7 @@ TEST_CASE( "TryRemove", "[CORE_ENTITIES]" )
 
 TEST_CASE( "OnComponentAdded event", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     bool lComponentAddedCalled = false;
     lRegistry.OnComponentAdded<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentAddedCalled = true; } );
@@ -183,7 +183,7 @@ TEST_CASE( "OnComponentAdded event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     bool lComponentUpdatedCalled = false;
     lRegistry.OnComponentUpdated<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentUpdatedCalled = true; } );
@@ -200,7 +200,7 @@ TEST_CASE( "OnComponentUpdated event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     bool lComponentDestroyedCalled = false;
     lRegistry.OnComponentDestroyed<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentDestroyedCalled = true; } );
@@ -222,7 +222,7 @@ struct sTagComponent
 // Tag
 TEST_CASE( "Tag Entity", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     lEntity0.Add<sTagComponent>();
@@ -236,7 +236,7 @@ TEST_CASE( "Tag Entity", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Update components 1", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
 
@@ -253,7 +253,7 @@ TEST_CASE( "Update components 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Update components 2", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry{};
+    entity_registry_t lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
 
@@ -267,7 +267,7 @@ TEST_CASE( "Update components 2", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Iterate Entities 1", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>();
@@ -284,18 +284,18 @@ TEST_CASE( "Iterate Entities 1", "[CORE_ENTITIES]" )
     auto lEntity4 = lRegistry0.CreateEntity();
     lEntity4.Add<ComponentA>();
 
-    std::vector<Entity> lEntitiesA = {};
+    std::vector<entity_t> lEntitiesA = {};
     lRegistry0.ForEach<ComponentA>( [&]( auto a_Entity, auto &a_Component ) { lEntitiesA.push_back( a_Entity ); } );
     REQUIRE( lEntitiesA.size() == 3 );
 
-    std::vector<Entity> lEntitiesB = {};
+    std::vector<entity_t> lEntitiesB = {};
     lRegistry0.ForEach<ComponentB>( [&]( auto a_Entity, auto &a_Component ) { lEntitiesB.push_back( a_Entity ); } );
     REQUIRE( lEntitiesB.size() == 2 );
 }
 
 TEST_CASE( "Sort Entities 1", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>( 1.0f );
@@ -325,7 +325,7 @@ TEST_CASE( "Sort Entities 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Sort Entities 2", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>( 1.0f );
@@ -348,14 +348,14 @@ TEST_CASE( "Sort Entities 2", "[CORE_ENTITIES]" )
     REQUIRE( lEntitiesA != lSortedValues );
 
     lEntitiesA.clear();
-    lRegistry0.Sort<ComponentA>( [&]( Entity l, Entity r ) { return ( l.Get<ComponentA>().a ) < ( r.Get<ComponentA>().a ); } );
+    lRegistry0.Sort<ComponentA>( [&]( entity_t l, entity_t r ) { return ( l.Get<ComponentA>().a ) < ( r.Get<ComponentA>().a ); } );
     lRegistry0.ForEach<ComponentA>( [&]( auto a_Entity, auto &a_Component ) { lEntitiesA.push_back( a_Component.a ); } );
     REQUIRE( lEntitiesA == lSortedValues );
 }
 
 TEST_CASE( "Test components", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>( 1.0f );
@@ -373,7 +373,7 @@ TEST_CASE( "Test components", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Adjoin components", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -381,14 +381,14 @@ TEST_CASE( "Adjoin components", "[CORE_ENTITIES]" )
     lEntity0.Add<ComponentA>( 1.0f );
     lEntity1.Adjoin<ComponentA>( lEntity0 );
 
-    REQUIRE( lEntity1.Has<sJoinComponent<ComponentA>>() );
-    REQUIRE( lEntity1.Get<sJoinComponent<ComponentA>>().JoinedComponent().a == 1.0f );
-    REQUIRE( lEntity1.Get<sJoinComponent<ComponentA>>().mJoinEntity == lEntity0 );
+    REQUIRE( lEntity1.Has<join_component_t<ComponentA>>() );
+    REQUIRE( lEntity1.Get<join_component_t<ComponentA>>().JoinedComponent().a == 1.0f );
+    REQUIRE( lEntity1.Get<join_component_t<ComponentA>>().mJoinEntity == lEntity0 );
 }
 
 TEST_CASE( "Relationships", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -399,16 +399,16 @@ TEST_CASE( "Relationships", "[CORE_ENTITIES]" )
     lRegistry0.SetParent( lEntity2, lEntity0 );
     lRegistry0.SetParent( lEntity3, lEntity0 );
 
-    REQUIRE( lEntity0.Get<sRelationshipComponent>().mChildren.size() == 3 );
+    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 3 );
 
-    REQUIRE( lEntity1.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( lEntity2.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( lEntity3.Get<sRelationshipComponent>().mParent == lEntity0 );
+    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( lEntity3.Get<relationship_compoment_t>().mParent == lEntity0 );
 }
 
 TEST_CASE( "Removing parent removes from siblings", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -420,16 +420,16 @@ TEST_CASE( "Removing parent removes from siblings", "[CORE_ENTITIES]" )
     lRegistry0.SetParent( lEntity3, lEntity0 );
 
     lRegistry0.SetParent( lEntity3, lEntity2 );
-    REQUIRE( lEntity0.Get<sRelationshipComponent>().mChildren.size() == 2 );
+    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 2 );
 
-    REQUIRE( lEntity1.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( lEntity2.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( lEntity3.Get<sRelationshipComponent>().mParent == lEntity2 );
+    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( lEntity3.Get<relationship_compoment_t>().mParent == lEntity2 );
 }
 
 TEST_CASE( "Ability to set parent to NULL", "[CORE_ENTITIES]" )
 {
-    EntityCollection lRegistry0{};
+    entity_registry_t lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -440,10 +440,10 @@ TEST_CASE( "Ability to set parent to NULL", "[CORE_ENTITIES]" )
     lRegistry0.SetParent( lEntity2, lEntity0 );
     lRegistry0.SetParent( lEntity3, lEntity0 );
 
-    lRegistry0.SetParent( lEntity3, Entity{} );
-    REQUIRE( lEntity0.Get<sRelationshipComponent>().mChildren.size() == 2 );
+    lRegistry0.SetParent( lEntity3, entity_t{} );
+    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 2 );
 
-    REQUIRE( lEntity1.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( lEntity2.Get<sRelationshipComponent>().mParent == lEntity0 );
-    REQUIRE( !( lEntity3.Get<sRelationshipComponent>().mParent ) );
+    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+    REQUIRE( !( lEntity3.Get<relationship_compoment_t>().mParent ) );
 }
