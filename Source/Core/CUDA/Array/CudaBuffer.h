@@ -32,13 +32,13 @@ namespace SE::Cuda
 
         gpu_memory_view_t( const gpu_memory_view_t & ) = default;
 
-        gpu_memory_view_t( size_t a_Size, size_t a_Offset, Internal::sGPUDevicePointerView &a_DevicePointer )
-            : Internal::sGPUDevicePointerView( a_Size, a_Offset, a_DevicePointer )
+        gpu_memory_view_t( size_t a_Size, size_t a_Offset, Internal::gpu_device_pointer_view_t &a_DevicePointer )
+            : Internal::gpu_device_pointer_view_t( a_Size, a_Offset, a_DevicePointer )
         {
         }
 
         gpu_memory_view_t( size_t a_Size, void *a_DevicePointer )
-            : Internal::sGPUDevicePointerView( a_Size, a_DevicePointer )
+            : Internal::gpu_device_pointer_view_t( a_Size, a_DevicePointer )
         {
         }
 
