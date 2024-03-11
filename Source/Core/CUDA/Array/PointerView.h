@@ -11,8 +11,8 @@
 #include "Core/CUDA/Cuda.h"
 #include <vector>
 
-#include "Core/Definitions.h"
 #include "Core/CUDA/CudaAssert.h"
+#include "Core/Definitions.h"
 
 /** \namespace SE::Cuda::Internal
  *
@@ -22,7 +22,7 @@
 namespace SE::Cuda::Internal
 {
     using namespace SE::Core;
-    
+
     /// @struct sGPUDevicePointerView
     ///
     /// @brief Simple wrapper around a RawPointer
@@ -185,7 +185,10 @@ namespace SE::Cuda::Internal
         /// @param aData     Pointer to the data to uploac
         /// @param aByteSize Size of the byffer pointed to by `aData`, in bytes
         ///
-        void Upload( const uint8_t *aData, size_t aByteSize ) const { Upload( aData, aByteSize, 0 ); }
+        void Upload( const uint8_t *aData, size_t aByteSize ) const
+        {
+            Upload( aData, aByteSize, 0 );
+        }
 
         /// @brief Overloaded member provided for convenience
         ///
@@ -266,10 +269,16 @@ namespace SE::Cuda::Internal
         /// This is roughly equivalent to @code{.cpp} cudaMemset(ptr, 0, this->size()); @endcode As of now there is
         /// no semantic initialization of elements of type `T`.
         ///
-        void Zero() const { CUDA_ASSERT( cudaMemset( (void *)mDevicePointer, 0, mSize ) ); }
+        void Zero() const
+        {
+            CUDA_ASSERT( cudaMemset( (void *)mDevicePointer, 0, mSize ) );
+        }
 
         /// @brief Size of the allocated buffer, in bytes.
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mSize; }
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const
+        {
+            return mSize;
+        }
 
         /// @brief Size of the allocated buffer, in elements of type `_Ty`.
         template <typename _Ty>
@@ -286,7 +295,10 @@ namespace SE::Cuda::Internal
         }
 
         /// @brief Number of elements in the buffer.
-        raw_pointer_t RawDevicePtr() const { return mDevicePointer; }
+        raw_pointer_t RawDevicePtr() const
+        {
+            return mDevicePointer;
+        }
 
       protected:
         size_t mSize = 0;
@@ -304,7 +316,7 @@ namespace SE::Cuda::Internal
     ///
     struct gpu_device_pointer_t : public gpu_device_pointer_view_t
     {
-        gpu_device_pointer_t()                            = default;
+        gpu_device_pointer_t()                               = default;
         gpu_device_pointer_t( const gpu_device_pointer_t & ) = default;
 
         gpu_device_pointer_t( size_t aSize )
@@ -318,7 +330,8 @@ namespace SE::Cuda::Internal
         /// @brief Free the allocated memory.
         void Dispose()
         {
-            if( mDevicePointer != 0 ) CUDA_ASSERT( cudaFree( (void *)mDevicePointer ) );
+            if( mDevicePointer != 0 )
+                CUDA_ASSERT( cudaFree( (void *)mDevicePointer ) );
             mDevicePointer = 0;
         }
 

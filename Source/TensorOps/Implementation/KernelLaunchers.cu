@@ -44,40 +44,40 @@ namespace SE::TensorOps
     };
 
     template <typename _Ty>
-    static void ConstantFillImpl( multi_tensor_t &aArray, scalar_value_t &aConstant )
+    static void ConstantFillImpl( multi_tensor_t &aArray, scalar_value_t &constant )
     {
-        int lBlockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::ConstantFill<_Ty><<<lGridDim, lBlockDim>>>( aArray, std::get<_Ty>( aConstant ) );
+        Kernels::ConstantFill<_Ty><<<gridDim, blockDim>>>( aArray, std::get<_Ty>( constant ) );
     }
 
     template <typename _Ty>
-    static void ConstantFillImpl( multi_tensor_t &aArray, memory_buffer_t &aInitialValues )
+    static void ConstantFillImpl( multi_tensor_t &aArray, memory_buffer_t &initialValues )
     {
-        int lBlockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::ConstantFill<_Ty><<<lGridDim, lBlockDim>>>( aArray, aInitialValues );
+        Kernels::ConstantFill<_Ty><<<gridDim, blockDim>>>( aArray, initialValues );
     }
 
-    void ConstantFill( scalar_type_t aTensorElementType, multi_tensor_t &aArray, memory_buffer_t &aInitialValues )
+    void ConstantFill( scalar_type_t tensorElementType, multi_tensor_t &aArray, memory_buffer_t &initialValues )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, ConstantFillImpl, ( aArray, aInitialValues ) );
+        DISPATCH_BY_TYPE( tensorElementType, ConstantFillImpl, ( aArray, initialValues ) );
     }
 
-    void ConstantFill( scalar_type_t aTensorElementType, multi_tensor_t &aArray, scalar_value_t &aInitialValues )
+    void ConstantFill( scalar_type_t tensorElementType, multi_tensor_t &aArray, scalar_value_t &initialValues )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, ConstantFillImpl, ( aArray, aInitialValues ) );
+        DISPATCH_BY_TYPE( tensorElementType, ConstantFillImpl, ( aArray, initialValues ) );
     }
 
-    void RandomUniformFill( scalar_type_t aTensorElementType, multi_tensor_t &aArray )
+    void RandomUniformFill( scalar_type_t tensorElementType, multi_tensor_t &aArray )
     {
-        switch( aTensorElementType )
+        switch( tensorElementType )
         {
         case scalar_type_t::FLOAT32:
         {
@@ -96,9 +96,9 @@ namespace SE::TensorOps
         }
     }
 
-    void RandomNormalFill( scalar_type_t aTensorElementType, multi_tensor_t &aArray, scalar_value_t &aMu, scalar_value_t &aSigma )
+    void RandomNormalFill( scalar_type_t tensorElementType, multi_tensor_t &aArray, scalar_value_t &aMu, scalar_value_t &aSigma )
     {
-        switch( aTensorElementType )
+        switch( tensorElementType )
         {
         case scalar_type_t::FLOAT32:
         {
@@ -127,30 +127,30 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void ARangeOpImpl( multi_tensor_t &aOut, memory_buffer_t &aLeft, memory_buffer_t &aRight, memory_buffer_t &aDelta,
+    static void ARangeOpImpl( multi_tensor_t &out, memory_buffer_t &left, memory_buffer_t &right, memory_buffer_t &aDelta,
                               uint32_t aMaxSubdivisions )
     {
-        int lBlockCount = ( aMaxSubdivisions / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aMaxSubdivisions / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aOut.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( out.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::ARange<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight, aDelta );
+        Kernels::ARange<_Ty><<<gridDim, blockDim>>>( out, left, right, aDelta );
     }
 
-    void ARangeOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, memory_buffer_t &aRight, memory_buffer_t &aDelta,
-                   uint32_t aMaxSubdivisions )
+    void ARangeOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, memory_buffer_t &right,
+                   memory_buffer_t &aDelta, uint32_t aMaxSubdivisions )
     {
-        switch( aTensorElementType )
+        switch( tensorElementType )
         {
         case scalar_type_t::FLOAT32:
         {
-            ARangeOpImpl<float>( aOut, aLeft, aRight, aDelta, aMaxSubdivisions );
+            ARangeOpImpl<float>( out, left, right, aDelta, aMaxSubdivisions );
             break;
         }
         case scalar_type_t::FLOAT64:
         {
-            ARangeOpImpl<double>( aOut, aLeft, aRight, aDelta, aMaxSubdivisions );
+            ARangeOpImpl<double>( out, left, right, aDelta, aMaxSubdivisions );
             break;
         }
         default:
@@ -159,1331 +159,1320 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void AddArrayToArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant )
+    static void AddArrayToArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Add<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Add<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
     template <typename _Ty>
-    static void AddArrayToArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                                     memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                                     uint32_t aMaxBroadcastSizes )
+    static void AddArrayToArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                     broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                     memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Add<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Add<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
     template <typename _ScalarType>
-    static void AddScalarToArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aArray, scalar_value_t &aConstant )
+    static void AddScalarToArrayImpl( multi_tensor_t &out, multi_tensor_t &aArray, scalar_value_t &constant )
     {
-        int lBlockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Add<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aArray, std::get<_ScalarType>( aConstant ) );
+        Kernels::Add<_ScalarType><<<gridDim, blockDim>>>( out, aArray, std::get<_ScalarType>( constant ) );
     }
 
     template <typename _Ty>
-    static void AddArrayToVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, memory_buffer_t &aConstant )
+    static void AddArrayToVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Add<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Add<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
-    void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void AddOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, AddArrayToArrayImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, AddArrayToArrayImpl, ( out, left, right ) );
     }
 
-    void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                uint32_t aMaxBroadcastSizes )
+    void AddOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize, memory_buffer_t &broadcastSizes,
+                uint32_t maxBroadcastSizes )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, AddArrayToArrayImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        DISPATCH_BY_TYPE( tensorElementType, AddArrayToArrayImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
     }
 
-    void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void AddOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, AddScalarToArrayImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, AddScalarToArrayImpl, ( out, left, right ) );
     }
 
-    void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void AddOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, AddArrayToVectorImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, AddArrayToVectorImpl, ( out, left, right ) );
     }
 
     template <typename _ScalarType>
-    void MultiplyArrayByScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
+    void MultiplyArrayByScalarImpl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Multiply<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_ScalarType>( aConstant ) );
+        Kernels::Multiply<_ScalarType><<<gridDim, blockDim>>>( out, in, std::get<_ScalarType>( constant ) );
     }
 
     template <typename _Ty>
-    static void MultiplyArrayByArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant )
+    static void MultiplyArrayByArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Multiply<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Multiply<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
     template <typename _Ty>
-    static void MultiplyArrayByArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                                          memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                                          uint32_t aMaxBroadcastSizes )
+    static void MultiplyArrayByArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                          broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                          memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Multiply<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Multiply<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
     template <typename _Ty>
-    static void MultiplyArrayByVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, memory_buffer_t &aConstant )
+    static void MultiplyArrayByVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Multiply<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Multiply<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
-    void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void MultiplyOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, MultiplyArrayByScalarImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, MultiplyArrayByScalarImpl, ( out, left, right ) );
     }
 
-    void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void MultiplyOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, MultiplyArrayByArrayImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, MultiplyArrayByArrayImpl, ( out, left, right ) );
     }
 
-    void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                     uint32_t aMaxBroadcastSizes )
+    void MultiplyOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                     memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, MultiplyArrayByArrayImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        DISPATCH_BY_TYPE( tensorElementType, MultiplyArrayByArrayImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
     }
 
-    void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void MultiplyOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, MultiplyArrayByVectorImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    template <typename _Ty>
-    void SubtractArrayFromScalarImpl( multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn )
-    {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Subtract<<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aConstant ), aIn );
+        DISPATCH_BY_TYPE( tensorElementType, MultiplyArrayByVectorImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    void SubtractScalarFromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
+    void SubtractArrayFromScalarImpl( multi_tensor_t &out, scalar_value_t &constant, multi_tensor_t &in )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Subtract<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Subtract<<<gridDim, blockDim>>>( out, std::get<_Ty>( constant ), in );
     }
 
     template <typename _Ty>
-    static void SubtractVectorFromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, memory_buffer_t &aConstant )
+    void SubtractScalarFromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Subtract<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Subtract<<<gridDim, blockDim>>>( out, in, std::get<_Ty>( constant ) );
     }
 
     template <typename _Ty>
-    static void SubtractArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant )
+    static void SubtractVectorFromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Subtract<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Subtract<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
     template <typename _Ty>
-    static void SubtractArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                                            memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                                            uint32_t aMaxBroadcastSizes )
+    static void SubtractArrayfromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Subtract<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Subtract<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
     template <typename _Ty>
-    static void SubtractArrayFromVectorImpl( multi_tensor_t &aOut, memory_buffer_t &aConstant, multi_tensor_t &aIn )
+    static void SubtractArrayfromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                            broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                            memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Subtract<_Ty><<<lGridDim, lBlockDim>>>( aOut, aConstant, aIn );
-    }
-
-    void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, SubtractScalarFromArrayImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, SubtractArrayFromScalarImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, SubtractArrayfromArrayImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                     uint32_t aMaxBroadcastSizes )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, SubtractArrayfromArrayImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
-    }
-
-    void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, SubtractVectorFromArrayImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, SubtractArrayFromVectorImpl, ( aOut, aLeft, aRight ) );
+        Kernels::Subtract<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
     template <typename _Ty>
-    static void DivideArrayByScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
+    static void SubtractArrayFromVectorImpl( multi_tensor_t &out, memory_buffer_t &constant, multi_tensor_t &in )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Subtract<_Ty><<<gridDim, blockDim>>>( out, constant, in );
+    }
+
+    void SubtractOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, SubtractScalarFromArrayImpl, ( out, left, right ) );
+    }
+
+    void SubtractOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, SubtractArrayFromScalarImpl, ( out, left, right ) );
+    }
+
+    void SubtractOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, SubtractArrayfromArrayImpl, ( out, left, right ) );
+    }
+
+    void SubtractOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                     memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, SubtractArrayfromArrayImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
+    }
+
+    void SubtractOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, SubtractVectorFromArrayImpl, ( out, left, right ) );
+    }
+
+    void SubtractOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, SubtractArrayFromVectorImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void DivideScalarByArrayImpl( multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn )
+    static void DivideArrayByScalarImpl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aConstant ), aIn );
+        Kernels::Divide<_Ty><<<gridDim, blockDim>>>( out, in, std::get<_Ty>( constant ) );
     }
 
     template <typename _Ty>
-    static void DivideArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant )
+    static void DivideScalarByArrayImpl( multi_tensor_t &out, scalar_value_t &constant, multi_tensor_t &in )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Divide<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( constant ), in );
     }
 
     template <typename _Ty>
-    static void DivideArrayfromArrayImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                                          memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                                          uint32_t aMaxBroadcastSizes )
+    static void DivideArrayfromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Divide<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Divide<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
     template <typename _Ty>
-    static void DivideArrayByVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, memory_buffer_t &aConstant )
+    static void DivideArrayfromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                          broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                          memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Divide<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
     template <typename _Ty>
-    static void DivideVectorByArrayImpl( multi_tensor_t &aOut, memory_buffer_t &aConstant, multi_tensor_t &aIn )
+    static void DivideArrayByVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Divide<_Ty><<<lGridDim, lBlockDim>>>( aOut, aConstant, aIn );
-    }
-
-    void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, DivideArrayByScalarImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, DivideScalarByArrayImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, DivideArrayfromArrayImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                   broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                   uint32_t aMaxBroadcastSizes )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, DivideArrayfromArrayImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
-    }
-
-    void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, DivideArrayByVectorImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, DivideVectorByArrayImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<uint8_t>( aRight ) );
-    }
-
-    void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
-    {
-        AndOp( aTensorElementType, aOut, aRight, aLeft );
-    }
-
-    void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                uint32_t aMaxBroadcastSizes )
-    {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
-    }
-
-    void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::And<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        AndOp( aTensorElementType, aOut, aRight, aLeft );
-    }
-
-    void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<uint8_t>( aRight ) );
-    }
-
-    void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
-    {
-        OrOp( aTensorElementType, aOut, aRight, aLeft );
-    }
-
-    void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-               broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-               uint32_t aMaxBroadcastSizes )
-    {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
-    }
-
-    void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Or<<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void OrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        OrOp( aTensorElementType, aOut, aRight, aLeft );
-    }
-
-    void NotOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aOperand )
-    {
-        int lBlockCount = ( aOperand.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aOperand.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Not<<<lGridDim, lBlockDim>>>( aOut, aOperand );
+        Kernels::Divide<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
     template <typename _Ty>
-    void BitwiseAnd_Tensor_Scalar_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
+    static void DivideVectorByArrayImpl( multi_tensor_t &out, memory_buffer_t &constant, multi_tensor_t &in )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseAnd<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::Divide<_Ty><<<gridDim, blockDim>>>( out, constant, in );
     }
 
-    void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void DivideOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseAnd_Tensor_Scalar_Impl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, DivideArrayByScalarImpl, ( out, left, right ) );
     }
 
-    void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void DivideOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        BitwiseAndOp( aTensorElementType, aOut, aRight, aLeft );
+        DISPATCH_BY_TYPE( tensorElementType, DivideScalarByArrayImpl, ( out, left, right ) );
     }
 
-    template <typename _Ty>
-    static void BitwiseAnd_Tensor_Tensor_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-                                               broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
-                                               memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes )
+    void DivideOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::BitwiseAnd<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        DISPATCH_BY_TYPE( tensorElementType, DivideArrayfromArrayImpl, ( out, left, right ) );
     }
 
-    void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                       broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                       uint32_t aMaxBroadcastSizes )
+    void DivideOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                   broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                   memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        DISPATCH_BY_INTEGRAL_TYPE(
-            aTensorElementType, BitwiseAnd_Tensor_Tensor_Impl,
-            ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        DISPATCH_BY_TYPE( tensorElementType, DivideArrayfromArrayImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
     }
 
-    template <typename _Ty>
-    void BitwiseAnd_Tensor_Tensor_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant )
+    void DivideOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::BitwiseAnd<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        DISPATCH_BY_TYPE( tensorElementType, DivideArrayByVectorImpl, ( out, left, right ) );
     }
 
-    void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void DivideOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseAnd_Tensor_Tensor_Impl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, DivideVectorByArrayImpl, ( out, left, right ) );
     }
 
-    template <typename _Ty>
-    void BitwiseAnd_Tensor_Vector_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, memory_buffer_t &aConstant )
+    void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseAnd<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::And<<<gridDim, blockDim>>>( out, left, std::get<uint8_t>( right ) );
     }
 
-    void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseAnd_Tensor_Vector_Impl, ( aOut, aLeft, aRight ) );
+        AndOp( tensorElementType, out, right, left );
     }
 
-    void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize, memory_buffer_t &broadcastSizes,
+                uint32_t maxBroadcastSizes )
     {
-        BitwiseAndOp( aTensorElementType, aOut, aRight, aLeft );
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::And<<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
-    template <typename _Ty>
-    void BitwiseOr_Tensor_Scalar_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
+    void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOr<<<lGridDim, lBlockDim>>>( aOut, aIn, std::get<_Ty>( aConstant ) );
+        Kernels::And<<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseOr_Tensor_Scalar_Impl, ( aOut, aLeft, aRight ) );
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::And<<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        BitwiseOrOp( aTensorElementType, aOut, aRight, aLeft );
+        AndOp( tensorElementType, out, right, left );
     }
 
-    template <typename _Ty>
-    void BitwiseOr_Tensor_Tensor_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant )
+    void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOr<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Or<<<gridDim, blockDim>>>( out, left, std::get<uint8_t>( right ) );
     }
 
-    void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseOr_Tensor_Tensor_Impl, ( aOut, aLeft, aRight ) );
+        OrOp( tensorElementType, out, right, left );
     }
 
-    template <typename _Ty>
-    static void BitwiseOr_Tensor_Tensor_Impl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant,
-                                              broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
-                                              memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes )
+    void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOr<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::Or<<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                      broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                      uint32_t aMaxBroadcastSizes )
+    void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+               broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize, memory_buffer_t &broadcastSizes,
+               uint32_t maxBroadcastSizes )
     {
-        DISPATCH_BY_INTEGRAL_TYPE(
-            aTensorElementType, BitwiseOr_Tensor_Tensor_Impl,
-            ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::Or<<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
-    template <typename _Ty>
-    void BitwiseOrTensorVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, memory_buffer_t &aConstant )
+    void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::BitwiseOr<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant );
+        Kernels::Or<<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseOrTensorVectorImpl, ( aOut, aLeft, aRight ) );
+        OrOp( tensorElementType, out, right, left );
     }
 
-    void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void NotOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aOperand )
     {
-        BitwiseOrOp( aTensorElementType, aOut, aRight, aLeft );
+        int blockCount = ( aOperand.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aOperand.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::Not<<<gridDim, blockDim>>>( out, aOperand );
     }
 
     template <typename _Ty>
-    void BitwiseNotTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aIn )
+    void BitwiseAnd_Tensor_Scalar_Impl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int lBlockCount = ( aIn.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Bitwise<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn );
+        Kernels::BitwiseAnd<<<gridDim, blockDim>>>( out, in, std::get<_Ty>( constant ) );
     }
 
-    void BitwiseNotOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aOperand )
+    void BitwiseAndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_INTEGRAL_TYPE( aTensorElementType, BitwiseNotTensorImpl, ( aOut, aOperand ) );
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseAnd_Tensor_Scalar_Impl, ( out, left, right ) );
     }
 
-    template <typename _Ty>
-    static void EqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void BitwiseAndOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::EqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl, ( aOut, aLeft, aRight ) );
+        BitwiseAndOp( tensorElementType, out, right, left );
     }
 
     template <typename _Ty>
-    static void EqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                             memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                             uint32_t aMaxBroadcastSizes )
+    static void BitwiseAnd_Tensor_Tensor_Impl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                               broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                               memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::EqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::BitwiseAnd<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
     }
 
-    void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                  broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                  uint32_t aMaxBroadcastSizes )
+    void BitwiseAndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                       broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                       memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseAnd_Tensor_Tensor_Impl,
+                                   ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
     }
 
     template <typename _Ty>
-    static void EqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void BitwiseAnd_Tensor_Tensor_Impl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::EqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::BitwiseAnd<_Ty><<<gridDim, blockDim>>>( out, in, constant );
     }
 
-    void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void BitwiseAndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseAnd_Tensor_Tensor_Impl, ( out, left, right ) );
+    }
+
+    template <typename _Ty>
+    void BitwiseAnd_Tensor_Vector_Impl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
+    {
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::BitwiseAnd<_Ty><<<gridDim, blockDim>>>( out, in, constant );
+    }
+
+    void BitwiseAndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseAnd_Tensor_Vector_Impl, ( out, left, right ) );
+    }
+
+    void BitwiseAndOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
+    {
+        BitwiseAndOp( tensorElementType, out, right, left );
+    }
+
+    template <typename _Ty>
+    void BitwiseOr_Tensor_Scalar_Impl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
+    {
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::BitwiseOr<<<gridDim, blockDim>>>( out, in, std::get<_Ty>( constant ) );
+    }
+
+    void BitwiseOrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
+    {
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseOr_Tensor_Scalar_Impl, ( out, left, right ) );
+    }
+
+    void BitwiseOrOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
+    {
+        BitwiseOrOp( tensorElementType, out, right, left );
+    }
+
+    template <typename _Ty>
+    void BitwiseOr_Tensor_Tensor_Impl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
+    {
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::BitwiseOr<_Ty><<<gridDim, blockDim>>>( out, in, constant );
+    }
+
+    void BitwiseOrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
+    {
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseOr_Tensor_Tensor_Impl, ( out, left, right ) );
+    }
+
+    template <typename _Ty>
+    static void BitwiseOr_Tensor_Tensor_Impl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                              broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                              memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
+    {
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::BitwiseOr<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
+    }
+
+    void BitwiseOrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                      broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                      memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
+    {
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseOr_Tensor_Tensor_Impl,
+                                   ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
+    }
+
+    template <typename _Ty>
+    void BitwiseOrTensorVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
+    {
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::BitwiseOr<_Ty><<<gridDim, blockDim>>>( out, in, constant );
+    }
+
+    void BitwiseOrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseOrTensorVectorImpl, ( out, left, right ) );
+    }
+
+    void BitwiseOrOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
+    {
+        BitwiseOrOp( tensorElementType, out, right, left );
+    }
+
+    template <typename _Ty>
+    void BitwiseNotTensorImpl( multi_tensor_t &out, multi_tensor_t &in )
+    {
+        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::Bitwise<_Ty><<<gridDim, blockDim>>>( out, in );
+    }
+
+    void BitwiseNotOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aOperand )
+    {
+        DISPATCH_BY_INTEGRAL_TYPE( tensorElementType, BitwiseNotTensorImpl, ( out, aOperand ) );
+    }
+
+    template <typename _Ty>
+    static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
+    {
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::EqualOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
+    }
+
+    void EqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, EqualOpImpl, ( out, left, right ) );
+    }
+
+    template <typename _Ty>
+    static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant, broadcast_hint_t aBroadcastHint,
+                             memory_buffer_t &blockSizes, uint32_t maxBlockSize, memory_buffer_t &broadcastSizes,
+                             uint32_t maxBroadcastSizes )
+    {
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::EqualOp<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
+    }
+
+    void EqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                  broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize, memory_buffer_t &broadcastSizes,
+                  uint32_t maxBroadcastSizes )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, EqualOpImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
+    }
+
+    template <typename _Ty>
+    static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::EqualOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
+    }
+
+    void EqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, EqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _ScalarType>
-    static void EqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::EqualOp<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<_ScalarType>( aRight ) );
+        Kernels::EqualOp<_ScalarType><<<gridDim, blockDim>>>( out, left, std::get<_ScalarType>( right ) );
     }
 
-    void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void EqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    template <typename _Ty>
-    static void EqualOpImpl( multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aRight.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aRight.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::EqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, EqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void EqualOpImpl( multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    static void EqualOpImpl( multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aRight.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aRight.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::EqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aLeft ), aRight );
+        Kernels::EqualOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void EqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, EqualOpImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    template <typename _Ty>
-    static void LessThanOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::LessThanOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, EqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void LessThanOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                                memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                                uint32_t aMaxBroadcastSizes )
+    static void EqualOpImpl( multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::EqualOp<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( left ), right );
     }
 
-    void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                     uint32_t aMaxBroadcastSizes )
+    void EqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        DISPATCH_BY_TYPE( tensorElementType, EqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void LessThanOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::LessThanOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void LessThanOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOpImpl, ( out, left, right ) );
+    }
+
+    template <typename _Ty>
+    static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant, broadcast_hint_t aBroadcastHint,
+                                memory_buffer_t &blockSizes, uint32_t maxBlockSize, memory_buffer_t &broadcastSizes,
+                                uint32_t maxBroadcastSizes )
+    {
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::LessThanOp<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
+    }
+
+    void LessThanOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                     memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOpImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
+    }
+
+    template <typename _Ty>
+    static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::LessThanOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
+    }
+
+    void LessThanOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOpImpl, ( out, left, right ) );
     }
 
     template <typename _ScalarType>
-    static void LessThanOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOp<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<_ScalarType>( aRight ) );
+        Kernels::LessThanOp<_ScalarType><<<gridDim, blockDim>>>( out, left, std::get<_ScalarType>( right ) );
     }
 
-    void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void LessThanOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    template <typename _Ty>
-    static void LessThanOpImpl( multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aRight.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aRight.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::LessThanOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void LessThanOpImpl( multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    static void LessThanOpImpl( multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aRight.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aRight.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aLeft ), aRight );
+        Kernels::LessThanOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void LessThanOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOpImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    template <typename _Ty>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::LessThanOrEqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aIn, multi_tensor_t &aConstant, broadcast_hint_t aBroadcastHint,
-                                       memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                                       uint32_t aMaxBroadcastSizes )
+    static void LessThanOpImpl( multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aMaxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aIn.Shape().CountLayers(), aMaxBlockSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOrEqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aIn, aConstant, aBroadcastHint, aBlockSizes, aBroadcastSizes );
+        Kernels::LessThanOp<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( left ), right );
     }
 
-    void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                            broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
-                            memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes )
+    void LessThanOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl,
-                          ( aOut, aLeft, aRight, aBroadcastHint, aBlockSizes, aMaxBlockSize, aBroadcastSizes, aMaxBroadcastSizes ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOrEqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
+        Kernels::LessThanOrEqualOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void LessThanOrEqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOrEqualOpImpl, ( out, left, right ) );
+    }
+
+    template <typename _Ty>
+    static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant,
+                                       broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                                       memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
+    {
+        int blockCount = ( maxBroadcastSizes / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( in.Shape().CountLayers(), maxBlockSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::LessThanOrEqualOp<_Ty><<<gridDim, blockDim>>>( out, in, constant, aBroadcastHint, blockSizes, broadcastSizes );
+    }
+
+    void LessThanOrEqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
+                            broadcast_hint_t aBroadcastHint, memory_buffer_t &blockSizes, uint32_t maxBlockSize,
+                            memory_buffer_t &broadcastSizes, uint32_t maxBroadcastSizes )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOrEqualOpImpl,
+                          ( out, left, right, aBroadcastHint, blockSizes, maxBlockSize, broadcastSizes, maxBroadcastSizes ) );
+    }
+
+    template <typename _Ty>
+    static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::LessThanOrEqualOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
+    }
+
+    void LessThanOrEqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOrEqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _ScalarType>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int lBlockCount = ( aLeft.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOrEqualOp<_ScalarType><<<lGridDim, lBlockDim>>>( aOut, aLeft, std::get<_ScalarType>( aRight ) );
+        Kernels::LessThanOrEqualOp<_ScalarType><<<gridDim, blockDim>>>( out, left, std::get<_ScalarType>( right ) );
     }
 
-    void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void LessThanOrEqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl, ( aOut, aLeft, aRight ) );
-    }
-
-    template <typename _Ty>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        int lBlockCount = ( aRight.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aRight.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::LessThanOrEqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight );
-    }
-
-    void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOrEqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void LessThanOrEqualOpImpl( multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    static void LessThanOrEqualOpImpl( multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        int lBlockCount = ( aRight.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aRight.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LessThanOrEqualOp<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( aLeft ), aRight );
+        Kernels::LessThanOrEqualOp<_Ty><<<gridDim, blockDim>>>( out, left, right );
     }
 
-    void LessThanOrEqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void LessThanOrEqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, LessThanOrEqualOpImpl, ( aOut, aLeft, aRight ) );
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOrEqualOpImpl, ( out, left, right ) );
     }
 
     template <typename _Ty>
-    static void InIntervalTensorTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, multi_tensor_t &aUpper,
+    static void LessThanOrEqualOpImpl( multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
+    {
+        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::LessThanOrEqualOp<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( left ), right );
+    }
+
+    void LessThanOrEqualOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, LessThanOrEqualOpImpl, ( out, left, right ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalTensorTensorImpl( multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower, multi_tensor_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, aLower, aUpper, aStrictLower, aStrictUpper );
     }
 
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, multi_tensor_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower,
+                       multi_tensor_t &aUpper, bool aStrictLower, bool aStrictUpper )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalTensorTensorImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void InIntervalTensorVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, memory_buffer_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, memory_buffer_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalTensorVectorImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalTensorTensorImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
     }
 
     template <typename _Ty>
-    static void InIntervalTensorScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, scalar_value_t &aUpper,
+    static void InIntervalTensorVectorImpl( multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower, memory_buffer_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower,
+                       memory_buffer_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalTensorVectorImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalTensorScalarImpl( multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower, scalar_value_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, aLower, std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower,
+                       scalar_value_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalTensorScalarImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalVectorTensorImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower, multi_tensor_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower,
+                       multi_tensor_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalVectorTensorImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalVectorVectorImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower, memory_buffer_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, aLower, aUpper, aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower,
+                       memory_buffer_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalVectorVectorImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalVectorScalarImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower, scalar_value_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, aLower, std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower,
+                       scalar_value_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalVectorScalarImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalScalarTensorImpl( multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower, multi_tensor_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, std::get<_Ty>( aLower ), aUpper, aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower,
+                       multi_tensor_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalScalarTensorImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalScalarVectorImpl( multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower, memory_buffer_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::InInterval<_Ty><<<gridDim, blockDim>>>( out, aX, std::get<_Ty>( aLower ), aUpper, aStrictLower, aStrictUpper );
+    }
+
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower,
+                       memory_buffer_t &aUpper, bool aStrictLower, bool aStrictUpper )
+    {
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalScalarVectorImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+    }
+
+    template <typename _Ty>
+    static void InIntervalScalarScalarImpl( multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower, scalar_value_t &aUpper,
+                                            bool aStrictLower, bool aStrictUpper )
+    {
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
         Kernels::InInterval<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aX, aLower, std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
+            <<<gridDim, blockDim>>>( out, aX, std::get<_Ty>( aLower ), std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
     }
 
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, scalar_value_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
+    void InIntervalOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower,
+                       scalar_value_t &aUpper, bool aStrictLower, bool aStrictUpper )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalTensorScalarImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
+        DISPATCH_BY_TYPE( tensorElementType, InIntervalScalarScalarImpl, ( out, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
     }
 
     template <typename _Ty>
-    static void InIntervalVectorTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, multi_tensor_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, multi_tensor_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalVectorTensorImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void InIntervalVectorVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, memory_buffer_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, memory_buffer_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalVectorVectorImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void InIntervalVectorScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, scalar_value_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aX, aLower, std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, scalar_value_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalVectorScalarImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void InIntervalScalarTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, multi_tensor_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aX, std::get<_Ty>( aLower ), aUpper, aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, multi_tensor_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalScalarTensorImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void InIntervalScalarVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, memory_buffer_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aX, std::get<_Ty>( aLower ), aUpper, aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, memory_buffer_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalScalarVectorImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void InIntervalScalarScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, scalar_value_t &aUpper,
-                                            bool aStrictLower, bool aStrictUpper )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::InInterval<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aX, std::get<_Ty>( aLower ), std::get<_Ty>( aUpper ), aStrictLower, aStrictUpper );
-    }
-
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, scalar_value_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper )
-    {
-        DISPATCH_BY_TYPE( aTensorElementType, InIntervalScalarScalarImpl, ( aOut, aX, aLower, aUpper, aStrictLower, aStrictUpper ) );
-    }
-
-    template <typename _Ty>
-    static void WhereOpTensorTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
+    static void WhereOpTensorTensorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                                          multi_tensor_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereTensorTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, aValueIfTrue, aValueIfFalse );
+        Kernels::WhereTensorTensor<_Ty><<<gridDim, blockDim>>>( out, aCondition, aValueIfTrue, aValueIfFalse );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                   multi_tensor_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereOpTensorTensorImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereOpTensorTensorImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereTensorVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
+    static void WhereTensorVectorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                                        memory_buffer_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereTensorVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, aValueIfTrue, aValueIfFalse );
+        Kernels::WhereTensorVector<_Ty><<<gridDim, blockDim>>>( out, aCondition, aValueIfTrue, aValueIfFalse );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                   memory_buffer_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereTensorVectorImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereTensorVectorImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereTensorScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
+    static void WhereTensorScalarImpl( multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                                        scalar_value_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereTensorScalar<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, aValueIfTrue, std::get<_Ty>( aValueIfFalse ) );
+        Kernels::WhereTensorScalar<_Ty><<<gridDim, blockDim>>>( out, aCondition, aValueIfTrue, std::get<_Ty>( aValueIfFalse ) );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                   scalar_value_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereTensorScalarImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereTensorScalarImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereVectorTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
+    static void WhereVectorTensorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                                        multi_tensor_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereVectorTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, aValueIfTrue, aValueIfFalse );
+        Kernels::WhereVectorTensor<_Ty><<<gridDim, blockDim>>>( out, aCondition, aValueIfTrue, aValueIfFalse );
     }
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                   multi_tensor_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereVectorTensorImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereVectorTensorImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereVectorVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
+    static void WhereVectorVectorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                                        memory_buffer_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereVectorVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, aValueIfTrue, aValueIfFalse );
+        Kernels::WhereVectorVector<_Ty><<<gridDim, blockDim>>>( out, aCondition, aValueIfTrue, aValueIfFalse );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                   memory_buffer_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereVectorVectorImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereVectorVectorImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereVectorScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
+    static void WhereVectorScalarImpl( multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                                        scalar_value_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereVectorScalar<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, aValueIfTrue, std::get<_Ty>( aValueIfFalse ) );
+        Kernels::WhereVectorScalar<_Ty><<<gridDim, blockDim>>>( out, aCondition, aValueIfTrue, std::get<_Ty>( aValueIfFalse ) );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                   scalar_value_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereVectorScalarImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereVectorScalarImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereScalarTensorImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
+    static void WhereScalarTensorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                                        multi_tensor_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereScalarTensor<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, std::get<_Ty>( aValueIfTrue ), aValueIfFalse );
+        Kernels::WhereScalarTensor<_Ty><<<gridDim, blockDim>>>( out, aCondition, std::get<_Ty>( aValueIfTrue ), aValueIfFalse );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                   multi_tensor_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereScalarTensorImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereScalarTensorImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereScalarVectorImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
+    static void WhereScalarVectorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                                        memory_buffer_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::WhereScalarVector<_Ty><<<lGridDim, lBlockDim>>>( aOut, aCondition, std::get<_Ty>( aValueIfTrue ), aValueIfFalse );
+        Kernels::WhereScalarVector<_Ty><<<gridDim, blockDim>>>( out, aCondition, std::get<_Ty>( aValueIfTrue ), aValueIfFalse );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                   memory_buffer_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereScalarVectorImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereScalarVectorImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void WhereScalarScalarImpl( multi_tensor_t &aOut, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
+    static void WhereScalarScalarImpl( multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                                        scalar_value_t &aValueIfFalse )
     {
-        int lBlockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aCondition.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
         Kernels::WhereScalarScalar<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aCondition, std::get<_Ty>( aValueIfTrue ), std::get<_Ty>( aValueIfFalse ) );
+            <<<gridDim, blockDim>>>( out, aCondition, std::get<_Ty>( aValueIfTrue ), std::get<_Ty>( aValueIfFalse ) );
     }
 
-    void WhereOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
+    void WhereOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                   scalar_value_t &aValueIfFalse )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, WhereScalarScalarImpl, ( aOut, aCondition, aValueIfTrue, aValueIfFalse ) );
+        DISPATCH_BY_TYPE( tensorElementType, WhereScalarScalarImpl, ( out, aCondition, aValueIfTrue, aValueIfFalse ) );
     }
 
     template <typename _Ty>
-    static void RepeatOpImpl( multi_tensor_t &aOut, multi_tensor_t &aArray, memory_buffer_t &aRepetitions, uint32_t lMaxRepetitions )
+    static void RepeatOpImpl( multi_tensor_t &out, multi_tensor_t &aArray, memory_buffer_t &aRepetitions, uint32_t lMaxRepetitions )
     {
-        int lBlockCount = ( lMaxRepetitions / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( lMaxRepetitions / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray.Shape().CountLayers(), aArray.Shape().mMaxBufferSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray.Shape().CountLayers(), aArray.Shape().mMaxBufferSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Repeat<_Ty><<<lGridDim, lBlockDim>>>( aOut, aArray, aRepetitions );
+        Kernels::Repeat<_Ty><<<gridDim, blockDim>>>( out, aArray, aRepetitions );
     }
 
-    void RepeatOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aArray, memory_buffer_t &aRepetitions,
+    void RepeatOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aArray, memory_buffer_t &aRepetitions,
                    uint32_t lMaxRepetitions )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, RepeatOpImpl, ( aOut, aArray, aRepetitions, lMaxRepetitions ) );
+        DISPATCH_BY_TYPE( tensorElementType, RepeatOpImpl, ( out, aArray, aRepetitions, lMaxRepetitions ) );
     }
 
     template <typename _Ty>
-    static void TileOpImpl( multi_tensor_t &aOut, multi_tensor_t &aArray, memory_buffer_t &aRepetitions, uint32_t lMaxRepetitions )
+    static void TileOpImpl( multi_tensor_t &out, multi_tensor_t &aArray, memory_buffer_t &aRepetitions, uint32_t lMaxRepetitions )
     {
-        int lBlockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray.Shape().CountLayers(), lMaxRepetitions, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray.Shape().CountLayers(), lMaxRepetitions, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Tile<_Ty><<<lGridDim, lBlockDim>>>( aOut, aArray, aRepetitions );
+        Kernels::Tile<_Ty><<<gridDim, blockDim>>>( out, aArray, aRepetitions );
     }
 
-    void TileOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aArray, memory_buffer_t &aRepetitions,
+    void TileOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aArray, memory_buffer_t &aRepetitions,
                  uint32_t lMaxRepetitions )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, TileOpImpl, ( aOut, aArray, aRepetitions, lMaxRepetitions ) );
+        DISPATCH_BY_TYPE( tensorElementType, TileOpImpl, ( out, aArray, aRepetitions, lMaxRepetitions ) );
     }
 
     template <typename _Ty>
-    static void LinearSpaceOpImpl( multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight, memory_buffer_t &aSubdivisions,
+    static void LinearSpaceOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right, memory_buffer_t &aSubdivisions,
                                    uint32_t aMaxSubdivisions )
     {
-        int lBlockCount = ( aMaxSubdivisions / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aMaxSubdivisions / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aLeft.Shape().CountLayers(), aLeft.Shape().mMaxBufferSize, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( left.Shape().CountLayers(), left.Shape().mMaxBufferSize, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::LinearSpace<_Ty><<<lGridDim, lBlockDim>>>( aOut, aLeft, aRight, aSubdivisions );
+        Kernels::LinearSpace<_Ty><<<gridDim, blockDim>>>( out, left, right, aSubdivisions );
     }
 
-    void LinearSpaceOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
+    void LinearSpaceOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right,
                         memory_buffer_t &aSubdivisions, uint32_t aMaxSubdivisions )
     {
-        switch( aTensorElementType )
+        switch( tensorElementType )
         {
         case scalar_type_t::FLOAT32:
         {
-            LinearSpaceOpImpl<float>( aOut, aLeft, aRight, aSubdivisions, aMaxSubdivisions );
+            LinearSpaceOpImpl<float>( out, left, right, aSubdivisions, aMaxSubdivisions );
             break;
         }
         case scalar_type_t::FLOAT64:
         {
-            LinearSpaceOpImpl<double>( aOut, aLeft, aRight, aSubdivisions, aMaxSubdivisions );
+            LinearSpaceOpImpl<double>( out, left, right, aSubdivisions, aMaxSubdivisions );
             break;
         }
         default:
@@ -1492,119 +1481,119 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void MixImpl( multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &B, multi_tensor_t &t )
+    static void MixImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &B, multi_tensor_t &t )
     {
-        int lBlockCount = ( A.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( A.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( A.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( A.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Mix<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, B, t );
+        Kernels::Mix<_Ty><<<gridDim, blockDim>>>( out, A, B, t );
     }
 
-    void MixOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &B, multi_tensor_t &t )
+    void MixOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &B, multi_tensor_t &t )
     {
-        DISPATCH_BY_TYPE( aTensorElementType, MixImpl, ( aOut, A, B, t ) );
+        DISPATCH_BY_TYPE( tensorElementType, MixImpl, ( out, A, B, t ) );
     }
 
-    void Sample2DOp( multi_tensor_t &aOut, multi_tensor_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
+    void Sample2DOp( multi_tensor_t &out, multi_tensor_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Sample2D<<<lGridDim, lBlockDim>>>( aOut, X, Y, aTextures );
+        Kernels::Sample2D<<<gridDim, blockDim>>>( out, X, Y, aTextures );
     }
 
-    void Sample2DOp( multi_tensor_t &aOut, multi_tensor_t &X, memory_buffer_t &Y, memory_buffer_t &aTextures )
+    void Sample2DOp( multi_tensor_t &out, multi_tensor_t &X, memory_buffer_t &Y, memory_buffer_t &aTextures )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Sample2D<<<lGridDim, lBlockDim>>>( aOut, X, Y, aTextures );
+        Kernels::Sample2D<<<gridDim, blockDim>>>( out, X, Y, aTextures );
     }
 
-    void Sample2DOp( multi_tensor_t &aOut, multi_tensor_t &X, scalar_value_t &Y, memory_buffer_t &aTextures )
+    void Sample2DOp( multi_tensor_t &out, multi_tensor_t &X, scalar_value_t &Y, memory_buffer_t &aTextures )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Sample2D<<<lGridDim, lBlockDim>>>( aOut, X, std::get<float>( Y ), aTextures );
+        Kernels::Sample2D<<<gridDim, blockDim>>>( out, X, std::get<float>( Y ), aTextures );
     }
 
-    void Sample2DOp( multi_tensor_t &aOut, memory_buffer_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
+    void Sample2DOp( multi_tensor_t &out, memory_buffer_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
     {
-        int lBlockCount = ( Y.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( Y.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( Y.Shape().CountLayers(), lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( Y.Shape().CountLayers(), blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Sample2D<<<lGridDim, lBlockDim>>>( aOut, X, Y, aTextures );
+        Kernels::Sample2D<<<gridDim, blockDim>>>( out, X, Y, aTextures );
     }
 
-    void Sample2DOp( multi_tensor_t &aOut, scalar_value_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
+    void Sample2DOp( multi_tensor_t &out, scalar_value_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
     {
-        int lBlockCount = ( Y.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( Y.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( Y.Shape().CountLayers(), lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( Y.Shape().CountLayers(), blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Sample2D<<<lGridDim, lBlockDim>>>( aOut, std::get<float>( X ), Y, aTextures );
+        Kernels::Sample2D<<<gridDim, blockDim>>>( out, std::get<float>( X ), Y, aTextures );
     }
 
     template <typename _Ty>
-    static void ToFixedPointOpImpl( multi_tensor_t &aOut, scalar_type_t aOutputElementType, multi_tensor_t &aArray, _Ty aScaling )
+    static void ToFixedPointOpImpl( multi_tensor_t &out, scalar_type_t outputElementType, multi_tensor_t &aArray, _Ty aScaling )
     {
-        int lBlockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        switch( aOutputElementType )
+        switch( outputElementType )
         {
         case scalar_type_t::UINT8:
         {
-            Kernels::ToFixedPoint<_Ty, uint8_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, uint8_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::UINT16:
         {
-            Kernels::ToFixedPoint<_Ty, uint16_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, uint16_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::UINT32:
         {
-            Kernels::ToFixedPoint<_Ty, uint32_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, uint32_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::UINT64:
         {
-            Kernels::ToFixedPoint<_Ty, uint64_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, uint64_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::INT8:
         {
-            Kernels::ToFixedPoint<_Ty, int8_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, int8_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::INT16:
         {
-            Kernels::ToFixedPoint<_Ty, int16_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, int16_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::INT32:
         {
-            Kernels::ToFixedPoint<_Ty, int32_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, int32_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         case scalar_type_t::INT64:
         {
-            Kernels::ToFixedPoint<_Ty, int64_t><<<lGridDim, lBlockDim>>>( aOut, aArray, aScaling );
+            Kernels::ToFixedPoint<_Ty, int64_t><<<gridDim, blockDim>>>( out, aArray, aScaling );
             break;
         }
         default:
@@ -1612,19 +1601,19 @@ namespace SE::TensorOps
         }
     }
 
-    void ToFixedPointOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_type_t aOutputElementType, multi_tensor_t &aArray,
+    void ToFixedPointOp( scalar_type_t tensorElementType, multi_tensor_t &out, scalar_type_t outputElementType, multi_tensor_t &aArray,
                          scalar_value_t &aScaling )
     {
-        switch( aTensorElementType )
+        switch( tensorElementType )
         {
         case scalar_type_t::FLOAT32:
         {
-            ToFixedPointOpImpl<float>( aOut, aOutputElementType, aArray, std::get<float>( aScaling ) );
+            ToFixedPointOpImpl<float>( out, outputElementType, aArray, std::get<float>( aScaling ) );
             break;
         }
         case scalar_type_t::FLOAT64:
         {
-            ToFixedPointOpImpl<double>( aOut, aOutputElementType, aArray, std::get<double>( aScaling ) );
+            ToFixedPointOpImpl<double>( out, outputElementType, aArray, std::get<double>( aScaling ) );
             break;
         }
         default:
@@ -1633,382 +1622,387 @@ namespace SE::TensorOps
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &X, multi_tensor_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X, multi_tensor_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, X, B );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, A, X, B );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &X, memory_buffer_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X, memory_buffer_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, X, B );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, A, X, B );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &X, scalar_value_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X, scalar_value_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, X, std::get<_Ty>( B ) );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, A, X, std::get<_Ty>( B ) );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, memory_buffer_t &A, multi_tensor_t &X, multi_tensor_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X, multi_tensor_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, X, B );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, A, X, B );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, memory_buffer_t &A, multi_tensor_t &X, memory_buffer_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X, memory_buffer_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, X, B );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, A, X, B );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, memory_buffer_t &A, multi_tensor_t &X, scalar_value_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X, scalar_value_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, A, X, std::get<_Ty>( B ) );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, A, X, std::get<_Ty>( B ) );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, scalar_value_t &A, multi_tensor_t &X, multi_tensor_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X, multi_tensor_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( A ), X, B );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( A ), X, B );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, scalar_value_t &A, multi_tensor_t &X, memory_buffer_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X, memory_buffer_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( A ), X, B );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( A ), X, B );
     }
 
     template <typename _Ty>
-    static void AffineTransformImpl( multi_tensor_t &aOut, scalar_value_t &A, multi_tensor_t &X, scalar_value_t &B )
+    static void AffineTransformImpl( multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X, scalar_value_t &B )
     {
-        int lBlockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( X.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::AffineTransform<_Ty><<<lGridDim, lBlockDim>>>( aOut, std::get<_Ty>( A ), X, std::get<_Ty>( B ) );
+        Kernels::AffineTransform<_Ty><<<gridDim, blockDim>>>( out, std::get<_Ty>( A ), X, std::get<_Ty>( B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &X, multi_tensor_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X,
+                            multi_tensor_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &X, memory_buffer_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X,
+                            memory_buffer_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &A, multi_tensor_t &X, scalar_value_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X,
+                            scalar_value_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, memory_buffer_t &A, multi_tensor_t &X, multi_tensor_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X,
+                            multi_tensor_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, memory_buffer_t &A, multi_tensor_t &X, memory_buffer_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X,
+                            memory_buffer_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, memory_buffer_t &A, multi_tensor_t &X, scalar_value_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X,
+                            scalar_value_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, scalar_value_t &A, multi_tensor_t &X, multi_tensor_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X,
+                            multi_tensor_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, scalar_value_t &A, multi_tensor_t &X, memory_buffer_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X,
+                            memory_buffer_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void AffineTransformOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, scalar_value_t &A, multi_tensor_t &X, scalar_value_t &B )
+    void AffineTransformOp( scalar_type_t outputElementType, multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X,
+                            scalar_value_t &B )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, AffineTransformImpl, ( aOut, A, X, B ) );
+        DISPATCH_BY_TYPE( outputElementType, AffineTransformImpl, ( out, A, X, B ) );
     }
 
-    void FloorOp( multi_tensor_t &aOut, multi_tensor_t &aX )
+    void FloorOp( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Floor<<<lGridDim, lBlockDim>>>( aOut, aX );
+        Kernels::Floor<<<gridDim, blockDim>>>( out, aX );
     }
 
-    void CeilOp( multi_tensor_t &aOut, multi_tensor_t &aX )
+    void CeilOp( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Ceil<<<lGridDim, lBlockDim>>>( aOut, aX );
-    }
-
-    template <typename _Ty>
-    void AbsImpl( multi_tensor_t &aOut, multi_tensor_t &aX )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Abs<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX );
-    }
-
-    void AbsOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX )
-    {
-        DISPATCH_BY_SIGNED_TYPE( aOutputElementType, AbsImpl, ( aOut, aX ) );
+        Kernels::Ceil<<<gridDim, blockDim>>>( out, aX );
     }
 
     template <typename _Ty>
-    void SqrtImpl( multi_tensor_t &aOut, multi_tensor_t &aX )
+    void AbsImpl( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Sqrt<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX );
+        Kernels::Abs<_Ty><<<gridDim, blockDim>>>( out, aX );
     }
 
-    void SqrtOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX )
+    void AbsOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, SqrtImpl, ( aOut, aX ) );
-    }
-
-    template <typename _Ty>
-    void RoundImpl( multi_tensor_t &aOut, multi_tensor_t &aX )
-    {
-        int lBlockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Round<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX );
-    }
-
-    void RoundOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX )
-    {
-        DISPATCH_BY_TYPE( aOutputElementType, RoundImpl, ( aOut, aX ) );
-    }
-
-    void CountTrueOp( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBlockSizes, memory_buffer_t &aElementCount,
-                      uint32_t aMaxBlockSize )
-    {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::CountNonZero<uint8_t><<<lGridDim, lBlockDim>>>( aOut, aX, aBlockSizes, aElementCount );
+        DISPATCH_BY_SIGNED_TYPE( outputElementType, AbsImpl, ( out, aX ) );
     }
 
     template <typename _Ty>
-    void CountNonZeroImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBlockSizes, memory_buffer_t &aElementCount,
-                           uint32_t aMaxBlockSize )
+    void SqrtImpl( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::CountNonZero<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aBlockSizes, aElementCount );
+        Kernels::Sqrt<_Ty><<<gridDim, blockDim>>>( out, aX );
     }
 
-    void CountNonZeroOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBlockSizes,
-                         memory_buffer_t &aElementCount, uint32_t aMaxBlockSize )
+    void SqrtOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, CountNonZeroImpl, ( aOut, aX, aBlockSizes, aElementCount, aMaxBlockSize ) );
-    }
-
-    template <typename _Ty>
-    void CountZeroImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBlockSizes, memory_buffer_t &aElementCount,
-                        uint32_t aMaxBlockSize )
-    {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::CountZero<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aBlockSizes, aElementCount );
-    }
-
-    void CountZeroOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBlockSizes,
-                      memory_buffer_t &aElementCount, uint32_t aMaxBlockSize )
-    {
-        DISPATCH_BY_TYPE( aOutputElementType, CountZeroImpl, ( aOut, aX, aBlockSizes, aElementCount, aMaxBlockSize ) );
+        DISPATCH_BY_TYPE( outputElementType, SqrtImpl, ( out, aX ) );
     }
 
     template <typename _Ty>
-    void ArraySummationImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin, memory_buffer_t &aEnd, memory_buffer_t &aElementCount,
-                             memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void RoundImpl( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::ArraySummation<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aBegin, aEnd, aElementCount, aBlockSizes );
+        Kernels::Round<_Ty><<<gridDim, blockDim>>>( out, aX );
     }
 
-    void ArraySummationOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin,
-                           memory_buffer_t &aEnd, memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void RoundOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, ArraySummationImpl,
-                          ( aOut, aX, aBegin, aEnd, aElementCount, aBlockSizes, aMaxBlockSize ) );
+        DISPATCH_BY_TYPE( outputElementType, RoundImpl, ( out, aX ) );
     }
 
-    template <typename _Ty>
-    void ArraySliceImpl( multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin, memory_buffer_t &aEnd, memory_buffer_t &aElementCount,
-                         memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void CountTrueOp( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &blockSizes, memory_buffer_t &aElementCount,
+                      uint32_t maxBlockSize )
     {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::ArraySlice<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aBegin, aEnd, aElementCount, aBlockSizes );
-    }
-
-    void ArraySliceOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin, memory_buffer_t &aEnd,
-                       memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
-    {
-        DISPATCH_BY_TYPE( aOutputElementType, ArraySliceImpl, ( aOut, aX, aBegin, aEnd, aElementCount, aBlockSizes, aMaxBlockSize ) );
+        Kernels::CountNonZero<uint8_t><<<gridDim, blockDim>>>( out, aX, blockSizes, aElementCount );
     }
 
     template <typename _Ty>
-    void DiffImpl( multi_tensor_t &aOut, multi_tensor_t &aX, uint32_t aCount, memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes,
-                   uint32_t aMaxBlockSize )
+    void CountNonZeroImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &blockSizes, memory_buffer_t &aElementCount,
+                           uint32_t maxBlockSize )
     {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::Diff<_Ty><<<lGridDim, lBlockDim>>>( aOut, aX, aCount, aElementCount, aBlockSizes );
+        Kernels::CountNonZero<_Ty><<<gridDim, blockDim>>>( out, aX, blockSizes, aElementCount );
     }
 
-    void DiffOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, uint32_t aCount, memory_buffer_t &aElementCount,
-                 memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void CountNonZeroOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &blockSizes,
+                         memory_buffer_t &aElementCount, uint32_t maxBlockSize )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, DiffImpl, ( aOut, aX, aCount, aElementCount, aBlockSizes, aMaxBlockSize ) );
+        DISPATCH_BY_TYPE( outputElementType, CountNonZeroImpl, ( out, aX, blockSizes, aElementCount, maxBlockSize ) );
     }
 
     template <typename _Ty>
-    void ShiftImpl( multi_tensor_t &aOut, multi_tensor_t &aX, int32_t aCount, scalar_value_t &aFillValue, memory_buffer_t &aElementCount,
-                    memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void CountZeroImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &blockSizes, memory_buffer_t &aElementCount,
+                        uint32_t maxBlockSize )
     {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aX.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::CountZero<_Ty><<<gridDim, blockDim>>>( out, aX, blockSizes, aElementCount );
+    }
+
+    void CountZeroOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &blockSizes,
+                      memory_buffer_t &aElementCount, uint32_t maxBlockSize )
+    {
+        DISPATCH_BY_TYPE( outputElementType, CountZeroImpl, ( out, aX, blockSizes, aElementCount, maxBlockSize ) );
+    }
+
+    template <typename _Ty>
+    void ArraySummationImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aBegin, memory_buffer_t &aEnd,
+                             memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::ArraySummation<_Ty><<<gridDim, blockDim>>>( out, aX, aBegin, aEnd, aElementCount, blockSizes );
+    }
+
+    void ArraySummationOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aBegin,
+                           memory_buffer_t &aEnd, memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        DISPATCH_BY_TYPE( outputElementType, ArraySummationImpl, ( out, aX, aBegin, aEnd, aElementCount, blockSizes, maxBlockSize ) );
+    }
+
+    template <typename _Ty>
+    void ArraySliceImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aBegin, memory_buffer_t &aEnd,
+                         memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::ArraySlice<_Ty><<<gridDim, blockDim>>>( out, aX, aBegin, aEnd, aElementCount, blockSizes );
+    }
+
+    void ArraySliceOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aBegin,
+                       memory_buffer_t &aEnd, memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        DISPATCH_BY_TYPE( outputElementType, ArraySliceImpl, ( out, aX, aBegin, aEnd, aElementCount, blockSizes, maxBlockSize ) );
+    }
+
+    template <typename _Ty>
+    void DiffImpl( multi_tensor_t &out, multi_tensor_t &aX, uint32_t aCount, memory_buffer_t &aElementCount,
+                   memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::Diff<_Ty><<<gridDim, blockDim>>>( out, aX, aCount, aElementCount, blockSizes );
+    }
+
+    void DiffOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX, uint32_t aCount,
+                 memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        DISPATCH_BY_TYPE( outputElementType, DiffImpl, ( out, aX, aCount, aElementCount, blockSizes, maxBlockSize ) );
+    }
+
+    template <typename _Ty>
+    void ShiftImpl( multi_tensor_t &out, multi_tensor_t &aX, int32_t aCount, scalar_value_t &aFillValue,
+                    memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
         if( aCount < 0 )
-            Kernels::ShiftLeft<_Ty>
-                <<<lGridDim, lBlockDim>>>( aOut, aX, -aCount, std::get<_Ty>( aFillValue ), aElementCount, aBlockSizes );
+            Kernels::ShiftLeft<_Ty><<<gridDim, blockDim>>>( out, aX, -aCount, std::get<_Ty>( aFillValue ), aElementCount, blockSizes );
         else
-            Kernels::ShiftRight<_Ty>
-                <<<lGridDim, lBlockDim>>>( aOut, aX, aCount, std::get<_Ty>( aFillValue ), aElementCount, aBlockSizes );
+            Kernels::ShiftRight<_Ty><<<gridDim, blockDim>>>( out, aX, aCount, std::get<_Ty>( aFillValue ), aElementCount, blockSizes );
     }
 
-    void ShiftOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, int32_t aCount, scalar_value_t &aFillValue,
-                  memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void ShiftOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aX, int32_t aCount, scalar_value_t &aFillValue,
+                  memory_buffer_t &aElementCount, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, ShiftImpl, ( aOut, aX, aCount, aFillValue, aElementCount, aBlockSizes, aMaxBlockSize ) );
-    }
-
-    template <typename _Ty>
-    void Conv1DImpl( multi_tensor_t &aOut, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0, memory_buffer_t &aBlockSizes0,
-                     uint32_t aMaxElementCount0, uint32_t aMaxBlockSize0, multi_tensor_t &aArray1, memory_buffer_t &aElementCount1,
-                     memory_buffer_t aBlockSizes1, uint32_t aMaxBlockSize1 )
-    {
-        int lBlockCount = ( aMaxElementCount0 / Private::ThreadsPerBlock ) + 1;
-
-        dim3 lGridDim( aArray0.Shape().CountLayers(), aMaxBlockSize0, lBlockCount );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
-
-        Kernels::Conv1D<_Ty>
-            <<<lGridDim, lBlockDim>>>( aOut, aArray0, aElementCount0, aBlockSizes0, aArray1, aElementCount1, aBlockSizes1 );
-    }
-
-    void Conv1DOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0,
-                   memory_buffer_t &aBlockSizes0, uint32_t aMaxElementCount0, uint32_t aMaxBlockSize0, multi_tensor_t &aArray1,
-                   memory_buffer_t &aElementCount1, memory_buffer_t &aBlockSizes1, uint32_t aMaxBlockSize1 )
-    {
-        DISPATCH_BY_TYPE( aOutputElementType, Conv1DImpl,
-                          ( aOut, aArray0, aElementCount0, aBlockSizes0, aMaxElementCount0, aMaxBlockSize0, aArray1, aElementCount1,
-                            aBlockSizes1, aMaxBlockSize1 ) );
+        DISPATCH_BY_TYPE( outputElementType, ShiftImpl, ( out, aX, aCount, aFillValue, aElementCount, blockSizes, maxBlockSize ) );
     }
 
     template <typename _Ty>
-    void HCatImpl( multi_tensor_t &aOut, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0, multi_tensor_t &aArray1,
-                   memory_buffer_t &aElementCount1, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize )
+    void Conv1DImpl( multi_tensor_t &out, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0, memory_buffer_t &blockSizes0,
+                     uint32_t aMaxElementCount0, uint32_t maxBlockSize0, multi_tensor_t &aArray1, memory_buffer_t &aElementCount1,
+                     memory_buffer_t blockSizes1, uint32_t maxBlockSize1 )
     {
-        int lBlockCount = ( aMaxBlockSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aMaxElementCount0 / Private::ThreadsPerBlock ) + 1;
 
-        dim3 lGridDim( aArray0.Shape().CountLayers(), lBlockCount, 1 );
-        dim3 lBlockDim( Private::ThreadsPerBlock );
+        dim3 gridDim( aArray0.Shape().CountLayers(), maxBlockSize0, blockCount );
+        dim3 blockDim( Private::ThreadsPerBlock );
 
-        Kernels::HCat<_Ty><<<lGridDim, lBlockDim>>>( aOut, aArray0, aElementCount0, aArray1, aElementCount1, aBlockSizes );
+        Kernels::Conv1D<_Ty><<<gridDim, blockDim>>>( out, aArray0, aElementCount0, blockSizes0, aArray1, aElementCount1, blockSizes1 );
     }
 
-    void HCatOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0,
-                 multi_tensor_t &aArray1, memory_buffer_t &aElementCount1, memory_buffer_t &aBlockSizes0, uint32_t aMaxBlockSize0 )
+    void Conv1DOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0,
+                   memory_buffer_t &blockSizes0, uint32_t aMaxElementCount0, uint32_t maxBlockSize0, multi_tensor_t &aArray1,
+                   memory_buffer_t &aElementCount1, memory_buffer_t &blockSizes1, uint32_t maxBlockSize1 )
     {
-        DISPATCH_BY_TYPE( aOutputElementType, HCatImpl,
-                          ( aOut, aArray0, aElementCount0, aArray1, aElementCount1, aBlockSizes0, aMaxBlockSize0 ) );
+        DISPATCH_BY_TYPE( outputElementType, Conv1DImpl,
+                          ( out, aArray0, aElementCount0, blockSizes0, aMaxElementCount0, maxBlockSize0, aArray1, aElementCount1,
+                            blockSizes1, maxBlockSize1 ) );
+    }
+
+    template <typename _Ty>
+    void HCatImpl( multi_tensor_t &out, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0, multi_tensor_t &aArray1,
+                   memory_buffer_t &aElementCount1, memory_buffer_t &blockSizes, uint32_t maxBlockSize )
+    {
+        int blockCount = ( maxBlockSize / Private::ThreadsPerBlock ) + 1;
+
+        dim3 gridDim( aArray0.Shape().CountLayers(), blockCount, 1 );
+        dim3 blockDim( Private::ThreadsPerBlock );
+
+        Kernels::HCat<_Ty><<<gridDim, blockDim>>>( out, aArray0, aElementCount0, aArray1, aElementCount1, blockSizes );
+    }
+
+    void HCatOp( scalar_type_t outputElementType, multi_tensor_t &out, multi_tensor_t &aArray0, memory_buffer_t &aElementCount0,
+                 multi_tensor_t &aArray1, memory_buffer_t &aElementCount1, memory_buffer_t &blockSizes0, uint32_t maxBlockSize0 )
+    {
+        DISPATCH_BY_TYPE( outputElementType, HCatImpl,
+                          ( out, aArray0, aElementCount0, aArray1, aElementCount1, blockSizes0, maxBlockSize0 ) );
     }
 
 } // namespace SE::TensorOps

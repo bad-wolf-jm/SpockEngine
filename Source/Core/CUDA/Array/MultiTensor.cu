@@ -13,11 +13,13 @@ namespace SE::Cuda
 {
     tensor_shape_t::tensor_shape_t( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize )
     {
-        if( aShape.size() == 0 ) return;
+        if( aShape.size() == 0 )
+            return;
 
         for( auto &x : aShape )
         {
-            if( x.size() != aShape[0].size() ) throw std::runtime_error( "All shapes must have the same length!" );
+            if( x.size() != aShape[0].size() )
+                throw std::runtime_error( "All shapes must have the same length!" );
         }
 
         mRank        = aShape[0].size();
@@ -30,12 +32,14 @@ namespace SE::Cuda
 
     tensor_shape_t::tensor_shape_t( vector_t<uint32_t> const &aShape, size_t aElementSize )
     {
-        if( aShape.size() == 0 ) return;
+        if( aShape.size() == 0 )
+            return;
 
         mRank       = 1;
         mLayerCount = aShape.size();
 
-        for( auto &lValue : aShape ) mShape.push_back( { lValue } );
+        for( auto &lValue : aShape )
+            mShape.push_back( { lValue } );
 
         mElementSize = aElementSize;
 
@@ -64,7 +68,9 @@ namespace SE::Cuda
             for( uint32_t i = 0; i < mRank; i++ )
             {
                 mMaxDimensions[i] = std::max( mMaxDimensions[i], lDim[i] );
-                if( i < mRank - 1 ) mStrides[lDimIdx][mRank - i - 2] = mStrides[lDimIdx][mRank - i - 1] * lDim[mRank - i - 1];
+                if( i < mRank - 1 )
+                    mStrides[lDimIdx][mRank - i - 2] = mStrides[lDimIdx][mRank - i - 1] * lDim[mRank - i - 1];
+
                 lSize *= lDim[i];
             }
 
@@ -86,7 +92,8 @@ namespace SE::Cuda
             if( i >= mRank )
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
-            for( auto &lShape : mShape ) lDimension.push_back( lShape[i] );
+            for( auto &lShape : mShape )
+                lDimension.push_back( lShape[i] );
         }
         else
         {
@@ -94,7 +101,8 @@ namespace SE::Cuda
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
 
-            for( auto &lShape : mShape ) lDimension.push_back( lShape[mRank + i] );
+            for( auto &lShape : mShape )
+                lDimension.push_back( lShape[mRank + i] );
         }
         return lDimension;
     }
@@ -105,9 +113,11 @@ namespace SE::Cuda
             throw std::out_of_range(
                 fmt::format( "New dimension array has size {}, but the tensor has {} layers", aDimension.size(), CountLayers() ) );
 
-        if( aPosition < 0 ) aPosition += ( mRank + 1 );
+        if( aPosition < 0 )
+            aPosition += ( mRank + 1 );
 
-        for( uint32_t i = 0; i < CountLayers(); i++ ) mShape[i].insert( mShape[i].begin() + aPosition, aDimension[i] );
+        for( uint32_t i = 0; i < CountLayers(); i++ )
+            mShape[i].insert( mShape[i].begin() + aPosition, aDimension[i] );
 
         mRank++;
 
@@ -116,7 +126,8 @@ namespace SE::Cuda
 
     void tensor_shape_t::Flatten( int32_t aToDimension )
     {
-        if( aToDimension <= 0 ) aToDimension += mRank;
+        if( aToDimension <= 0 )
+            aToDimension += mRank;
 
         vector_t<vector_t<uint32_t>> lNewShape( CountLayers() );
 
@@ -135,9 +146,11 @@ namespace SE::Cuda
 
     void tensor_shape_t::Trim( int32_t aToDimension )
     {
-        if( aToDimension == 0 ) return;
+        if( aToDimension == 0 )
+            return;
 
-        if( aToDimension < 0 ) aToDimension += mRank;
+        if( aToDimension < 0 )
+            aToDimension += mRank;
 
         vector_t<vector_t<uint32_t>> lNewShape( CountLayers() );
 
@@ -155,14 +168,21 @@ namespace SE::Cuda
         return ( lLhs.mSize == lRhs.mSize ) && ( lLhs.mOffset == lRhs.mOffset );
     }
 
-    bool tensor_shape_t::operator==( const tensor_shape_t &lRhs ) { return ( mShape == lRhs.mShape ); }
+    bool tensor_shape_t::operator==( const tensor_shape_t &lRhs )
+    {
+        return ( mShape == lRhs.mShape );
+    }
 
-    bool tensor_shape_t::operator!=( const tensor_shape_t &lRhs ) { return ( mShape != lRhs.mShape ); }
+    bool tensor_shape_t::operator!=( const tensor_shape_t &lRhs )
+    {
+        return ( mShape != lRhs.mShape );
+    }
 
     void tensor_shape_t::SyncDeviceData()
     {
         vector_t<uint32_t> lDimensions( mLayerCount * mRank );
-        uint32_t              k = 0;
+
+        uint32_t k = 0;
         for( uint32_t i = 0; i < mLayerCount; i++ )
         {
             for( uint32_t j = 0; j < mRank; j++ )

@@ -78,8 +78,8 @@ namespace SE::TensorOps
     ///
     void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void AddOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                uint32_t aMaxBroadcastSizes );
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
 
     /// @brief Add a list of scalars to all elements of a tensor
     ///
@@ -104,8 +104,8 @@ namespace SE::TensorOps
     ///
     void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void MultiplyOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                     uint32_t aMaxBroadcastSizes );
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                     memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
 
     /// @brief Multiply the elements of a tensor by a vector of values
     ///
@@ -163,8 +163,8 @@ namespace SE::TensorOps
     ///
     void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void SubtractOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                     uint32_t aMaxBroadcastSizes );
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                     memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
 
     /// @brief Subtract elements of a multi-tensor from the elements of a vector
     ///
@@ -223,8 +223,8 @@ namespace SE::TensorOps
     ///
     void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void DivideOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                   broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                   uint32_t aMaxBroadcastSizes );
+                   broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                   memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
 
     /// @brief Divide the elements of a multi-tensor by the elements of a vector
     ///
@@ -265,8 +265,8 @@ namespace SE::TensorOps
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                uint32_t aMaxBroadcastSizes );
+                broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void AndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
 
@@ -315,8 +315,8 @@ namespace SE::TensorOps
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                       broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                       uint32_t aMaxBroadcastSizes );
+                       broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                       memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void BitwiseAndOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
 
@@ -335,8 +335,8 @@ namespace SE::TensorOps
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                      broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                      uint32_t aMaxBroadcastSizes );
+                      broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                      memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void BitwiseOrOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
 
@@ -364,24 +364,24 @@ namespace SE::TensorOps
     /// @param aStrictLower Should the comparison with the lower bound be strict?
     /// @param aStrictUpper Should the comparison with the upper bound be strict?
     ///
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, multi_tensor_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, memory_buffer_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower, scalar_value_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, multi_tensor_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, memory_buffer_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower, scalar_value_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, multi_tensor_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, memory_buffer_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
-    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower, scalar_value_t &aUpper,
-                       bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower,
+                       multi_tensor_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower,
+                       memory_buffer_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, multi_tensor_t &aLower,
+                       scalar_value_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower,
+                       multi_tensor_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower,
+                       memory_buffer_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aLower,
+                       scalar_value_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower,
+                       multi_tensor_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower,
+                       memory_buffer_t &aUpper, bool aStrictLower, bool aStrictUpper );
+    void InIntervalOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aX, scalar_value_t &aLower,
+                       scalar_value_t &aUpper, bool aStrictLower, bool aStrictUpper );
 
     /// @brief Test equaliy between tensors
     ///
@@ -396,8 +396,8 @@ namespace SE::TensorOps
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                  broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                  uint32_t aMaxBroadcastSizes );
+                  broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                  memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void EqualOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
 
@@ -414,8 +414,8 @@ namespace SE::TensorOps
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize, memory_buffer_t &aBroadcastSizes,
-                     uint32_t aMaxBroadcastSizes );
+                     broadcast_hint_t aBroadcastHint, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize,
+                     memory_buffer_t &aBroadcastSizes, uint32_t aMaxBroadcastSizes );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight );
     void LessThanOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight );
 
@@ -478,8 +478,8 @@ namespace SE::TensorOps
     /// @param aRight Upper bounds
     /// @param aDelta Range step
     ///
-    void ARangeOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, memory_buffer_t &aRight, memory_buffer_t &aDelta,
-                   uint32_t aMaxSubdivisions );
+    void ARangeOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, memory_buffer_t &aRight,
+                   memory_buffer_t &aDelta, uint32_t aMaxSubdivisions );
 
     /// @brief Repeat each element of a multi-tensor.
     ///
@@ -561,12 +561,13 @@ namespace SE::TensorOps
     /// @param aArray Array to repeat
     /// @param aRepetitions Nummber of repetitions
     ///
-    void ToFixedPointOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_type_t a_OutputElementType, multi_tensor_t &Array,
-                         scalar_value_t &Scaling );
+    void ToFixedPointOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_type_t a_OutputElementType,
+                         multi_tensor_t &Array, scalar_value_t &Scaling );
 
     /// @brief Affine transformation
     ///
-    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$ using pointwise operations
+    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$ using pointwise
+    /// operations
     ///
     ///
     /// @param aTensorElementType Type of element in the buffer
@@ -575,13 +576,14 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift tensor
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aA, multi_tensor_t &aX, multi_tensor_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aA, multi_tensor_t &aX,
+                            multi_tensor_t &aB );
 
     /// @brief Affine transformation
     ///
-    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$ using pointwise operations
-    /// for the product, and considering each element of @f$ B @f$ to be a constant to be added to the individual layers of @f$ A\cdot
-    /// X @f$
+    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$ using pointwise
+    /// operations for the product, and considering each element of @f$ B @f$ to be a constant to be added to the individual layers of
+    /// @f$ A\cdot X @f$
     ///
     /// @param aTensorElementType Type of element in the buffer
     /// @param aOut Output tensor.
@@ -589,12 +591,14 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift vector
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aA, multi_tensor_t &aX, memory_buffer_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aA, multi_tensor_t &aX,
+                            memory_buffer_t &aB );
 
     /// @brief Affine transformation
     ///
-    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$ using pointwise operations
-    /// for the product, and considering @f$ B @f$ to be a constant to be added to the individual elements of @f$ A\cdot X @f$
+    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$ using pointwise
+    /// operations for the product, and considering @f$ B @f$ to be a constant to be added to the individual elements of @f$ A\cdot X
+    /// @f$
     ///
     /// @param aTensorElementType Type of element in the buffer
     /// @param aOut Output tensor.
@@ -602,11 +606,13 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aA, multi_tensor_t &aX, scalar_value_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aA, multi_tensor_t &aX,
+                            scalar_value_t &aB );
 
     /// @brief Affine transformation
     ///
-    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$. The values contained in
+    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$. The values contained
+    /// in
     /// @f$ A @f$ are constant coefficients to be applied to each layer in @f$ X @f$. The final sum is calculated pointwise.
     ///
     ///
@@ -616,11 +622,13 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift tensor
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aA, multi_tensor_t &aX, multi_tensor_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aA, multi_tensor_t &aX,
+                            multi_tensor_t &aB );
 
     /// @brief Affine transformation
     ///
-    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$. The values contained in
+    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$. The values contained
+    /// in
     /// @f$ A @f$ and @f$ B @f$ are constant coefficients and shift values to be applied to each layer in @f$ X @f$.
     ///
     ///
@@ -630,11 +638,13 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift vector
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aA, multi_tensor_t &aX, memory_buffer_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aA, multi_tensor_t &aX,
+                            memory_buffer_t &aB );
 
     /// @brief Affine transformation
     ///
-    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$. The values contained in
+    /// Given multitensors @f$ A @f$, @f$ X @f$ and @f$ B @f$, computes the multi_tensor_t @f$ A\cdot X + B @f$. The values contained
+    /// in
     /// @f$ A @f$ are constant coefficients and shift values to be applied to each layer in @f$ X @f$. The constant value contrained
     /// in @f$ B @f$ is then added to every element.
     ///
@@ -645,7 +655,8 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aA, multi_tensor_t &aX, scalar_value_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aA, multi_tensor_t &aX,
+                            scalar_value_t &aB );
 
     /// @brief Affine transformation
     ///
@@ -659,7 +670,8 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aA, multi_tensor_t &aX, multi_tensor_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aA, multi_tensor_t &aX,
+                            multi_tensor_t &aB );
 
     /// @brief Affine transformation
     ///
@@ -673,7 +685,8 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aA, multi_tensor_t &aX, memory_buffer_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aA, multi_tensor_t &aX,
+                            memory_buffer_t &aB );
 
     /// @brief Affine transformation
     ///
@@ -687,7 +700,8 @@ namespace SE::TensorOps
     /// @param aX Tensor to transform
     /// @param aB Shift constant
     ///
-    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aA, multi_tensor_t &aX, scalar_value_t &aB );
+    void AffineTransformOp( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aA, multi_tensor_t &aX,
+                            scalar_value_t &aB );
 
     /// @brief Floor
     ///
@@ -801,7 +815,8 @@ namespace SE::TensorOps
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
     void ArraySummationOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin,
-                           memory_buffer_t &aEnd, memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
+                           memory_buffer_t &aEnd, memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes,
+                           uint32_t aMaxBlockSize );
 
     /// @brief Slice the last dimension of a given tensor
     ///
@@ -817,8 +832,8 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void ArraySliceOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin, memory_buffer_t &aEnd,
-                       memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
+    void ArraySliceOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, memory_buffer_t &aBegin,
+                       memory_buffer_t &aEnd, memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief Finite differences along the last dimension of a given tensor
     ///
@@ -833,8 +848,8 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void DiffOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, uint32_t aCount, memory_buffer_t &aElementCount,
-                 memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
+    void DiffOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, uint32_t aCount,
+                 memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief Shifts along the last dimension of a given tensor
     ///
@@ -849,8 +864,8 @@ namespace SE::TensorOps
     /// @param aBlockSizes Product of the lengths of the first rank-1 dimensions of the input tensor
     /// @param aMaxBlockSize Maximum value of the `aBlockSizes` parameter
     ///
-    void ShiftOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, int32_t aCount, scalar_value_t &aFillValue,
-                  memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
+    void ShiftOp( scalar_type_t aOutputElementType, multi_tensor_t &aOut, multi_tensor_t &aX, int32_t aCount,
+                  scalar_value_t &aFillValue, memory_buffer_t &aElementCount, memory_buffer_t &aBlockSizes, uint32_t aMaxBlockSize );
 
     /// @brief One-dimensional convolution along the last dimension
     ///

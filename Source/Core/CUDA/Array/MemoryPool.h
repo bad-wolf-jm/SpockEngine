@@ -41,8 +41,15 @@ namespace SE::Cuda
 
         memory_buffer_t( const memory_buffer_t & ) = default;
 
-        memory_buffer_t View( size_t aSize, size_t aOffset ) { return memory_buffer_t( aSize, aOffset, *this ); }
-        memory_buffer_t View( size_t aSize, size_t aOffset ) const { return memory_buffer_t( aSize, aOffset, *this ); }
+        memory_buffer_t View( size_t aSize, size_t aOffset )
+        {
+            return memory_buffer_t( aSize, aOffset, *this );
+        }
+        
+        memory_buffer_t View( size_t aSize, size_t aOffset ) const
+        {
+            return memory_buffer_t( aSize, aOffset, *this );
+        }
 
         memory_buffer_t( size_t aSize, void *aDevicePointer )
             : Internal::gpu_device_pointer_view_t( aSize, aDevicePointer )

@@ -24,7 +24,7 @@ namespace SE::Cuda
         uint32_t mSize   = 0; //!< Size of current buffer
         uint32_t mOffset = 0; //!< Offset of current buffer
 
-        buffer_size_info_t()                          = default;
+        buffer_size_info_t()                             = default;
         buffer_size_info_t( const buffer_size_info_t & ) = default;
     };
 
@@ -46,13 +46,13 @@ namespace SE::Cuda
     {
         vector_t<vector_t<uint32_t>> mShape         = {}; //!< Shape
         vector_t<vector_t<uint32_t>> mStrides       = {}; //!< Strides
-        uint32_t                           mRank          = 0;  //!< Dimension of each element in the shape array
-        uint32_t                           mLayerCount    = 0;  //!< Number of layers
-        uint32_t                           mElementSize   = 0;  //!< Size, in bytes, of each element in the tensor
-        vector_t<uint32_t>              mMaxDimensions = {}; //!< Pointwise maximum of the elements in the shape vector
-        uint32_t                           mMaxBufferSize = 0;  //!< Size, in bytes, of the largest tensor.
-        size_t                             mByteSize      = 0;  //!< Size, in bytes, of the entire tensor
-        vector_t<buffer_size_info_t>       mBufferSizes = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
+        uint32_t                     mRank          = 0;  //!< Dimension of each element in the shape array
+        uint32_t                     mLayerCount    = 0;  //!< Number of layers
+        uint32_t                     mElementSize   = 0;  //!< Size, in bytes, of each element in the tensor
+        vector_t<uint32_t>           mMaxDimensions = {}; //!< Pointwise maximum of the elements in the shape vector
+        uint32_t                     mMaxBufferSize = 0;  //!< Size, in bytes, of the largest tensor.
+        size_t                       mByteSize      = 0;  //!< Size, in bytes, of the entire tensor
+        vector_t<buffer_size_info_t> mBufferSizes   = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
 
         struct
         {
@@ -61,7 +61,7 @@ namespace SE::Cuda
             memory_buffer_t mBufferSizes{};
         } mDeviceSideData; //!< Data shared with GPU.
 
-        tensor_shape_t()                       = default;
+        tensor_shape_t()                         = default;
         tensor_shape_t( const tensor_shape_t & ) = default;
 
         ~tensor_shape_t() = default;
@@ -85,7 +85,10 @@ namespace SE::Cuda
         tensor_shape_t( vector_t<uint32_t> const &aShape, size_t aElementSize );
 
         /** @brief Returns the number of layers in the sTensorShape*/
-        size_t CountLayers() const { return mLayerCount; }
+        size_t CountLayers() const
+        {
+            return mLayerCount;
+        }
 
         /// @brief Retrieves the dimension of the i-th layer of the sTensorShape
         vector_t<uint32_t> const &GetShapeForLayer( uint32_t i ) const
@@ -167,13 +170,13 @@ namespace SE::Cuda
 #ifdef __CUDACC__
             auto lData = mDeviceSideData.mBufferSizes.DataAs<buffer_size_info_t>()[i];
             return buffer_size_info_t{ lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
-                                    lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+                                       lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #else
             if( i >= CountLayers() )
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
             return buffer_size_info_t{ mBufferSizes[i].mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
-                                    mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+                                       mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #endif
         }
 
@@ -268,7 +271,10 @@ namespace SE::Cuda
         multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const tensor_shape_t &aShape );
 
         /// @brief Retrieves the shape of the tensor
-        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF tensor_shape_t &Shape() { return mShape; }
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF tensor_shape_t &Shape()
+        {
+            return mShape;
+        }
 
         /// @brief Retrieve a pointer to the i-th layer
         ///
@@ -376,7 +382,10 @@ namespace SE::Cuda
         }
 
         /// @brief Size, in bytes, of the tensor.
-        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mMemoryBuffer.Size(); }
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const
+        {
+            return mMemoryBuffer.Size();
+        }
 
         /// @brief Size of the tensor as elements of type `_Ty`.
         template <typename _Tx>
@@ -392,10 +401,13 @@ namespace SE::Cuda
             return mMemoryBuffer.DataAs<_Tx>();
         }
 
-        memory_buffer_t &GetMemoryBuffer() { return mMemoryBuffer; }
+        memory_buffer_t &GetMemoryBuffer()
+        {
+            return mMemoryBuffer;
+        }
 
       private:
-        tensor_shape_t mShape{};        //!< Shape of the tensor
+        tensor_shape_t  mShape{};        //!< Shape of the tensor
         memory_buffer_t mMemoryBuffer{}; //!< Memory buffer assigned to the tensor
     };
 
