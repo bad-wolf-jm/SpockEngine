@@ -177,6 +177,7 @@ namespace SE::Cuda::Internal
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
                                  aOffset, aByteSize, Size() )
                         .c_str() );
+                        
             MemCopyHostToDevice( (void *)( DataAs<uint8_t>() + aOffset ), (void *)aData, aByteSize );
         }
 

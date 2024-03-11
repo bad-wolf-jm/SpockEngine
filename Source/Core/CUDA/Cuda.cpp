@@ -9,7 +9,8 @@ namespace SE::Cuda
 
     inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine )
     {
-        if( CUDA_SUCCESS == aErr ) return;
+        if( CUDA_SUCCESS == aErr )
+            return;
 
         const char *errorStr = cudaGetErrorString( aErr );
         SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", aErr, errorStr, aFile, aLine );
@@ -17,13 +18,20 @@ namespace SE::Cuda
     }
 #endif
 
-    void SyncDevice() { CUDA_ASSERT( cudaDeviceSynchronize() ); }
+    void SyncDevice()
+    {
+        CUDA_ASSERT( cudaDeviceSynchronize() );
+    }
 
-    void Malloc( void **aDestination, size_t aSize ) { CUDA_ASSERT( cudaMalloc( aDestination, aSize ) ); }
+    void Malloc( void **aDestination, size_t aSize )
+    {
+        CUDA_ASSERT( cudaMalloc( aDestination, aSize ) );
+    }
 
     void Free( void **aDestination )
     {
-        if( nullptr != aDestination ) CUDA_ASSERT( cudaFree( *aDestination ) );
+        if( nullptr != aDestination )
+            CUDA_ASSERT( cudaFree( *aDestination ) );
 
         *aDestination = nullptr;
     }
@@ -46,7 +54,8 @@ namespace SE::Cuda
 
     void FreeArray( array_t *aDestination )
     {
-        if( nullptr != aDestination ) CUDA_ASSERT( cudaFreeArray( *aDestination ) );
+        if( nullptr != aDestination )
+            CUDA_ASSERT( cudaFreeArray( *aDestination ) );
 
         *aDestination = nullptr;
     }
@@ -75,7 +84,8 @@ namespace SE::Cuda
 
     void DestroyExternalMemory( external_memory_t *aDestination )
     {
-        if( nullptr != *aDestination ) CUDA_ASSERT( cudaDestroyExternalMemory( *aDestination ) );
+        if( nullptr != *aDestination )
+            CUDA_ASSERT( cudaDestroyExternalMemory( *aDestination ) );
 
         *aDestination = nullptr;
     }
@@ -120,7 +130,8 @@ namespace SE::Cuda
         memset( &lTextureDescription, 0, sizeof( cudaTextureDesc ) );
 
         lTextureDescription.readMode = cudaReadModeElementType;
-        if( aSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
+        if( aSpec.mNormalizedValues )
+            lTextureDescription.readMode = cudaReadModeNormalizedFloat;
 
         lTextureDescription.borderColor[0] = aSpec.mBorderColor[0];
         lTextureDescription.borderColor[1] = aSpec.mBorderColor[1];
@@ -134,7 +145,8 @@ namespace SE::Cuda
         lTextureDescription.filterMode = ToCudaFilterMode( aSpec.mFilter );
 
         lTextureDescription.normalizedCoords = 0;
-        if( aSpec.mNormalizedCoordinates ) lTextureDescription.normalizedCoords = 1;
+        if( aSpec.mNormalizedCoordinates )
+            lTextureDescription.normalizedCoords = 1;
 
         lTextureDescription.mipmapFilterMode    = cudaFilterModePoint;
         lTextureDescription.mipmapLevelBias     = 0.0f;
@@ -146,7 +158,8 @@ namespace SE::Cuda
 
     void FreeTextureObject( texture_object_t *aDestination )
     {
-        if( 0 != *aDestination ) CUDA_ASSERT( cudaDestroyTextureObject( *aDestination ) );
+        if( 0 != *aDestination )
+            CUDA_ASSERT( cudaDestroyTextureObject( *aDestination ) );
 
         *aDestination = 0;
     }

@@ -19,7 +19,8 @@
 
 inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine )
 {
-    if( CUDA_SUCCESS == aErr ) return;
+    if( CUDA_SUCCESS == aErr )
+        return;
 
     const char *errorStr = cudaGetErrorString( aErr );
     SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", aErr, errorStr, aFile, aLine );
@@ -30,9 +31,9 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine 
 
 #ifdef __CUDACC__
 #    define SE_CUDA_HOST_DEVICE_FUNCTION_DEF __device__ __host__
-#    define SE_CUDA_DEVICE_FUNCTION_DEF __device__
-#    define SE_CUDA_INLINE __forceinline__
-#    define CUDA_KERNEL_DEFINITION __global__
+#    define SE_CUDA_DEVICE_FUNCTION_DEF      __device__
+#    define SE_CUDA_INLINE                   __forceinline__
+#    define CUDA_KERNEL_DEFINITION           __global__
 #else
 #    define SE_CUDA_INLINE
 #    define SE_CUDA_HOST_DEVICE_FUNCTION_DEF
@@ -40,8 +41,9 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine 
 #    define CUDA_KERNEL_DEFINITION
 #endif
 
-#define RETURN_UNLESS( condition )   \
-    do                               \
-    {                                \
-        if( !( condition ) ) return; \
+#define RETURN_UNLESS( condition ) \
+    do                             \
+    {                              \
+        if( !( condition ) )       \
+            return;                \
     } while( 0 )

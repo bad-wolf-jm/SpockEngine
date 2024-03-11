@@ -15,7 +15,10 @@ namespace SE::Cuda
                don't allow dynamic initialization (ie, PRD) */
         }
 
-        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF LCG( unsigned int val0, unsigned int val1 ) { init( val0, val1 ); }
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF LCG( unsigned int val0, unsigned int val1 )
+        {
+            init( val0, val1 );
+        }
 
         SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF void init( unsigned int val0, unsigned int val1 )
         {
@@ -45,4 +48,4 @@ namespace SE::Cuda
         uint32_t state;
     };
 
-} // namespace gdt
+} // namespace SE::Cuda

@@ -42,7 +42,10 @@ namespace SE::Cuda
         {
         }
 
-        gpu_memory_view_t View( size_t a_Size, size_t a_Offset ) { return gpu_memory_view_t( a_Size, a_Offset, *this ); }
+        gpu_memory_view_t View( size_t a_Size, size_t a_Offset )
+        {
+            return gpu_memory_view_t( a_Size, a_Offset, *this );
+        }
     };
 
     class gpu_memory_t : public Internal::gpu_device_pointer_t
@@ -69,9 +72,15 @@ namespace SE::Cuda
             return lOut;
         }
 
-        raw_pointer_t RawDevicePtr() { return mDevicePointer; }
+        raw_pointer_t RawDevicePtr()
+        {
+            return mDevicePointer;
+        }
 
-        raw_pointer_t *RawDevicePtrP() { return &( mDevicePointer ); }
+        raw_pointer_t *RawDevicePtrP()
+        {
+            return &( mDevicePointer );
+        }
     };
 
 } // namespace SE::Cuda

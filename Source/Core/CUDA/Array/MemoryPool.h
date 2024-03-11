@@ -45,7 +45,7 @@ namespace SE::Cuda
         {
             return memory_buffer_t( aSize, aOffset, *this );
         }
-        
+
         memory_buffer_t View( size_t aSize, size_t aOffset ) const
         {
             return memory_buffer_t( aSize, aOffset, *this );
