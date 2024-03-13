@@ -15,5 +15,5 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/dual_quaternion.hpp>
-#include <glm/gtx/orthonormalize.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/orthonormalize.hpp>

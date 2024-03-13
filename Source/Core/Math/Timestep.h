@@ -16,9 +16,20 @@ class Timestep
     {
     }
 
-    operator float() const { return mTime; }
-    float GetMilliseconds() const { return mTime; }
-    float GetSeconds() const { return mTime / 1000.0f; }
+    operator float() const
+    {
+        return mTime;
+    }
+
+    float GetMilliseconds() const
+    {
+        return mTime;
+    }
+    
+    float GetSeconds() const
+    {
+        return mTime / 1000.0f;
+    }
 
   private:
     float mTime = 0.0f;

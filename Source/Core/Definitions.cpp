@@ -37,4 +37,4 @@ namespace SE::Core
         return static_cast<scalar_type_t>( aType.index() );
     }
 
-} // namespace SE::TensorOps
+} // namespace SE::Core

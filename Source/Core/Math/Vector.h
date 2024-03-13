@@ -82,19 +82,28 @@ namespace math
      *
      * Equal to `vec3(1.0f, 0.0f, 0.0f)`.
      */
-    inline vec3 x_axis() { return vec3( 1.0f, 0.0f, 0.0f ); }
+    inline vec3 x_axis()
+    {
+        return vec3( 1.0f, 0.0f, 0.0f );
+    }
 
     /** @brief Standard basis y axis
      *
      * Equal to `vec3(0.0f, 1.0f, 0.0f)`.
      */
-    inline vec3 y_axis() { return vec3( 0.0f, 1.0f, 0.0f ); }
+    inline vec3 y_axis()
+    {
+        return vec3( 0.0f, 1.0f, 0.0f );
+    }
 
     /** @brief Standard basis z axis.
      *
      * Equal to `vec3(0.0f, 0.0f, 1.0f)`.
      */
-    inline vec3 z_axis() { return vec3( 0.0f, 0.0f, 1.0f ); }
+    inline vec3 z_axis()
+    {
+        return vec3( 0.0f, 0.0f, 1.0f );
+    }
 
     /** @brief Euclidean length of input vector. */
     template <typename T>
@@ -138,17 +147,24 @@ namespace math
     }
 
     /** @brief Standard cross-product of v1 and v2. */
-    inline vec3 cross( const vec3 &aVector1, const vec3 &aVector2 ) { return glm::cross( aVector1, aVector2 ); }
+    inline vec3 cross( const vec3 &aVector1, const vec3 &aVector2 )
+    {
+        return glm::cross( aVector1, aVector2 );
+    }
 
     /** @brief Returns a vector normal to v1. */
-    inline vec2 perpendicular( const vec2 &aVector1 ) { return { -aVector1.y, aVector1.x }; }
+    inline vec2 perpendicular( const vec2 &aVector1 )
+    {
+        return { -aVector1.y, aVector1.x };
+    }
 
     /** @brief Color conversion. */
     inline vec3 hsv_to_rgb( float aHue, float aSaturation, float aValue )
     {
         aHue -= glm::floor( aHue / 360.0 ) * 360.0f;
 
-        if( aHue < 0 ) aHue += 360.0f;
+        if( aHue < 0 )
+            aHue += 360.0f;
 
         int lH = static_cast<int>( aHue / 60.0f ) % 6;
 
@@ -159,13 +175,20 @@ namespace math
 
         switch( lH )
         {
-        case 0: return vec3( aValue, lT, lP );
-        case 1: return vec3( lQ, aValue, lP );
-        case 2: return vec3( lP, aValue, lT );
-        case 3: return vec3( lP, lQ, aValue );
-        case 4: return vec3( lT, lP, aValue );
-        case 5: return vec3( aValue, lP, lQ );
-        default: return vec3( 0, 0, 0 );
+        case 0:
+            return vec3( aValue, lT, lP );
+        case 1:
+            return vec3( lQ, aValue, lP );
+        case 2:
+            return vec3( lP, aValue, lT );
+        case 3:
+            return vec3( lP, lQ, aValue );
+        case 4:
+            return vec3( lT, lP, aValue );
+        case 5:
+            return vec3( aValue, lP, lQ );
+        default:
+            return vec3( 0, 0, 0 );
         }
     }
 

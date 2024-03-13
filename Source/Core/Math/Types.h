@@ -8,15 +8,13 @@
 
 #pragma once
 
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 #include "Constants.h"
 #include "Functions.h"
 #include "Matrix.h"
 #include "Timestep.h"
 #include "Vector.h"
-#include "Timestep.h"
-
 
 // #include "Transform.h"
