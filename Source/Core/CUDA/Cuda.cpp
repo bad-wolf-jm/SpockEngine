@@ -46,7 +46,7 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaMemcpy( aDestination, aSource, aSize, cudaMemcpyDeviceToHost ) );
     }
 
-    void MallocArray( array_t *aDestination, color_format_t aFormat, size_t aWidth, size_t aHeight )
+    void MallocArray( array_t *aDestination, color_format aFormat, size_t aWidth, size_t aHeight )
     {
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( aFormat );
         CUDA_ASSERT( cudaMallocArray( aDestination, &lTextureFormat, aWidth, aHeight, cudaArrayDefault ) );
@@ -90,7 +90,7 @@ namespace SE::Cuda
         *aDestination = nullptr;
     }
 
-    void GetMappedMipmappedArray( mipmapped_array_t *aDestination, external_memory_t aExternalMemoryHandle, color_format_t aFormat,
+    void GetMappedMipmappedArray( mipmapped_array_t *aDestination, external_memory_t aExternalMemoryHandle, color_format aFormat,
                                   int32_t aWidth, int32_t aHeight )
     {
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};

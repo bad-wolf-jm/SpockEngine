@@ -12,13 +12,38 @@
 #include <filesystem>
 #include <memory>
 
-#include "ColorFormat.h"
 #include "Core/Definitions.h"
 
 namespace fs = std::filesystem;
 
 namespace SE::Core
 {
+    enum class color_format : uint32_t
+    {
+        UNDEFINED           = 0,
+        R32_FLOAT           = 1,
+        RG32_FLOAT          = 2,
+        RGB32_FLOAT         = 3,
+        RGBA32_FLOAT        = 4,
+        R16_FLOAT           = 5,
+        RG16_FLOAT          = 6,
+        RGB16_FLOAT         = 7,
+        RGBA16_FLOAT        = 8,
+        R8_UNORM            = 9,
+        RG8_UNORM           = 10,
+        RGB8_UNORM          = 11,
+        RGBA8_UNORM         = 12,
+        D16_UNORM           = 13,
+        X8_D24_UNORM_PACK32 = 14,
+        D32_SFLOAT          = 15,
+        S8_UINT             = 16,
+        D16_UNORM_S8_UINT   = 17,
+        D24_UNORM_S8_UINT   = 18,
+        D32_UNORM_S8_UINT   = 19,
+        BGR8_SRGB           = 20,
+        BGRA8_SRGB          = 21
+    };
+
     /** @brief Minification and magnification filters */
     enum class sampler_filter_t : uint8_t
     {
@@ -82,14 +107,14 @@ namespace SE::Core
      */
     struct image_data_t
     {
-        color_format_t    mFormat    = color_format_t::UNDEFINED; //!< Image format
+        color_format    mFormat    = color_format::UNDEFINED; //!< Image format
         size_t            mWidth     = 0;                         //!< Width of the image, in pixels
         size_t            mHeight    = 0;                         //!< Height of the image, in pixels
         size_t            mByteSize  = 0;                         //!< Size of the pixel data pointer, in bytes
         vector_t<uint8_t> mPixelData = {};                        //!< Raw pixel data
 
         template <typename PixelType>
-        static image_data_t Create( color_format_t aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
+        static image_data_t Create( color_format aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
         {
             image_data_t o_ImageData{};
             o_ImageData.mWidth     = aWidth;
@@ -110,7 +135,7 @@ namespace SE::Core
         texture_type_t mType =
             texture_type_t::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
 
-        color_format_t mFormat         = color_format_t::UNDEFINED; /**!< Specifies the color format used for the texture*/
+        color_format mFormat         = color_format::UNDEFINED; /**!< Specifies the color format used for the texture*/
         int32_t        mWidth          = 0;                         /**!< Width of the texture, in pixels*/
         int32_t        mHeight         = 0;                         /**!< Height of the texture, in pixels*/
         int32_t        mDepth          = 0;                         /**!< Depth of the texture, in pixels (for 3D textures only)*/

@@ -95,23 +95,4 @@ namespace math
     {
         return glm::degrees( V );
     }
-
-    namespace literals
-    {
-        inline float operator"" _degf( long double v )
-        {
-            return glm::radians( (float)v );
-        }
-
-        inline vec3 operator"" _rgbf( unsigned long long value )
-        {
-            return { ( uint8_t( value >> 16 ) / 255.0f ), ( uint8_t( value >> 8 ) / 255.0f ), ( uint8_t( value ) / 255.0f ) };
-        }
-
-        inline vec4 operator"" _rgbaf( unsigned long long value )
-        {
-            return { ( uint8_t( value >> 24 ) / 255.0f ), ( uint8_t( value >> 16 ) / 255.0f ), ( uint8_t( value >> 8 ) / 255.0f ),
-                     ( uint8_t( value ) / 255.0f ) };
-        }
-    } // namespace literals
 } // namespace math

@@ -35,11 +35,11 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                          16 * sizeof( uint32_t ) );
 
             texture_create_info_t lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = color_format_t::RGBA8_UNORM;
+            lTextureCreateInfo.mFormat = color_format::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 4;
             lTextureCreateInfo.mHeight = 4;
             texture2d_t lTexture( lTextureCreateInfo, lPixelDataVector );
-            REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
+            REQUIRE( lTexture.mSpec.mFormat == color_format::RGBA8_UNORM );
         }
 
         {
@@ -49,11 +49,11 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                          16 * sizeof( float ) );
 
             texture_create_info_t lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = color_format_t::R32_FLOAT;
+            lTextureCreateInfo.mFormat = color_format::R32_FLOAT;
             lTextureCreateInfo.mWidth  = 4;
             lTextureCreateInfo.mHeight = 4;
             texture2d_t lTexture( lTextureCreateInfo, lPixelDataVector );
-            REQUIRE( lTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
+            REQUIRE( lTexture.mSpec.mFormat == color_format::R32_FLOAT );
         }
     }
 
@@ -65,7 +65,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                                         0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
 
             image_data_t lImageDataStruct{};
-            lImageDataStruct.mFormat    = color_format_t::RGBA8_UNORM;
+            lImageDataStruct.mFormat    = color_format::RGBA8_UNORM;
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
@@ -74,14 +74,14 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
 
             texture_create_info_t lCudaTextureCreateInfo{};
             texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
-            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
+            REQUIRE( lCudaTexture.mSpec.mFormat == color_format::RGBA8_UNORM );
         }
 
         {
             float lImageData[16] = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
             image_data_t lImageDataStruct{};
-            lImageDataStruct.mFormat    = color_format_t::R32_FLOAT;
+            lImageDataStruct.mFormat    = color_format::R32_FLOAT;
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
@@ -90,7 +90,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
 
             texture_create_info_t lCudaTextureCreateInfo{};
             texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
-            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
+            REQUIRE( lCudaTexture.mSpec.mFormat == color_format::R32_FLOAT );
         }
     }
 
@@ -149,7 +149,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                          9 * sizeof( uint32_t ) );
 
             texture_create_info_t lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = color_format_t::RGBA8_UNORM;
+            lTextureCreateInfo.mFormat = color_format::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 3;
             lTextureCreateInfo.mHeight = 3;
             ref_t<texture2d_t> lTexture  = New<texture2d_t>( lTextureCreateInfo, lPixelDataVector );
@@ -177,7 +177,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
                          9 * sizeof( uint32_t ) );
 
             texture_create_info_t lTextureCreateInfo{};
-            lTextureCreateInfo.mFormat = color_format_t::RGBA8_UNORM;
+            lTextureCreateInfo.mFormat = color_format::RGBA8_UNORM;
             lTextureCreateInfo.mWidth  = 3;
             lTextureCreateInfo.mHeight = 3;
             ref_t<texture2d_t> lTexture  = New<texture2d_t>( lTextureCreateInfo, lPixelDataVector );

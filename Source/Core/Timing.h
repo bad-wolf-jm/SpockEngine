@@ -4,15 +4,15 @@
 
 namespace SE::Core
 {
-    class EveryNMilliseconds
+    class every_n_milliseconds_t
     {
       public:
-        EveryNMilliseconds()
-            : EveryNMilliseconds( 1 )
+        every_n_milliseconds_t()
+            : every_n_milliseconds_t( 1 )
         {
         }
 
-        EveryNMilliseconds( int64_t period )
+        every_n_milliseconds_t( int64_t period )
             : mPeriod{ period }
         {
             Reset();
@@ -26,20 +26,30 @@ namespace SE::Core
             return now_ms.time_since_epoch().count();
         };
 
-        int64_t Elapsed() { return Time() - mPrevTrigger; }
+        int64_t Elapsed()
+        {
+            return Time() - mPrevTrigger;
+        }
 
         /// Check if the time interval has elapsed
         bool IsReady()
         {
             bool lIsReady = ( Elapsed() >= mPeriod );
-            if( lIsReady ) Reset();
+            if( lIsReady )
+                Reset();
 
             return lIsReady;
         }
 
-        void Reset() { mPrevTrigger = Time(); };
+        void Reset()
+        {
+            mPrevTrigger = Time();
+        };
 
-        operator bool() { return IsReady(); }
+        operator bool()
+        {
+            return IsReady();
+        }
 
       private:
         int64_t mPrevTrigger = 0;
@@ -52,9 +62,9 @@ namespace SE::Core
 #define EVERY_N_MILLISECONDS( N ) EVERY_N_MILLIS_I( CONCAT_MACRO( _TIMER_, __COUNTER__ ), N )
 
 #define EVERY_N_MILLIS_I( NAME, N )      \
-    static EveryNMilliseconds NAME( N ); \
+    static every_n_milliseconds_t NAME( N ); \
     if( NAME )
 
-EVERY_N_MILLISECONDS(23)
+    EVERY_N_MILLISECONDS( 23 )
 
 } // namespace SE::Core

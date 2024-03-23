@@ -17,7 +17,7 @@ namespace SE::Core
     {
         texture_create_info_t lCreateInfo{};
         lCreateInfo.mType      = aTable["type"].valid() ? aTable["type"] : texture_type_t::TEXTURE_2D;
-        lCreateInfo.mFormat    = aTable["color_format"].valid() ? aTable["color_format"] : color_format_t::UNDEFINED;
+        lCreateInfo.mFormat    = aTable["color_format"].valid() ? aTable["color_format"] : color_format::UNDEFINED;
         lCreateInfo.mWidth     = aTable["width"].valid() ? aTable["width"] : 0;
         lCreateInfo.mHeight    = aTable["height"].valid() ? aTable["height"] : 0;
         lCreateInfo.mDepth     = aTable["depth"].valid() ? aTable["depth"] : 0;
@@ -29,7 +29,7 @@ namespace SE::Core
     image_data_t ParseImageData( sol::table aTable )
     {
         image_data_t lImageData{};
-        lImageData.mFormat = aTable["color_format"].valid() ? aTable["color_format"] : color_format_t::UNDEFINED;
+        lImageData.mFormat = aTable["color_format"].valid() ? aTable["color_format"] : color_format::UNDEFINED;
         lImageData.mWidth  = aTable["width"].valid() ? aTable["width"] : 0;
         lImageData.mHeight = aTable["height"].valid() ? aTable["height"] : 0;
 
@@ -109,28 +109,28 @@ namespace SE::Core
 
         // clang-format off
         aScriptingState.new_enum( "eColorFormat",
-            "UNDEFINED",           color_format_t::UNDEFINED,
-            "R32_FLOAT",           color_format_t::R32_FLOAT,
-            "RG32_FLOAT",          color_format_t::RG32_FLOAT,
-            "RGB32_FLOAT",         color_format_t::RGB32_FLOAT,
-            "RGBA32_FLOAT",        color_format_t::RGBA32_FLOAT,
-            "R16_FLOAT",           color_format_t::R16_FLOAT,
-            "RG16_FLOAT",          color_format_t::RG16_FLOAT,
-            "RGB16_FLOAT",         color_format_t::RGB16_FLOAT,
-            "RGBA16_FLOAT",        color_format_t::RGBA16_FLOAT,
-            "R8_UNORM",            color_format_t::R8_UNORM,
-            "RG8_UNORM",           color_format_t::RG8_UNORM,
-            "RGB8_UNORM",          color_format_t::RGB8_UNORM,
-            "RGBA8_UNORM",         color_format_t::RGBA8_UNORM,
-            "D16_UNORM",           color_format_t::D16_UNORM,
-            "X8_D24_UNORM_PACK32", color_format_t::X8_D24_UNORM_PACK32,
-            "D32_SFLOAT",          color_format_t::D32_SFLOAT,
-            "S8_UINT",             color_format_t::S8_UINT,
-            "D16_UNORM_S8_UINT",   color_format_t::D16_UNORM_S8_UINT,
-            "D24_UNORM_S8_UINT",   color_format_t::D24_UNORM_S8_UINT,
-            "D32_UNORM_S8_UINT",   color_format_t::D32_UNORM_S8_UINT,
-            "BGR8_SRGB",           color_format_t::BGR8_SRGB,
-            "BGRA8_SRGB",          color_format_t::BGRA8_SRGB );
+            "UNDEFINED",           color_format::UNDEFINED,
+            "R32_FLOAT",           color_format::R32_FLOAT,
+            "RG32_FLOAT",          color_format::RG32_FLOAT,
+            "RGB32_FLOAT",         color_format::RGB32_FLOAT,
+            "RGBA32_FLOAT",        color_format::RGBA32_FLOAT,
+            "R16_FLOAT",           color_format::R16_FLOAT,
+            "RG16_FLOAT",          color_format::RG16_FLOAT,
+            "RGB16_FLOAT",         color_format::RGB16_FLOAT,
+            "RGBA16_FLOAT",        color_format::RGBA16_FLOAT,
+            "R8_UNORM",            color_format::R8_UNORM,
+            "RG8_UNORM",           color_format::RG8_UNORM,
+            "RGB8_UNORM",          color_format::RGB8_UNORM,
+            "RGBA8_UNORM",         color_format::RGBA8_UNORM,
+            "D16_UNORM",           color_format::D16_UNORM,
+            "X8_D24_UNORM_PACK32", color_format::X8_D24_UNORM_PACK32,
+            "D32_SFLOAT",          color_format::D32_SFLOAT,
+            "S8_UINT",             color_format::S8_UINT,
+            "D16_UNORM_S8_UINT",   color_format::D16_UNORM_S8_UINT,
+            "D24_UNORM_S8_UINT",   color_format::D24_UNORM_S8_UINT,
+            "D32_UNORM_S8_UINT",   color_format::D32_UNORM_S8_UINT,
+            "BGR8_SRGB",           color_format::BGR8_SRGB,
+            "BGRA8_SRGB",          color_format::BGRA8_SRGB );
         // clang-format on
 
         aScriptingState.new_enum( "eSamplerFilter", "NEAREST", sampler_filter_t::NEAREST, "LINEAR", sampler_filter_t::LINEAR );

@@ -11,7 +11,6 @@
 #include <cuda_runtime_api.h>
 
 #include "Core/Logging.h"
-#include "Texture/ColorFormat.h"
 #include "Texture/TextureTypes.h"
 
 #ifdef __CUDACC__
@@ -50,7 +49,7 @@ namespace SE::Cuda
     void MemCopyHostToDevice( void *aDestination, void *aSource, size_t aSize );
     void MemCopyDeviceToHost( void *aDestination, void *aSource, size_t aSize );
 
-    void MallocArray( array_t *aDestination, color_format_t aFormat, size_t aWidth, size_t aHeight );
+    void MallocArray( array_t *aDestination, color_format aFormat, size_t aWidth, size_t aHeight );
     void FreeArray( array_t *aDestination );
     void ArrayCopyHostToDevice( array_t aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize );
     void ArrayCopyDeviceToHost( array_t aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize );
@@ -58,7 +57,7 @@ namespace SE::Cuda
     void ImportExternalMemory( external_memory_t *aDestination, void *aExternalBuffer, size_t aSize );
     void DestroyExternalMemory( external_memory_t *aDestination );
 
-    void GetMappedMipmappedArray( mipmapped_array_t *aDestination, external_memory_t aExternalMemoryHandle, color_format_t aFormat,
+    void GetMappedMipmappedArray( mipmapped_array_t *aDestination, external_memory_t aExternalMemoryHandle, color_format aFormat,
                                   int32_t aWidth, int32_t aHeight );
     void GeMipmappedArrayLevel( array_t *aDestination, mipmapped_array_t aMipMappedArray, uint32_t aLevel );
     void FreeMipmappedArray( mipmapped_array_t *aDestination );

@@ -1238,7 +1238,7 @@ TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
     value = Core.load_image("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 )" );
     auto lImageData = scriptingEngine.Get<sol::table>( "value" );
-    REQUIRE( lImageData.get<color_format_t>( "color_format" ) == color_format_t::RGBA8_UNORM );
+    REQUIRE( lImageData.get<color_format>( "color_format" ) == color_format::RGBA8_UNORM );
     REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
     REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
 }

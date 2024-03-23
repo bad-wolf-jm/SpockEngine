@@ -45,7 +45,7 @@ namespace SE::Core
             if( !lData )
                 return image_data_t{};
 
-            lImageData.mFormat = color_format_t::RGBA32_FLOAT;
+            lImageData.mFormat = color_format::RGBA32_FLOAT;
             lImageData.mPixelData =
                 vector_t<uint8_t>( (uint8_t *)lData, ( (uint8_t *)lData ) + ( lWidth * lHeight * sizeof( float ) ) );
         }
@@ -58,7 +58,7 @@ namespace SE::Core
             if( !lData )
                 return image_data_t{};
 
-            lImageData.mFormat    = color_format_t::RGBA8_UNORM;
+            lImageData.mFormat    = color_format::RGBA8_UNORM;
             lImageData.mPixelData = vector_t<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
         }
 
