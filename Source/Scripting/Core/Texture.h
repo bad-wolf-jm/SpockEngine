@@ -3,7 +3,7 @@
 #include <sol/sol.hpp>
 
 #include "Core/Entity/Collection.h"
-#include "Core/CUDA/Texture/TextureData.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
 
 namespace SE::Core
 {

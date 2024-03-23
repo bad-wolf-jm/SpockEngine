@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 #include "Core/Definitions.h"
-#include "Core/CUDA/Texture/TextureData.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
 #include "Core/CUDA/Texture/Texture2D.h"
 
 #include "TensorOps/Scope.h"

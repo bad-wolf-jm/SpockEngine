@@ -15,7 +15,7 @@
 
 #include "Core/Definitions.h"
 
-#include "TextureData.h"
+#include "TextureTypes.h"
 
 #include "Core/Logging.h"
 
