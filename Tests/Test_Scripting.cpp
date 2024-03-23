@@ -25,7 +25,7 @@ using namespace TestUtils;
 
 TEST_CASE( "LUA Arrays", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 value = Core.U8Array()
@@ -77,7 +77,7 @@ value0:append(value1)
 
 TEST_CASE( "LUA Vectors", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 value = Core.Array(dtypes.uint32, 6)
@@ -99,7 +99,7 @@ value[1] = 3
 
 TEST_CASE( "LUA Random", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 value = Core.Random(dtypes.uint32, 25, 1, 128)
@@ -112,7 +112,7 @@ value = Core.Random(dtypes.uint32, 25, 1, 128)
 
 TEST_CASE( "LUA Vec2 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.vec2(1.0, 2.0)" );
     REQUIRE( scriptingEngine.Get<vec2>( "value" ) == vec2{ 1.0f, 2.0f } );
@@ -162,7 +162,7 @@ value = value0:dot(value1)
 
 TEST_CASE( "LUA Vec3 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0)" );
     REQUIRE( scriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
@@ -221,7 +221,7 @@ value = value0:cross(value1)
 
 TEST_CASE( "LUA Vec4 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0)" );
     REQUIRE( scriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
@@ -273,7 +273,7 @@ value = value0:dot(value1)
 
 TEST_CASE( "LUA iVec2 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.ivec2(1, 2)" );
     REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 1, 2 } );
@@ -303,7 +303,7 @@ value = Math.ivec2(1, 2) * 2
 
 TEST_CASE( "LUA iVec3 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.ivec3(1, 2, 3)" );
     REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 1, 2, 3 } );
@@ -334,7 +334,7 @@ value = 2 * Math.ivec3(1, 2, 3)
 
 TEST_CASE( "LUA iVec4 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.ivec4(1, 2, 3, 4)" );
     REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 1, 2, 3, 4 } );
@@ -364,7 +364,7 @@ value = value0 + value1
 
 TEST_CASE( "LUA uVec2 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.uvec2(1, 2)" );
     REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 1, 2 } );
@@ -394,7 +394,7 @@ value = 2 * Math.uvec2(1, 2)
 
 TEST_CASE( "LUA uVec3 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.uvec3(1, 2, 3)" );
     REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 1, 2, 3 } );
@@ -425,7 +425,7 @@ value = Math.uvec3(1, 2, 3) * 2
 
 TEST_CASE( "LUA uVec4 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.uvec4(1, 2, 3, 4)" );
     REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 1, 2, 3, 4 } );
@@ -455,7 +455,7 @@ value = value0 + value1
 
 TEST_CASE( "LUA Mat3 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.mat3()" );
     REQUIRE( scriptingEngine.Get<mat3>( "value" ) == mat3{ 1.0 } );
@@ -472,7 +472,7 @@ TEST_CASE( "LUA Mat3 type", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Math.mat4()" );
     REQUIRE( scriptingEngine.Get<mat4>( "value" ) == mat4{ 1.0 } );
@@ -496,7 +496,7 @@ TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA Create registry", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = EntityCollection.Registry.new()" );
     REQUIRE( true );
@@ -504,7 +504,7 @@ TEST_CASE( "LUA Create registry", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA Create entity", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
@@ -532,7 +532,7 @@ entity2 = registry:create_entity(entity0, "NAME_0")
 
 TEST_CASE( "LUA create entity with relationship", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
@@ -552,7 +552,7 @@ entity1 = registry:create_entity_with_relationship("NAME_0")
 
 TEST_CASE( "LUA Destroy entity", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
@@ -565,7 +565,7 @@ registry:destroy_entity(entity0)
 
 TEST_CASE( "LUA set parent entity", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
@@ -587,7 +587,7 @@ registry:set_parent(entity1, entity0)
 
 TEST_CASE( "LUA Relationships", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
@@ -612,7 +612,7 @@ registry:set_parent(entity3, entity0)
 
 TEST_CASE( "LUA Removing parent removes from siblings", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
@@ -639,7 +639,7 @@ registry:set_parent(entity3, entity2)
 
 TEST_CASE( "LUA Ability to set parent to NULL", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     scriptingEngine.Execute( R"(
 registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
@@ -673,7 +673,7 @@ struct ComponentA
 
 TEST_CASE( "LUA add component", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     auto x                   = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
@@ -697,7 +697,7 @@ entity1:add(dtypes.ComponentA(4.0))
 
 TEST_CASE( "LUA remove component", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
@@ -717,7 +717,7 @@ entity0 = registry:create_entity()
 
 TEST_CASE( "LUA replace component", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
@@ -738,7 +738,7 @@ entity0 = registry:create_entity()
 TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 {
     entity_registry_t lRegistry{};
-    ScriptingEngine  scriptingEngine{};
+    script_bindings  scriptingEngine{};
 
     scriptingEngine.Define( "registry0", &lRegistry );
     scriptingEngine.Execute( "entity0 = registry0:create_entity()" );
@@ -752,7 +752,7 @@ TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
     entity_registry_t lRegistry{};
     auto             lEntity0 = lRegistry.CreateEntity();
 
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
@@ -767,7 +767,7 @@ TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 {
     entity_registry_t lRegistry{};
-    ScriptingEngine  scriptingEngine{};
+    script_bindings  scriptingEngine{};
     auto             x       = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
@@ -786,7 +786,7 @@ TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 TEST_CASE( "LUA OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
     entity_registry_t lRegistry{};
-    ScriptingEngine  scriptingEngine{};
+    script_bindings  scriptingEngine{};
     auto             x       = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
@@ -808,7 +808,7 @@ entity0:add(dtypes.ComponentA())
 TEST_CASE( "LUA OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
     entity_registry_t lRegistry{};
-    ScriptingEngine  scriptingEngine{};
+    script_bindings  scriptingEngine{};
     auto             x       = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
@@ -829,7 +829,7 @@ entity0:add(dtypes.ComponentA())
 
 TEST_CASE( "LUA TensorShape", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Cuda.TensorShape({{1, 2}, {3, 4}, {5, 6}}, 123)" );
 
@@ -844,7 +844,7 @@ TEST_CASE( "LUA TensorShape", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA TensorShape GetDimension", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 ts = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -873,7 +873,7 @@ value = ts:get_dimension( -1 )
 
 TEST_CASE( "LUA TensorShape Trim", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -902,7 +902,7 @@ value:trim( -2 )
 
 TEST_CASE( "LUA TensorShape Flatten", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -931,7 +931,7 @@ value:flatten( -2 )
 
 TEST_CASE( "LUA MemoryPool", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Cuda.MemoryPool.new(123)" );
 
@@ -940,7 +940,7 @@ TEST_CASE( "LUA MemoryPool", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA MultiTensor", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 pool  = Cuda.MemoryPool.new(64000)
@@ -955,7 +955,7 @@ value = tensor:size()
 
 TEST_CASE( "LUA MultiTensor Types", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 value = dtypes.float32.type_id()
@@ -967,7 +967,7 @@ value = dtypes.float32.type_id()
 
 TEST_CASE( "LUA MultiTensor SizeAs", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 pool  = Cuda.MemoryPool.new(64000)
@@ -998,7 +998,7 @@ std::vector<std::vector<_Ty>> RandomVector2( std::vector<uint32_t> aDim, _Ty aMi
 
 TEST_CASE( "LUA MultiTensor fetch_at", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
@@ -1039,7 +1039,7 @@ value2 = tensor:fetch_f32(2)
 
 TEST_CASE( "LUA MultiTensor fetch_flattened", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
@@ -1064,7 +1064,7 @@ value = tensor:fetch_f32()
 
 TEST_CASE( "LUA MultiTensor upload", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
@@ -1092,7 +1092,7 @@ tensor:upload_f32(tensor_data)
 
 TEST_CASE( "LUA MultiTensor upload layers", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
     size_t          lPoolSize = 128 * 1024;
     memory_pool_t      lPool( lPoolSize );
 
@@ -1137,7 +1137,7 @@ tensor:upload_f32(tensor_data_2, 2)
 
 TEST_CASE( "LUA Scope", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( "value = Cuda.Scope.new(123)" );
 
@@ -1232,7 +1232,7 @@ TEST_CASE( "LUA Scope", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
     value = Core.load_image("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
@@ -1325,7 +1325,7 @@ TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA sConstantValueInitializerComponent", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
     value = Cuda.Ops.sConstantValueInitializerComponent(Cuda.Ops.eScalarType.FLOAT32, 1.234)
@@ -1337,7 +1337,7 @@ TEST_CASE( "LUA sConstantValueInitializerComponent", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA sVectorInitializerComponent", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     std::vector<float> lData{ 1.234f, 2.345f, 3.456f, 1.234f, 2.345f, 3.456f };
     scriptingEngine.Define( "data", lData );
@@ -1358,7 +1358,7 @@ TEST_CASE( "LUA sVectorInitializerComponent", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA sDataInitializerComponent", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     std::vector<float> lData{ 1.234f, 2.345f, 3.456f, 1.234f, 2.345f, 3.456f };
     scriptingEngine.Define( "data", lData );
@@ -1379,7 +1379,7 @@ TEST_CASE( "LUA sDataInitializerComponent", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA MultiTensorValue initialized with constant", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     scriptingEngine.Execute( R"(
 scope    = Cuda.Scope.new(128 * 1024)
@@ -1397,7 +1397,7 @@ scope:run(mt)
 
 TEST_CASE( "LUA MultiTensorValue initialized with vector", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     std::vector<float> lData{ 1.234f, 2.345f, 3.456f };
     scriptingEngine.Define( "data", lData );
@@ -1433,7 +1433,7 @@ scope:run(mt)
 
 TEST_CASE( "LUA MultiTensorValue initialized with data", "[CORE_SCRIPTING]" )
 {
-    ScriptingEngine scriptingEngine{};
+    script_bindings scriptingEngine{};
 
     auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 

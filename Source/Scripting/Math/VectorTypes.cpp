@@ -6,7 +6,8 @@ namespace SE::Core
 {
     using namespace math;
 
-    template <typename _VecType> usertype<_VecType> NewVector2Type( sol::table &aScriptState, std::string aName )
+    template <typename _VecType>
+    usertype<_VecType> NewVector2Type( sol::table &aScriptState, std::string aName )
     {
         auto lNewType = NewVectorType<_VecType>( aScriptState, aName );
         lNewType["x"] = &_VecType::x;
@@ -27,7 +28,8 @@ namespace SE::Core
         return lNewType;
     }
 
-    template <typename _VecType> usertype<_VecType> NewVector3Type( sol::table &aScriptState, std::string aName )
+    template <typename _VecType>
+    usertype<_VecType> NewVector3Type( sol::table &aScriptState, std::string aName )
     {
         auto lNewType = NewVectorType<_VecType>( aScriptState, aName );
         lNewType["x"] = &_VecType::x;
@@ -49,7 +51,8 @@ namespace SE::Core
         return lNewType;
     }
 
-    template <typename _VecType> usertype<_VecType> NewVector4Type( sol::table &aScriptState, std::string aName )
+    template <typename _VecType>
+    usertype<_VecType> NewVector4Type( sol::table &aScriptState, std::string aName )
     {
         auto lNewType = NewVectorType<_VecType>( aScriptState, aName );
         lNewType["x"] = &_VecType::x;
@@ -72,7 +75,7 @@ namespace SE::Core
         return lNewType;
     }
 
-    void DefineVectorTypes( sol::table &aModule )
+    void define_vector_types( sol::table &aModule )
     {
         NewVector2Type<vec2>( aModule, "vec2" );
         DeclareVectorOperation<vec2>( aModule );

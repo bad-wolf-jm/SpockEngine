@@ -1,8 +1,8 @@
 #include "Texture.h"
 
-#include "Core/Definitions.h"
-#include "Core/CUDA/Texture/TextureTypes.h"
 #include "Core/CUDA/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
+#include "Core/Definitions.h"
 
 #include "TensorOps/Scope.h"
 
@@ -28,14 +28,14 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    void RequireCudaTexture( sol::table &aScriptingState )
+    void require_cuda_texture( sol::table &aScriptingState )
     {
         auto lTextureData2DType = aScriptingState.new_usertype<Cuda::texture2d_t>( "Texture2D" );
 
         // clang-format off
         lTextureData2DType[call_constructor] = factories(
             []( sol::table aCreateInfo, sol::table aImageData ) {
-                return New<Cuda::texture2d_t>( ParseCudaCreateInfo( aCreateInfo ), ParseImageData( aImageData ) );
+                return New<Cuda::texture2d_t>( ParseCudaCreateInfo( aCreateInfo ), parse_image_data( aImageData ) );
             },
             []( sol::table aCreateInfo, vector_t<uint8_t> aImageData ) {
                 return New<Cuda::texture2d_t>( ParseCudaCreateInfo( aCreateInfo ), aImageData );
@@ -45,7 +45,13 @@ namespace SE::Core
 
         auto lTextureSampler2DType = aScriptingState.new_usertype<Cuda::texture_sampler2d_t>( "TextureSampler2D" );
 
-        lTextureSampler2DType[call_constructor] =
-            factories( []( ref_t<Cuda::texture2d_t> &aTexture, sol::table aCreateInfo ) { return Cuda::texture_sampler2d_t( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+        // clang-format off
+        lTextureSampler2DType[call_constructor] = factories( 
+                []( ref_t<Cuda::texture2d_t> &aTexture, sol::table aCreateInfo )
+                { 
+                    return Cuda::texture_sampler2d_t( aTexture, parse_sampler_info( aCreateInfo ) ); 
+                }
+            );
+        // clang-format on
     }
 }; // namespace SE::Core

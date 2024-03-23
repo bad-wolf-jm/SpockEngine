@@ -7,7 +7,7 @@ namespace SE::Core
     using namespace sol;
     using namespace entt::literals;
 
-    [[nodiscard]] entt::id_type GetTypeID( const sol::table &aObject )
+    [[nodiscard]] entt::id_type get_type_id( const sol::table &aObject )
     {
         const auto lFunction = aObject["type_id"].get<sol::function>();
         assert( lFunction.valid() && "type_id not exposed to lua!" );
@@ -20,31 +20,31 @@ namespace SE::Core
 
         lEntityType["tag"] = []( entity_t &aSelf, const sol::object &aTypeOrID ) -> sol::object
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Tag"_hs, aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Tag"_hs, aSelf );
             return sol::lua_nil_t{};
         };
 
         lEntityType["untag"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Untag"_hs, aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Untag"_hs, aSelf );
             return sol::lua_nil_t{};
         };
 
         lEntityType["has"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Has"_hs, &aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Has"_hs, &aSelf );
             return lMaybeAny ? lMaybeAny.cast<bool>() : false;
         };
 
         lEntityType["get"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Get"_hs, &aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Get"_hs, &aSelf );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
         lEntityType["try_get"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryGet"_hs, &aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "TryGet"_hs, &aSelf );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
@@ -53,7 +53,7 @@ namespace SE::Core
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = InvokeMetaFunction( GetTypeID( aComponent ), "Add"_hs, aSelf, aComponent, s );
+            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "Add"_hs, aSelf, aComponent, s );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
@@ -62,7 +62,7 @@ namespace SE::Core
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = InvokeMetaFunction( GetTypeID( aComponent ), "Replace"_hs, aSelf, aComponent, s );
+            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "Replace"_hs, aSelf, aComponent, s );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
@@ -71,7 +71,7 @@ namespace SE::Core
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = InvokeMetaFunction( GetTypeID( aComponent ), "AddOrReplace"_hs, aSelf, aComponent, s );
+            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "AddOrReplace"_hs, aSelf, aComponent, s );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
@@ -80,19 +80,19 @@ namespace SE::Core
             if( !aComponent.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = InvokeMetaFunction( GetTypeID( aComponent ), "TryAdd"_hs, aSelf, aComponent, s );
+            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "TryAdd"_hs, aSelf, aComponent, s );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
         lEntityType["remove"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Remove"_hs, aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Remove"_hs, aSelf );
             return sol::lua_nil_t{};
         };
 
         lEntityType["try_remove"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryRemove"_hs, aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "TryRemove"_hs, aSelf );
             return sol::lua_nil_t{};
         };
     }
@@ -115,7 +115,7 @@ namespace SE::Core
         lRegistryType["clear"] = []( entity_registry_t &aSelf ) { aSelf.Clear(); };
     }
 
-    void OpenEntityRegistry( sol::state &aScriptingState )
+    void open_entity_registry_library( sol::state &aScriptingState )
     {
         auto lEntityRegistryModule = aScriptingState["EntityCollection"].get_or_create<sol::table>();
 

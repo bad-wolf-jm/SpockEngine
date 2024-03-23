@@ -4,6 +4,7 @@
 
 #include <type_traits>
 
+#include "Core/TypeReflection.h"
 #include "Core/Entity/Collection.h"
 // #include "Core/CUDA/Texture/TextureData.h"
 
@@ -13,11 +14,11 @@ namespace SE::Core
 {
     namespace
     {
-
-        template <typename _Ty> auto RandomVector( size_t aSize, double aMin, double aMax, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto RandomVector( size_t aSize, double aMin, double aMax, sol::this_state aScriptState )
         {
             std::random_device dev;
-            std::mt19937 rng( dev() );
+            std::mt19937       rng( dev() );
 
             _Ty lMin = static_cast<_Ty>( aMin );
             _Ty lMax = static_cast<_Ty>( aMax );
@@ -25,8 +26,8 @@ namespace SE::Core
             if constexpr( std::is_floating_point<_Ty>::value )
             {
                 std::uniform_real_distribution<_Ty> dist6( lMin, lMax );
-                auto gen = [&dist6, &rng]() { return dist6( rng ); };
-                vector_t<_Ty> lNewVector( aSize );
+                auto                                gen = [&dist6, &rng]() { return dist6( rng ); };
+                vector_t<_Ty>                       lNewVector( aSize );
                 std::generate( lNewVector.begin(), lNewVector.end(), gen );
 
                 return sol::make_reference( aScriptState, std::move( lNewVector ) );
@@ -34,140 +35,188 @@ namespace SE::Core
             else
             {
                 std::uniform_int_distribution<_Ty> dist6( lMin, lMax );
-                auto gen = [&dist6, &rng]() { return dist6( rng ); };
-                vector_t<_Ty> lNewVector( aSize );
+                auto                               gen = [&dist6, &rng]() { return dist6( rng ); };
+                vector_t<_Ty>                      lNewVector( aSize );
                 std::generate( lNewVector.begin(), lNewVector.end(), gen );
 
                 return sol::make_reference( aScriptState, std::move( lNewVector ) );
             }
         }
 
-        template <typename _Ty> auto CreateVector0( uint32_t aSize, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto CreateVector0( uint32_t aSize, sol::this_state aScriptState )
         {
             auto lNewVector = vector_t<_Ty>( aSize );
             return sol::make_reference( aScriptState, std::move( lNewVector ) );
         }
 
-        template <typename _Ty> auto CreateVector1( uint32_t aSize, _Ty aFill, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto CreateVector1( uint32_t aSize, _Ty aFill, sol::this_state aScriptState )
         {
             auto lNewVector = vector_t<_Ty>( aSize, aFill );
             return sol::make_reference( aScriptState, std::move( lNewVector ) );
         }
 
-        template <typename _Ty> auto FetchFlattened( Cuda::multi_tensor_t &aMT, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto FetchFlattened( Cuda::multi_tensor_t &aMT, sol::this_state aScriptState )
         {
             auto x = aMT.FetchFlattened<_Ty>();
             return sol::make_reference( aScriptState, std::move( x ) );
         }
 
-        template <typename _Ty> auto FetchBufferAt( Cuda::multi_tensor_t &aMT, uint32_t aLayer, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto FetchBufferAt( Cuda::multi_tensor_t &aMT, uint32_t aLayer, sol::this_state aScriptState )
         {
             auto x = aMT.FetchBufferAt<_Ty>( aLayer );
             return sol::make_reference( aScriptState, std::move( x ) );
         }
 
-        template <typename _Ty> size_t SizeAs( Cuda::multi_tensor_t &aMT ) { return aMT.SizeAs<_Ty>(); }
+        template <typename _Ty>
+        size_t SizeAs( Cuda::multi_tensor_t &aMT )
+        {
+            return aMT.SizeAs<_Ty>();
+        }
 
-        template <typename _Ty> void Upload0( Cuda::multi_tensor_t &aM, sol::table &aArray )
+        template <typename _Ty>
+        void Upload0( Cuda::multi_tensor_t &aM, sol::table &aArray )
         {
             auto &lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload<_Ty>( lArray );
         }
 
-        template <typename _Ty> void Upload1( Cuda::multi_tensor_t &aM, sol::table &aArray, uint32_t aLayer )
+        template <typename _Ty>
+        void Upload1( Cuda::multi_tensor_t &aM, sol::table &aArray, uint32_t aLayer )
         {
             auto lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload( lArray, aLayer, 0 );
         }
 
-        template <typename _Ty> void Upload2( Cuda::multi_tensor_t &aM, sol::table &aArray, uint32_t aLayer, uint32_t aOffset )
+        template <typename _Ty>
+        void Upload2( Cuda::multi_tensor_t &aM, sol::table &aArray, uint32_t aLayer, uint32_t aOffset )
         {
             auto lArray = aArray.as<vector_t<_Ty>>();
             aM.Upload<_Ty>( lArray, aOffset );
         }
 
-        template <typename _Ty> auto Valid( entity_t &aEntity ) { return aEntity.IsValid(); }
+        template <typename _Ty>
+        auto Valid( entity_t &aEntity )
+        {
+            return aEntity.IsValid();
+        }
 
-        template <typename _Ty> auto Add( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto Add( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Add<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto AddOrReplace( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto AddOrReplace( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.AddOrReplace<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto Replace( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto Replace( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Replace<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto TryAdd( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto TryAdd( entity_t &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.TryAdd<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto Tag( entity_t &aEntity ) { aEntity.Tag<_Ty>(); }
-        template <typename _Ty> auto Untag( entity_t &aEntity ) { aEntity.Untag<_Ty>(); }
+        template <typename _Ty>
+        auto Tag( entity_t &aEntity )
+        {
+            aEntity.Tag<_Ty>();
+        }
 
-        template <typename _Ty> auto Get( entity_t &aEntity, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto Untag( entity_t &aEntity )
+        {
+            aEntity.Untag<_Ty>();
+        }
+
+        template <typename _Ty>
+        auto Get( entity_t &aEntity, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Get<_Ty>();
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto TryGet( entity_t &aEntity, sol::this_state aScriptState )
+        template <typename _Ty>
+        auto TryGet( entity_t &aEntity, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.TryGet<_Ty>( _Ty{} );
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
-        template <typename _Ty> auto Has( entity_t &aEntity ) { return aEntity.Has<_Ty>(); }
-        template <typename _Ty> auto Remove( entity_t &aEntity ) { aEntity.Remove<_Ty>(); }
-        template <typename _Ty> auto TryRemove( entity_t &aEntity ) { aEntity.TryRemove<_Ty>(); }
+        template <typename _Ty>
+        auto Has( entity_t &aEntity )
+        {
+            return aEntity.Has<_Ty>();
+        }
+
+        template <typename _Ty>
+        auto Remove( entity_t &aEntity )
+        {
+            aEntity.Remove<_Ty>();
+        }
+
+        template <typename _Ty>
+        auto TryRemove( entity_t &aEntity )
+        {
+            aEntity.TryRemove<_Ty>();
+        }
     } // namespace
 
-    [[nodiscard]] entt::id_type GetTypeID( const sol::table &aObject );
+    // [[nodiscard]] entt::id_type get_type_id( const sol::table &aObject );
 
-    template <typename T> [[nodiscard]] entt::id_type DeduceType( T &&aObject )
-    {
-        switch( aObject.get_type() )
-        {
-        case sol::type::number:
-            return aObject.as<entt::id_type>();
-        case sol::type::table:
-            return GetTypeID( aObject );
-        }
-        assert( false );
-        return -1;
-    }
+    // template <typename T>
+    // [[nodiscard]] entt::id_type deduce_type( T &&aObject )
+    // {
+    //     switch( aObject.get_type() )
+    //     {
+    //     case sol::type::number:
+    //         return aObject.as<entt::id_type>();
+    //     case sol::type::table:
+    //         return get_type_id( aObject );
+    //     }
+    //     assert( false );
+    //     return -1;
+    // }
 
-    template <typename... Args> inline auto InvokeMetaFunction( entt::meta_type meta_type, entt::id_type function_id, Args &&...args )
-    {
-        if( !meta_type )
-        {
-            assert( false );
-        }
-        else
-        {
-            auto meta_function = meta_type.func( function_id );
-            if( meta_function )
-                return meta_function.invoke( {}, std::forward<Args>( args )... );
-        }
-        return entt::meta_any{};
-    }
+    // template <typename... Args>
+    // inline auto invoke_meta_function( entt::meta_type meta_type, entt::id_type function_id, Args &&...args )
+    // {
+    //     if( !meta_type )
+    //     {
+    //         assert( false );
+    //     }
+    //     else
+    //     {
+    //         auto meta_function = meta_type.func( function_id );
+    //         if( meta_function )
+    //             return meta_function.invoke( {}, std::forward<Args>( args )... );
+    //     }
+    //     return entt::meta_any{};
+    // }
 
-    template <typename... Args> inline auto InvokeMetaFunction( entt::id_type type_id, entt::id_type function_id, Args &&...args )
-    {
-        return InvokeMetaFunction( entt::resolve( type_id ), function_id, std::forward<Args>( args )... );
-    }
+    // template <typename... Args>
+    // inline auto invoke_meta_function( entt::id_type type_id, entt::id_type function_id, Args &&...args )
+    // {
+    //     return invoke_meta_function( entt::resolve( type_id ), function_id, std::forward<Args>( args )... );
+    // }
 
-    template <typename _Ty> auto DeclarePrimitiveType( sol::table &aScriptingState, std::string const &aLuaName )
+    template <typename _Ty>
+    auto declare_primitive_type( sol::table &aScriptingState, std::string const &aLuaName )
     {
         using namespace entt::literals;
 

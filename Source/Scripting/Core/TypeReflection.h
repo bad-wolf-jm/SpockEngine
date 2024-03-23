@@ -6,22 +6,24 @@
 
 namespace SE::Core
 {
-    [[nodiscard]] entt::id_type GetTypeID( const sol::table &aObject );
+    [[nodiscard]] entt::id_type get_type_id( const sol::table &aObject );
 
-    template <typename T> [[nodiscard]] entt::id_type DeduceType( T &&aObject )
+    template <typename T>
+    [[nodiscard]] entt::id_type deduce_type( T &&aObject )
     {
         switch( aObject.get_type() )
         {
         case sol::type::number:
             return aObject.as<entt::id_type>();
         case sol::type::table:
-            return GetTypeID( aObject );
+            return get_type_id( aObject );
         }
         assert( false );
         return -1;
     }
 
-    template <typename... Args> inline auto InvokeMetaFunction( entt::meta_type meta_type, entt::id_type function_id, Args &&...args )
+    template <typename... Args>
+    inline auto invoke_meta_function( entt::meta_type meta_type, entt::id_type function_id, Args &&...args )
     {
         if( !meta_type )
         {
@@ -36,10 +38,10 @@ namespace SE::Core
         return entt::meta_any{};
     }
 
-    template <typename... Args> inline auto InvokeMetaFunction( entt::id_type type_id, entt::id_type function_id, Args &&...args )
+    template <typename... Args>
+    inline auto invoke_meta_function( entt::id_type type_id, entt::id_type function_id, Args &&...args )
     {
-        return InvokeMetaFunction( entt::resolve( type_id ), function_id, std::forward<Args>( args )... );
+        return invoke_meta_function( entt::resolve( type_id ), function_id, std::forward<Args>( args )... );
     }
 
-
-}
+} // namespace SE::Core

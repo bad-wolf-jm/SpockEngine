@@ -13,7 +13,7 @@ namespace SE::Core
 {
     using namespace sol;
 
-    texture_create_info_t ParseCreateInfo( sol::table aTable )
+    texture_create_info_t parse_create_info( sol::table aTable )
     {
         texture_create_info_t lCreateInfo{};
         lCreateInfo.mType      = aTable["type"].valid() ? aTable["type"] : texture_type_t::TEXTURE_2D;
@@ -26,7 +26,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    image_data_t ParseImageData( sol::table aTable )
+    image_data_t parse_image_data( sol::table aTable )
     {
         image_data_t lImageData{};
         lImageData.mFormat = aTable["color_format"].valid() ? aTable["color_format"] : color_format::UNDEFINED;
@@ -59,7 +59,7 @@ namespace SE::Core
         return lImageData;
     }
 
-    texture_sampling_info_t ParseSamplerInfo( sol::table aTable )
+    texture_sampling_info_t parse_sampler_info( sol::table aTable )
     {
         texture_sampling_info_t lSamplingInfo{};
         lSamplingInfo.mFilter = aTable["minification"].valid() ? aTable["minification"] : sampler_filter_t::LINEAR;
@@ -149,8 +149,8 @@ namespace SE::Core
 
         // clang-format off
         // lTextureData2DType[call_constructor] = factories(
-        //     []( sol::table aCreateInfo ) { return texture_data2d_t( ParseCreateInfo(aCreateInfo) ); },
-        //     []( sol::table aCreateInfo, sol::table aImageData ){ return texture_data2d_t( ParseCreateInfo( aCreateInfo ), ParseImageData( aImageData ) ); },
+        //     []( sol::table aCreateInfo ) { return texture_data2d_t( parse_create_info(aCreateInfo) ); },
+        //     []( sol::table aCreateInfo, sol::table aImageData ){ return texture_data2d_t( parse_create_info( aCreateInfo ), parse_image_data( aImageData ) ); },
         //     []( std::string const &aImagePath )
         //     {
         //         texture_create_info_t lCreateInfo{};
@@ -197,14 +197,14 @@ namespace SE::Core
 
         // lTextureSampler2DType[call_constructor] =
         //     factories( []( texture_data2d_t const &aTexture, sol::table aCreateInfo )
-        //                { return texture_data_sampler2d_t( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+        //                { return texture_data_sampler2d_t( aTexture, parse_sampler_info( aCreateInfo ) ); } );
 
         // lTextureSampler2DType["fetch"] = []( TextureSampler2D &aSelf, float x, float y ) { return aSelf.Fetch( x, y ); };
     }
 
-    void OpenCoreLibrary( sol::table &aScriptingState )
+    void open_core_library( sol::table &aScriptingState )
     {
         RequireTexture( aScriptingState );
-        OpenVectorLibrary( aScriptingState );
+        open_vector_library( aScriptingState );
     }
 }; // namespace SE::Core

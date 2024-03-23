@@ -1,49 +1,49 @@
 #include "ScriptingEngine.h"
 
-#include "Core/Logging.h"
 #include "Core/Definitions.h"
+#include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Cuda/Tensor.h"
 // #include "Math/Module.h"
-#include "Math/VectorTypes.h"
 #include "Math/MatrixTypes.h"
+#include "Math/VectorTypes.h"
 #include <type_traits>
 
+#include "ArrayTypes.h"
 #include "Scripting/Core/Texture.h"
 #include "Scripting/Cuda/Texture.h"
 #include "TensorOps/ScalarTypes.h"
-#include "ArrayTypes.h"
 
 namespace SE::Core
 {
     using namespace math;
     using namespace sol;
 
-    ScriptingEngine::ScriptingEngine()
+    script_bindings::script_bindings()
     {
-        ScriptState.open_libraries( lib::base );
+        _scriptState.open_libraries( lib::base );
         Initialize();
     }
 
-    void ScriptingEngine::Initialize()
+    void script_bindings::Initialize()
     {
-        mTypesModule = ScriptState["dtypes"].get_or_create<sol::table>();
+        _typesModule = _scriptState["dtypes"].get_or_create<sol::table>();
 
         // clang-format off
-        DeclarePrimitiveType<uint8_t>  ( mTypesModule, "uint8"   );
-        DeclarePrimitiveType<uint16_t> ( mTypesModule, "uint16"  );
-        DeclarePrimitiveType<uint32_t> ( mTypesModule, "uint32"  );
-        DeclarePrimitiveType<uint64_t> ( mTypesModule, "uint64"  );
-        DeclarePrimitiveType<int8_t>   ( mTypesModule, "int8"    );
-        DeclarePrimitiveType<int16_t>  ( mTypesModule, "int16"   );
-        DeclarePrimitiveType<int32_t>  ( mTypesModule, "int32"   );
-        DeclarePrimitiveType<int64_t>  ( mTypesModule, "int64"   );
-        DeclarePrimitiveType<float>    ( mTypesModule, "float32" );
-        DeclarePrimitiveType<double>   ( mTypesModule, "float64" );
+        declare_primitive_type<uint8_t>  ( _typesModule, "uint8"   );
+        declare_primitive_type<uint16_t> ( _typesModule, "uint16"  );
+        declare_primitive_type<uint32_t> ( _typesModule, "uint32"  );
+        declare_primitive_type<uint64_t> ( _typesModule, "uint64"  );
+        declare_primitive_type<int8_t>   ( _typesModule, "int8"    );
+        declare_primitive_type<int16_t>  ( _typesModule, "int16"   );
+        declare_primitive_type<int32_t>  ( _typesModule, "int32"   );
+        declare_primitive_type<int64_t>  ( _typesModule, "int64"   );
+        declare_primitive_type<float>    ( _typesModule, "float32" );
+        declare_primitive_type<double>   ( _typesModule, "float64" );
         // clang-format on
 
         // clang-format off
-        ScriptState.new_enum( "types",
+        _scriptState.new_enum( "types",
             "float32", scalar_type_t::FLOAT32,
             "float64", scalar_type_t::FLOAT64,
             "uint8",   scalar_type_t::UINT8,
@@ -56,41 +56,48 @@ namespace SE::Core
             "int64",   scalar_type_t::INT64  );
         // clang-format on
 
-        auto lMathModule       = ScriptState["Math"].get_or_create<sol::table>();
+        auto lMathModule       = _scriptState["Math"].get_or_create<sol::table>();
         lMathModule["radians"] = []( float aDegrees ) { return radians( aDegrees ); };
         lMathModule["degrees"] = []( float aRadians ) { return degrees( aRadians ); };
 
-        DefineVectorTypes( lMathModule );
-        DefineMatrixTypes( lMathModule );
+        define_vector_types( lMathModule );
+        define_matrix_types( lMathModule );
 
-        OpenEntityRegistry( ScriptState );
+        open_entity_registry_library( _scriptState );
 
-        auto lCudaModule = ScriptState["Cuda"].get_or_create<sol::table>();
-        OpenTensorLibrary( lCudaModule );
-        RequireCudaTexture( lCudaModule );
+        auto lCudaModule = _scriptState["Cuda"].get_or_create<sol::table>();
+        open_tensor_library( lCudaModule );
+        require_cuda_texture( lCudaModule );
 
-        auto lCoreModule = ScriptState["Core"].get_or_create<sol::table>();
-        OpenCoreLibrary( lCoreModule );
-        DefineArrayTypes(lCoreModule);
+        auto lCoreModule = _scriptState["Core"].get_or_create<sol::table>();
+        open_core_library( lCoreModule );
+        define_array_types( lCoreModule );
     }
 
-    ScriptEnvironment ScriptingEngine::LoadFile( fs::path aPath )
+    environment_t script_bindings::LoadFile( fs::path aPath )
     {
-        ScriptEnvironment lNewEnvironment = NewEnvironment();
+        environment_t lNewEnvironment = NewEnvironment();
 
-        ScriptState.script_file( aPath.string(), lNewEnvironment, load_mode::any );
+        _scriptState.script_file( aPath.string(), lNewEnvironment, load_mode::any );
 
         return lNewEnvironment;
     }
 
-    ScriptEnvironment ScriptingEngine::NewEnvironment()
+    environment_t script_bindings::NewEnvironment()
     {
-        ScriptEnvironment lNewEnvironment( ScriptState, create, ScriptState.globals() );
+        environment_t lNewEnvironment( _scriptState, create, _scriptState.globals() );
 
         return lNewEnvironment;
     }
 
-    void ScriptingEngine::Execute( std::string aString ) { ScriptState.script( aString ); }
-    void ScriptingEngine::Execute( ScriptEnvironment &aEnvironment, std::string aString ) { ScriptState.script( aString, aEnvironment ); }
+    void script_bindings::Execute( std::string aString )
+    {
+        _scriptState.script( aString );
+    }
+
+    void script_bindings::Execute( environment_t &aEnvironment, std::string aString )
+    {
+        _scriptState.script( aString, aEnvironment );
+    }
 
 } // namespace SE::Core

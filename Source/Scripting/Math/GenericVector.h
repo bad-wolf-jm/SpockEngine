@@ -9,22 +9,27 @@ namespace SE::Core
 {
     using namespace sol;
 
-    template <typename _VecType> void DeclareVectorOperation( table &aScriptState )
+    template <typename _VecType>
+    void DeclareVectorOperation( table &aScriptState )
     {
         if constexpr( std::is_same<_VecType::value_type, float>::value )
         {
             aScriptState["normalize"] = []( _VecType aVector ) -> _VecType { return normalize( aVector ); };
             aScriptState["length"]    = []( _VecType aVector ) -> _VecType::value_type { return length( aVector ); };
             aScriptState["length2"]   = []( _VecType aVector ) -> _VecType::value_type { return length2( aVector ); };
-            aScriptState["dist2"]     = []( _VecType aVector0, _VecType aVector1 ) -> _VecType::value_type { return dist2( aVector0, aVector1 ); };
-            aScriptState["dot"]       = []( _VecType aVector0, _VecType aVector1 ) -> _VecType::value_type { return dot( aVector0, aVector1 ); };
-            aScriptState["mix"]       = []( _VecType aVector0, _VecType aVector1, float aCoefficient ) -> _VecType { return mix<_VecType>( aVector0, aVector1, aCoefficient ); };
+            aScriptState["dist2"]     = []( _VecType aVector0, _VecType aVector1 ) -> _VecType::value_type
+            { return dist2( aVector0, aVector1 ); };
+            aScriptState["dot"] = []( _VecType aVector0, _VecType aVector1 ) -> _VecType::value_type
+            { return dot( aVector0, aVector1 ); };
+            aScriptState["mix"] = []( _VecType aVector0, _VecType aVector1, float aCoefficient ) -> _VecType
+            { return mix<_VecType>( aVector0, aVector1, aCoefficient ); };
         }
     }
 
-    template <typename _VecType> usertype<_VecType> NewVectorType( table &aScriptState, std::string aName )
+    template <typename _VecType>
+    usertype<_VecType> NewVectorType( table &aScriptState, std::string aName )
     {
-        auto lNewType = DeclarePrimitiveType<_VecType>( aScriptState, aName );
+        auto lNewType = declare_primitive_type<_VecType>( aScriptState, aName );
 
         if constexpr( std::is_same<_VecType::value_type, float>::value )
         {

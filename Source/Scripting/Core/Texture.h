@@ -2,14 +2,14 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 
-#include "Core/Entity/Collection.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
+#include "Core/Entity/Collection.h"
 
 namespace SE::Core
 {
-    texture_create_info_t ParseCreateInfo( sol::table aTable );
-    image_data_t ParseImageData( sol::table aTable );
-    texture_sampling_info_t ParseSamplerInfo( sol::table aTable );
+    image_data_t            parse_image_data( sol::table aTable );
+    texture_create_info_t   parse_create_info( sol::table aTable );
+    texture_sampling_info_t parse_sampler_info( sol::table aTable );
 
-    void OpenCoreLibrary( sol::table &aScriptingState );
+    void open_core_library( sol::table &aScriptingState );
 }; // namespace SE::Core

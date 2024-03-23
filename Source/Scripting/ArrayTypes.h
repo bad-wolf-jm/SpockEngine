@@ -60,6 +60,6 @@ namespace SE::Core
 
     using TextureArray = structure_array_t<math::mat3>;
 
-    void DefineArrayTypes( sol::table &aModule );
+    void define_array_types( sol::table &aModule );
 
 } // namespace SE::Core

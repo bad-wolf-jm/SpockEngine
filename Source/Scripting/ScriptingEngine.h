@@ -15,38 +15,49 @@ namespace fs = std::filesystem;
 namespace SE::Core
 {
 
-    using ScriptEnvironment = sol::environment;
+    using environment_t = sol::environment;
 
-    class ScriptingEngine
+    class script_bindings
     {
       public:
-        ScriptingEngine();
+        script_bindings();
 
         void Initialize();
 
-        ScriptEnvironment NewEnvironment();
+        environment_t NewEnvironment();
 
-        ScriptEnvironment LoadFile( fs::path aPath );
+        environment_t LoadFile( fs::path aPath );
 
-        void Execute( ScriptEnvironment &aEnvironment, std::string aString );
+        void Execute( environment_t &aEnvironment, std::string aString );
         void Execute( std::string aString );
 
-        template <typename _Ty> ScriptingEngine &Define( std::string aName, _Ty aValue )
+        template <typename _Ty>
+        script_bindings &Define( std::string aName, _Ty aValue )
         {
-            ScriptState[aName] = aValue;
+            _scriptState[aName] = aValue;
             return *this;
         }
 
-        template <typename _Ty> _Ty Get( std::string aName ) { return ScriptState.get<_Ty>( aName ); }
-        template <typename _Ty> _Ty &GetRef( std::string aName ) { return ScriptState.get<_Ty>( aName ); }
-
-        template <typename _Ty> sol::usertype<_Ty> RegisterPrimitiveType( std::string const &aName )
+        template <typename _Ty>
+        _Ty Get( std::string aName )
         {
-            return DeclarePrimitiveType<_Ty>( mTypesModule, aName );
+            return _scriptState.get<_Ty>( aName );
+        }
+
+        template <typename _Ty>
+        _Ty &GetRef( std::string aName )
+        {
+            return _scriptState.get<_Ty>( aName );
+        }
+
+        template <typename _Ty>
+        sol::usertype<_Ty> RegisterPrimitiveType( std::string const &aName )
+        {
+            return declare_primitive_type<_Ty>( _typesModule, aName );
         }
 
       private:
-        sol::state ScriptState;
-        sol::table mTypesModule;
+        sol::state _scriptState;
+        sol::table _typesModule;
     };
 } // namespace SE::Core

@@ -5,5 +5,5 @@
 
 namespace SE::Core
 {
-    void DefineVectorTypes(sol::table &aModule);
+    void define_vector_types( sol::table &aModule );
 }

@@ -7,5 +7,5 @@
 
 namespace SE::Core
 {
-    void OpenTensorLibrary( sol::table &aScriptingState );
+    void open_tensor_library( sol::table &aScriptingState );
 }; // namespace SE::Core

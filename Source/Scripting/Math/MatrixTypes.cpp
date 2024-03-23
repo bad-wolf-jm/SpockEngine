@@ -1,5 +1,5 @@
-#include "GenericMatrix.h"
 #include "MatrixTypes.h"
+#include "GenericMatrix.h"
 
 #include "Core/Math/Types.h"
 
@@ -7,9 +7,9 @@ namespace SE::Core
 {
     using namespace math;
 
-    void DefineMatrixTypes( sol::table &aModule )
+    void define_matrix_types( sol::table &aModule )
     {
-        auto lMat3Type = NewMatrixType<mat3>( aModule, "mat3" );
+        auto lMat3Type = new_matrix_type<mat3>( aModule, "mat3" );
         // clang-format off
         lMat3Type[sol::call_constructor] =
             factories(
@@ -22,7 +22,7 @@ namespace SE::Core
         // clang-format on
         lMat3Type["comatrix"] = []( mat3 aSelf ) -> mat3 { return Comatrix( aSelf ); };
 
-        auto lMat4Type = NewMatrixType<mat4>( aModule, "mat4" );
+        auto lMat4Type = new_matrix_type<mat4>( aModule, "mat4" );
 
         // clang-format off
         lMat4Type[sol::call_constructor] =

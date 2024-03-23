@@ -60,7 +60,7 @@ namespace SE::Core
         }
     } // namespace
 
-    void DefineArrayTypes( sol::table &aModule )
+    void define_array_types( sol::table &aModule )
     {
         NewArrayType<uint8_t>( aModule, "U8Array" );
         NewArrayType<uint16_t>( aModule, "U16Array" );

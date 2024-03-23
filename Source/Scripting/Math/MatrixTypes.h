@@ -5,5 +5,5 @@
 
 namespace SE::Core
 {
-    void DefineMatrixTypes( sol::table &aModule );
+    void define_matrix_types( sol::table &aModule );
 }

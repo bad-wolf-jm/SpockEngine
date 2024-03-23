@@ -55,7 +55,7 @@ namespace SE::Core
         }
     } // namespace
 
-    void OpenTensorLibrary( sol::table &aScriptingState )
+    void open_tensor_library( sol::table &aScriptingState )
     {
         auto lTensorShapeType = aScriptingState.new_usertype<Cuda::tensor_shape_t>( "TensorShape" );
 
@@ -95,7 +95,7 @@ namespace SE::Core
         lMultiTensorType["size"]    = []( Cuda::multi_tensor_t &aSelf ) { return aSelf.Size(); };
         lMultiTensorType["size_as"] = []( Cuda::multi_tensor_t &aSelf, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "SizeAs"_hs, aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "SizeAs"_hs, aSelf );
 
             return lMaybeAny ? lMaybeAny.cast<size_t>() : 0;
         };
@@ -195,7 +195,7 @@ namespace SE::Core
             "UNKNOWN", scalar_type_t::UNKNOWN  );
         // clang-format on
 
-        DeclarePrimitiveType<multi_tensor_value_t>( lOpsModule, "sMultiTensorComponent" );
+        declare_primitive_type<multi_tensor_value_t>( lOpsModule, "sMultiTensorComponent" );
 
         // clang-format off
         auto lConstantInitializerComponent = lOpsModule.new_usertype<constant_value_initializer_t>("sConstantValueInitializerComponent");
