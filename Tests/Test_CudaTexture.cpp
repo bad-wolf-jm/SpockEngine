@@ -94,49 +94,49 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
         }
     }
 
-    SECTION( "Load cuda 2D textures from data" )
-    {
-        {
-            uint32_t lImageData[16] = { 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
-                                        0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
-                                        0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
+    // SECTION( "Load cuda 2D textures from data" )
+    // {
+    //     {
+    //         uint32_t lImageData[16] = { 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
+    //                                     0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+    //                                     0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
 
-            image_data_t lImageDataStruct{};
-            lImageDataStruct.mFormat    = color_format_t::RGBA8_UNORM;
-            lImageDataStruct.mWidth     = 4;
-            lImageDataStruct.mHeight    = 4;
-            lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = std::vector<uint8_t>(
-                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
+    //         image_data_t lImageDataStruct{};
+    //         lImageDataStruct.mFormat    = color_format_t::RGBA8_UNORM;
+    //         lImageDataStruct.mWidth     = 4;
+    //         lImageDataStruct.mHeight    = 4;
+    //         lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
+    //         lImageDataStruct.mPixelData = std::vector<uint8_t>(
+    //             reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
-            texture_create_info_t lTextureCreateInfo{};
-            lTextureCreateInfo.mMipLevels = 1;
-            texture_data2d_t lTexture( lTextureCreateInfo, lImageDataStruct );
+    //         texture_create_info_t lTextureCreateInfo{};
+    //         lTextureCreateInfo.mMipLevels = 1;
+    //         texture_data2d_t lTexture( lTextureCreateInfo, lImageDataStruct );
 
-            texture_create_info_t lCudaTextureCreateInfo{};
-            texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
-            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
-        }
+    //         texture_create_info_t lCudaTextureCreateInfo{};
+    //         texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
+    //         REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
+    //     }
 
-        {
-            float lImageData[16] = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+    //     {
+    //         float lImageData[16] = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
-            image_data_t lImageDataStruct{};
-            lImageDataStruct.mFormat    = color_format_t::R32_FLOAT;
-            lImageDataStruct.mWidth     = 4;
-            lImageDataStruct.mHeight    = 4;
-            lImageDataStruct.mByteSize  = 16 * sizeof( float );
-            lImageDataStruct.mPixelData = std::vector<uint8_t>(
-                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
+    //         image_data_t lImageDataStruct{};
+    //         lImageDataStruct.mFormat    = color_format_t::R32_FLOAT;
+    //         lImageDataStruct.mWidth     = 4;
+    //         lImageDataStruct.mHeight    = 4;
+    //         lImageDataStruct.mByteSize  = 16 * sizeof( float );
+    //         lImageDataStruct.mPixelData = std::vector<uint8_t>(
+    //             reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
-            texture_create_info_t lTextureCreateInfo{};
-            lTextureCreateInfo.mMipLevels = 1;
-            texture_data2d_t      lTexture( lTextureCreateInfo, lImageDataStruct );
-            texture_create_info_t lCudaTextureCreateInfo{};
-            texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
-            REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
-        }
-    }
+    //         texture_create_info_t lTextureCreateInfo{};
+    //         lTextureCreateInfo.mMipLevels = 1;
+    //         texture_data2d_t      lTexture( lTextureCreateInfo, lImageDataStruct );
+    //         texture_create_info_t lCudaTextureCreateInfo{};
+    //         texture2d_t          lCudaTexture( lCudaTextureCreateInfo, lTexture.GetImageData() );
+    //         REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::R32_FLOAT );
+    //     }
+    // }
 
     SECTION( "Sampling 2D textures" )
     {

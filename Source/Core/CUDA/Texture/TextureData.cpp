@@ -68,6 +68,7 @@ namespace SE::Core
         return lImageData;
     }
 
+#if 0
     static const gli::format ToGliType( const color_format_t &aFormat )
     {
         switch( aFormat )
@@ -418,5 +419,5 @@ namespace SE::Core
 
         return std::move( lImageData );
     }
-
+#endif
 } // namespace SE::Core

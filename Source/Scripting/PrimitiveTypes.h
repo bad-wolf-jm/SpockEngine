@@ -5,7 +5,7 @@
 #include <type_traits>
 
 #include "Core/Entity/Collection.h"
-#include "Core/CUDA/Texture/TextureData.h"
+// #include "Core/CUDA/Texture/TextureData.h"
 
 #include "Core/CUDA/Array/MultiTensor.h"
 

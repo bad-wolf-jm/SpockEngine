@@ -145,36 +145,36 @@ namespace SE::Core
             "MIRROR_CLAMP_TO_BORDER", sampler_wrapping_t::MIRROR_CLAMP_TO_BORDER );
         // clang-format on
 
-        auto lTextureData2DType = aScriptingState.new_usertype<texture_data2d_t>( "TextureData2D" );
+        // auto lTextureData2DType = aScriptingState.new_usertype<texture_data2d_t>( "TextureData2D" );
 
         // clang-format off
-        lTextureData2DType[call_constructor] = factories(
-            []( sol::table aCreateInfo ) { return texture_data2d_t( ParseCreateInfo(aCreateInfo) ); },
-            []( sol::table aCreateInfo, sol::table aImageData ){ return texture_data2d_t( ParseCreateInfo( aCreateInfo ), ParseImageData( aImageData ) ); },
-            []( std::string const &aImagePath )
-            {
-                texture_create_info_t lCreateInfo{};
-                return texture_data2d_t( lCreateInfo, fs::path(aImagePath) );
-            }
-        );
+        // lTextureData2DType[call_constructor] = factories(
+        //     []( sol::table aCreateInfo ) { return texture_data2d_t( ParseCreateInfo(aCreateInfo) ); },
+        //     []( sol::table aCreateInfo, sol::table aImageData ){ return texture_data2d_t( ParseCreateInfo( aCreateInfo ), ParseImageData( aImageData ) ); },
+        //     []( std::string const &aImagePath )
+        //     {
+        //         texture_create_info_t lCreateInfo{};
+        //         return texture_data2d_t( lCreateInfo, fs::path(aImagePath) );
+        //     }
+        // );
         // clang-format on
 
-        lTextureData2DType["get_image_data"] = [&]( texture_data2d_t &aSelf, sol::this_state aScriptState )
-        {
-            sol::table lDataTable( aScriptState, sol::new_table{} );
-            auto       lImageData = aSelf.GetImageData();
+        // lTextureData2DType["get_image_data"] = [&]( texture_data2d_t &aSelf, sol::this_state aScriptState )
+        // {
+        //     sol::table lDataTable( aScriptState, sol::new_table{} );
+        //     auto       lImageData = aSelf.GetImageData();
 
-            lDataTable["color_format"] = lImageData.mFormat;
-            lDataTable["width"]        = lImageData.mWidth;
-            lDataTable["height"]       = lImageData.mHeight;
+        //     lDataTable["color_format"] = lImageData.mFormat;
+        //     lDataTable["width"]        = lImageData.mWidth;
+        //     lDataTable["height"]       = lImageData.mHeight;
 
-            auto lDataVector = vector_t<uint8_t>( lImageData.mByteSize );
-            for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
-                lDataVector[i] = lImageData.mPixelData[i];
-            lDataTable["pixel_data"] = lDataVector;
+        //     auto lDataVector = vector_t<uint8_t>( lImageData.mByteSize );
+        //     for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
+        //         lDataVector[i] = lImageData.mPixelData[i];
+        //     lDataTable["pixel_data"] = lDataVector;
 
-            return lDataTable;
-        };
+        //     return lDataTable;
+        // };
 
         aScriptingState["load_image"] = []( std::string aPath, sol::this_state aScriptState )
         {
@@ -193,11 +193,11 @@ namespace SE::Core
             return lDataTable;
         };
 
-        auto lTextureSampler2DType = aScriptingState.new_usertype<texture_data_sampler2d_t>( "TextureSampler2D" );
+        // auto lTextureSampler2DType = aScriptingState.new_usertype<texture_data_sampler2d_t>( "TextureSampler2D" );
 
-        lTextureSampler2DType[call_constructor] =
-            factories( []( texture_data2d_t const &aTexture, sol::table aCreateInfo )
-                       { return texture_data_sampler2d_t( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+        // lTextureSampler2DType[call_constructor] =
+        //     factories( []( texture_data2d_t const &aTexture, sol::table aCreateInfo )
+        //                { return texture_data_sampler2d_t( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
 
         // lTextureSampler2DType["fetch"] = []( TextureSampler2D &aSelf, float x, float y ) { return aSelf.Fetch( x, y ); };
     }

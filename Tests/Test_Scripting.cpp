@@ -1144,91 +1144,91 @@ TEST_CASE( "LUA Scope", "[CORE_SCRIPTING]" )
     REQUIRE( true );
 }
 
-TEST_CASE( "LUA TextureData", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA TextureData", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(value = Core.TextureData2D({
-        type         = Core.eTextureType.TEXTURE_2D,
-        color_format = Core.eColorFormat.RGBA32_FLOAT,
-        width        = 128,
-        height       = 256,
-        depth        = 1,
-        mip_levels   = 1})
-)" );
-    auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
-    REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
-    REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA32_FLOAT );
-    REQUIRE( lTexture.mSpec.mWidth == 128 );
-}
+//     scriptingEngine.Execute( R"(value = Core.TextureData2D({
+//         type         = Core.eTextureType.TEXTURE_2D,
+//         color_format = Core.eColorFormat.RGBA32_FLOAT,
+//         width        = 128,
+//         height       = 256,
+//         depth        = 1,
+//         mip_levels   = 1})
+// )" );
+//     auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+//     REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+//     REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA32_FLOAT );
+//     REQUIRE( lTexture.mSpec.mWidth == 128 );
+// }
 
-TEST_CASE( "LUA TextureData from image data", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA TextureData from image data", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-create_info = {
-    type         = Core.eTextureType.TEXTURE_2D,
-    color_format = Core.eColorFormat.R8_UNORM,
-    width        = 2,
-    height       = 2,
-    depth        = 1,
-    mip_levels = 1 }
+//     scriptingEngine.Execute( R"(
+// create_info = {
+//     type         = Core.eTextureType.TEXTURE_2D,
+//     color_format = Core.eColorFormat.R8_UNORM,
+//     width        = 2,
+//     height       = 2,
+//     depth        = 1,
+//     mip_levels = 1 }
 
-pixel_data = {
-    color_format = Core.eColorFormat.R8_UNORM,
-    width        = 2,
-    height       = 2,
-    pixel_data   = { 1, 2, 3, 4 } }
-value = Core.TextureData2D(create_info, pixel_data)
-)" );
-    auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
-    REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
-    REQUIRE( lTexture.mSpec.mFormat == color_format_t::R8_UNORM );
-    REQUIRE( lTexture.mSpec.mWidth == 2 );
+// pixel_data = {
+//     color_format = Core.eColorFormat.R8_UNORM,
+//     width        = 2,
+//     height       = 2,
+//     pixel_data   = { 1, 2, 3, 4 } }
+// value = Core.TextureData2D(create_info, pixel_data)
+// )" );
+//     auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+//     REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+//     REQUIRE( lTexture.mSpec.mFormat == color_format_t::R8_UNORM );
+//     REQUIRE( lTexture.mSpec.mWidth == 2 );
 
-    auto lPixelData = lTexture.GetImageData();
-    REQUIRE( lPixelData.mByteSize == 4 );
-    REQUIRE( lPixelData.mWidth == 2 );
-    REQUIRE( lPixelData.mHeight == 2 );
-    REQUIRE( lPixelData.mPixelData[0] == 1 );
-    REQUIRE( lPixelData.mPixelData[1] == 2 );
-}
+//     auto lPixelData = lTexture.GetImageData();
+//     REQUIRE( lPixelData.mByteSize == 4 );
+//     REQUIRE( lPixelData.mWidth == 2 );
+//     REQUIRE( lPixelData.mHeight == 2 );
+//     REQUIRE( lPixelData.mPixelData[0] == 1 );
+//     REQUIRE( lPixelData.mPixelData[1] == 2 );
+// }
 
-TEST_CASE( "LUA TextureData load from file", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA TextureData load from file", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx"))" );
-    {
-        auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
-        REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
-        REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGB8_UNORM );
-        REQUIRE( lTexture.mSpec.mWidth == 256 );
-    }
+//     scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx"))" );
+//     {
+//         auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+//         REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+//         REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGB8_UNORM );
+//         REQUIRE( lTexture.mSpec.mWidth == 256 );
+//     }
 
-    scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png"))" );
-    {
-        auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
-        REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
-        REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
-        REQUIRE( lTexture.mSpec.mWidth == 256 );
-    }
-}
+//     scriptingEngine.Execute( R"(value = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png"))" );
+//     {
+//         auto lTexture = scriptingEngine.Get<texture_data2d_t>( "value" );
+//         REQUIRE( lTexture.mSpec.mType == texture_type_t::TEXTURE_2D );
+//         REQUIRE( lTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
+//         REQUIRE( lTexture.mSpec.mWidth == 256 );
+//     }
+// }
 
-TEST_CASE( "LUA TextureData get image data from texture", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA TextureData get image data from texture", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
-    value = texture:get_image_data()
-)" );
-    auto lImageData = scriptingEngine.Get<sol::table>( "value" );
-    REQUIRE( lImageData.get<color_format_t>( "color_format" ) == color_format_t::RGB8_UNORM );
-    REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
-    REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
-}
+//     scriptingEngine.Execute( R"(
+//     texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
+//     value = texture:get_image_data()
+// )" );
+//     auto lImageData = scriptingEngine.Get<sol::table>( "value" );
+//     REQUIRE( lImageData.get<color_format_t>( "color_format" ) == color_format_t::RGB8_UNORM );
+//     REQUIRE( lImageData.get<uint32_t>( "width" ) == 256 );
+//     REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
+// }
 
 TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
 {
@@ -1243,85 +1243,85 @@ TEST_CASE( "LUA TextureData load image data from file", "[CORE_SCRIPTING]" )
     REQUIRE( lImageData.get<uint32_t>( "height" ) == 256 );
 }
 
-TEST_CASE( "LUA TextureSampler", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA TextureSampler", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
+//     scriptingEngine.Execute( R"(
+//     texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_rgb8_unorm.ktx")
 
-    sampler_create_info = {
-        minification = Core.eSamplerFilter.NEAREST,
-        magnification = Core.eSamplerFilter.LINEAR,
-        mip = Core.eSamplerMipmap.NEAREST,
-        wrapping = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER,
-        offset = { x = 3.0, y = 4.0 },
-        scaling = { x = 5.0, y = 6.0 },
-        border_color = { r = 0.1, g = 0.2, b = 0.3, a = 0.4}
-    }
+//     sampler_create_info = {
+//         minification = Core.eSamplerFilter.NEAREST,
+//         magnification = Core.eSamplerFilter.LINEAR,
+//         mip = Core.eSamplerMipmap.NEAREST,
+//         wrapping = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER,
+//         offset = { x = 3.0, y = 4.0 },
+//         scaling = { x = 5.0, y = 6.0 },
+//         border_color = { r = 0.1, g = 0.2, b = 0.3, a = 0.4}
+//     }
 
-    value = Core.TextureSampler2D(texture, sampler_create_info)
-)" );
+//     value = Core.TextureSampler2D(texture, sampler_create_info)
+// )" );
 
-    auto lTextureSampler = scriptingEngine.Get<SE::Core::texture_data_sampler2d_t>( "value" );
-    REQUIRE( lTextureSampler.mSamplingSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
-    REQUIRE( lTextureSampler.mSamplingSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
-    REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
-}
+//     auto lTextureSampler = scriptingEngine.Get<SE::Core::texture_data_sampler2d_t>( "value" );
+//     REQUIRE( lTextureSampler.mSamplingSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
+//     REQUIRE( lTextureSampler.mSamplingSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
+//     REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
+// }
 
-TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
+//     scriptingEngine.Execute( R"(
+//     texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 
-    texture_create_info = {
-        filter_mode = Core.eSamplerFilter.NEAREST,
-        wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
-    }
+//     texture_create_info = {
+//         filter_mode = Core.eSamplerFilter.NEAREST,
+//         wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
+//     }
 
-    value = Cuda.Texture2D(texture_create_info, texture:get_image_data())
-)" );
+//     value = Cuda.Texture2D(texture_create_info, texture:get_image_data())
+// )" );
 
-    auto &lCudaTexture = scriptingEngine.GetRef<SE::Cuda::texture2d_t>( "value" );
-    REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
-    REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
-    REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
-}
+//     auto &lCudaTexture = scriptingEngine.GetRef<SE::Cuda::texture2d_t>( "value" );
+//     REQUIRE( lCudaTexture.mSpec.mFormat == color_format_t::RGBA8_UNORM );
+//     REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
+//     REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
+// }
 
-TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine scriptingEngine{};
+// TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-    texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
+//     scriptingEngine.Execute( R"(
+//     texture = Core.TextureData2D("C:/GitLab/SpockEngine/Tests/Data/kueken7_srgb8.png")
 
-    texture_create_info = {
-        filter_mode = Core.eSamplerFilter.NEAREST,
-        wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
-    }
+//     texture_create_info = {
+//         filter_mode = Core.eSamplerFilter.NEAREST,
+//         wrapping    = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER
+//     }
 
-    tex2d = Cuda.Texture2D(texture_create_info, texture:get_image_data())
+//     tex2d = Cuda.Texture2D(texture_create_info, texture:get_image_data())
 
-    sampler_create_info = {
-        minification  = Core.eSamplerFilter.NEAREST,
-        magnification = Core.eSamplerFilter.NEAREST,
-        mip           = Core.eSamplerMipmap.NEAREST,
-        wrapping      = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER,
-        offset        = { x = 3.0, y = 4.0 },
-        scaling       = { x = 5.0, y = 6.0 },
-        border_color  = { r = 0.1, g = 0.2, b = 0.3, a = 0.4}
-    }
+//     sampler_create_info = {
+//         minification  = Core.eSamplerFilter.NEAREST,
+//         magnification = Core.eSamplerFilter.NEAREST,
+//         mip           = Core.eSamplerMipmap.NEAREST,
+//         wrapping      = Core.eSamplerWrapping.MIRROR_CLAMP_TO_BORDER,
+//         offset        = { x = 3.0, y = 4.0 },
+//         scaling       = { x = 5.0, y = 6.0 },
+//         border_color  = { r = 0.1, g = 0.2, b = 0.3, a = 0.4}
+//     }
 
-    value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
-)" );
+//     value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
+// )" );
 
-    auto &lCudaTextureSampler = scriptingEngine.GetRef<SE::Cuda::texture_sampler2d_t>( "value" );
-    REQUIRE( lCudaTextureSampler.mSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
-    REQUIRE( lCudaTextureSampler.mSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
-    REQUIRE( lCudaTextureSampler.mSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
-}
+//     auto &lCudaTextureSampler = scriptingEngine.GetRef<SE::Cuda::texture_sampler2d_t>( "value" );
+//     REQUIRE( lCudaTextureSampler.mSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
+//     REQUIRE( lCudaTextureSampler.mSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
+//     REQUIRE( lCudaTextureSampler.mSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
+// }
 
 TEST_CASE( "LUA sConstantValueInitializerComponent", "[CORE_SCRIPTING]" )
 {

@@ -23,7 +23,7 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-
+#if 0
     /** \struct TextureData
      *
      * @brief CPU-side class for textures
@@ -166,10 +166,11 @@ namespace SE::Core
          */
         texture_data_sampler2d_t( texture_data2d_t const &aTexture, texture_sampling_info_t const &aSamplingInfo );
     };
-
+#endif
     using cubemap_image_data_t      = std::array<image_data_t, 6>;
     using cubemap_image_path_data_t = std::array<fs::path, 6>;
 
+#if 0
     class texture_data_cubemap_t : public texture_data_t
     {
       public:
@@ -193,5 +194,5 @@ namespace SE::Core
       protected:
         gli::texture_cube mInternalTextureCubeMap{};
     };
-
+#endif
 } // namespace SE::Core
