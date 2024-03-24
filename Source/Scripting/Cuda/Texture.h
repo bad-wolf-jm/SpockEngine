@@ -6,5 +6,5 @@
 
 namespace SE::Core
 {
-    void require_cuda_texture( sol::table &aScriptingState );
+    void require_cuda_texture( sol::table &scriptingState );
 }; // names

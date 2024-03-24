@@ -3,7 +3,7 @@
 namespace SE::Core
 {
 
-    size_t SizeOf( scalar_type_t aType )
+    size_t size_of( scalar_type_t aType )
     {
         switch( aType )
         {
@@ -32,7 +32,7 @@ namespace SE::Core
         }
     }
 
-    scalar_type_t TypeOf( scalar_value_t aType )
+    scalar_type_t type_of( scalar_value_t aType )
     {
         return static_cast<scalar_type_t>( aType.index() );
     }

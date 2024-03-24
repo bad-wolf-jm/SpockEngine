@@ -7,9 +7,9 @@
 
 namespace SE::Core
 {
-    image_data_t            parse_image_data( sol::table aTable );
-    texture_create_info_t   parse_create_info( sol::table aTable );
-    texture_sampling_info_t parse_sampler_info( sol::table aTable );
+    image_data_t            parse_image_data( sol::table table );
+    texture_create_info_t   parse_create_info( sol::table table );
+    texture_sampling_info_t parse_sampler_info( sol::table table );
 
     void open_core_library( sol::table &aScriptingState );
 }; // namespace SE::Core

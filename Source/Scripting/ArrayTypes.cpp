@@ -5,26 +5,26 @@ namespace SE::Core
     namespace
     {
         template <typename _Ty>
-        void NewArrayType( sol::table &aModule, std::string aName )
+        void new_array_type( sol::table &module, std::string name )
         {
-            auto lNewType = aModule.new_usertype<numeric_array_t<_Ty>>( aName );
+            auto newType = module.new_usertype<numeric_array_t<_Ty>>( name );
 
             // clang-format off
-            lNewType[sol::call_constructor] = sol::factories(
+            newType[sol::call_constructor] = sol::factories(
                 []() {
                     return numeric_array_t<_Ty>{};
                 },
-                [](uint32_t aSize) {
-                    return numeric_array_t<_Ty>{vector_t<_Ty>(aSize)};
+                [](uint32_t size) {
+                    return numeric_array_t<_Ty>{vector_t<_Ty>(size)};
                 },
-                [](uint32_t aSize, _Ty aValue) {
-                    return numeric_array_t<_Ty>{vector_t<_Ty>(aSize, aValue)};
+                [](uint32_t size, _Ty value) {
+                    return numeric_array_t<_Ty>{vector_t<_Ty>(size, value)};
                 },
-                [](sol::table aArrayData) {
+                [](sol::table arrayData) {
                     vector_t<_Ty> lArray{};
-                    auto lArrayDataSize = aArrayData.size();
+                    auto lArrayDataSize = arrayData.size();
                     for( uint32_t i = 0; i < lArrayDataSize; i++ )
-                        lArray.push_back( aArrayData.get<_Ty>( i + 1 ) );
+                        lArray.push_back( arrayData.get<_Ty>( i + 1 ) );
 
                     return numeric_array_t<_Ty>{lArray};
                 }
@@ -32,63 +32,63 @@ namespace SE::Core
             // clang-format on
 
             // clang-format off
-            lNewType["append"] = sol::overload(
-                [](numeric_array_t<_Ty> &aSelf, _Ty aValue) {
-                    aSelf.mArray.push_back(aValue);
+            newType["append"] = sol::overload(
+                [](numeric_array_t<_Ty> &self, _Ty value) {
+                    self.mArray.push_back(value);
                 },
-                [](numeric_array_t<_Ty> &aSelf, numeric_array_t<_Ty> aValue) {
-                    aSelf.mArray.insert(aSelf.mArray.end(), aValue.mArray.begin(), aValue.mArray.end());
+                [](numeric_array_t<_Ty> &self, numeric_array_t<_Ty> value) {
+                    self.mArray.insert(self.mArray.end(), value.mArray.begin(), value.mArray.end());
                 }
             );
             // clang-format on
 
             // clang-format off
-            lNewType["insert"] = sol::overload(
-                [](numeric_array_t<_Ty> &aSelf, _Ty aValue, uint32_t aPosition) {
-                    aSelf.mArray.insert(aSelf.mArray.begin() + aPosition, aValue);
+            newType["insert"] = sol::overload(
+                [](numeric_array_t<_Ty> &self, _Ty value, uint32_t position) {
+                    self.mArray.insert(self.mArray.begin() + position, value);
                 },
-                [](numeric_array_t<_Ty> &aSelf, numeric_array_t<_Ty> aValue, uint32_t aPosition) {
-                    aSelf.mArray.insert(aSelf.mArray.begin() + aPosition, aValue.mArray.begin(), aValue.mArray.end());
+                [](numeric_array_t<_Ty> &self, numeric_array_t<_Ty> value, uint32_t position) {
+                    self.mArray.insert(self.mArray.begin() + position, value.mArray.begin(), value.mArray.end());
                 }
             );
             // clang-format on
 
             // &numeric_array_t<_Ty>::Append;
-            lNewType["length"] = &numeric_array_t<_Ty>::Length;
+            newType["length"] = &numeric_array_t<_Ty>::Length;
 
-            lNewType[sol::meta_method::length] = &numeric_array_t<_Ty>::Length;
+            newType[sol::meta_method::length] = &numeric_array_t<_Ty>::Length;
         }
     } // namespace
 
-    void define_array_types( sol::table &aModule )
+    void define_array_types( sol::table &module )
     {
-        NewArrayType<uint8_t>( aModule, "U8Array" );
-        NewArrayType<uint16_t>( aModule, "U16Array" );
-        NewArrayType<uint32_t>( aModule, "U32Array" );
-        NewArrayType<uint64_t>( aModule, "U64Array" );
+        new_array_type<uint8_t>( module, "U8Array" );
+        new_array_type<uint16_t>( module, "U16Array" );
+        new_array_type<uint32_t>( module, "U32Array" );
+        new_array_type<uint64_t>( module, "U64Array" );
 
-        NewArrayType<int8_t>( aModule, "I8Array" );
-        NewArrayType<int16_t>( aModule, "I16Array" );
-        NewArrayType<int32_t>( aModule, "I32Array" );
-        NewArrayType<int64_t>( aModule, "I64Array" );
+        new_array_type<int8_t>( module, "I8Array" );
+        new_array_type<int16_t>( module, "I16Array" );
+        new_array_type<int32_t>( module, "I32Array" );
+        new_array_type<int64_t>( module, "I64Array" );
 
-        NewArrayType<float>( aModule, "F32Array" );
-        NewArrayType<double>( aModule, "F64Array" );
+        new_array_type<float>( module, "F32Array" );
+        new_array_type<double>( module, "F64Array" );
 
-        NewArrayType<math::uvec2>( aModule, "UVec2Array" );
-        NewArrayType<math::uvec3>( aModule, "UVec3Array" );
-        NewArrayType<math::uvec4>( aModule, "UVec4Array" );
+        new_array_type<math::uvec2>( module, "UVec2Array" );
+        new_array_type<math::uvec3>( module, "UVec3Array" );
+        new_array_type<math::uvec4>( module, "UVec4Array" );
 
-        NewArrayType<math::ivec2>( aModule, "IVec2Array" );
-        NewArrayType<math::ivec3>( aModule, "IVec3Array" );
-        NewArrayType<math::ivec4>( aModule, "IVec4Array" );
+        new_array_type<math::ivec2>( module, "IVec2Array" );
+        new_array_type<math::ivec3>( module, "IVec3Array" );
+        new_array_type<math::ivec4>( module, "IVec4Array" );
 
-        NewArrayType<math::vec2>( aModule, "Vec2Array" );
-        NewArrayType<math::vec3>( aModule, "Vec3Array" );
-        NewArrayType<math::vec4>( aModule, "Vec4Array" );
+        new_array_type<math::vec2>( module, "Vec2Array" );
+        new_array_type<math::vec3>( module, "Vec3Array" );
+        new_array_type<math::vec4>( module, "Vec4Array" );
 
-        NewArrayType<math::mat3>( aModule, "Mat3Array" );
-        NewArrayType<math::mat4>( aModule, "Mat4Array" );
+        new_array_type<math::mat3>( module, "Mat3Array" );
+        new_array_type<math::mat4>( module, "Mat4Array" );
     }
 
 } // namespace SE::Core

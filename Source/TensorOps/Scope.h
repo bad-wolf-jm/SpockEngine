@@ -165,7 +165,7 @@ namespace SE::TensorOps
 
         if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
-            l_NewEntity.Add<type_t>( TypeOf( aValue[0] ) );
+            l_NewEntity.Add<type_t>( type_of( aValue[0] ) );
         }
 
         l_NewEntity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
@@ -211,7 +211,7 @@ namespace SE::TensorOps
         auto &l_Value  = l_NewEntity.Add<scalar_node_t>();
         l_Value.mValue = aValue;
 
-        l_NewEntity.Add<type_t>( TypeOf( l_Value.mValue ) );
+        l_NewEntity.Add<type_t>( type_of( l_Value.mValue ) );
 
         return l_NewEntity;
     }

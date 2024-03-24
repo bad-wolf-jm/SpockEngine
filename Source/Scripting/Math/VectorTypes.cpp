@@ -7,106 +7,106 @@ namespace SE::Core
     using namespace math;
 
     template <typename _VecType>
-    usertype<_VecType> NewVector2Type( sol::table &aScriptState, std::string aName )
+    usertype<_VecType> new_vector2_type( sol::table &scriptState, std::string name )
     {
-        auto lNewType = NewVectorType<_VecType>( aScriptState, aName );
-        lNewType["x"] = &_VecType::x;
-        lNewType["y"] = &_VecType::y;
+        auto newType = new_vector_type<_VecType>( scriptState, name );
+        newType["x"] = &_VecType::x;
+        newType["y"] = &_VecType::y;
 
         // clang-format off
-        lNewType[call_constructor] = factories(
+        newType[call_constructor] = factories(
             []() { return _VecType{}; },
-            []( sol::table aInitializer ) {
-                if ( aInitializer["x"].valid() && aInitializer["y"].valid() )
-                    return _VecType{ aInitializer.get<_VecType::value_type>("x"), aInitializer.get<_VecType::value_type>("y") };
-                return _VecType{ aInitializer.get<_VecType::value_type>(1), aInitializer.get<_VecType::value_type>(2) };
+            []( sol::table initializer ) {
+                if ( initializer["x"].valid() && initializer["y"].valid() )
+                    return _VecType{ initializer.get<_VecType::value_type>("x"), initializer.get<_VecType::value_type>("y") };
+                return _VecType{ initializer.get<_VecType::value_type>(1), initializer.get<_VecType::value_type>(2) };
             },
             []( _VecType::value_type x, _VecType::value_type y ) { return _VecType{ x, y }; }
         );
         // clang-format on
 
-        return lNewType;
+        return newType;
     }
 
     template <typename _VecType>
-    usertype<_VecType> NewVector3Type( sol::table &aScriptState, std::string aName )
+    usertype<_VecType> new_vector3_type( sol::table &scriptState, std::string name )
     {
-        auto lNewType = NewVectorType<_VecType>( aScriptState, aName );
-        lNewType["x"] = &_VecType::x;
-        lNewType["y"] = &_VecType::y;
-        lNewType["z"] = &_VecType::z;
+        auto newType = new_vector_type<_VecType>( scriptState, name );
+        newType["x"] = &_VecType::x;
+        newType["y"] = &_VecType::y;
+        newType["z"] = &_VecType::z;
 
         // clang-format off
-        lNewType[call_constructor] = factories(
+        newType[call_constructor] = factories(
             []() { return _VecType{}; },
-            []( sol::table aInitializer ) {
-                if ( aInitializer["x"].valid() && aInitializer["y"].valid() && aInitializer["z"].valid() )
-                    return _VecType{ aInitializer.get<_VecType::value_type>("x"), aInitializer.get<_VecType::value_type>("y"), aInitializer.get<_VecType::value_type>("z") };
-                return _VecType{ aInitializer.get<_VecType::value_type>(1), aInitializer.get<_VecType::value_type>(2), aInitializer.get<_VecType::value_type>(3) };
+            []( sol::table initializer ) {
+                if ( initializer["x"].valid() && initializer["y"].valid() && initializer["z"].valid() )
+                    return _VecType{ initializer.get<_VecType::value_type>("x"), initializer.get<_VecType::value_type>("y"), initializer.get<_VecType::value_type>("z") };
+                return _VecType{ initializer.get<_VecType::value_type>(1), initializer.get<_VecType::value_type>(2), initializer.get<_VecType::value_type>(3) };
             },
             []( _VecType::value_type x, _VecType::value_type y, _VecType::value_type z ) { return _VecType{ x, y, z }; }
         );
         // clang-format on
 
-        return lNewType;
+        return newType;
     }
 
     template <typename _VecType>
-    usertype<_VecType> NewVector4Type( sol::table &aScriptState, std::string aName )
+    usertype<_VecType> new_vector4_type( sol::table &scriptState, std::string name )
     {
-        auto lNewType = NewVectorType<_VecType>( aScriptState, aName );
-        lNewType["x"] = &_VecType::x;
-        lNewType["y"] = &_VecType::y;
-        lNewType["z"] = &_VecType::z;
-        lNewType["w"] = &_VecType::w;
+        auto newType = new_vector_type<_VecType>( scriptState, name );
+        newType["x"] = &_VecType::x;
+        newType["y"] = &_VecType::y;
+        newType["z"] = &_VecType::z;
+        newType["w"] = &_VecType::w;
 
         // clang-format off
-        lNewType[call_constructor] = factories(
+        newType[call_constructor] = factories(
             []() { return _VecType{}; },
-            []( sol::table aInitializer ) {
-                if ( aInitializer["x"].valid() && aInitializer["y"].valid() && aInitializer["z"].valid() && aInitializer["w"].valid() )
-                    return _VecType{ aInitializer.get<_VecType::value_type>("x"), aInitializer.get<_VecType::value_type>("y"), aInitializer.get<_VecType::value_type>("z"), aInitializer.get<_VecType::value_type>("w") };
-                return _VecType{ aInitializer.get<_VecType::value_type>(1), aInitializer.get<_VecType::value_type>(2), aInitializer.get<_VecType::value_type>(3), aInitializer.get<_VecType::value_type>(4) };
+            []( sol::table initializer ) {
+                if ( initializer["x"].valid() && initializer["y"].valid() && initializer["z"].valid() && initializer["w"].valid() )
+                    return _VecType{ initializer.get<_VecType::value_type>("x"), initializer.get<_VecType::value_type>("y"), initializer.get<_VecType::value_type>("z"), initializer.get<_VecType::value_type>("w") };
+                return _VecType{ initializer.get<_VecType::value_type>(1), initializer.get<_VecType::value_type>(2), initializer.get<_VecType::value_type>(3), initializer.get<_VecType::value_type>(4) };
             },
             []( _VecType::value_type x, _VecType::value_type y, _VecType::value_type z, _VecType::value_type w ) { return _VecType{ x, y, z, w }; }
         );
         // clang-format on
 
-        return lNewType;
+        return newType;
     }
 
-    void define_vector_types( sol::table &aModule )
+    void define_vector_types( sol::table &module )
     {
-        NewVector2Type<vec2>( aModule, "vec2" );
-        DeclareVectorOperation<vec2>( aModule );
-        aModule["perpendicular"] = []( vec2 aSelf ) { return perpendicular( aSelf ); };
-        aModule["det"]           = []( vec2 aSelf, vec2 aOther ) { return det( aSelf, aOther ); };
+        new_vector2_type<vec2>( module, "vec2" );
+        declare_vector_operation<vec2>( module );
+        module["perpendicular"] = []( vec2 self ) { return perpendicular( self ); };
+        module["det"]           = []( vec2 self, vec2 other ) { return det( self, other ); };
 
-        NewVector2Type<ivec2>( aModule, "ivec2" );
-        DeclareVectorOperation<ivec2>( aModule );
+        new_vector2_type<ivec2>( module, "ivec2" );
+        declare_vector_operation<ivec2>( module );
 
-        NewVector2Type<uvec2>( aModule, "uvec2" );
-        DeclareVectorOperation<uvec2>( aModule );
+        new_vector2_type<uvec2>( module, "uvec2" );
+        declare_vector_operation<uvec2>( module );
 
-        auto lVec3Type     = NewVector3Type<vec3>( aModule, "vec3" );
-        lVec3Type["cross"] = []( vec3 aSelf, vec3 aOther ) -> vec3 { return cross( aSelf, aOther ); };
+        auto lVec3Type     = new_vector3_type<vec3>( module, "vec3" );
+        lVec3Type["cross"] = []( vec3 self, vec3 other ) -> vec3 { return cross( self, other ); };
 
-        DeclareVectorOperation<vec3>( aModule );
-        aModule["cross"] = []( vec3 aSelf, vec3 aOther ) -> vec3 { return cross( aSelf, aOther ); };
+        declare_vector_operation<vec3>( module );
+        module["cross"] = []( vec3 self, vec3 other ) -> vec3 { return cross( self, other ); };
 
-        NewVector3Type<ivec3>( aModule, "ivec3" );
-        DeclareVectorOperation<ivec3>( aModule );
+        new_vector3_type<ivec3>( module, "ivec3" );
+        declare_vector_operation<ivec3>( module );
 
-        NewVector3Type<uvec3>( aModule, "uvec3" );
-        DeclareVectorOperation<uvec3>( aModule );
+        new_vector3_type<uvec3>( module, "uvec3" );
+        declare_vector_operation<uvec3>( module );
 
-        NewVector4Type<vec4>( aModule, "vec4" );
-        DeclareVectorOperation<vec4>( aModule );
+        new_vector4_type<vec4>( module, "vec4" );
+        declare_vector_operation<vec4>( module );
 
-        NewVector4Type<ivec4>( aModule, "ivec4" );
-        DeclareVectorOperation<ivec4>( aModule );
+        new_vector4_type<ivec4>( module, "ivec4" );
+        declare_vector_operation<ivec4>( module );
 
-        NewVector4Type<uvec4>( aModule, "uvec4" );
-        DeclareVectorOperation<uvec4>( aModule );
+        new_vector4_type<uvec4>( module, "uvec4" );
+        declare_vector_operation<uvec4>( module );
     }
 } // namespace SE::Core

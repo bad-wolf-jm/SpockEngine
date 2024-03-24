@@ -93,7 +93,7 @@ namespace SE::Core
     ///
     /// @return Size in bytes
     ///
-    size_t SizeOf( scalar_type_t aType );
+    size_t size_of( scalar_type_t aType );
 
     /// @brief Returns the type contained in the passed in @ref ScalarValue
     ///
@@ -101,6 +101,6 @@ namespace SE::Core
     ///
     /// @return Type
     ///
-    scalar_type_t TypeOf( scalar_value_t aValue );
+    scalar_type_t type_of( scalar_value_t aValue );
 
 } // namespace SE::Core

@@ -6,17 +6,17 @@
 
 namespace SE::Core
 {
-    [[nodiscard]] entt::id_type get_type_id( const sol::table &aObject );
+    [[nodiscard]] entt::id_type get_type_id( const sol::table &object );
 
     template <typename T>
-    [[nodiscard]] entt::id_type deduce_type( T &&aObject )
+    [[nodiscard]] entt::id_type deduce_type( T &&object )
     {
-        switch( aObject.get_type() )
+        switch( object.get_type() )
         {
         case sol::type::number:
-            return aObject.as<entt::id_type>();
+            return object.as<entt::id_type>();
         case sol::type::table:
-            return get_type_id( aObject );
+            return get_type_id( object );
         }
         assert( false );
         return -1;

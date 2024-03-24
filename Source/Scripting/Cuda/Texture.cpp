@@ -14,42 +14,42 @@ namespace SE::Core
 {
     using namespace sol;
 
-    Cuda::texture_create_info_t ParseCudaCreateInfo( sol::table aTable )
+    Cuda::texture_create_info_t parse_cuda_create_info( sol::table table )
     {
         Cuda::texture_create_info_t lCreateInfo{};
-        // lCreateInfo.mFilterMode            = aTable["filter_mode"].valid() ? aTable["filter_mode"] : eSamplerFilter::LINEAR;
-        // lCreateInfo.mWrappingMode          = aTable["wrapping"].valid() ? aTable["wrapping"] : eSamplerWrapping::CLAMP_TO_BORDER;
-        // lCreateInfo.mFormat                = aTable["color_format"].valid() ? aTable["color_format"] : eColorFormat::UNDEFINED;
-        // lCreateInfo.mWidth                 = aTable["width"].valid() ? aTable["width"] : 0;
-        // lCreateInfo.mHeight                = aTable["height"].valid() ? aTable["height"] : 0;
-        // lCreateInfo.mNormalizedCoordinates = aTable["normalized_coordinates"].valid() ? aTable["normalized_coordinates"] : false;
-        // lCreateInfo.mNormalizedValues      = aTable["normalized_values"].valid() ? aTable["normalized_values"] : false;
+        // lCreateInfo.mFilterMode            = table["filter_mode"].valid() ? table["filter_mode"] : eSamplerFilter::LINEAR;
+        // lCreateInfo.mWrappingMode          = table["wrapping"].valid() ? table["wrapping"] : eSamplerWrapping::CLAMP_TO_BORDER;
+        // lCreateInfo.mFormat                = table["color_format"].valid() ? table["color_format"] : eColorFormat::UNDEFINED;
+        // lCreateInfo.mWidth                 = table["width"].valid() ? table["width"] : 0;
+        // lCreateInfo.mHeight                = table["height"].valid() ? table["height"] : 0;
+        // lCreateInfo.mNormalizedCoordinates = table["normalized_coordinates"].valid() ? table["normalized_coordinates"] : false;
+        // lCreateInfo.mNormalizedValues      = table["normalized_values"].valid() ? table["normalized_values"] : false;
 
         return lCreateInfo;
     }
 
-    void require_cuda_texture( sol::table &aScriptingState )
+    void require_cuda_texture( sol::table &scriptingState )
     {
-        auto lTextureData2DType = aScriptingState.new_usertype<Cuda::texture2d_t>( "Texture2D" );
+        auto textureData2DType = scriptingState.new_usertype<Cuda::texture2d_t>( "Texture2D" );
 
         // clang-format off
-        lTextureData2DType[call_constructor] = factories(
-            []( sol::table aCreateInfo, sol::table aImageData ) {
-                return New<Cuda::texture2d_t>( ParseCudaCreateInfo( aCreateInfo ), parse_image_data( aImageData ) );
+        textureData2DType[call_constructor] = factories(
+            []( sol::table createInfo, sol::table imageData ) {
+                return New<Cuda::texture2d_t>( parse_cuda_create_info( createInfo ), parse_image_data( imageData ) );
             },
-            []( sol::table aCreateInfo, vector_t<uint8_t> aImageData ) {
-                return New<Cuda::texture2d_t>( ParseCudaCreateInfo( aCreateInfo ), aImageData );
+            []( sol::table createInfo, vector_t<uint8_t> imageData ) {
+                return New<Cuda::texture2d_t>( parse_cuda_create_info( createInfo ), imageData );
             }
         );
         // clang-format on
 
-        auto lTextureSampler2DType = aScriptingState.new_usertype<Cuda::texture_sampler2d_t>( "TextureSampler2D" );
+        auto textureSampler2DType = scriptingState.new_usertype<Cuda::texture_sampler2d_t>( "TextureSampler2D" );
 
         // clang-format off
-        lTextureSampler2DType[call_constructor] = factories( 
-                []( ref_t<Cuda::texture2d_t> &aTexture, sol::table aCreateInfo )
+        textureSampler2DType[call_constructor] = factories( 
+                []( ref_t<Cuda::texture2d_t> &texture, sol::table createInfo )
                 { 
-                    return Cuda::texture_sampler2d_t( aTexture, parse_sampler_info( aCreateInfo ) ); 
+                    return Cuda::texture_sampler2d_t( texture, parse_sampler_info( createInfo ) ); 
                 }
             );
         // clang-format on

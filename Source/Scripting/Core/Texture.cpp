@@ -13,102 +13,100 @@ namespace SE::Core
 {
     using namespace sol;
 
-    texture_create_info_t parse_create_info( sol::table aTable )
+    texture_create_info_t parse_create_info( sol::table table )
     {
-        texture_create_info_t lCreateInfo{};
-        lCreateInfo.mType      = aTable["type"].valid() ? aTable["type"] : texture_type_t::TEXTURE_2D;
-        lCreateInfo.mFormat    = aTable["color_format"].valid() ? aTable["color_format"] : color_format::UNDEFINED;
-        lCreateInfo.mWidth     = aTable["width"].valid() ? aTable["width"] : 0;
-        lCreateInfo.mHeight    = aTable["height"].valid() ? aTable["height"] : 0;
-        lCreateInfo.mDepth     = aTable["depth"].valid() ? aTable["depth"] : 0;
-        lCreateInfo.mMipLevels = aTable["mip_levels"].valid() ? aTable["mip_levels"] : 0;
+        texture_create_info_t createInfo{};
+        createInfo.mType      = table["type"].valid() ? table["type"] : texture_type_t::TEXTURE_2D;
+        createInfo.mFormat    = table["color_format"].valid() ? table["color_format"] : color_format::UNDEFINED;
+        createInfo.mWidth     = table["width"].valid() ? table["width"] : 0;
+        createInfo.mHeight    = table["height"].valid() ? table["height"] : 0;
+        createInfo.mDepth     = table["depth"].valid() ? table["depth"] : 0;
+        createInfo.mMipLevels = table["mip_levels"].valid() ? table["mip_levels"] : 0;
 
-        return lCreateInfo;
+        return createInfo;
     }
 
-    image_data_t parse_image_data( sol::table aTable )
+    image_data_t parse_image_data( sol::table table )
     {
-        image_data_t lImageData{};
-        lImageData.mFormat = aTable["color_format"].valid() ? aTable["color_format"] : color_format::UNDEFINED;
-        lImageData.mWidth  = aTable["width"].valid() ? aTable["width"] : 0;
-        lImageData.mHeight = aTable["height"].valid() ? aTable["height"] : 0;
+        image_data_t imageData{};
+        imageData.mFormat = table["color_format"].valid() ? table["color_format"] : color_format::UNDEFINED;
+        imageData.mWidth  = table["width"].valid() ? table["width"] : 0;
+        imageData.mHeight = table["height"].valid() ? table["height"] : 0;
 
-        auto lPixelData       = aTable.get<sol::table>( "pixel_data" );
-        auto lPixelDataSize   = lPixelData.size();
-        lImageData.mByteSize  = lPixelDataSize;
-        lImageData.mPixelData = vector_t<uint8_t>( lPixelDataSize );
+        auto pixelData       = table.get<sol::table>( "pixel_data" );
+        auto pixelDataSize   = pixelData.size();
+        imageData.mByteSize  = pixelDataSize;
+        imageData.mPixelData = vector_t<uint8_t>( pixelDataSize );
 
-        if( lPixelData.get_type() == sol::type::table )
+        if( pixelData.get_type() == sol::type::table )
         {
-            for( uint32_t i = 0; i < lPixelDataSize; i++ )
+            for( uint32_t i = 0; i < pixelDataSize; i++ )
             {
-                auto lPx                 = lPixelData.get<uint8_t>( i + 1 );
-                lImageData.mPixelData[i] = lPx;
+                imageData.mPixelData[i] = pixelData.get<uint8_t>( i + 1 );
             }
         }
         else
         {
-            auto lDataPointer = lPixelData.as<vector_t<uint8_t>>();
-            for( uint32_t i = 0; i < lPixelDataSize; i++ )
+            auto dataPointer = pixelData.as<vector_t<uint8_t>>();
+            for( uint32_t i = 0; i < pixelDataSize; i++ )
             {
-                auto lPx                 = lDataPointer[i];
-                lImageData.mPixelData[i] = lPx;
+                imageData.mPixelData[i] = dataPointer[i];
             }
         }
 
-        return lImageData;
+        return imageData;
     }
 
-    texture_sampling_info_t parse_sampler_info( sol::table aTable )
+    texture_sampling_info_t parse_sampler_info( sol::table table )
     {
-        texture_sampling_info_t lSamplingInfo{};
-        lSamplingInfo.mFilter = aTable["minification"].valid() ? aTable["minification"] : sampler_filter_t::LINEAR;
-        // lSamplingInfo.mMagnification = aTable["magnification"].valid() ? aTable["magnification"] : eSamplerFilter::LINEAR;
-        lSamplingInfo.mMipFilter = aTable["mip"].valid() ? aTable["mip"] : sampler_mipmap_t::LINEAR;
-        lSamplingInfo.mWrapping  = aTable["wrapping"].valid() ? aTable["wrapping"] : sampler_wrapping_t::CLAMP_TO_BORDER;
+        texture_sampling_info_t samplingInfo{};
+        samplingInfo.mFilter = table["minification"].valid() ? table["minification"] : sampler_filter_t::LINEAR;
+        // samplingInfo.mMagnification = table["magnification"].valid() ? table["magnification"] : eSamplerFilter::LINEAR;
+        samplingInfo.mMipFilter = table["mip"].valid() ? table["mip"] : sampler_mipmap_t::LINEAR;
+        samplingInfo.mWrapping  = table["wrapping"].valid() ? table["wrapping"] : sampler_wrapping_t::CLAMP_TO_BORDER;
 
-        auto lScaling = aTable.get<sol::table>( "scaling" );
+        auto lScaling = table.get<sol::table>( "scaling" );
         if( !lScaling.valid() )
         {
-            lSamplingInfo.mScaling = { 1.0f, 1.0f };
+            samplingInfo.mScaling = { 1.0f, 1.0f };
         }
         else
         {
-            lSamplingInfo.mScaling[0] = lScaling["x"].valid() ? lScaling["x"] : 1.0f;
-            lSamplingInfo.mScaling[1] = lScaling["y"].valid() ? lScaling["y"] : 1.0f;
+            samplingInfo.mScaling[0] = lScaling["x"].valid() ? lScaling["x"] : 1.0f;
+            samplingInfo.mScaling[1] = lScaling["y"].valid() ? lScaling["y"] : 1.0f;
         }
-        auto lOffset = aTable.get<sol::table>( "offset" );
-        if( !lOffset.valid() )
+        auto offset = table.get<sol::table>( "offset" );
+        if( !offset.valid() )
         {
-            lSamplingInfo.mOffset = { 0.0f, 0.0f };
-        }
-        else
-        {
-            lSamplingInfo.mOffset[0] = lOffset["x"].valid() ? lOffset["x"] : 0.0f;
-            lSamplingInfo.mOffset[1] = lOffset["y"].valid() ? lOffset["y"] : 0.0f;
-        }
-        auto lBorderColor = aTable.get<sol::table>( "border_color" );
-        if( !lBorderColor.valid() )
-        {
-            lSamplingInfo.mBorderColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+            samplingInfo.mOffset = { 0.0f, 0.0f };
         }
         else
         {
-            lSamplingInfo.mBorderColor[0] = lBorderColor["r"].valid() ? lBorderColor["r"] : 0.0f;
-            lSamplingInfo.mBorderColor[1] = lBorderColor["g"].valid() ? lBorderColor["g"] : 0.0f;
-            lSamplingInfo.mBorderColor[2] = lBorderColor["b"].valid() ? lBorderColor["b"] : 0.0f;
-            lSamplingInfo.mBorderColor[3] = lBorderColor["a"].valid() ? lBorderColor["a"] : 0.0f;
+            samplingInfo.mOffset[0] = offset["x"].valid() ? offset["x"] : 0.0f;
+            samplingInfo.mOffset[1] = offset["y"].valid() ? offset["y"] : 0.0f;
+        }
+        auto borderColor = table.get<sol::table>( "border_color" );
+        if( !borderColor.valid() )
+        {
+            samplingInfo.mBorderColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+        }
+        else
+        {
+            samplingInfo.mBorderColor[0] = borderColor["r"].valid() ? borderColor["r"] : 0.0f;
+            samplingInfo.mBorderColor[1] = borderColor["g"].valid() ? borderColor["g"] : 0.0f;
+            samplingInfo.mBorderColor[2] = borderColor["b"].valid() ? borderColor["b"] : 0.0f;
+            samplingInfo.mBorderColor[3] = borderColor["a"].valid() ? borderColor["a"] : 0.0f;
         }
 
-        return lSamplingInfo;
+        return samplingInfo;
     }
 
-    void RequireTexture( sol::table &aScriptingState )
+    void require_texture( sol::table &scriptingState )
     {
-        aScriptingState.new_enum( "eTextureType", "TEXTURE_2D", texture_type_t::TEXTURE_2D, "TEXTURE_3D", texture_type_t::TEXTURE_3D );
+        scriptingState.new_enum( "eTextureType", "TEXTURE_2D", texture_type_t::TEXTURE_2D, "TEXTURE_3D", texture_type_t::TEXTURE_3D );
 
         // clang-format off
-        aScriptingState.new_enum( "eColorFormat",
+        scriptingState.new_enum( "eColorFormat",
             "UNDEFINED",           color_format::UNDEFINED,
             "R32_FLOAT",           color_format::R32_FLOAT,
             "RG32_FLOAT",          color_format::RG32_FLOAT,
@@ -133,11 +131,11 @@ namespace SE::Core
             "BGRA8_SRGB",          color_format::BGRA8_SRGB );
         // clang-format on
 
-        aScriptingState.new_enum( "eSamplerFilter", "NEAREST", sampler_filter_t::NEAREST, "LINEAR", sampler_filter_t::LINEAR );
-        aScriptingState.new_enum( "eSamplerMipmap", "NEAREST", sampler_mipmap_t::NEAREST, "LINEAR", sampler_mipmap_t::LINEAR );
+        scriptingState.new_enum( "eSamplerFilter", "NEAREST", sampler_filter_t::NEAREST, "LINEAR", sampler_filter_t::LINEAR );
+        scriptingState.new_enum( "eSamplerMipmap", "NEAREST", sampler_mipmap_t::NEAREST, "LINEAR", sampler_mipmap_t::LINEAR );
 
         // clang-format off
-        aScriptingState.new_enum( "eSamplerWrapping",
+        scriptingState.new_enum( "eSamplerWrapping",
             "REPEAT",          sampler_wrapping_t::REPEAT,
             "MIRRORED_REPEAT", sampler_wrapping_t::MIRRORED_REPEAT,
             "CLAMP_TO_EDGE",   sampler_wrapping_t::CLAMP_TO_EDGE,
@@ -145,7 +143,7 @@ namespace SE::Core
             "MIRROR_CLAMP_TO_BORDER", sampler_wrapping_t::MIRROR_CLAMP_TO_BORDER );
         // clang-format on
 
-        // auto lTextureData2DType = aScriptingState.new_usertype<texture_data2d_t>( "TextureData2D" );
+        // auto lTextureData2DType = scriptingState.new_usertype<texture_data2d_t>( "TextureData2D" );
 
         // clang-format off
         // lTextureData2DType[call_constructor] = factories(
@@ -153,47 +151,47 @@ namespace SE::Core
         //     []( sol::table aCreateInfo, sol::table aImageData ){ return texture_data2d_t( parse_create_info( aCreateInfo ), parse_image_data( aImageData ) ); },
         //     []( std::string const &aImagePath )
         //     {
-        //         texture_create_info_t lCreateInfo{};
-        //         return texture_data2d_t( lCreateInfo, fs::path(aImagePath) );
+        //         texture_create_info_t createInfo{};
+        //         return texture_data2d_t( createInfo, fs::path(aImagePath) );
         //     }
         // );
         // clang-format on
 
-        // lTextureData2DType["get_image_data"] = [&]( texture_data2d_t &aSelf, sol::this_state aScriptState )
+        // lTextureData2DType["get_image_data"] = [&]( texture_data2d_t &aSelf, sol::this_state scriptState )
         // {
-        //     sol::table lDataTable( aScriptState, sol::new_table{} );
-        //     auto       lImageData = aSelf.GetImageData();
+        //     sol::table dataTable( scriptState, sol::new_table{} );
+        //     auto       imageData = aSelf.GetImageData();
 
-        //     lDataTable["color_format"] = lImageData.mFormat;
-        //     lDataTable["width"]        = lImageData.mWidth;
-        //     lDataTable["height"]       = lImageData.mHeight;
+        //     dataTable["color_format"] = imageData.mFormat;
+        //     dataTable["width"]        = imageData.mWidth;
+        //     dataTable["height"]       = imageData.mHeight;
 
-        //     auto lDataVector = vector_t<uint8_t>( lImageData.mByteSize );
-        //     for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
-        //         lDataVector[i] = lImageData.mPixelData[i];
-        //     lDataTable["pixel_data"] = lDataVector;
+        //     auto lDataVector = vector_t<uint8_t>( imageData.mByteSize );
+        //     for( uint32_t i = 0; i < imageData.mByteSize; i++ )
+        //         lDataVector[i] = imageData.mPixelData[i];
+        //     dataTable["pixel_data"] = lDataVector;
 
-        //     return lDataTable;
+        //     return dataTable;
         // };
 
-        aScriptingState["load_image"] = []( std::string aPath, sol::this_state aScriptState )
+        scriptingState["load_image"] = []( std::string path, sol::this_state scriptState )
         {
-            auto lImageData = LoadImageData( fs::path( aPath ) );
+            auto imageData = LoadImageData( fs::path( path ) );
 
-            sol::table lDataTable( aScriptState, sol::new_table{} );
+            sol::table dataTable( scriptState, sol::new_table{} );
 
-            lDataTable["color_format"] = lImageData.mFormat;
-            lDataTable["width"]        = lImageData.mWidth;
-            lDataTable["height"]       = lImageData.mHeight;
-            auto lDataVector           = vector_t<uint8_t>( lImageData.mByteSize );
-            for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
-                lDataVector[i] = lImageData.mPixelData[i];
-            lDataTable["pixel_data"] = lDataVector;
+            dataTable["color_format"] = imageData.mFormat;
+            dataTable["width"]        = imageData.mWidth;
+            dataTable["height"]       = imageData.mHeight;
+            auto lDataVector           = vector_t<uint8_t>( imageData.mByteSize );
+            for( uint32_t i = 0; i < imageData.mByteSize; i++ )
+                lDataVector[i] = imageData.mPixelData[i];
+            dataTable["pixel_data"] = lDataVector;
 
-            return lDataTable;
+            return dataTable;
         };
 
-        // auto lTextureSampler2DType = aScriptingState.new_usertype<texture_data_sampler2d_t>( "TextureSampler2D" );
+        // auto lTextureSampler2DType = scriptingState.new_usertype<texture_data_sampler2d_t>( "TextureSampler2D" );
 
         // lTextureSampler2DType[call_constructor] =
         //     factories( []( texture_data2d_t const &aTexture, sol::table aCreateInfo )
@@ -202,9 +200,9 @@ namespace SE::Core
         // lTextureSampler2DType["fetch"] = []( TextureSampler2D &aSelf, float x, float y ) { return aSelf.Fetch( x, y ); };
     }
 
-    void open_core_library( sol::table &aScriptingState )
+    void open_core_library( sol::table &scriptingState )
     {
-        RequireTexture( aScriptingState );
-        open_vector_library( aScriptingState );
+        require_texture( scriptingState );
+        open_vector_library( scriptingState );
     }
 }; // namespace SE::Core

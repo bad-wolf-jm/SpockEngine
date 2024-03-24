@@ -56,48 +56,48 @@ namespace SE::Core
             "int64",   scalar_type_t::INT64  );
         // clang-format on
 
-        auto lMathModule       = _scriptState["Math"].get_or_create<sol::table>();
-        lMathModule["radians"] = []( float aDegrees ) { return radians( aDegrees ); };
-        lMathModule["degrees"] = []( float aRadians ) { return degrees( aRadians ); };
+        auto mathModule       = _scriptState["Math"].get_or_create<sol::table>();
+        mathModule["radians"] = []( float degrees ) { return radians( degrees ); };
+        mathModule["degrees"] = []( float radians ) { return degrees( radians ); };
 
-        define_vector_types( lMathModule );
-        define_matrix_types( lMathModule );
+        define_vector_types( mathModule );
+        define_matrix_types( mathModule );
 
         open_entity_registry_library( _scriptState );
 
-        auto lCudaModule = _scriptState["Cuda"].get_or_create<sol::table>();
-        open_tensor_library( lCudaModule );
-        require_cuda_texture( lCudaModule );
+        auto cudaModule = _scriptState["Cuda"].get_or_create<sol::table>();
+        open_tensor_library( cudaModule );
+        require_cuda_texture( cudaModule );
 
-        auto lCoreModule = _scriptState["Core"].get_or_create<sol::table>();
-        open_core_library( lCoreModule );
-        define_array_types( lCoreModule );
+        auto coreModule = _scriptState["Core"].get_or_create<sol::table>();
+        open_core_library( coreModule );
+        define_array_types( coreModule );
     }
 
-    environment_t script_bindings::LoadFile( fs::path aPath )
+    environment_t script_bindings::LoadFile( fs::path path )
     {
-        environment_t lNewEnvironment = NewEnvironment();
+        environment_t newEnvironment = NewEnvironment();
 
-        _scriptState.script_file( aPath.string(), lNewEnvironment, load_mode::any );
+        _scriptState.script_file( path.string(), newEnvironment, load_mode::any );
 
-        return lNewEnvironment;
+        return newEnvironment;
     }
 
     environment_t script_bindings::NewEnvironment()
     {
-        environment_t lNewEnvironment( _scriptState, create, _scriptState.globals() );
+        environment_t newEnvironment( _scriptState, create, _scriptState.globals() );
 
-        return lNewEnvironment;
+        return newEnvironment;
     }
 
-    void script_bindings::Execute( std::string aString )
+    void script_bindings::Execute( std::string string )
     {
-        _scriptState.script( aString );
+        _scriptState.script( string );
     }
 
-    void script_bindings::Execute( environment_t &aEnvironment, std::string aString )
+    void script_bindings::Execute( environment_t &environment, std::string string )
     {
-        _scriptState.script( aString, aEnvironment );
+        _scriptState.script( string, environment );
     }
 
 } // namespace SE::Core

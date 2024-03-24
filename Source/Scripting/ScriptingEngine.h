@@ -26,34 +26,34 @@ namespace SE::Core
 
         environment_t NewEnvironment();
 
-        environment_t LoadFile( fs::path aPath );
+        environment_t LoadFile( fs::path path );
 
-        void Execute( environment_t &aEnvironment, std::string aString );
-        void Execute( std::string aString );
+        void Execute( environment_t &environment, std::string string );
+        void Execute( std::string string );
 
         template <typename _Ty>
-        script_bindings &Define( std::string aName, _Ty aValue )
+        script_bindings &Define( std::string name, _Ty value )
         {
-            _scriptState[aName] = aValue;
+            _scriptState[name] = value;
             return *this;
         }
 
         template <typename _Ty>
-        _Ty Get( std::string aName )
+        _Ty Get( std::string name )
         {
-            return _scriptState.get<_Ty>( aName );
+            return _scriptState.get<_Ty>( name );
         }
 
         template <typename _Ty>
-        _Ty &GetRef( std::string aName )
+        _Ty &GetRef( std::string name )
         {
-            return _scriptState.get<_Ty>( aName );
+            return _scriptState.get<_Ty>( name );
         }
 
         template <typename _Ty>
-        sol::usertype<_Ty> RegisterPrimitiveType( std::string const &aName )
+        sol::usertype<_Ty> RegisterPrimitiveType( std::string const &name )
         {
-            return declare_primitive_type<_Ty>( _typesModule, aName );
+            return declare_primitive_type<_Ty>( _typesModule, name );
         }
 
       private:

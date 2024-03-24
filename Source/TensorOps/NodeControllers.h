@@ -59,7 +59,7 @@ namespace SE::TensorOps
             auto &lValue = Get<vector_value_t<_Ty>>().mValue;
             if constexpr( std::is_same<_Ty, scalar_value_t>::value )
             {
-                DISPATCH_BY_TYPE( TypeOf( lValue[0] ), ResolveAndUpload, ( lData, lValue ) );
+                DISPATCH_BY_TYPE( type_of( lValue[0] ), ResolveAndUpload, ( lData, lValue ) );
             }
             else
             {

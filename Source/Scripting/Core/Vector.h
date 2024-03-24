@@ -7,5 +7,5 @@
 
 namespace SE::Core
 {
-    void open_vector_library( sol::table &aScriptingState );
+    void open_vector_library( sol::table &scriptingState );
 }; // namespace SE::Core

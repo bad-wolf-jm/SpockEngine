@@ -6,5 +6,5 @@
 
 namespace SE::Core
 {
-    void open_entity_registry_library( sol::state &aScriptingState );
+    void open_entity_registry_library( sol::state &scriptingState );
 }; // namespace SE::Core

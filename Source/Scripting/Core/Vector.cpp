@@ -9,18 +9,18 @@ namespace SE::Core
 
     void CreateReflectedTypes() {}
 
-    void open_vector_library( sol::table &aScriptingState )
+    void open_vector_library( sol::table &scriptingState )
     {
-        aScriptingState["Array"] = []( const sol::object &aTypeOrID, uint32_t aSize, sol::this_state aScriptState )
+        scriptingState["Array"] = []( const sol::object &typeOrID, uint32_t size, sol::this_state scriptState )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "CreateVector0"_hs, aSize, aScriptState );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "CreateVector0"_hs, size, scriptState );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        aScriptingState["Random"] = []( const sol::object &aTypeOrID, size_t aSize, double aMin, double aMax, sol::this_state aScriptState )
+        scriptingState["Random"] = []( const sol::object &typeOrID, size_t size, double min, double max, sol::this_state scriptState )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "RandomVector"_hs, aSize, aMin, aMax, aScriptState );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "RandomVector"_hs, size, min, max, scriptState );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
     }
 }; // namespace SE::Core

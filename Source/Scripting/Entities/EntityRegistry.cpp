@@ -7,120 +7,120 @@ namespace SE::Core
     using namespace sol;
     using namespace entt::literals;
 
-    [[nodiscard]] entt::id_type get_type_id( const sol::table &aObject )
+    [[nodiscard]] entt::id_type get_type_id( const sol::table &object )
     {
-        const auto lFunction = aObject["type_id"].get<sol::function>();
+        const auto lFunction = object["type_id"].get<sol::function>();
         assert( lFunction.valid() && "type_id not exposed to lua!" );
         return lFunction.valid() ? lFunction().get<entt::id_type>() : -1;
     }
 
-    void RequireEntityType( sol::table &aScriptingState )
+    void RequireEntityType( sol::table &scriptingState )
     {
-        auto lEntityType = aScriptingState.new_usertype<entity_t>( "Entity", constructors<entity_t()>() );
+        auto entityType = scriptingState.new_usertype<entity_t>( "Entity", constructors<entity_t()>() );
 
-        lEntityType["tag"] = []( entity_t &aSelf, const sol::object &aTypeOrID ) -> sol::object
+        entityType["tag"] = []( entity_t &self, const sol::object &typeOrID ) -> sol::object
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Tag"_hs, aSelf );
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "Tag"_hs, self );
             return sol::lua_nil_t{};
         };
 
-        lEntityType["untag"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
+        entityType["untag"] = []( entity_t &self, const sol::object &typeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Untag"_hs, aSelf );
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "Untag"_hs, self );
             return sol::lua_nil_t{};
         };
 
-        lEntityType["has"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
+        entityType["has"] = []( entity_t &self, const sol::object &typeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Has"_hs, &aSelf );
-            return lMaybeAny ? lMaybeAny.cast<bool>() : false;
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "Has"_hs, &self );
+            return maybeAny ? maybeAny.cast<bool>() : false;
         };
 
-        lEntityType["get"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
+        entityType["get"] = []( entity_t &self, const sol::object &typeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Get"_hs, &aSelf );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "Get"_hs, &self );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["try_get"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
+        entityType["try_get"] = []( entity_t &self, const sol::object &typeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "TryGet"_hs, &aSelf );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "TryGet"_hs, &self );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["add"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        entityType["add"] = []( entity_t &self, const sol::table &component, sol::this_state s ) -> sol::object
         {
-            if( !aComponent.valid() )
+            if( !component.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "Add"_hs, aSelf, aComponent, s );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( get_type_id( component ), "Add"_hs, self, component, s );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["replace"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        entityType["replace"] = []( entity_t &self, const sol::table &component, sol::this_state s ) -> sol::object
         {
-            if( !aComponent.valid() )
+            if( !component.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "Replace"_hs, aSelf, aComponent, s );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( get_type_id( component ), "Replace"_hs, self, component, s );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["add_or_replace"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        entityType["add_or_replace"] = []( entity_t &self, const sol::table &component, sol::this_state s ) -> sol::object
         {
-            if( !aComponent.valid() )
+            if( !component.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "AddOrReplace"_hs, aSelf, aComponent, s );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( get_type_id( component ), "AddOrReplace"_hs, self, component, s );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["try_add"] = []( entity_t &aSelf, const sol::table &aComponent, sol::this_state s ) -> sol::object
+        entityType["try_add"] = []( entity_t &self, const sol::table &component, sol::this_state s ) -> sol::object
         {
-            if( !aComponent.valid() )
+            if( !component.valid() )
                 return sol::lua_nil_t{};
 
-            const auto lMaybeAny = invoke_meta_function( get_type_id( aComponent ), "TryAdd"_hs, aSelf, aComponent, s );
-            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+            const auto maybeAny = invoke_meta_function( get_type_id( component ), "TryAdd"_hs, self, component, s );
+            return maybeAny ? maybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["remove"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
+        entityType["remove"] = []( entity_t &self, const sol::object &typeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "Remove"_hs, aSelf );
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "Remove"_hs, self );
             return sol::lua_nil_t{};
         };
 
-        lEntityType["try_remove"] = []( entity_t &aSelf, const sol::object &aTypeOrID )
+        entityType["try_remove"] = []( entity_t &self, const sol::object &typeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "TryRemove"_hs, aSelf );
+            const auto maybeAny = invoke_meta_function( deduce_type( typeOrID ), "TryRemove"_hs, self );
             return sol::lua_nil_t{};
         };
     }
 
-    void RequireEntityRegistry( sol::table &aScriptingState )
+    void RequireEntityRegistry( sol::table &scriptingState )
     {
-        auto lRegistryType = aScriptingState.new_usertype<entity_registry_t>( "Registry", constructors<entity_registry_t()>() );
+        auto registryType = scriptingState.new_usertype<entity_registry_t>( "Registry", constructors<entity_registry_t()>() );
 
-        lRegistryType["create_entity"] =
-            overload( []( entity_registry_t &aSelf ) { return aSelf.CreateEntity(); }, []( entity_registry_t &aSelf, std::string aName ) { return aSelf.CreateEntity( aName ); },
-                      []( entity_registry_t &aSelf, entity_t &aParent, std::string aName ) { return aSelf.CreateEntity( aParent, aName ); } );
+        registryType["create_entity"] =
+            overload( []( entity_registry_t &self ) { return self.CreateEntity(); }, []( entity_registry_t &self, std::string aName ) { return self.CreateEntity( aName ); },
+                      []( entity_registry_t &self, entity_t &aParent, std::string aName ) { return self.CreateEntity( aParent, aName ); } );
 
-        lRegistryType["create_entity_with_relationship"] = overload( []( entity_registry_t &aSelf ) { return aSelf.CreateEntityWithRelationship(); },
-                                                                     []( entity_registry_t &aSelf, std::string aName ) { return aSelf.CreateEntityWithRelationship( aName ); } );
+        registryType["create_entity_with_relationship"] = overload( []( entity_registry_t &self ) { return self.CreateEntityWithRelationship(); },
+                                                                     []( entity_registry_t &self, std::string aName ) { return self.CreateEntityWithRelationship( aName ); } );
 
-        lRegistryType["destroy_entity"] = []( entity_registry_t &aSelf, entity_t &aEntity ) { aSelf.DestroyEntity( aEntity ); };
+        registryType["destroy_entity"] = []( entity_registry_t &self, entity_t &aEntity ) { self.DestroyEntity( aEntity ); };
 
-        lRegistryType["set_parent"] = []( entity_registry_t &aSelf, entity_t &aEntity, entity_t &aParentEntity ) { aSelf.SetParent( aEntity, aParentEntity ); };
+        registryType["set_parent"] = []( entity_registry_t &self, entity_t &aEntity, entity_t &aParentEntity ) { self.SetParent( aEntity, aParentEntity ); };
 
-        lRegistryType["clear"] = []( entity_registry_t &aSelf ) { aSelf.Clear(); };
+        registryType["clear"] = []( entity_registry_t &self ) { self.Clear(); };
     }
 
-    void open_entity_registry_library( sol::state &aScriptingState )
+    void open_entity_registry_library( sol::state &scriptingState )
     {
-        auto lEntityRegistryModule = aScriptingState["EntityCollection"].get_or_create<sol::table>();
+        auto entityRegistryModule = scriptingState["EntityCollection"].get_or_create<sol::table>();
 
-        RequireEntityType( lEntityRegistryModule );
-        RequireEntityRegistry( lEntityRegistryModule );
+        RequireEntityType( entityRegistryModule );
+        RequireEntityRegistry( entityRegistryModule );
     }
 
 } // namespace SE::Core

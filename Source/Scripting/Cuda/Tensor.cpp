@@ -1,7 +1,7 @@
 #include "Tensor.h"
 
-#include "Core/Definitions.h"
 #include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/Definitions.h"
 
 #include "TensorOps/ScalarTypes.h"
 #include "TensorOps/Scope.h"
@@ -19,151 +19,156 @@ namespace SE::Core
 
     namespace
     {
-        template <typename _Ty> auto MakeUploadFunction()
+        template <typename _Ty>
+        auto MakeUploadFunction()
         {
             return overload(
-                []( Cuda::multi_tensor_t &aSelf, numeric_array_t<_Ty> &aValues )
+                []( Cuda::multi_tensor_t &self, numeric_array_t<_Ty> &values )
                 {
-                    aSelf.Upload( aValues.mArray );
+                    self.Upload( values.mArray );
 
-                    return aSelf;
+                    return self;
                 },
-                []( Cuda::multi_tensor_t &aSelf, vector_t<_Ty> &aValues )
+                []( Cuda::multi_tensor_t &self, vector_t<_Ty> &values )
                 {
-                    aSelf.Upload( aValues );
+                    self.Upload( values );
 
-                    return aSelf;
+                    return self;
                 },
-                []( Cuda::multi_tensor_t &aSelf, numeric_array_t<_Ty> &aValues, uint32_t aLayer )
+                []( Cuda::multi_tensor_t &self, numeric_array_t<_Ty> &values, uint32_t layer )
                 {
-                    aSelf.Upload( aValues.mArray, aLayer );
+                    self.Upload( values.mArray, layer );
 
-                    return aSelf;
+                    return self;
                 },
-                []( Cuda::multi_tensor_t &aSelf, vector_t<_Ty> &aValues, uint32_t aLayer )
+                []( Cuda::multi_tensor_t &self, vector_t<_Ty> &values, uint32_t layer )
                 {
-                    aSelf.Upload( aValues, aLayer );
+                    self.Upload( values, layer );
 
-                    return aSelf;
+                    return self;
                 } );
         }
 
-        template <typename _Ty> auto MakeFetchFunction()
+        template <typename _Ty>
+        auto MakeFetchFunction()
         {
-            return overload( []( Cuda::multi_tensor_t &aSelf ) { return aSelf.FetchFlattened<_Ty>(); },
-                             []( Cuda::multi_tensor_t &aSelf, uint32_t aLayer ) { return aSelf.FetchBufferAt<_Ty>( aLayer ); } );
+            return overload( []( Cuda::multi_tensor_t &self ) { return self.FetchFlattened<_Ty>(); },
+                             []( Cuda::multi_tensor_t &self, uint32_t layer ) { return self.FetchBufferAt<_Ty>( layer ); } );
         }
     } // namespace
 
-    void open_tensor_library( sol::table &aScriptingState )
+    void open_tensor_library( sol::table &scriptingState )
     {
-        auto lTensorShapeType = aScriptingState.new_usertype<Cuda::tensor_shape_t>( "TensorShape" );
+        auto tensorShapeType = scriptingState.new_usertype<Cuda::tensor_shape_t>( "TensorShape" );
 
         // clang-format off
-        lTensorShapeType[call_constructor] = factories(
-            []( sol::table aInitializer, int32_t aElementSize )
+        tensorShapeType[call_constructor] = factories(
+            []( sol::table initializer, int32_t elementSize )
             {
-                vector_t<vector_t<uint32_t>> lShape{};
+                vector_t<vector_t<uint32_t>> shape{};
 
-                for (uint32_t i=0; i < aInitializer.size(); i++)
+                for (uint32_t i=0; i < initializer.size(); i++)
                 {
-                    auto lLayer = aInitializer.get<sol::table>( i + 1 );
-                    lShape.push_back( vector_t<uint32_t>{} );
+                    auto layer = initializer.get<sol::table>( i + 1 );
+                    shape.push_back( vector_t<uint32_t>{} );
 
-                    for (uint32_t j=0; j < lLayer.size(); j++)
+                    for (uint32_t j=0; j < layer.size(); j++)
                     {
-                        auto lDim = lLayer.get<uint32_t>( j + 1 );
+                        auto dim = layer.get<uint32_t>( j + 1 );
 
-                        lShape.back().push_back( lDim );
+                        shape.back().push_back( dim );
                     }
                 }
 
-                return Cuda::tensor_shape_t( lShape, aElementSize );
+                return Cuda::tensor_shape_t( shape, elementSize );
             } );
         // clang-format on
 
-        lTensorShapeType["get_dimension"] = []( Cuda::tensor_shape_t &aSelf, int32_t i ) { return aSelf.GetDimension( i ); };
-        lTensorShapeType["trim"]          = []( Cuda::tensor_shape_t &aSelf, int32_t i ) { aSelf.Trim( i ); };
-        lTensorShapeType["flatten"]       = []( Cuda::tensor_shape_t &aSelf, int32_t i ) { aSelf.Flatten( i ); };
+        tensorShapeType["get_dimension"] = []( Cuda::tensor_shape_t &self, int32_t i ) { return self.GetDimension( i ); };
+        tensorShapeType["trim"]          = []( Cuda::tensor_shape_t &self, int32_t i ) { self.Trim( i ); };
+        tensorShapeType["flatten"]       = []( Cuda::tensor_shape_t &self, int32_t i ) { self.Flatten( i ); };
 
-        auto lMemoryPoolType        = aScriptingState.new_usertype<Cuda::memory_pool_t>( "MemoryPool", constructors<Cuda::memory_pool_t( uint32_t aMemorySize )>() );
-        lMemoryPoolType["reset"]    = []( Cuda::memory_pool_t &aSelf ) { aSelf.Reset(); };
-        lMemoryPoolType["allocate"] = []( Cuda::memory_pool_t &aSelf, int32_t aBytes ) { return aSelf.Allocate( aBytes ); };
+        auto memoryPoolType = scriptingState.new_usertype<Cuda::memory_pool_t>(
+            "MemoryPool", constructors<Cuda::memory_pool_t( uint32_t aMemorySize )>() );
+        memoryPoolType["reset"]    = []( Cuda::memory_pool_t &self ) { self.Reset(); };
+        memoryPoolType["allocate"] = []( Cuda::memory_pool_t &self, int32_t bytes ) { return self.Allocate( bytes ); };
 
-        auto lMultiTensorType =
-            aScriptingState.new_usertype<Cuda::multi_tensor_t>( "MultiTensor", constructors<Cuda::multi_tensor_t( Cuda::memory_pool_t & aMemoryPool, const Cuda::tensor_shape_t &aShape )>() );
-        lMultiTensorType["size"]    = []( Cuda::multi_tensor_t &aSelf ) { return aSelf.Size(); };
-        lMultiTensorType["size_as"] = []( Cuda::multi_tensor_t &aSelf, const sol::object &aTypeOrID )
+        auto multiTensorType = scriptingState.new_usertype<Cuda::multi_tensor_t>(
+            "MultiTensor",
+            constructors<Cuda::multi_tensor_t( Cuda::memory_pool_t & aMemoryPool, const Cuda::tensor_shape_t &shape )>() );
+        multiTensorType["size"]    = []( Cuda::multi_tensor_t &self ) { return self.Size(); };
+        multiTensorType["size_as"] = []( Cuda::multi_tensor_t &self, const sol::object &aTypeOrID )
         {
-            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "SizeAs"_hs, aSelf );
+            const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "SizeAs"_hs, self );
 
             return lMaybeAny ? lMaybeAny.cast<size_t>() : 0;
         };
 
-        lMultiTensorType["upload_u8"]  = MakeUploadFunction<uint8_t>();
-        lMultiTensorType["upload_u16"] = MakeUploadFunction<uint16_t>();
-        lMultiTensorType["upload_u32"] = MakeUploadFunction<uint32_t>();
-        lMultiTensorType["upload_u64"] = MakeUploadFunction<uint32_t>();
+        multiTensorType["upload_u8"]  = MakeUploadFunction<uint8_t>();
+        multiTensorType["upload_u16"] = MakeUploadFunction<uint16_t>();
+        multiTensorType["upload_u32"] = MakeUploadFunction<uint32_t>();
+        multiTensorType["upload_u64"] = MakeUploadFunction<uint32_t>();
 
-        lMultiTensorType["upload_i8"]  = MakeUploadFunction<int8_t>();
-        lMultiTensorType["upload_i16"] = MakeUploadFunction<int16_t>();
-        lMultiTensorType["upload_i32"] = MakeUploadFunction<int32_t>();
-        lMultiTensorType["upload_i64"] = MakeUploadFunction<int32_t>();
+        multiTensorType["upload_i8"]  = MakeUploadFunction<int8_t>();
+        multiTensorType["upload_i16"] = MakeUploadFunction<int16_t>();
+        multiTensorType["upload_i32"] = MakeUploadFunction<int32_t>();
+        multiTensorType["upload_i64"] = MakeUploadFunction<int32_t>();
 
-        lMultiTensorType["upload_f32"] = MakeUploadFunction<float>();
-        lMultiTensorType["upload_f64"] = MakeUploadFunction<double>();
+        multiTensorType["upload_f32"] = MakeUploadFunction<float>();
+        multiTensorType["upload_f64"] = MakeUploadFunction<double>();
 
-        lMultiTensorType["upload_uvec2"] = MakeUploadFunction<math::uvec2>();
-        lMultiTensorType["upload_uvec3"] = MakeUploadFunction<math::uvec3>();
-        lMultiTensorType["upload_uvec4"] = MakeUploadFunction<math::uvec4>();
+        multiTensorType["upload_uvec2"] = MakeUploadFunction<math::uvec2>();
+        multiTensorType["upload_uvec3"] = MakeUploadFunction<math::uvec3>();
+        multiTensorType["upload_uvec4"] = MakeUploadFunction<math::uvec4>();
 
-        lMultiTensorType["upload_ivec2"] = MakeUploadFunction<math::ivec2>();
-        lMultiTensorType["upload_ivec3"] = MakeUploadFunction<math::ivec3>();
-        lMultiTensorType["upload_ivec4"] = MakeUploadFunction<math::ivec4>();
+        multiTensorType["upload_ivec2"] = MakeUploadFunction<math::ivec2>();
+        multiTensorType["upload_ivec3"] = MakeUploadFunction<math::ivec3>();
+        multiTensorType["upload_ivec4"] = MakeUploadFunction<math::ivec4>();
 
-        lMultiTensorType["upload_vec2"] = MakeUploadFunction<math::vec2>();
-        lMultiTensorType["upload_vec3"] = MakeUploadFunction<math::vec3>();
-        lMultiTensorType["upload_vec4"] = MakeUploadFunction<math::vec4>();
+        multiTensorType["upload_vec2"] = MakeUploadFunction<math::vec2>();
+        multiTensorType["upload_vec3"] = MakeUploadFunction<math::vec3>();
+        multiTensorType["upload_vec4"] = MakeUploadFunction<math::vec4>();
 
-        lMultiTensorType["upload_mat3"] = MakeUploadFunction<math::mat3>();
-        lMultiTensorType["upload_mat4"] = MakeUploadFunction<math::mat4>();
+        multiTensorType["upload_mat3"] = MakeUploadFunction<math::mat3>();
+        multiTensorType["upload_mat4"] = MakeUploadFunction<math::mat4>();
 
-        lMultiTensorType["fetch_u8"]  = MakeFetchFunction<uint8_t>();
-        lMultiTensorType["fetch_u16"] = MakeFetchFunction<uint16_t>();
-        lMultiTensorType["fetch_u32"] = MakeFetchFunction<uint32_t>();
-        lMultiTensorType["fetch_u64"] = MakeFetchFunction<uint32_t>();
+        multiTensorType["fetch_u8"]  = MakeFetchFunction<uint8_t>();
+        multiTensorType["fetch_u16"] = MakeFetchFunction<uint16_t>();
+        multiTensorType["fetch_u32"] = MakeFetchFunction<uint32_t>();
+        multiTensorType["fetch_u64"] = MakeFetchFunction<uint32_t>();
 
-        lMultiTensorType["fetch_i8"]  = MakeFetchFunction<int8_t>();
-        lMultiTensorType["fetch_i16"] = MakeFetchFunction<int16_t>();
-        lMultiTensorType["fetch_i32"] = MakeFetchFunction<int32_t>();
-        lMultiTensorType["fetch_i64"] = MakeFetchFunction<int32_t>();
+        multiTensorType["fetch_i8"]  = MakeFetchFunction<int8_t>();
+        multiTensorType["fetch_i16"] = MakeFetchFunction<int16_t>();
+        multiTensorType["fetch_i32"] = MakeFetchFunction<int32_t>();
+        multiTensorType["fetch_i64"] = MakeFetchFunction<int32_t>();
 
-        lMultiTensorType["fetch_f32"] = MakeFetchFunction<float>();
-        lMultiTensorType["fetch_f64"] = MakeFetchFunction<double>();
+        multiTensorType["fetch_f32"] = MakeFetchFunction<float>();
+        multiTensorType["fetch_f64"] = MakeFetchFunction<double>();
 
-        lMultiTensorType["fetch_uvec2"] = MakeFetchFunction<math::uvec2>();
-        lMultiTensorType["fetch_uvec3"] = MakeFetchFunction<math::uvec3>();
-        lMultiTensorType["fetch_uvec4"] = MakeFetchFunction<math::uvec4>();
+        multiTensorType["fetch_uvec2"] = MakeFetchFunction<math::uvec2>();
+        multiTensorType["fetch_uvec3"] = MakeFetchFunction<math::uvec3>();
+        multiTensorType["fetch_uvec4"] = MakeFetchFunction<math::uvec4>();
 
-        lMultiTensorType["fetch_ivec2"] = MakeFetchFunction<math::ivec2>();
-        lMultiTensorType["fetch_ivec3"] = MakeFetchFunction<math::ivec3>();
-        lMultiTensorType["fetch_ivec4"] = MakeFetchFunction<math::ivec4>();
+        multiTensorType["fetch_ivec2"] = MakeFetchFunction<math::ivec2>();
+        multiTensorType["fetch_ivec3"] = MakeFetchFunction<math::ivec3>();
+        multiTensorType["fetch_ivec4"] = MakeFetchFunction<math::ivec4>();
 
-        lMultiTensorType["fetch_vec2"] = MakeFetchFunction<math::vec2>();
-        lMultiTensorType["fetch_vec3"] = MakeFetchFunction<math::vec3>();
-        lMultiTensorType["fetch_vec4"] = MakeFetchFunction<math::vec4>();
+        multiTensorType["fetch_vec2"] = MakeFetchFunction<math::vec2>();
+        multiTensorType["fetch_vec3"] = MakeFetchFunction<math::vec3>();
+        multiTensorType["fetch_vec4"] = MakeFetchFunction<math::vec4>();
 
-        lMultiTensorType["fetch_mat3"] = MakeFetchFunction<math::mat3>();
-        lMultiTensorType["fetch_mat4"] = MakeFetchFunction<math::mat4>();
+        multiTensorType["fetch_mat3"] = MakeFetchFunction<math::mat3>();
+        multiTensorType["fetch_mat4"] = MakeFetchFunction<math::mat4>();
 
-        auto lScopeType     = aScriptingState.new_usertype<TensorOps::scope_t>( "Scope", constructors<TensorOps::scope_t( uint32_t aMemorySize )>() );
-        lScopeType["reset"] = []( TensorOps::scope_t &aSelf ) { aSelf.Reset(); };
+        auto scopeType =
+            scriptingState.new_usertype<TensorOps::scope_t>( "Scope", constructors<TensorOps::scope_t( uint32_t aMemorySize )>() );
+        scopeType["reset"] = []( TensorOps::scope_t &self ) { self.Reset(); };
 
         // clang-format off
-        lScopeType["run"] = overload(
-            []( TensorOps::scope_t &aSelf, TensorOps::graph_node_t &aNode ) { aSelf.Run( aNode ); },
-            []( TensorOps::scope_t &aSelf, vector_t<TensorOps::graph_node_t> aNode ) { aSelf.Run( aNode ); },
-            []( TensorOps::scope_t &aSelf, sol::table aNode )
+        scopeType["run"] = overload(
+            []( TensorOps::scope_t &self, TensorOps::graph_node_t &aNode ) { self.Run( aNode ); },
+            []( TensorOps::scope_t &self, vector_t<TensorOps::graph_node_t> aNode ) { self.Run( aNode ); },
+            []( TensorOps::scope_t &self, sol::table aNode )
             {
                 vector_t<TensorOps::graph_node_t> lOpNodes{};
 
@@ -173,15 +178,15 @@ namespace SE::Core
                     lOpNodes.push_back( lNode );
                 }
 
-                aSelf.Run( lOpNodes );
+                self.Run( lOpNodes );
             }
         );
         // clang-format on
 
-        auto lOpsModule = aScriptingState["Ops"].get_or_create<sol::table>();
+        auto opsModule = scriptingState["Ops"].get_or_create<sol::table>();
 
         // clang-format off
-        lOpsModule.new_enum( "eScalarType",
+        opsModule.new_enum( "eScalarType",
             "FLOAT32", scalar_type_t::FLOAT32,
             "FLOAT64", scalar_type_t::FLOAT64,
             "UINT8",   scalar_type_t::UINT8,
@@ -195,10 +200,10 @@ namespace SE::Core
             "UNKNOWN", scalar_type_t::UNKNOWN  );
         // clang-format on
 
-        declare_primitive_type<multi_tensor_value_t>( lOpsModule, "sMultiTensorComponent" );
+        declare_primitive_type<multi_tensor_value_t>( opsModule, "sMultiTensorComponent" );
 
         // clang-format off
-        auto lConstantInitializerComponent = lOpsModule.new_usertype<constant_value_initializer_t>("sConstantValueInitializerComponent");
+        auto lConstantInitializerComponent = opsModule.new_usertype<constant_value_initializer_t>("sConstantValueInitializerComponent");
         lConstantInitializerComponent[call_constructor] = [](scalar_type_t aType, double value)
         {
             switch(aType)
@@ -229,7 +234,7 @@ namespace SE::Core
             }
         };
 
-        auto lVectorInitializerComponent = lOpsModule.new_usertype<vector_initializer_t>( "sVectorInitializerComponent" );
+        auto lVectorInitializerComponent = opsModule.new_usertype<vector_initializer_t>( "sVectorInitializerComponent" );
 
         // clang-format off
         lVectorInitializerComponent[call_constructor] = factories(
@@ -246,7 +251,7 @@ namespace SE::Core
         );
         // clang-format on
 
-        auto lDataInitializerComponent = lOpsModule.new_usertype<data_initializer_t>( "sDataInitializerComponent" );
+        auto lDataInitializerComponent = opsModule.new_usertype<data_initializer_t>( "sDataInitializerComponent" );
         // clang-format off
         lDataInitializerComponent[call_constructor] = factories(
             []( vector_t<float> value)    { return data_initializer_t{ value }; },
@@ -262,10 +267,13 @@ namespace SE::Core
         );
         // clang-format on
 
-        auto lRandomUniformInitializerComponent              = lOpsModule.new_usertype<random_uniform_initializer_t>( "sRandomUniformInitializerComponent" );
-        lRandomUniformInitializerComponent[call_constructor] = []( scalar_type_t value ) { return random_uniform_initializer_t{ value }; };
+        auto lRandomUniformInitializerComponent =
+            opsModule.new_usertype<random_uniform_initializer_t>( "sRandomUniformInitializerComponent" );
+        lRandomUniformInitializerComponent[call_constructor] = []( scalar_type_t value )
+        { return random_uniform_initializer_t{ value }; };
 
-        auto lRandomNormalInitializerComponent              = lOpsModule.new_usertype<random_normal_initializer_t>( "sRandomNormalInitializerComponent" );
+        auto lRandomNormalInitializerComponent =
+            opsModule.new_usertype<random_normal_initializer_t>( "sRandomNormalInitializerComponent" );
         lRandomNormalInitializerComponent[call_constructor] = []( scalar_type_t value, double mean, double std )
         {
             switch( value )
@@ -278,82 +286,82 @@ namespace SE::Core
         };
 
         // clang-format off
-        lOpsModule["MultiTensorValue"] = overload(
-            []( scope_t &aScope, constant_value_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
-                return MultiTensorValue( aScope, aInitializer, aShape );
+        opsModule["MultiTensorValue"] = overload(
+            []( scope_t &scope, constant_value_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+                return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &aScope, vector_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
-                return MultiTensorValue( aScope, aInitializer, aShape );
+            []( scope_t &scope, vector_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+                return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &aScope, data_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
-                return MultiTensorValue( aScope, aInitializer, aShape );
+            []( scope_t &scope, data_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+                return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &aScope, random_uniform_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
-                return MultiTensorValue( aScope, aInitializer, aShape );
+            []( scope_t &scope, random_uniform_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+                return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &aScope, random_normal_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape ) {
-                return MultiTensorValue( aScope, aInitializer, aShape );
+            []( scope_t &scope, random_normal_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+                return MultiTensorValue( scope, initializer, shape );
             }
         );
         // clang-format on
 
-        lOpsModule["Add"]      = TensorOps::Add;
-        lOpsModule["Subtract"] = TensorOps::Subtract;
-        lOpsModule["Divide"]   = TensorOps::Divide;
-        lOpsModule["Multiply"] = TensorOps::Multiply;
-        lOpsModule["Floor"]    = TensorOps::Floor;
-        lOpsModule["Ceil"]     = TensorOps::Ceil;
-        lOpsModule["Abs"]      = TensorOps::Abs;
-        lOpsModule["Sqrt"]     = TensorOps::Sqrt;
-        lOpsModule["Round"]    = TensorOps::Round;
-        lOpsModule["Diff"]     = TensorOps::Diff;
-        lOpsModule["Shift"]    = TensorOps::Shift;
+        opsModule["Add"]      = TensorOps::Add;
+        opsModule["Subtract"] = TensorOps::Subtract;
+        opsModule["Divide"]   = TensorOps::Divide;
+        opsModule["Multiply"] = TensorOps::Multiply;
+        opsModule["Floor"]    = TensorOps::Floor;
+        opsModule["Ceil"]     = TensorOps::Ceil;
+        opsModule["Abs"]      = TensorOps::Abs;
+        opsModule["Sqrt"]     = TensorOps::Sqrt;
+        opsModule["Round"]    = TensorOps::Round;
+        opsModule["Diff"]     = TensorOps::Diff;
+        opsModule["Shift"]    = TensorOps::Shift;
 
-        lOpsModule["And"] = TensorOps::And;
-        lOpsModule["Or"]  = TensorOps::Or;
-        lOpsModule["Not"] = TensorOps::Not;
+        opsModule["And"] = TensorOps::And;
+        opsModule["Or"]  = TensorOps::Or;
+        opsModule["Not"] = TensorOps::Not;
 
-        lOpsModule["BitwiseAnd"] = TensorOps::BitwiseAnd;
-        lOpsModule["BitwiseOr"]  = TensorOps::BitwiseOr;
-        lOpsModule["BitwiseNot"] = TensorOps::BitwiseNot;
+        opsModule["BitwiseAnd"] = TensorOps::BitwiseAnd;
+        opsModule["BitwiseOr"]  = TensorOps::BitwiseOr;
+        opsModule["BitwiseNot"] = TensorOps::BitwiseNot;
 
-        lOpsModule["InInterval"] = TensorOps::InInterval;
+        opsModule["InInterval"] = TensorOps::InInterval;
 
-        lOpsModule["Equal"]              = TensorOps::Equal;
-        lOpsModule["LessThan"]           = TensorOps::LessThan;
-        lOpsModule["LessThanOrEqual"]    = TensorOps::LessThanOrEqual;
-        lOpsModule["GreaterThan"]        = TensorOps::GreaterThan;
-        lOpsModule["GreaterThanOrEqual"] = TensorOps::GreaterThanOrEqual;
+        opsModule["Equal"]              = TensorOps::Equal;
+        opsModule["LessThan"]           = TensorOps::LessThan;
+        opsModule["LessThanOrEqual"]    = TensorOps::LessThanOrEqual;
+        opsModule["GreaterThan"]        = TensorOps::GreaterThan;
+        opsModule["GreaterThanOrEqual"] = TensorOps::GreaterThanOrEqual;
 
-        lOpsModule["Where"] = TensorOps::Where;
+        opsModule["Where"] = TensorOps::Where;
 
-        lOpsModule["Mix"]    = TensorOps::Mix;
-        lOpsModule["Affine"] = TensorOps::AffineTransform;
+        opsModule["Mix"]    = TensorOps::Mix;
+        opsModule["Affine"] = TensorOps::AffineTransform;
 
-        lOpsModule["ARange"]      = TensorOps::ARange;
-        lOpsModule["LinearSpace"] = TensorOps::LinearSpace;
-        lOpsModule["Repeat"]      = TensorOps::Repeat;
-        lOpsModule["Tile"]        = TensorOps::Tile;
+        opsModule["ARange"]      = TensorOps::ARange;
+        opsModule["LinearSpace"] = TensorOps::LinearSpace;
+        opsModule["Repeat"]      = TensorOps::Repeat;
+        opsModule["Tile"]        = TensorOps::Tile;
 
-        lOpsModule["Sample2D"]     = TensorOps::Sample2D;
-        lOpsModule["ToFixedPoint"] = TensorOps::ToFixedPoint;
+        opsModule["Sample2D"]     = TensorOps::Sample2D;
+        opsModule["ToFixedPoint"] = TensorOps::ToFixedPoint;
 
-        lOpsModule["Collapse"] = TensorOps::Collapse;
-        lOpsModule["Expand"]   = TensorOps::Expand;
-        lOpsModule["Reshape"]  = TensorOps::Reshape;
-        lOpsModule["Relayout"] = TensorOps::Relayout;
-        lOpsModule["Flatten"]  = TensorOps::Flatten;
-        lOpsModule["Slice"]    = TensorOps::Slice;
-        lOpsModule["HCat"]     = TensorOps::HCat;
+        opsModule["Collapse"] = TensorOps::Collapse;
+        opsModule["Expand"]   = TensorOps::Expand;
+        opsModule["Reshape"]  = TensorOps::Reshape;
+        opsModule["Relayout"] = TensorOps::Relayout;
+        opsModule["Flatten"]  = TensorOps::Flatten;
+        opsModule["Slice"]    = TensorOps::Slice;
+        opsModule["HCat"]     = TensorOps::HCat;
 
-        lOpsModule["Summation"] =
-            overload( []( scope_t &aScope, graph_node_t const &aArray ) { return Summation( aScope, aArray ); },
-                      []( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd ) { return Summation( aScope, aArray, aBegin, aEnd ); } );
+        opsModule["Summation"] = overload( []( scope_t &scope, graph_node_t const &array ) { return Summation( scope, array ); },
+                                            []( scope_t &scope, graph_node_t const &array, graph_node_t const &aBegin,
+                                                graph_node_t const &aEnd ) { return Summation( scope, array, aBegin, aEnd ); } );
 
-        lOpsModule["CountTrue"]    = TensorOps::CountTrue;
-        lOpsModule["CountNonZero"] = TensorOps::CountNonZero;
-        lOpsModule["CountZero"]    = TensorOps::CountZero;
+        opsModule["CountTrue"]    = TensorOps::CountTrue;
+        opsModule["CountNonZero"] = TensorOps::CountNonZero;
+        opsModule["CountZero"]    = TensorOps::CountZero;
 
-        lOpsModule["Conv1D"] = TensorOps::Conv1D;
+        opsModule["Conv1D"] = TensorOps::Conv1D;
     }
 }; // namespace SE::Core

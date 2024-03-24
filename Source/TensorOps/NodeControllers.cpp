@@ -792,18 +792,18 @@ namespace SE::TensorOps
         if( Has<constant_value_initializer_t>() )
         {
             auto &lInitializer = Get<constant_value_initializer_t>();
-            ConstantFill( TypeOf( lInitializer.mValue ), lValue, lInitializer.mValue );
+            ConstantFill( type_of( lInitializer.mValue ), lValue, lInitializer.mValue );
         }
         else if( Has<vector_initializer_t>() )
         {
             auto &lInitializer = Get<vector_initializer_t>();
-            DISPATCH_BY_TYPE( TypeOf( lInitializer.mValue[0] ), ResolveAndUpload, ( lInitializer ) );
-            ConstantFill( TypeOf( lInitializer.mValue[0] ), lValue, lInitializer.mData );
+            DISPATCH_BY_TYPE( type_of( lInitializer.mValue[0] ), ResolveAndUpload, ( lInitializer ) );
+            ConstantFill( type_of( lInitializer.mValue[0] ), lValue, lInitializer.mData );
         }
         else if( Has<data_initializer_t>() )
         {
             auto &lInitializer = Get<data_initializer_t>();
-            DISPATCH_BY_TYPE( TypeOf( lInitializer.mValue[0] ), ResolveAndUpload, ( lInitializer, lValue ) );
+            DISPATCH_BY_TYPE( type_of( lInitializer.mValue[0] ), ResolveAndUpload, ( lInitializer, lValue ) );
         }
         else if( Has<random_uniform_initializer_t>() )
         {

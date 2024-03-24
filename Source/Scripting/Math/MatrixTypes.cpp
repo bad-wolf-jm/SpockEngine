@@ -7,11 +7,11 @@ namespace SE::Core
 {
     using namespace math;
 
-    void define_matrix_types( sol::table &aModule )
+    void define_matrix_types( sol::table &module )
     {
-        auto lMat3Type = new_matrix_type<mat3>( aModule, "mat3" );
+        auto mat3Type = new_matrix_type<mat3>( module, "mat3" );
         // clang-format off
-        lMat3Type[sol::call_constructor] =
+        mat3Type[sol::call_constructor] =
             factories(
                 []() { return mat3( 1.0f ); },
                 []( const float &d ) { return mat3( d ); },
@@ -20,12 +20,12 @@ namespace SE::Core
                 []( const mat4 &c1 ) { return mat3(c1); }
             ) ;
         // clang-format on
-        lMat3Type["comatrix"] = []( mat3 aSelf ) -> mat3 { return Comatrix( aSelf ); };
+        mat3Type["comatrix"] = []( mat3 self ) -> mat3 { return Comatrix( self ); };
 
-        auto lMat4Type = new_matrix_type<mat4>( aModule, "mat4" );
+        auto mat4Type = new_matrix_type<mat4>( module, "mat4" );
 
         // clang-format off
-        lMat4Type[sol::call_constructor] =
+        mat4Type[sol::call_constructor] =
             factories( []() { return mat4( 1.0f ); },
                 []( const float &d ) { return mat4( d ); },
                 []( const vec4 &d ) { return FromDiagonal( d ); },
@@ -33,12 +33,12 @@ namespace SE::Core
                 []( mat3 const &aRotation, vec3 const &aTranslation ) { return FromComponents( aRotation, aTranslation ); }
         );
         // clang-format on
-        lMat4Type["normal_matrix"]   = []( mat4 aSelf ) -> mat4 { return NormalMatrix( aSelf ); };
-        lMat4Type["get_rotation"]    = []( mat4 aSelf ) -> mat3 { return Rotation( aSelf ); };
-        lMat4Type["get_translation"] = []( mat4 aSelf ) -> vec3 { return Translation( aSelf ); };
-        lMat4Type["get_scale"]       = []( mat4 aSelf ) -> vec3 { return Scaling( aSelf ); };
-        lMat4Type["up"]              = []( mat4 aSelf ) -> vec3 { return UpDirection( aSelf ); };
-        lMat4Type["right"]           = []( mat4 aSelf ) -> vec3 { return RightDirection( aSelf ); };
-        lMat4Type["back"]            = []( mat4 aSelf ) -> vec3 { return BackwardDirection( aSelf ); };
+        mat4Type["normal_matrix"]   = []( mat4 self ) -> mat4 { return NormalMatrix( self ); };
+        mat4Type["get_rotation"]    = []( mat4 self ) -> mat3 { return Rotation( self ); };
+        mat4Type["get_translation"] = []( mat4 self ) -> vec3 { return Translation( self ); };
+        mat4Type["get_scale"]       = []( mat4 self ) -> vec3 { return Scaling( self ); };
+        mat4Type["up"]              = []( mat4 self ) -> vec3 { return UpDirection( self ); };
+        mat4Type["right"]           = []( mat4 self ) -> vec3 { return RightDirection( self ); };
+        mat4Type["back"]            = []( mat4 self ) -> vec3 { return BackwardDirection( self ); };
     }
 } // namespace SE::Core
