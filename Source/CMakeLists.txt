@@ -18,7 +18,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/CUDA/Texture/Texture2D.cu
     Core/CUDA/Texture/Conversion.cpp
     Core/CUDA/Texture/TextureCubeMap.cu
-    # Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureTypes.cpp
 
     TensorOps/Implementation/KernelLaunchers.cu
@@ -27,9 +26,9 @@ add_library(LTSimulationEngineRuntime STATIC
 
     Scripting/Core/Texture.cpp
     Scripting/Core/Vector.cpp
+    Scripting/Core/TypeReflection.cpp
     Scripting/Cuda/Tensor.cpp
     Scripting/Cuda/Texture.cpp
-    Scripting/Entities/EntityRegistry.cpp
     Scripting/Math/MatrixTypes.cpp
     Scripting/Math/VectorTypes.cpp
     Scripting/ArrayTypes.cpp
