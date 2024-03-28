@@ -1470,7 +1470,7 @@ namespace SE::TensorOps::Kernels
         RETURN_UNLESS( blockIdx.y < N );
 
         int i = blockIdx.z * Private::ThreadsPerBlock + threadIdx.x;
-        int j = blockIdx.y * array.Shape().GetBufferSizeAs<_Ty>( layer ).mSize + i;
+        int j = blockIdx.y * array.Shape().GetBufferSizeAs<_Ty>( layer ).Size + i;
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) && out.Shape().InBounds<_Ty>( layer, j ) );
 

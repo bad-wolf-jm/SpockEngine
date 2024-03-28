@@ -2,188 +2,188 @@
 
 namespace SE::Core
 {
-    tensor_shape_t::tensor_shape_t( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize )
+    tensor_shape_t::tensor_shape_t( vector_t<vector_t<uint32_t>> const &shape, size_t elementSize )
     {
-        if( aShape.size() == 0 )
+        if( shape.size() == 0 )
             return;
 
-        for( auto &x : aShape )
+        for( auto &x : shape )
         {
-            if( x.size() != aShape[0].size() )
+            if( x.size() != shape[0].size() )
                 throw std::runtime_error( "All shapes must have the same length!" );
         }
 
-        mRank        = aShape[0].size();
-        mLayerCount  = aShape.size();
-        mShape       = aShape;
-        mElementSize = aElementSize;
+        Rank        = shape[0].size();
+        LayerCount  = shape.size();
+        Shape       = shape;
+        ElementSize = elementSize;
 
         UpdateMetadata();
     }
 
-    tensor_shape_t::tensor_shape_t( vector_t<uint32_t> const &aShape, size_t aElementSize )
+    tensor_shape_t::tensor_shape_t( vector_t<uint32_t> const &shape, size_t elementSize )
     {
-        if( aShape.size() == 0 )
+        if( shape.size() == 0 )
             return;
 
-        mRank       = 1;
-        mLayerCount = aShape.size();
+        Rank       = 1;
+        LayerCount = shape.size();
 
-        for( auto &lValue : aShape )
-            mShape.push_back( { lValue } );
+        for( auto &lValue : shape )
+            Shape.push_back( { lValue } );
 
-        mElementSize = aElementSize;
+        ElementSize = elementSize;
 
         UpdateMetadata();
     }
 
     void tensor_shape_t::UpdateMetadata()
     {
-        mMaxBufferSize = 0;
+        MaxBufferSize = 0;
 
-        mMaxDimensions.resize( mRank );
-        std::fill( mMaxDimensions.begin(), mMaxDimensions.end(), 0 );
+        MaxDimensions.resize( Rank );
+        std::fill( MaxDimensions.begin(), MaxDimensions.end(), 0 );
 
-        mBufferSizes.resize( mShape.size() );
-        mStrides.resize( mShape.size() );
+        BufferSizes.resize( Shape.size() );
+        Strides.resize( Shape.size() );
 
-        size_t lCurrentOffset = 0;
-        for( size_t lDimIdx = 0; lDimIdx < mShape.size(); lDimIdx++ )
+        size_t currentOffset = 0;
+        for( size_t dimIdx = 0; dimIdx < Shape.size(); dimIdx++ )
         {
-            auto &lDim = mShape[lDimIdx];
+            auto &lDim = Shape[dimIdx];
 
-            mStrides[lDimIdx]            = vector_t<uint32_t>( mRank );
-            mStrides[lDimIdx][mRank - 1] = 1;
+            Strides[dimIdx]            = vector_t<uint32_t>( Rank );
+            Strides[dimIdx][Rank - 1] = 1;
 
-            uint32_t lSize = mElementSize;
-            for( uint32_t i = 0; i < mRank; i++ )
+            uint32_t size = ElementSize;
+            for( uint32_t i = 0; i < Rank; i++ )
             {
-                mMaxDimensions[i] = std::max( mMaxDimensions[i], lDim[i] );
-                if( i < mRank - 1 )
-                    mStrides[lDimIdx][mRank - i - 2] = mStrides[lDimIdx][mRank - i - 1] * lDim[mRank - i - 1];
+                MaxDimensions[i] = std::max( MaxDimensions[i], lDim[i] );
+                if( i < Rank - 1 )
+                    Strides[dimIdx][Rank - i - 2] = Strides[dimIdx][Rank - i - 1] * lDim[Rank - i - 1];
 
-                lSize *= lDim[i];
+                size *= lDim[i];
             }
 
-            mBufferSizes[lDimIdx].mSize   = lSize;
-            mBufferSizes[lDimIdx].mOffset = lCurrentOffset;
-            mMaxBufferSize                = std::max( mMaxBufferSize, mBufferSizes[lDimIdx].mSize / mElementSize );
-            lCurrentOffset += mBufferSizes[lDimIdx].mSize;
+            BufferSizes[dimIdx].Size   = size;
+            BufferSizes[dimIdx].Offset = currentOffset;
+            MaxBufferSize                = std::max( MaxBufferSize, BufferSizes[dimIdx].Size / ElementSize );
+            currentOffset += BufferSizes[dimIdx].Size;
         }
 
-        mByteSize = lCurrentOffset;
+        ByteSize = currentOffset;
     }
 
     vector_t<uint32_t> const tensor_shape_t::GetDimension( int32_t i ) const
     {
-        vector_t<uint32_t> lDimension;
+        vector_t<uint32_t> dimension;
 
         if( i >= 0 )
         {
-            if( i >= mRank )
+            if( i >= Rank )
                 throw std::out_of_range(
-                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
-            for( auto &lShape : mShape )
-                lDimension.push_back( lShape[i] );
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", Rank + i, CountLayers() ) );
+            for( auto &lShape : Shape )
+                dimension.push_back( lShape[i] );
         }
         else
         {
-            if( -i > mRank )
+            if( -i > Rank )
                 throw std::out_of_range(
-                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", Rank + i, CountLayers() ) );
 
-            for( auto &lShape : mShape )
-                lDimension.push_back( lShape[mRank + i] );
+            for( auto &lShape : Shape )
+                dimension.push_back( lShape[Rank + i] );
         }
-        return lDimension;
+        return dimension;
     }
 
-    void tensor_shape_t::InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension )
+    void tensor_shape_t::InsertDimension( int32_t position, vector_t<uint32_t> dimension )
     {
-        if( aDimension.size() != CountLayers() )
+        if( dimension.size() != CountLayers() )
             throw std::out_of_range(
-                fmt::format( "New dimension array has size {}, but the tensor has {} layers", aDimension.size(), CountLayers() ) );
+                fmt::format( "New dimension array has size {}, but the tensor has {} layers", dimension.size(), CountLayers() ) );
 
-        if( aPosition < 0 )
-            aPosition += ( mRank + 1 );
+        if( position < 0 )
+            position += ( Rank + 1 );
 
         for( uint32_t i = 0; i < CountLayers(); i++ )
-            mShape[i].insert( mShape[i].begin() + aPosition, aDimension[i] );
+            Shape[i].insert( Shape[i].begin() + position, dimension[i] );
 
-        mRank++;
+        Rank++;
 
         UpdateMetadata();
     }
 
-    void tensor_shape_t::Flatten( int32_t aToDimension )
+    void tensor_shape_t::Flatten( int32_t toDimension )
     {
-        if( aToDimension <= 0 )
-            aToDimension += mRank;
+        if( toDimension <= 0 )
+            toDimension += Rank;
 
-        vector_t<vector_t<uint32_t>> lNewShape( CountLayers() );
+        vector_t<vector_t<uint32_t>> newShape( CountLayers() );
 
         for( uint32_t i = 0; i < CountLayers(); i++ )
         {
-            lNewShape[i].push_back(
-                std::accumulate( mShape[i].begin(), mShape[i].begin() + aToDimension, 1, std::multiplies<uint32_t>() ) );
-            lNewShape[i].insert( lNewShape[i].end(), mShape[i].begin() + aToDimension, mShape[i].end() );
+            newShape[i].push_back(
+                std::accumulate( Shape[i].begin(), Shape[i].begin() + toDimension, 1, std::multiplies<uint32_t>() ) );
+            newShape[i].insert( newShape[i].end(), Shape[i].begin() + toDimension, Shape[i].end() );
         }
 
-        mShape = lNewShape;
-        mRank  = mRank - aToDimension + 1;
+        Shape = newShape;
+        Rank  = Rank - toDimension + 1;
 
         UpdateMetadata();
     }
 
-    void tensor_shape_t::Trim( int32_t aToDimension )
+    void tensor_shape_t::Trim( int32_t toDimension )
     {
-        if( aToDimension == 0 )
+        if( toDimension == 0 )
             return;
 
-        if( aToDimension < 0 )
-            aToDimension += mRank;
+        if( toDimension < 0 )
+            toDimension += Rank;
 
-        vector_t<vector_t<uint32_t>> lNewShape( CountLayers() );
+        vector_t<vector_t<uint32_t>> newShape( CountLayers() );
 
         for( uint32_t i = 0; i < CountLayers(); i++ )
-            lNewShape[i].insert( lNewShape[i].end(), mShape[i].begin(), mShape[i].begin() + aToDimension );
+            newShape[i].insert( newShape[i].end(), Shape[i].begin(), Shape[i].begin() + toDimension );
 
-        mShape = lNewShape;
-        mRank  = aToDimension;
+        Shape = newShape;
+        Rank  = toDimension;
 
         UpdateMetadata();
     }
 
-    bool operator==( const buffer_size_info_t &lLhs, const buffer_size_info_t &lRhs )
+    bool operator==( const buffer_size_info_t &lhs, const buffer_size_info_t &rhs )
     {
-        return ( lLhs.mSize == lRhs.mSize ) && ( lLhs.mOffset == lRhs.mOffset );
+        return ( lhs.Size == rhs.Size ) && ( lhs.Offset == rhs.Offset );
     }
 
-    bool tensor_shape_t::operator==( const tensor_shape_t &lRhs )
+    bool tensor_shape_t::operator==( const tensor_shape_t &rhs )
     {
-        return ( mShape == lRhs.mShape );
+        return ( Shape == rhs.Shape );
     }
 
-    bool tensor_shape_t::operator!=( const tensor_shape_t &lRhs )
+    bool tensor_shape_t::operator!=( const tensor_shape_t &rhs )
     {
-        return ( mShape != lRhs.mShape );
+        return ( Shape != rhs.Shape );
     }
 
     void tensor_shape_t::SyncDeviceData()
     {
-        vector_t<uint32_t> lDimensions( mLayerCount * mRank );
+        vector_t<uint32_t> dimensions( LayerCount * Rank );
 
         uint32_t k = 0;
-        for( uint32_t i = 0; i < mLayerCount; i++ )
+        for( uint32_t i = 0; i < LayerCount; i++ )
         {
-            for( uint32_t j = 0; j < mRank; j++ )
+            for( uint32_t j = 0; j < Rank; j++ )
             {
-                lDimensions[k] = mShape[i][j];
+                dimensions[k] = Shape[i][j];
                 k++;
             }
         }
-        mDeviceSideData.mShape.Upload( lDimensions );
-        mDeviceSideData.mMaxDimensions.Upload( mMaxDimensions );
-        mDeviceSideData.mBufferSizes.Upload( mBufferSizes );
+        DeviceSideData.Shape.Upload( dimensions );
+        DeviceSideData.MaxDimensions.Upload( MaxDimensions );
+        DeviceSideData.BufferSizes.Upload( BufferSizes );
     }
 }

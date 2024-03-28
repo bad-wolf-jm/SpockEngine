@@ -14,10 +14,10 @@ namespace SE::Cuda
     multi_tensor_t::multi_tensor_t( memory_pool_t &memoryPool, const tensor_shape_t &shape )
         : _shape{ shape }
     {
-        _memoryBuffer                         = memoryPool.Allocate( _shape.mByteSize );
-        _shape.mDeviceSideData.mShape         = memoryPool.Allocate( _shape.mLayerCount * _shape.mRank * sizeof( uint32_t ) );
-        _shape.mDeviceSideData.mMaxDimensions = memoryPool.Allocate( _shape.mRank * sizeof( uint32_t ) );
-        _shape.mDeviceSideData.mBufferSizes   = memoryPool.Allocate( _shape.mLayerCount * sizeof( buffer_size_info_t ) );
+        _memoryBuffer                         = memoryPool.Allocate( _shape.ByteSize );
+        _shape.DeviceSideData.Shape         = memoryPool.Allocate( _shape.LayerCount * _shape.Rank * sizeof( uint32_t ) );
+        _shape.DeviceSideData.MaxDimensions = memoryPool.Allocate( _shape.Rank * sizeof( uint32_t ) );
+        _shape.DeviceSideData.BufferSizes   = memoryPool.Allocate( _shape.LayerCount * sizeof( buffer_size_info_t ) );
         _shape.SyncDeviceData();
     }
 
@@ -25,9 +25,9 @@ namespace SE::Cuda
         : _shape{ shape }
     {
         _memoryBuffer                         = aMemoryBuffer;
-        _shape.mDeviceSideData.mShape         = memoryPool.Allocate( _shape.mLayerCount * _shape.mRank * sizeof( uint32_t ) );
-        _shape.mDeviceSideData.mMaxDimensions = memoryPool.Allocate( _shape.mRank * sizeof( uint32_t ) );
-        _shape.mDeviceSideData.mBufferSizes   = memoryPool.Allocate( _shape.mLayerCount * sizeof( buffer_size_info_t ) );
+        _shape.DeviceSideData.Shape         = memoryPool.Allocate( _shape.LayerCount * _shape.Rank * sizeof( uint32_t ) );
+        _shape.DeviceSideData.MaxDimensions = memoryPool.Allocate( _shape.Rank * sizeof( uint32_t ) );
+        _shape.DeviceSideData.BufferSizes   = memoryPool.Allocate( _shape.LayerCount * sizeof( buffer_size_info_t ) );
         _shape.SyncDeviceData();
     }
 } // namespace SE::Cuda

@@ -837,8 +837,8 @@ TEST_CASE( "LUA TensorShape", "[CORE_SCRIPTING]" )
     auto lTensorShape = scriptingEngine.Get<tensor_shape_t>( "value" );
 
     REQUIRE( lTensorShape.CountLayers() == 3 );
-    REQUIRE( lTensorShape.mRank == 2 );
-    REQUIRE( lTensorShape.mElementSize == 123 );
+    REQUIRE( lTensorShape.Rank == 2 );
+    REQUIRE( lTensorShape.ElementSize == 123 );
     REQUIRE( lTensorShape.GetDimension( 0 ) == std::vector<uint32_t>{ 1, 3, 5 } );
     REQUIRE( lTensorShape.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 6 } );
 }
@@ -882,7 +882,7 @@ value:trim( 1 )
 )" );
 
     auto lDimension0 = scriptingEngine.Get<tensor_shape_t>( "value" );
-    REQUIRE( lDimension0.mShape == std::vector<std::vector<uint32_t>>{ { 1 }, { 3 }, { 5 } } );
+    REQUIRE( lDimension0.Shape == std::vector<std::vector<uint32_t>>{ { 1 }, { 3 }, { 5 } } );
 
     scriptingEngine.Execute( R"(
 value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -890,7 +890,7 @@ value:trim( -1 )
 )" );
 
     auto lDimension1 = scriptingEngine.Get<tensor_shape_t>( "value" );
-    REQUIRE( lDimension1.mShape == std::vector<std::vector<uint32_t>>{ { 1, 2 }, { 3, 4 }, { 5, 6 } } );
+    REQUIRE( lDimension1.Shape == std::vector<std::vector<uint32_t>>{ { 1, 2 }, { 3, 4 }, { 5, 6 } } );
 
     scriptingEngine.Execute( R"(
 value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -898,7 +898,7 @@ value:trim( -2 )
 )" );
 
     auto lDimension2 = scriptingEngine.Get<tensor_shape_t>( "value" );
-    REQUIRE( lDimension2.mShape == std::vector<std::vector<uint32_t>>{ { 1 }, { 3 }, { 5 } } );
+    REQUIRE( lDimension2.Shape == std::vector<std::vector<uint32_t>>{ { 1 }, { 3 }, { 5 } } );
 }
 
 TEST_CASE( "LUA TensorShape Flatten", "[CORE_SCRIPTING]" )
@@ -911,7 +911,7 @@ value:flatten( 3 )
 )" );
 
     auto lDimension0 = scriptingEngine.Get<tensor_shape_t>( "value" );
-    REQUIRE( lDimension0.mShape == std::vector<std::vector<uint32_t>>{ { 18 }, { 96 }, { 210 } } );
+    REQUIRE( lDimension0.Shape == std::vector<std::vector<uint32_t>>{ { 18 }, { 96 }, { 210 } } );
 
     scriptingEngine.Execute( R"(
 value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -919,7 +919,7 @@ value:flatten( -1 )
 )" );
 
     auto lDimension1 = scriptingEngine.Get<tensor_shape_t>( "value" );
-    REQUIRE( lDimension1.mShape == std::vector<std::vector<uint32_t>>{ { 2, 9 }, { 12, 8 }, { 30, 7 } } );
+    REQUIRE( lDimension1.Shape == std::vector<std::vector<uint32_t>>{ { 2, 9 }, { 12, 8 }, { 30, 7 } } );
 
     scriptingEngine.Execute( R"(
 value = Cuda.TensorShape( { { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, 123 )
@@ -927,7 +927,7 @@ value:flatten( -2 )
 )" );
 
     auto lDimension2 = scriptingEngine.Get<tensor_shape_t>( "value" );
-    REQUIRE( lDimension2.mShape == std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } } );
+    REQUIRE( lDimension2.Shape == std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } } );
 }
 
 TEST_CASE( "LUA MemoryPool", "[CORE_SCRIPTING]" )
@@ -1006,9 +1006,9 @@ TEST_CASE( "LUA MultiTensor fetch_at", "[CORE_SCRIPTING]" )
     auto lShape  = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
     auto lTensor = multi_tensor_t( lPool, lShape );
 
-    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
-    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
-    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[2], 1.0f, 150.0f ) );
+    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[0], 1.0f, 150.0f ) );
+    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[1], 1.0f, 150.0f ) );
+    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[2], 1.0f, 150.0f ) );
 
     lTensor.Upload( ConcatenateVectors( std::vector<std::vector<float>>{ lLayer1, lLayer2, lLayer3 } ) );
     scriptingEngine.Define( "tensor", lTensor );
@@ -1047,9 +1047,9 @@ TEST_CASE( "LUA MultiTensor fetch_flattened", "[CORE_SCRIPTING]" )
     auto lShape  = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
     auto lTensor = multi_tensor_t( lPool, lShape );
 
-    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
-    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
-    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[2], 1.0f, 150.0f ) );
+    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[0], 1.0f, 150.0f ) );
+    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[1], 1.0f, 150.0f ) );
+    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[2], 1.0f, 150.0f ) );
 
     lTensor.Upload( ConcatenateVectors( std::vector<std::vector<float>>{ lLayer1, lLayer2, lLayer3 } ) );
     scriptingEngine.Define( "tensor", lTensor );
@@ -1071,9 +1071,9 @@ TEST_CASE( "LUA MultiTensor upload", "[CORE_SCRIPTING]" )
 
     auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
-    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
-    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
-    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[2], 1.0f, 150.0f ) );
+    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[0], 1.0f, 150.0f ) );
+    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[1], 1.0f, 150.0f ) );
+    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[2], 1.0f, 150.0f ) );
 
     auto lData = ConcatenateVectors( std::vector<std::vector<float>>{ lLayer1, lLayer2, lLayer3 } );
 
@@ -1099,9 +1099,9 @@ TEST_CASE( "LUA MultiTensor upload layers", "[CORE_SCRIPTING]" )
 
     auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
-    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
-    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
-    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[2], 1.0f, 150.0f ) );
+    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[0], 1.0f, 150.0f ) );
+    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[1], 1.0f, 150.0f ) );
+    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[2], 1.0f, 150.0f ) );
 
     auto lData = ConcatenateVectors( std::vector<std::vector<float>>{ lLayer1, lLayer2, lLayer3 } );
 
@@ -1326,9 +1326,9 @@ TEST_CASE( "LUA MultiTensorValue initialized with data", "[CORE_SCRIPTING]" )
 
     auto lShape = tensor_shape_t( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
-    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[0], 1.0f, 150.0f ) );
-    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[1], 1.0f, 150.0f ) );
-    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.mShape[2], 1.0f, 150.0f ) );
+    auto lLayer1 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[0], 1.0f, 150.0f ) );
+    auto lLayer2 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[1], 1.0f, 150.0f ) );
+    auto lLayer3 = ConcatenateVectors( RandomVector2<float>( lShape.Shape[2], 1.0f, 150.0f ) );
 
     auto lData = ConcatenateVectors( std::vector<std::vector<float>>{ lLayer1, lLayer2, lLayer3 } );
     scriptingEngine.Define( "data", lData );

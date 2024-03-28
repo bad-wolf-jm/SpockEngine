@@ -216,7 +216,7 @@ namespace SE::TensorOps
 
                 if( lLeftShape != lRightShape )
                 {
-                    if( lLeftShape.mRank == lRightShape.mRank - 1 )
+                    if( lLeftShape.Rank == lRightShape.Rank - 1 )
                     {
                         lRightShape.Trim( -1 );
                         if( lRightShape != lLeftShape )
@@ -225,17 +225,17 @@ namespace SE::TensorOps
                         auto &lBroadcastInfo = lNewEntity.Add<broadcast_info_t>();
                         lRightShape.Flatten( 0 );
                         lBroadcastInfo.mBroadcastHint = broadcast_hint_t::LEFT;
-                        lBroadcastInfo.mMaxBlockSize  = lRightShape.mMaxDimensions[0];
+                        lBroadcastInfo.mMaxBlockSize  = lRightShape.MaxDimensions[0];
                         lBroadcastInfo.mBlockSizes    = VectorValue( aScope, lRightShape.GetDimension( 0 ) );
 
                         auto lBroadcastShape                  = lOperandData.mRightOperand.Get<multi_tensor_value_t>().Shape();
                         lBroadcastInfo.mBroadcastDimension    = VectorValue( aScope, lBroadcastShape.GetDimension( -1 ) );
-                        lBroadcastInfo.mMaxBroadcastDimension = lBroadcastShape.mMaxDimensions[lBroadcastShape.mRank - 1];
+                        lBroadcastInfo.mMaxBroadcastDimension = lBroadcastShape.MaxDimensions[lBroadcastShape.Rank - 1];
 
                         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool,
-                                                               tensor_shape_t( lBroadcastShape.mShape, size_of( aType ) ) );
+                                                               tensor_shape_t( lBroadcastShape.Shape, size_of( aType ) ) );
                     }
-                    else if( lRightShape.mRank == lLeftShape.mRank - 1 )
+                    else if( lRightShape.Rank == lLeftShape.Rank - 1 )
                     {
                         lLeftShape.Trim( -1 );
                         if( lRightShape != lLeftShape )
@@ -244,15 +244,15 @@ namespace SE::TensorOps
                         auto &lBroadcastInfo = lNewEntity.Add<broadcast_info_t>();
                         lRightShape.Flatten( 0 );
                         lBroadcastInfo.mBroadcastHint = broadcast_hint_t::RIGHT;
-                        lBroadcastInfo.mMaxBlockSize  = lRightShape.mMaxDimensions[0];
+                        lBroadcastInfo.mMaxBlockSize  = lRightShape.MaxDimensions[0];
                         lBroadcastInfo.mBlockSizes    = VectorValue( aScope, lRightShape.GetDimension( 0 ) );
 
                         auto lBroadcastShape                  = lOperandData.mLeftOperand.Get<multi_tensor_value_t>().Shape();
                         lBroadcastInfo.mBroadcastDimension    = VectorValue( aScope, lBroadcastShape.GetDimension( -1 ) );
-                        lBroadcastInfo.mMaxBroadcastDimension = lBroadcastShape.mMaxDimensions[lBroadcastShape.mRank - 1];
+                        lBroadcastInfo.mMaxBroadcastDimension = lBroadcastShape.MaxDimensions[lBroadcastShape.Rank - 1];
 
                         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool,
-                                                               tensor_shape_t( lBroadcastShape.mShape, size_of( aType ) ) );
+                                                               tensor_shape_t( lBroadcastShape.Shape, size_of( aType ) ) );
                     }
                     else
                     {
@@ -261,13 +261,13 @@ namespace SE::TensorOps
                 }
                 else
                 {
-                    auto lShape = lOperandData.mLeftOperand.Get<multi_tensor_value_t>().Shape().mShape;
+                    auto lShape = lOperandData.mLeftOperand.Get<multi_tensor_value_t>().Shape().Shape;
                     lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aType ) ) );
                 }
             }
             else
             {
-                auto lShape = lOperandData.mLeftOperand.Get<multi_tensor_value_t>().Shape().mShape;
+                auto lShape = lOperandData.mLeftOperand.Get<multi_tensor_value_t>().Shape().Shape;
                 lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aType ) ) );
             }
         }
@@ -278,7 +278,7 @@ namespace SE::TensorOps
                 throw std::runtime_error( "RHS should have a tensor" );
             }
 
-            auto lShape = lOperandData.mRightOperand.Get<multi_tensor_value_t>().Shape().mShape;
+            auto lShape = lOperandData.mRightOperand.Get<multi_tensor_value_t>().Shape().Shape;
             lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aType ) ) );
         }
 
@@ -432,7 +432,7 @@ namespace SE::TensorOps
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aX, aLower, aUpper } );
         lNewEntity.Add<type_t>( scalar_type_t::UINT8 );
 
-        vector_t<vector_t<uint32_t>> lOutputShape = aX.Get<multi_tensor_value_t>().Shape().mShape;
+        vector_t<vector_t<uint32_t>> lOutputShape = aX.Get<multi_tensor_value_t>().Shape().Shape;
 
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape, size_of( scalar_type_t::UINT8 ) ) );
         lNewEntity.Add<graph_operation_t>().Bind<sInIntervalOperationController>();
@@ -498,7 +498,7 @@ namespace SE::TensorOps
         lNewEntity.Add<type_t>( aValueIfTrue.Get<type_t>() );
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aCondition, aValueIfTrue, aValueIfFalse } );
 
-        auto lShape = aCondition.Get<multi_tensor_value_t>().Shape().mShape;
+        auto lShape = aCondition.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool,
                                                tensor_shape_t( lShape, size_of( aValueIfTrue.Get<type_t>().mValue ) ) );
 
@@ -535,7 +535,7 @@ namespace SE::TensorOps
 
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aArray, aScaling } );
 
-        auto &lShape = lOperandData.mArray.Get<multi_tensor_value_t>().Shape().mShape;
+        auto &lShape = lOperandData.mArray.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aOutputType ) ) );
 
         lNewEntity.Add<graph_operation_t>().Bind<sToFixedPointOperationController>();
@@ -560,10 +560,10 @@ namespace SE::TensorOps
         vector_t<vector_t<uint32_t>> lOutputShape( lInputShape.CountLayers() );
         for( uint32_t i = 0; i < lInputShape.CountLayers(); i++ )
         {
-            lOutputShape[i] = vector_t<uint32_t>( lInputShape.mShape[i].size() + 1 );
-            for( uint32_t j = 0; j < lInputShape.mShape[i].size(); j++ )
+            lOutputShape[i] = vector_t<uint32_t>( lInputShape.Shape[i].size() + 1 );
+            for( uint32_t j = 0; j < lInputShape.Shape[i].size(); j++ )
             {
-                lOutputShape[i][j] = lInputShape.mShape[i][j];
+                lOutputShape[i][j] = lInputShape.Shape[i][j];
             }
             lOutputShape[i][lOutputShape[i].size() - 1] = lRepetitions[i];
         }
@@ -591,14 +591,14 @@ namespace SE::TensorOps
         vector_t<vector_t<uint32_t>> lOutputShape( lInputShape.CountLayers() );
         for( uint32_t i = 0; i < lInputShape.CountLayers(); i++ )
         {
-            lOutputShape[i]                             = vector_t<uint32_t>( lInputShape.mShape[i].size() + 1 );
+            lOutputShape[i]                             = vector_t<uint32_t>( lInputShape.Shape[i].size() + 1 );
             lOutputShape[i][lOutputShape[i].size() - 1] = lRepetitions[i];
 
             lOutputShape[i][0] = lRepetitions[i];
 
-            for( uint32_t j = 0; j < lInputShape.mShape[i].size(); j++ )
+            for( uint32_t j = 0; j < lInputShape.Shape[i].size(); j++ )
             {
-                lOutputShape[i][j + 1] = lInputShape.mShape[i][j];
+                lOutputShape[i][j + 1] = lInputShape.Shape[i][j];
             }
         }
 
@@ -667,11 +667,11 @@ namespace SE::TensorOps
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aLeft, aRight, aSubdivisions } );
 
         auto                         lSubdivisions = aSubdivisions.Get<u32_vector_t>().mValue;
-        vector_t<vector_t<uint32_t>> lOutputShape( aLeft.Get<multi_tensor_value_t>().Shape().mShape.size() );
+        vector_t<vector_t<uint32_t>> lOutputShape( aLeft.Get<multi_tensor_value_t>().Shape().Shape.size() );
 
-        for( uint32_t i = 0; i < aLeft.Get<multi_tensor_value_t>().Shape().mShape.size(); i++ )
+        for( uint32_t i = 0; i < aLeft.Get<multi_tensor_value_t>().Shape().Shape.size(); i++ )
         {
-            lOutputShape[i] = aLeft.Get<multi_tensor_value_t>().Shape().mShape[i];
+            lOutputShape[i] = aLeft.Get<multi_tensor_value_t>().Shape().Shape[i];
             lOutputShape[i].push_back( lSubdivisions[i] );
         }
 
@@ -745,20 +745,20 @@ namespace SE::TensorOps
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aArray } );
 
         auto &lInputShape = aArray.Get<multi_tensor_value_t>().Shape();
-        for( uint32_t i = 0; i < lInputShape.mShape.size(); i++ )
+        for( uint32_t i = 0; i < lInputShape.Shape.size(); i++ )
         {
-            if( lInputShape.mShape[i] != lInputShape.mShape[0] )
+            if( lInputShape.Shape[i] != lInputShape.Shape[0] )
                 throw std::runtime_error( "All dimensions should be equal" );
         }
 
-        vector_t<uint32_t> lOutputDimension( lInputShape.mRank + 1 );
+        vector_t<uint32_t> lOutputDimension( lInputShape.Rank + 1 );
         lOutputDimension[0] = lInputShape.CountLayers();
-        std::copy( lInputShape.mShape[0].begin(), lInputShape.mShape[0].end(), lOutputDimension.begin() + 1 );
+        std::copy( lInputShape.Shape[0].begin(), lInputShape.Shape[0].end(), lOutputDimension.begin() + 1 );
 
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<multi_tensor_value_t>(
             aScope.mPool, aArray.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(),
-            tensor_shape_t( vector_t<vector_t<uint32_t>>{ lOutputDimension }, static_cast<size_t>( lInputShape.mElementSize ) ) );
+            tensor_shape_t( vector_t<vector_t<uint32_t>>{ lOutputDimension }, static_cast<size_t>( lInputShape.ElementSize ) ) );
 
         return lNewEntity;
     }
@@ -774,17 +774,17 @@ namespace SE::TensorOps
 
         assert( lInputShape.CountLayers() == 1 );
 
-        vector_t<vector_t<uint32_t>> lOutputShape( lInputShape.mShape[0][0] );
+        vector_t<vector_t<uint32_t>> lOutputShape( lInputShape.Shape[0][0] );
 
         for( uint32_t i = 0; i < lOutputShape.size(); i++ )
         {
-            lOutputShape[i] = vector_t<uint32_t>( lInputShape.mRank - 1 );
-            std::copy( lInputShape.mShape[0].begin() + 1, lInputShape.mShape[0].end(), lOutputShape[i].begin() );
+            lOutputShape[i] = vector_t<uint32_t>( lInputShape.Rank - 1 );
+            std::copy( lInputShape.Shape[0].begin() + 1, lInputShape.Shape[0].end(), lOutputShape[i].begin() );
         }
 
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, aArray.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(),
-                                               tensor_shape_t( lOutputShape, static_cast<size_t>( lInputShape.mElementSize ) ) );
+                                               tensor_shape_t( lOutputShape, static_cast<size_t>( lInputShape.ElementSize ) ) );
 
         return lNewEntity;
     }
@@ -797,14 +797,14 @@ namespace SE::TensorOps
         auto &lInputShape = aArray.Get<multi_tensor_value_t>().Shape();
 
         assert( lInputShape.CountLayers() == aNewShape.CountLayers() );
-        assert( lInputShape.mElementSize == aNewShape.mElementSize );
+        assert( lInputShape.ElementSize == aNewShape.ElementSize );
 
         for( uint32_t i = 0; i < lInputShape.CountLayers(); i++ )
         {
             uint32_t lSize0 =
-                std::accumulate( lInputShape.mShape[i].begin(), lInputShape.mShape[i].end(), 1, std::multiplies<uint32_t>() );
+                std::accumulate( lInputShape.Shape[i].begin(), lInputShape.Shape[i].end(), 1, std::multiplies<uint32_t>() );
             uint32_t lSize1 =
-                std::accumulate( aNewShape.mShape[i].begin(), aNewShape.mShape[i].end(), 1, std::multiplies<uint32_t>() );
+                std::accumulate( aNewShape.Shape[i].begin(), aNewShape.Shape[i].end(), 1, std::multiplies<uint32_t>() );
 
             if( lSize0 != lSize1 )
                 throw std::runtime_error( "Incompatible dimensions" );
@@ -824,16 +824,16 @@ namespace SE::TensorOps
 
         auto &lInputShape = aArray.Get<multi_tensor_value_t>().Shape();
 
-        assert( lInputShape.mElementSize == aNewLayout.mElementSize );
+        assert( lInputShape.ElementSize == aNewLayout.ElementSize );
 
         uint32_t lInputSize = 0;
         for( uint32_t i = 0; i < lInputShape.CountLayers(); i++ )
             lInputSize +=
-                std::accumulate( lInputShape.mShape[i].begin(), lInputShape.mShape[i].end(), 1, std::multiplies<uint32_t>() );
+                std::accumulate( lInputShape.Shape[i].begin(), lInputShape.Shape[i].end(), 1, std::multiplies<uint32_t>() );
 
         uint32_t lOutputSize = 0;
         for( uint32_t i = 0; i < aNewLayout.CountLayers(); i++ )
-            lOutputSize += std::accumulate( aNewLayout.mShape[i].begin(), aNewLayout.mShape[i].end(), 1, std::multiplies<uint32_t>() );
+            lOutputSize += std::accumulate( aNewLayout.Shape[i].begin(), aNewLayout.Shape[i].end(), 1, std::multiplies<uint32_t>() );
 
         if( lInputSize != lOutputSize )
             throw std::runtime_error( "Incompatible dimensions" );
@@ -909,16 +909,16 @@ namespace SE::TensorOps
 
         for( uint32_t i = 0; i < lInputShape.CountLayers(); i++ )
         {
-            lOutputShape[i] = vector_t<uint32_t>( lInputShape.mShape[i].size() );
-            for( uint32_t j = 0; j < lInputShape.mShape[i].size() - 1; j++ )
+            lOutputShape[i] = vector_t<uint32_t>( lInputShape.Shape[i].size() );
+            for( uint32_t j = 0; j < lInputShape.Shape[i].size() - 1; j++ )
             {
-                lOutputShape[i][j] = lInputShape.mShape[i][j];
+                lOutputShape[i][j] = lInputShape.Shape[i][j];
             }
-            lOutputShape[i][lInputShape.mShape[i].size() - 1] = std::max( lEnd[i] - lBegin[i] + 1, static_cast<uint32_t>( 0 ) );
+            lOutputShape[i][lInputShape.Shape[i].size() - 1] = std::max( lEnd[i] - lBegin[i] + 1, static_cast<uint32_t>( 0 ) );
         }
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
@@ -937,7 +937,7 @@ namespace SE::TensorOps
         auto               lInputShape = aArray.Get<multi_tensor_value_t>().Shape();
         vector_t<uint32_t> lLastDimensions( lInputShape.CountLayers() );
         for( uint32_t i = 0; i < lInputShape.CountLayers(); i++ )
-            lLastDimensions[i] = lInputShape.mShape[i][lInputShape.mShape[i].size() - 1] - 1;
+            lLastDimensions[i] = lInputShape.Shape[i][lInputShape.Shape[i].size() - 1] - 1;
 
         auto lZero = ConstantScalarValue( aScope, static_cast<uint32_t>( 0 ) );
         auto lEnd  = VectorValue( aScope, lLastDimensions );
@@ -983,14 +983,14 @@ namespace SE::TensorOps
         lOutputShape.Trim( -1 );
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aArray, lOperandData.mBegin, lOperandData.mEnd,
                                                                    lOperandData.mBlockSizes, lOperandData.mElementCount } );
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool,
-                                               tensor_shape_t( lOutputShape.mShape, size_of( aArray.Get<type_t>().mValue ) ) );
+                                               tensor_shape_t( lOutputShape.Shape, size_of( aArray.Get<type_t>().mValue ) ) );
         lNewEntity.Add<graph_operation_t>().Bind<sArraySummationOperationController>();
 
         return lNewEntity;
@@ -1011,12 +1011,12 @@ namespace SE::TensorOps
         lOutputShape.Trim( -1 );
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape.mShape, size_of( scalar_type_t::UINT32 ) ) );
+        lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape.Shape, size_of( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<graph_operation_t>().Bind<sCountTrueOperationController>();
 
         return lNewEntity;
@@ -1038,12 +1038,12 @@ namespace SE::TensorOps
         lOutputShape.Trim( -1 );
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape.mShape, size_of( scalar_type_t::UINT32 ) ) );
+        lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape.Shape, size_of( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<graph_operation_t>().Bind<sCountZeroOperationController>();
 
         return lNewEntity;
@@ -1065,12 +1065,12 @@ namespace SE::TensorOps
         lOutputShape.Trim( -1 );
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         lNewEntity.Add<operand_t>( vector_t<graph_node_t>{ aArray, lOperandData.mBlockSizes, lOperandData.mElementCount } );
-        lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape.mShape, size_of( scalar_type_t::UINT32 ) ) );
+        lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lOutputShape.Shape, size_of( scalar_type_t::UINT32 ) ) );
         lNewEntity.Add<graph_operation_t>().Bind<sCountNonZeroOperationController>();
 
         return lNewEntity;
@@ -1091,7 +1091,7 @@ namespace SE::TensorOps
         auto lOutputShape = aArray.Get<multi_tensor_value_t>().Shape();
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
@@ -1120,7 +1120,7 @@ namespace SE::TensorOps
         auto lOutputShape = aArray.Get<multi_tensor_value_t>().Shape();
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize = lInputShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize = lInputShape.MaxDimensions[0];
         lOperandData.mBlockSizes   = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
@@ -1143,7 +1143,7 @@ namespace SE::TensorOps
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<floor_operation_t>( floor_operation_t{ aArray } );
 
-        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().mShape;
+        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aArray.Get<type_t>().mValue ) ) );
 
         lNewEntity.Add<graph_operation_t>().Bind<sFloorOperationController>();
@@ -1162,7 +1162,7 @@ namespace SE::TensorOps
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<ceiling_operation_t>( ceiling_operation_t{ aArray } );
 
-        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().mShape;
+        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aArray.Get<type_t>().mValue ) ) );
 
         lNewEntity.Add<graph_operation_t>().Bind<sCeilOperationController>();
@@ -1183,7 +1183,7 @@ namespace SE::TensorOps
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<abs_operation_t>( abs_operation_t{ aArray } );
 
-        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().mShape;
+        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aArray.Get<type_t>().mValue ) ) );
 
         lNewEntity.Add<graph_operation_t>().Bind<sAbsOperationController>();
@@ -1201,7 +1201,7 @@ namespace SE::TensorOps
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<sqrt_operation_t>( sqrt_operation_t{ aArray } );
 
-        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().mShape;
+        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aArray.Get<type_t>().mValue ) ) );
 
         lNewEntity.Add<graph_operation_t>().Bind<sSqrtOperationController>();
@@ -1219,7 +1219,7 @@ namespace SE::TensorOps
         lNewEntity.Add<type_t>( aArray.Get<type_t>() );
         lNewEntity.Add<round_operation_t>( round_operation_t{ aArray } );
 
-        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().mShape;
+        auto lShape = aArray.Get<multi_tensor_value_t>().Shape().Shape;
         lNewEntity.Add<multi_tensor_value_t>( aScope.mPool, tensor_shape_t( lShape, size_of( aArray.Get<type_t>().mValue ) ) );
 
         lNewEntity.Add<graph_operation_t>().Bind<sRoundOperationController>();
@@ -1243,15 +1243,15 @@ namespace SE::TensorOps
         auto lOutputShape = aArray0.Get<multi_tensor_value_t>().Shape();
 
         lInputShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize0    = lInputShape.mMaxDimensions[0];
-        lOperandData.mMaxElementCount0 = lInputShape.mMaxDimensions[lInputShape.mRank - 1];
+        lOperandData.mMaxBlockSize0    = lInputShape.MaxDimensions[0];
+        lOperandData.mMaxElementCount0 = lInputShape.MaxDimensions[lInputShape.Rank - 1];
         lOperandData.mBlockSizes0      = VectorValue( aScope, lInputShape.GetDimension( 0 ) );
         lOperandData.mElementCount0    = VectorValue( aScope, lInputShape.GetDimension( -1 ) );
 
         auto lKernelShape = aArray1.Get<multi_tensor_value_t>().Shape();
 
         lKernelShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize1 = lKernelShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize1 = lKernelShape.MaxDimensions[0];
         lOperandData.mBlockSizes1   = VectorValue( aScope, lKernelShape.GetDimension( 0 ) );
         lOperandData.mElementCount1 = VectorValue( aScope, lKernelShape.GetDimension( -1 ) );
 
@@ -1291,7 +1291,7 @@ namespace SE::TensorOps
 
         auto lBlockShape = aArray0.Get<multi_tensor_value_t>().Shape();
         lBlockShape.Flatten( -1 );
-        lOperandData.mMaxBlockSize  = lBlockShape.mMaxDimensions[0];
+        lOperandData.mMaxBlockSize  = lBlockShape.MaxDimensions[0];
         lOperandData.mBlockSizes    = VectorValue( aScope, lBlockShape.GetDimension( 0 ) );
         lOperandData.mElementCount0 = VectorValue( aScope, lInputShape0.GetDimension( -1 ) );
         lOperandData.mElementCount1 = VectorValue( aScope, lInputShape1.GetDimension( -1 ) );

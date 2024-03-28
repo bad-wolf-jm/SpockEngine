@@ -1049,10 +1049,10 @@ TEMPLATE_TEST_CASE( "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t,
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1400 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 700 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 200 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 1400 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 700 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 200 } );
 
     std::vector<TestType> lResultValues0 = lResult0.Get<multi_tensor_value_t>().mValue.FetchFlattened<TestType>();
     REQUIRE( lResultValues0 == lExpectedValues );
@@ -1668,7 +1668,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lBValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lA    = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1702,7 +1702,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lNodeX.Get<multi_tensor_value_t>().Shape().CountLayers(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lA    = lNodeA.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1746,7 +1746,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lB    = lNodeB.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1790,7 +1790,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -1834,7 +1834,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -1878,7 +1878,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lB    = lNodeB.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1923,7 +1923,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -1968,7 +1968,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<multi_tensor_value_t>().Shape().GetBufferSizeAs<float>( i ).Size;
             std::vector<float> lX    = lNodeX.Get<multi_tensor_value_t>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -2037,9 +2037,9 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto &lResult0 = LinearSpace( lScope, lNodeA, lNodeB, lNode_S );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 32 } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 64 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] == std::vector<uint32_t>{ 2, 2, 32 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1] == std::vector<uint32_t>{ 3, 4, 64 } );
     }
 
     SECTION( "Linear space (float)" )
@@ -2130,16 +2130,16 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
 
         auto lResult0 = ARange( lScope, lNodeA, lNodeB, lNode_D );
         REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 5 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 1 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[0] - lAValues[0] ) / lDValues[0] ) ) } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[1] - lAValues[1] ) / lDValues[1] ) ) } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[2] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[2] - lAValues[2] ) / lDValues[2] ) ) } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[3] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[3] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[3] - lAValues[3] ) / lDValues[3] ) ) } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[4] ==
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[4] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[4] - lAValues[4] ) / lDValues[4] ) ) } );
     }
 
@@ -2225,9 +2225,9 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto lResult0 = Repeat( lScope, lNodeA, lNode_S );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 3 } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 5 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] == std::vector<uint32_t>{ 2, 2, 3 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1] == std::vector<uint32_t>{ 3, 4, 5 } );
     }
 
     SECTION( "Repeat (float)" )
@@ -2311,9 +2311,9 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto lResult0 = Tile( lScope, lNodeA, lNode_S );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 3, 2, 2 } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 5, 3, 4 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] == std::vector<uint32_t>{ 3, 2, 2 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1] == std::vector<uint32_t>{ 5, 3, 4 } );
     }
 
     SECTION( "Tile (float)" )
@@ -2395,12 +2395,12 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             MultiTensorValue( lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == ( lDim1.size() - 1 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == ( lDim1.size() - 1 ) );
         REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == lDim1[0] );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[3] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[2] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[3] == std::vector<uint32_t>{ 23, 42 } );
     }
 
     SECTION( "Expanding multi-tensors does not change values" )
@@ -2445,9 +2445,9 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             lScope, lInitializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 3 );
         REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 1 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == std::vector<uint32_t>{ 4, 23, 42 } );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] == std::vector<uint32_t>{ 4, 23, 42 } );
     }
 
     SECTION( "Collapsing multi-tensors does not change values" )
@@ -2500,11 +2500,11 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Reshape( lScope, lNodeA, tensor_shape_t( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
         lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 3 );
         REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 3 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0] == lODim1 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1] == lODim2 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2] == lODim3 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0] == lODim1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1] == lODim2 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[2] == lODim3 );
     }
 
     SECTION( "Reshaping multi-tensors does not change values" )
@@ -2555,11 +2555,11 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto lResult0 = Flatten( lScope, lNodeA );
         lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mRank == 1 );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Rank == 1 );
         REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().CountLayers() == 3 );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[0][0] == Prod( lODim1 ) );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[1][0] == Prod( lODim2 ) );
-        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().mShape[2][0] == Prod( lODim3 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[0][0] == Prod( lODim1 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[1][0] == Prod( lODim2 ) );
+        REQUIRE( lResult0.Get<multi_tensor_value_t>().Shape().Shape[2][0] == Prod( lODim3 ) );
     }
 
     SECTION( "Flattening multi-tensors does not change values" )
@@ -3779,10 +3779,10 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart[0] + 1 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd[1] - lSliceStart[1] + 1 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd[2] - lSliceStart[2] + 1 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart[0] + 1 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd[1] - lSliceStart[1] + 1 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd[2] - lSliceStart[2] + 1 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -3857,10 +3857,10 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart + 1 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd[1] - lSliceStart + 1 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd[2] - lSliceStart + 1 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart + 1 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd[1] - lSliceStart + 1 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd[2] - lSliceStart + 1 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -3935,10 +3935,10 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart[0] + 1 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd - lSliceStart[1] + 1 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd - lSliceStart[2] + 1 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart[0] + 1 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd - lSliceStart[1] + 1 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd - lSliceStart[2] + 1 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4013,10 +4013,10 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart + 1 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd - lSliceStart + 1 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd - lSliceStart + 1 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart + 1 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, lSliceEnd - lSliceStart + 1 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, lSliceEnd - lSliceStart + 1 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4094,10 +4094,10 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4175,10 +4175,10 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4256,10 +4256,10 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4337,10 +4337,10 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4415,10 +4415,10 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4497,10 +4497,10 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4579,10 +4579,10 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4661,10 +4661,10 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 2 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5 } );
+    REQUIRE( lOutputShape.Rank == 2 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5 } );
 
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4894,10 +4894,10 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 256 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 512 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 256 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 512 } );
 
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -4973,10 +4973,10 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 256 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 512 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 256 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 512 } );
 
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -5058,10 +5058,10 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 256 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 512 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 256 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 512 } );
 
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -5180,10 +5180,10 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<int64_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<int64_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -5299,10 +5299,10 @@ TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -5410,10 +5410,10 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 + 34 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 + 42 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 + 5 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 + 34 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 + 42 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 + 5 } );
 
     std::vector<uint32_t> lExpectedValues =
         ConcatenateVectors( std::vector<std::vector<uint32_t>>{ lExpectedValues1, lExpectedValues2, lExpectedValues3 } );
@@ -5466,10 +5466,10 @@ TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -5526,10 +5526,10 @@ TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -5589,10 +5589,10 @@ TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<float> lExpectedValues0 = ConcatenateVectors( std::vector<std::vector<float>>{
         ConcatenateVectors( lExpectedValues01 ), ConcatenateVectors( lExpectedValues02 ), ConcatenateVectors( lExpectedValues03 ) } );
@@ -5654,10 +5654,10 @@ TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues0 = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues01 ), ConcatenateVectors( lExpectedValues02 ), ConcatenateVectors( lExpectedValues03 ) } );
@@ -5715,10 +5715,10 @@ TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<uint8_t> lExpectedValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -5774,10 +5774,10 @@ TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<uint8_t> lExpectedValues = ConcatenateVectors( std::vector<std::vector<uint8_t>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -5833,10 +5833,10 @@ TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -5892,10 +5892,10 @@ TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -5952,10 +5952,10 @@ TEMPLATE_TEST_CASE( "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uin
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues0 = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues1 ), ConcatenateVectors( lExpectedValues2 ), ConcatenateVectors( lExpectedValues3 ) } );
@@ -6019,10 +6019,10 @@ TEMPLATE_TEST_CASE( "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues00 = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues01 ), ConcatenateVectors( lExpectedValues02 ), ConcatenateVectors( lExpectedValues03 ) } );
@@ -6093,10 +6093,10 @@ TEMPLATE_TEST_CASE( "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uin
 
     auto lOutputShape = lResult0.Get<multi_tensor_value_t>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
-    REQUIRE( lOutputShape.mRank == 3 );
-    REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
-    REQUIRE( lOutputShape.mShape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
-    REQUIRE( lOutputShape.mShape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
+    REQUIRE( lOutputShape.Rank == 3 );
+    REQUIRE( lOutputShape.Shape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
+    REQUIRE( lOutputShape.Shape[1] == std::vector<uint32_t>{ 2, 7, 75 } );
+    REQUIRE( lOutputShape.Shape[2] == std::vector<uint32_t>{ 3, 5, 23 } );
 
     std::vector<TestType> lExpectedValues00 = ConcatenateVectors( std::vector<std::vector<TestType>>{
         ConcatenateVectors( lExpectedValues01 ), ConcatenateVectors( lExpectedValues02 ), ConcatenateVectors( lExpectedValues03 ) } );

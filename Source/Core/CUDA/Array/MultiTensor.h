@@ -85,7 +85,7 @@ namespace SE::Cuda
         {
             buffer_size_info_t bufferSize = _shape.GetBufferSizeAs<_Ty>( i );
 
-            return DataAs<_Ty>() + bufferSize.mOffset;
+            return DataAs<_Ty>() + bufferSize.Offset;
         }
 
         /// @brief Retrieve a view into the i-th layer
@@ -97,7 +97,7 @@ namespace SE::Cuda
         memory_buffer_t BufferAt( uint32_t i ) const
         {
             auto &bufferInfo = _shape.GetBufferSize( i );
-            return _memoryBuffer.View( bufferInfo.mSize, bufferInfo.mOffset );
+            return _memoryBuffer.View( bufferInfo.Size, bufferInfo.Offset );
         }
 
         /// @brief Fetch the contents of the i-th layer
@@ -115,7 +115,7 @@ namespace SE::Cuda
         {
             auto &bufferInfo = _shape.GetBufferSizeAs<_Tx>( i );
 
-            return _memoryBuffer.Fetch<_Tx>( bufferInfo.mOffset, bufferInfo.mSize );
+            return _memoryBuffer.Fetch<_Tx>( bufferInfo.Offset, bufferInfo.Size );
         }
 
         /// @brief Fetch the contents of the underlying buffer

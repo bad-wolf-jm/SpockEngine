@@ -33,7 +33,7 @@ namespace SE::TensorOps
         auto lElementType = Get<type_t>().mValue;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lValue.Shape().mShape )
+        for( const auto &lSub : lValue.Shape().Shape )
             lMaxSubdivisions = std::max( lMaxSubdivisions, lSub[0] );
 
         ARangeOp( lElementType, lValue, lLeft, lRight, lDelta, lMaxSubdivisions );

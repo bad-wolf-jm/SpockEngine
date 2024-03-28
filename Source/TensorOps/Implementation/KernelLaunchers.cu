@@ -46,7 +46,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void ConstantFillImpl( multi_tensor_t &aArray, scalar_value_t &constant )
     {
-        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -57,7 +57,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void ConstantFillImpl( multi_tensor_t &aArray, memory_buffer_t &initialValues )
     {
-        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -161,7 +161,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AddArrayToArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -185,7 +185,7 @@ namespace SE::TensorOps
     template <typename _ScalarType>
     static void AddScalarToArrayImpl( multi_tensor_t &out, multi_tensor_t &aArray, scalar_value_t &constant )
     {
-        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -196,7 +196,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AddArrayToVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -230,7 +230,7 @@ namespace SE::TensorOps
     template <typename _ScalarType>
     void MultiplyArrayByScalarImpl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -241,7 +241,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void MultiplyArrayByArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -265,7 +265,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void MultiplyArrayByVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -299,7 +299,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void SubtractArrayFromScalarImpl( multi_tensor_t &out, scalar_value_t &constant, multi_tensor_t &in )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -310,7 +310,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void SubtractScalarFromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -321,7 +321,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void SubtractVectorFromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -332,7 +332,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void SubtractArrayfromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -356,7 +356,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void SubtractArrayFromVectorImpl( multi_tensor_t &out, memory_buffer_t &constant, multi_tensor_t &in )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -400,7 +400,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void DivideArrayByScalarImpl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -411,7 +411,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void DivideScalarByArrayImpl( multi_tensor_t &out, scalar_value_t &constant, multi_tensor_t &in )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -422,7 +422,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void DivideArrayfromArrayImpl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -446,7 +446,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void DivideArrayByVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -457,7 +457,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void DivideVectorByArrayImpl( multi_tensor_t &out, memory_buffer_t &constant, multi_tensor_t &in )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -500,7 +500,7 @@ namespace SE::TensorOps
 
     void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -527,7 +527,7 @@ namespace SE::TensorOps
 
     void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -537,7 +537,7 @@ namespace SE::TensorOps
 
     void AndOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -552,7 +552,7 @@ namespace SE::TensorOps
 
     void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -567,7 +567,7 @@ namespace SE::TensorOps
 
     void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -589,7 +589,7 @@ namespace SE::TensorOps
 
     void OrOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -604,7 +604,7 @@ namespace SE::TensorOps
 
     void NotOp( scalar_type_t tensorElementType, multi_tensor_t &out, multi_tensor_t &aOperand )
     {
-        int blockCount = ( aOperand.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aOperand.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aOperand.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -615,7 +615,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseAnd_Tensor_Scalar_Impl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -657,7 +657,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseAnd_Tensor_Tensor_Impl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -673,7 +673,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseAnd_Tensor_Vector_Impl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -694,7 +694,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseOr_Tensor_Scalar_Impl( multi_tensor_t &out, multi_tensor_t &in, scalar_value_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -715,7 +715,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseOr_Tensor_Tensor_Impl( multi_tensor_t &out, multi_tensor_t &in, multi_tensor_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -752,7 +752,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseOrTensorVectorImpl( multi_tensor_t &out, multi_tensor_t &in, memory_buffer_t &constant )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -773,7 +773,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void BitwiseNotTensorImpl( multi_tensor_t &out, multi_tensor_t &in )
     {
-        int blockCount = ( in.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( in.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( in.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -789,7 +789,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -826,7 +826,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -842,7 +842,7 @@ namespace SE::TensorOps
     template <typename _ScalarType>
     static void EqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -858,7 +858,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void EqualOpImpl( multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -874,7 +874,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void EqualOpImpl( multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -890,7 +890,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -927,7 +927,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -943,7 +943,7 @@ namespace SE::TensorOps
     template <typename _ScalarType>
     static void LessThanOpImpl( multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -959,7 +959,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOpImpl( multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -975,7 +975,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOpImpl( multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -991,7 +991,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1028,7 +1028,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, memory_buffer_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1044,7 +1044,7 @@ namespace SE::TensorOps
     template <typename _ScalarType>
     static void LessThanOrEqualOpImpl( multi_tensor_t &out, multi_tensor_t &left, scalar_value_t &right )
     {
-        int blockCount = ( left.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( left.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( left.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1060,7 +1060,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOrEqualOpImpl( multi_tensor_t &out, memory_buffer_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1076,7 +1076,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void LessThanOrEqualOpImpl( multi_tensor_t &out, scalar_value_t &left, multi_tensor_t &right )
     {
-        int blockCount = ( right.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( right.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( right.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1093,7 +1093,7 @@ namespace SE::TensorOps
     static void InIntervalTensorTensorImpl( multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower, multi_tensor_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1111,7 +1111,7 @@ namespace SE::TensorOps
     static void InIntervalTensorVectorImpl( multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower, memory_buffer_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1129,7 +1129,7 @@ namespace SE::TensorOps
     static void InIntervalTensorScalarImpl( multi_tensor_t &out, multi_tensor_t &aX, multi_tensor_t &aLower, scalar_value_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1147,7 +1147,7 @@ namespace SE::TensorOps
     static void InIntervalVectorTensorImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower, multi_tensor_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1165,7 +1165,7 @@ namespace SE::TensorOps
     static void InIntervalVectorVectorImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower, memory_buffer_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1183,7 +1183,7 @@ namespace SE::TensorOps
     static void InIntervalVectorScalarImpl( multi_tensor_t &out, multi_tensor_t &aX, memory_buffer_t &aLower, scalar_value_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1201,7 +1201,7 @@ namespace SE::TensorOps
     static void InIntervalScalarTensorImpl( multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower, multi_tensor_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1219,7 +1219,7 @@ namespace SE::TensorOps
     static void InIntervalScalarVectorImpl( multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower, memory_buffer_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1237,7 +1237,7 @@ namespace SE::TensorOps
     static void InIntervalScalarScalarImpl( multi_tensor_t &out, multi_tensor_t &aX, scalar_value_t &aLower, scalar_value_t &aUpper,
                                             bool aStrictLower, bool aStrictUpper )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1256,7 +1256,7 @@ namespace SE::TensorOps
     static void WhereOpTensorTensorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                                          multi_tensor_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1274,7 +1274,7 @@ namespace SE::TensorOps
     static void WhereTensorVectorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                                        memory_buffer_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1292,7 +1292,7 @@ namespace SE::TensorOps
     static void WhereTensorScalarImpl( multi_tensor_t &out, multi_tensor_t &aCondition, multi_tensor_t &aValueIfTrue,
                                        scalar_value_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1310,7 +1310,7 @@ namespace SE::TensorOps
     static void WhereVectorTensorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                                        multi_tensor_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1327,7 +1327,7 @@ namespace SE::TensorOps
     static void WhereVectorVectorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                                        memory_buffer_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1345,7 +1345,7 @@ namespace SE::TensorOps
     static void WhereVectorScalarImpl( multi_tensor_t &out, multi_tensor_t &aCondition, memory_buffer_t &aValueIfTrue,
                                        scalar_value_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1363,7 +1363,7 @@ namespace SE::TensorOps
     static void WhereScalarTensorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                                        multi_tensor_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1381,7 +1381,7 @@ namespace SE::TensorOps
     static void WhereScalarVectorImpl( multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                                        memory_buffer_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1399,7 +1399,7 @@ namespace SE::TensorOps
     static void WhereScalarScalarImpl( multi_tensor_t &out, multi_tensor_t &aCondition, scalar_value_t &aValueIfTrue,
                                        scalar_value_t &aValueIfFalse )
     {
-        int blockCount = ( aCondition.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aCondition.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aCondition.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1419,7 +1419,7 @@ namespace SE::TensorOps
     {
         int blockCount = ( lMaxRepetitions / Private::ThreadsPerBlock ) + 1;
 
-        dim3 gridDim( aArray.Shape().CountLayers(), aArray.Shape().mMaxBufferSize, blockCount );
+        dim3 gridDim( aArray.Shape().CountLayers(), aArray.Shape().MaxBufferSize, blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
 
         Kernels::Repeat<_Ty><<<gridDim, blockDim>>>( out, aArray, aRepetitions );
@@ -1434,7 +1434,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void TileOpImpl( multi_tensor_t &out, multi_tensor_t &aArray, memory_buffer_t &aRepetitions, uint32_t lMaxRepetitions )
     {
-        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aArray.Shape().CountLayers(), lMaxRepetitions, blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1454,7 +1454,7 @@ namespace SE::TensorOps
     {
         int blockCount = ( aMaxSubdivisions / Private::ThreadsPerBlock ) + 1;
 
-        dim3 gridDim( left.Shape().CountLayers(), left.Shape().mMaxBufferSize, blockCount );
+        dim3 gridDim( left.Shape().CountLayers(), left.Shape().MaxBufferSize, blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
 
         Kernels::LinearSpace<_Ty><<<gridDim, blockDim>>>( out, left, right, aSubdivisions );
@@ -1483,7 +1483,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void MixImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &B, multi_tensor_t &t )
     {
-        int blockCount = ( A.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( A.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( A.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1498,7 +1498,7 @@ namespace SE::TensorOps
 
     void Sample2DOp( multi_tensor_t &out, multi_tensor_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1508,7 +1508,7 @@ namespace SE::TensorOps
 
     void Sample2DOp( multi_tensor_t &out, multi_tensor_t &X, memory_buffer_t &Y, memory_buffer_t &aTextures )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1518,7 +1518,7 @@ namespace SE::TensorOps
 
     void Sample2DOp( multi_tensor_t &out, multi_tensor_t &X, scalar_value_t &Y, memory_buffer_t &aTextures )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1528,7 +1528,7 @@ namespace SE::TensorOps
 
     void Sample2DOp( multi_tensor_t &out, memory_buffer_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
     {
-        int blockCount = ( Y.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( Y.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( Y.Shape().CountLayers(), blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1538,7 +1538,7 @@ namespace SE::TensorOps
 
     void Sample2DOp( multi_tensor_t &out, scalar_value_t &X, multi_tensor_t &Y, memory_buffer_t &aTextures )
     {
-        int blockCount = ( Y.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( Y.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( Y.Shape().CountLayers(), blockCount );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1549,7 +1549,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void ToFixedPointOpImpl( multi_tensor_t &out, scalar_type_t outputElementType, multi_tensor_t &aArray, _Ty aScaling )
     {
-        int blockCount = ( aArray.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aArray.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aArray.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1624,7 +1624,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X, multi_tensor_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1635,7 +1635,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X, memory_buffer_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1646,7 +1646,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, multi_tensor_t &A, multi_tensor_t &X, scalar_value_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1657,7 +1657,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X, multi_tensor_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1668,7 +1668,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X, memory_buffer_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1679,7 +1679,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, memory_buffer_t &A, multi_tensor_t &X, scalar_value_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1690,7 +1690,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X, multi_tensor_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1701,7 +1701,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X, memory_buffer_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1712,7 +1712,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     static void AffineTransformImpl( multi_tensor_t &out, scalar_value_t &A, multi_tensor_t &X, scalar_value_t &B )
     {
-        int blockCount = ( X.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( X.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( X.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1776,7 +1776,7 @@ namespace SE::TensorOps
 
     void FloorOp( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1786,7 +1786,7 @@ namespace SE::TensorOps
 
     void CeilOp( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1797,7 +1797,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void AbsImpl( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1813,7 +1813,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void SqrtImpl( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );
@@ -1829,7 +1829,7 @@ namespace SE::TensorOps
     template <typename _Ty>
     void RoundImpl( multi_tensor_t &out, multi_tensor_t &aX )
     {
-        int blockCount = ( aX.Shape().mMaxBufferSize / Private::ThreadsPerBlock ) + 1;
+        int blockCount = ( aX.Shape().MaxBufferSize / Private::ThreadsPerBlock ) + 1;
 
         dim3 gridDim( aX.Shape().CountLayers(), blockCount, 1 );
         dim3 blockDim( Private::ThreadsPerBlock );

@@ -332,7 +332,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim3{ 5, 1, 2 };
         multi_tensor_t           lTestTensor( lMemoryPool, tensor_shape_t( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) ) );
 
-        auto lMaxDimension = lTestTensor.Shape().mMaxDimensions;
+        auto lMaxDimension = lTestTensor.Shape().MaxDimensions;
         REQUIRE( lMaxDimension == std::vector<uint32_t>{ 5, 11, 7 } );
     }
 
@@ -350,7 +350,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2, 11, 3, 8, 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1, 2, 8, 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -364,7 +364,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2 * 11 * 3 * 8 * 2 * 3 };
             std::vector<uint32_t> lExpectedDim3{ 5 * 1 * 2 * 8 * 7 * 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -372,13 +372,13 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
         {
             tensor_shape_t lTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) );
-            lTensorShape.Flatten( lTensorShape.mRank );
+            lTensorShape.Flatten( lTensorShape.Rank );
 
             std::vector<uint32_t> lExpectedDim1{ 2 * 3 * 7 * 4 * 8 * 3 };
             std::vector<uint32_t> lExpectedDim2{ 2 * 11 * 3 * 8 * 2 * 3 };
             std::vector<uint32_t> lExpectedDim3{ 5 * 1 * 2 * 8 * 7 * 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -392,7 +392,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2 * 11, 3, 8, 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5 * 1, 2, 8, 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -406,7 +406,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2 * 11 * 3, 8, 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5 * 1 * 2, 8, 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -420,7 +420,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2 * 11 * 3 * 8 * 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5 * 1 * 2 * 8 * 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -434,7 +434,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2 * 11 * 3 * 8, 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5 * 1 * 2 * 8, 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -455,7 +455,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2 };
             std::vector<uint32_t> lExpectedDim3{ 5 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -469,7 +469,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2, 11, 3, 8, 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1, 2, 8, 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -477,13 +477,13 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
         {
             tensor_shape_t lTensorShape( { lDim1, lDim2, lDim3 }, sizeof( math::vec3 ) );
-            lTensorShape.Trim( lTensorShape.mRank );
+            lTensorShape.Trim( lTensorShape.Rank );
 
             std::vector<uint32_t> lExpectedDim1{ 2, 3, 7, 4, 8, 3 };
             std::vector<uint32_t> lExpectedDim2{ 2, 11, 3, 8, 2, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1, 2, 8, 7, 6 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -497,7 +497,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2, 11 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -511,7 +511,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2, 11, 3 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1, 2 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -525,7 +525,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2, 11, 3, 8, 2 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1, 2, 8, 7 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
@@ -539,7 +539,7 @@ TEST_CASE( "MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             std::vector<uint32_t> lExpectedDim2{ 2, 11, 3, 8 };
             std::vector<uint32_t> lExpectedDim3{ 5, 1, 2, 8 };
 
-            REQUIRE( lTensorShape.mRank == lExpectedDim1.size() );
+            REQUIRE( lTensorShape.Rank == lExpectedDim1.size() );
             REQUIRE( lTensorShape.GetShapeForLayer( 0 ) == lExpectedDim1 );
             REQUIRE( lTensorShape.GetShapeForLayer( 1 ) == lExpectedDim2 );
             REQUIRE( lTensorShape.GetShapeForLayer( 2 ) == lExpectedDim3 );
