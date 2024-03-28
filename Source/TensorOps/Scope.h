@@ -38,19 +38,19 @@ namespace SE::TensorOps
         /// @brief Copy constructor
         scope_t( const scope_t & ) = default;
 
-        /// @brief Create a scope, and reserves `aMemorySize` butes of GPU memory for it
+        /// @brief Create a scope, and reserves `memorySize` butes of GPU memory for it
         ///
-        /// @param aMemorySize Size, in bytes, of the underlying memory pool
+        /// @param memorySize Size, in bytes, of the underlying memory pool
         ///
-        scope_t( uint32_t aMemorySize );
+        scope_t( uint32_t memorySize );
 
-        /// @brief Set `aName` to be the name of the next node
+        /// @brief Set `name` to be the name of the next node
         ///
-        /// @param aName REquested name
+        /// @param name REquested name
         ///
         /// @returns The parent scope for method chaining/
         ///
-        scope_t &WithOpName( const string_t &aName );
+        scope_t &WithOpName( const string_t &name );
 
         /// @brief Create a node in the database
         ///
@@ -62,475 +62,477 @@ namespace SE::TensorOps
         graph_node_t CreateNode();
 
         /// @brief Retrieve a node by name
-        graph_node_t operator[]( string_t const &aNodeName );
+        graph_node_t operator[]( string_t const &nodeName );
 
         /// @brief Clears the node registry, and resets the memory pool
         void Reset();
 
         /// @brief Overloaded method provided for convenience.
-        void Run( graph_node_t const &aNode );
+        void Run( graph_node_t const &node );
 
         /// @brief Run a given list of nodes
         ///
         /// This implies running all nodes used as inputs for the nodes to run.
         ///
-        void Run( vector_t<graph_node_t> const &aNode );
+        void Run( vector_t<graph_node_t> const &node );
 
         /// @brief Access the underlying nodes registry
         SE::Core::entity_registry_t &GetNodesRegistry()
         {
-            return mNodesRegistry;
+            return _nodesRegistry;
         };
 
       private:
-        SE::Core::entity_registry_t mNodesRegistry{};     //!< Underlying node database
-        std::optional<string_t> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
-        std::unordered_map<string_t, graph_node_t> mNamedNodes = {}; //!< Mapping of node names to OpNodes
+        SE::Core::entity_registry_t _nodesRegistry{};     //!< Underlying node database
+        std::optional<string_t>     _name = std::nullopt; //!< If this is set, the next node will be stored under the given value
+        std::unordered_map<string_t, graph_node_t> _namedNodes = {}; //!< Mapping of node names to OpNodes
     };
 
     /// @brief Create a constant @ref MultiTensor initialized with the given constant
     ///
-    /// @param aScope computation scope
-    /// @param aInitializer Initialization method to use
-    /// @param aShape Shape pf the tensor
+    /// @param scope computation scope
+    /// @param initializer Initialization method to use
+    /// @param shape Shape pf the tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, constant_value_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &scope, constant_value_initializer_t const &initializer,
+                                   Cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given vector of values
     ///
-    /// The length of `aInitializer` should match the number of layers defined in `aShape`. Each layer of the tensor
-    /// is initialized with the corresponding value in `aInitializer`.
+    /// The length of `initializer` should match the number of layers defined in `shape`. Each layer of the tensor
+    /// is initialized with the corresponding value in `initializer`.
     ///
-    /// @param aScope computation scope
-    /// @param aInitializer Initialization method to use
-    /// @param aShape Shape pf the tensor
+    /// @param scope computation scope
+    /// @param initializer Initialization method to use
+    /// @param shape Shape pf the tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, vector_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &scope, vector_initializer_t const &initializer, Cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given data
     ///
-    /// The length of `aInitializer` should match the number of elements defined in `aShape`.
+    /// The length of `initializer` should match the number of elements defined in `shape`.
     ///
-    /// @param aScope computation scope
-    /// @param aInitializer Initialization method to use
-    /// @param aShape Shape pf the tensor
+    /// @param scope computation scope
+    /// @param initializer Initialization method to use
+    /// @param shape Shape pf the tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, data_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &scope, data_initializer_t const &initializer, Cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with uniformly distributed random values
     ///
-    /// @param aScope computation scope
-    /// @param aInitializer Initialization method to use
-    /// @param aShape Shape pf the tensor
+    /// @param scope computation scope
+    /// @param initializer Initialization method to use
+    /// @param shape Shape pf the tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, random_uniform_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &scope, random_uniform_initializer_t const &initializer,
+                                   Cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with normally distributed random values
     ///
-    /// @param aScope computation scope
-    /// @param aInitializer Initialization method to use
-    /// @param aShape Shape pf the tensor
+    /// @param scope computation scope
+    /// @param initializer Initialization method to use
+    /// @param shape Shape pf the tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &aScope, random_normal_initializer_t const &aInitializer, Cuda::tensor_shape_t const &aShape );
+    graph_node_t MultiTensorValue( scope_t &scope, random_normal_initializer_t const &initializer, Cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MemoryBuffer initialized with the given vector
     ///
     /// @tparam _Ty Type of the elements
     ///
-    /// @param aScope computation scope
-    /// @param aValue Vector of values to upload to the GPU upon running the node
+    /// @param scope computation scope
+    /// @param value Vector of values to upload to the GPU upon running the node
     ///
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    graph_node_t VectorValue( scope_t &aScope, vector_t<_Ty> const &aValue )
+    graph_node_t VectorValue( scope_t &scope, vector_t<_Ty> const &value )
     {
-        auto l_NewEntity = aScope.CreateNode();
+        auto newEntity = scope.CreateNode();
 
-        auto &l_Value  = l_NewEntity.Add<vector_value_t<_Ty>>();
-        l_Value.mValue = aValue;
+        auto &valueComponent  = newEntity.Add<vector_value_t<_Ty>>();
+        valueComponent.mValue = value;
 
-        auto &l_Buffer = l_NewEntity.Add<vector_buffer_t>();
-        l_Buffer.mSize = aValue.size() * sizeof( _Ty );
+        auto &buffer = newEntity.Add<vector_buffer_t>();
+        buffer.mSize = value.size() * sizeof( _Ty );
 
         if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
-            l_NewEntity.Add<type_t>( type_of( aValue[0] ) );
+            newEntity.Add<type_t>( type_of( value[0] ) );
         }
 
-        l_NewEntity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
+        newEntity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
 
-        return l_NewEntity;
+        return newEntity;
     }
 
     /// @brief Create a constant @ref MemoryBuffer of ScalarValues initialized with the given vector
     ///
     /// @tparam _Ty Type of the elements
     ///
-    /// @param aScope computation scope
-    /// @param aValue Vector of values to upload to the GPU upon running the node
+    /// @param scope computation scope
+    /// @param value Vector of values to upload to the GPU upon running the node
     ///
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    graph_node_t ScalarVectorValue( scope_t &aScope, scalar_type_t aType, vector_t<_Ty> const &aValue )
+    graph_node_t ScalarVectorValue( scope_t &scope, scalar_type_t type, vector_t<_Ty> const &value )
     {
-        uint32_t                 lSize = aValue.size();
-        vector_t<scalar_value_t> lValues( lSize );
-        for( uint32_t i = 0; i < lSize; i++ )
+        uint32_t                 size = value.size();
+        vector_t<scalar_value_t> values( size );
+        for( uint32_t i = 0; i < size; i++ )
         {
-            lValues[i] = aValue[i];
+            values[i] = value[i];
         }
-        return VectorValue( aScope, lValues );
+        return VectorValue( scope, values );
     }
 
     /// @brief Create a scalar initialized with the given value.
     ///
     /// @tparam _Ty Type of the elements
     ///
-    /// @param aScope computation scope
-    /// @param aValue Value to upload to the GPU upon running the node
+    /// @param scope computation scope
+    /// @param value Value to upload to the GPU upon running the node
     ///
     /// @return The newly created computation node
     ///
     template <typename _Ty>
-    graph_node_t ConstantScalarValue( scope_t &aScope, _Ty const &aValue )
+    graph_node_t ConstantScalarValue( scope_t &scope, _Ty const &value )
     {
-        auto l_NewEntity = aScope.CreateNode();
+        auto newEntity = scope.CreateNode();
 
-        auto &l_Value  = l_NewEntity.Add<scalar_node_t>();
-        l_Value.mValue = aValue;
+        auto &valueComponent  = newEntity.Add<scalar_node_t>();
+        valueComponent.mValue = value;
 
-        l_NewEntity.Add<type_t>( type_of( l_Value.mValue ) );
+        newEntity.Add<type_t>( type_of( valueComponent.mValue ) );
 
-        return l_NewEntity;
+        return newEntity;
     }
 
     /// @brief Adds the outputs of two nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Add( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t Add( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Subtracts the outputs of two nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Subtract( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t Subtract( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Divides the outputs of two nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Divide( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t Divide( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Multiplies the outputs of two nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Multiply( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t Multiply( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Conjunction of two boolean (uint8_t) nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t And( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t And( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Disjunction of two boolean (uint8_t) nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Or( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t Or( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Negation of two boolean (uint8_t) nodes
     ///
-    /// The parameter `aOperand` should be a @ref MultiTensor node. The dimension of the output tensor is the
+    /// The parameter `operand` should be a @ref MultiTensor node. The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aOperand Operand
+    /// @param scope Computation scope
+    /// @param operand Operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Not( scope_t &aScope, graph_node_t const &aOperand );
+    graph_node_t Not( scope_t &scope, graph_node_t const &operand );
 
     /// @brief Bitwise conjunction of two integer nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t BitwiseAnd( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t BitwiseAnd( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Bitwise disjunction of two integer nodes
     ///
-    /// At least one of `aLeft` and `aRight` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `left` and `right` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aLeft Left operand
-    /// @param aRight Right operand
+    /// @param scope Computation scope
+    /// @param left Left operand
+    /// @param right Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t BitwiseOr( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight );
+    graph_node_t BitwiseOr( scope_t &scope, graph_node_t const &left, graph_node_t const &right );
 
     /// @brief Bitwise negation of two integer nodes
     ///
-    /// The parameter `aOperand` should be a @ref MultiTensor node. The dimension of the output tensor is the
+    /// The parameter `operand` should be a @ref MultiTensor node. The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aOperand Operand
+    /// @param scope Computation scope
+    /// @param operand Operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t BitwiseNot( scope_t &aScope, graph_node_t const &aOperand );
+    graph_node_t BitwiseNot( scope_t &scope, graph_node_t const &operand );
 
     /// @brief Test whether the values contained in a tensor lie within an interval
     ///
-    /// The parameter `aX` should be a @ref MultiTensor node. The dimension of the output tensor is the
+    /// The parameter `x` should be a @ref MultiTensor node. The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aX Operand
-    /// @param aLower Lower bound for the interval
-    /// @param aUpper Upper bound for the interval
-    /// @param aStrictLower Use strict inequality for the lower bound
-    /// @param aStrictUpper Use strict inequality for the lower bound
+    /// @param scope Computation scope
+    /// @param x Operand
+    /// @param lower Lower bound for the interval
+    /// @param upper Upper bound for the interval
+    /// @param strictLower Use strict inequality for the lower bound
+    /// @param strictUpper Use strict inequality for the lower bound
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t InInterval( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aLower, graph_node_t const &aUpper, bool aStrictLower,
-                       bool aStrictUpper );
+    graph_node_t InInterval( scope_t &scope, graph_node_t const &x, graph_node_t const &lower, graph_node_t const &upper,
+                             bool strictLower, bool strictUpper );
 
     /// @brief Equality
     ///
-    /// At least one of `aX` and `aY` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `x` and `y` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aX Left operand
-    /// @param aY Right operand
+    /// @param scope Computation scope
+    /// @param x Left operand
+    /// @param y Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Equal( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
+    graph_node_t Equal( scope_t &scope, graph_node_t const &x, graph_node_t const &y );
 
     /// @brief Less than
     ///
-    /// At least one of `aX` and `aY` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `x` and `y` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aX Left operand
-    /// @param aY Right operand
+    /// @param scope Computation scope
+    /// @param x Left operand
+    /// @param y Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t LessThan( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
+    graph_node_t LessThan( scope_t &scope, graph_node_t const &x, graph_node_t const &y );
 
     /// @brief Less than or equal to
     ///
-    /// At least one of `aX` and `aY` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `x` and `y` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aX Left operand
-    /// @param aY Right operand
+    /// @param scope Computation scope
+    /// @param x Left operand
+    /// @param y Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t LessThanOrEqual( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
+    graph_node_t LessThanOrEqual( scope_t &scope, graph_node_t const &x, graph_node_t const &y );
 
     /// @brief Greater than
     ///
-    /// At least one of `aX` and `aY` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `x` and `y` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aX Left operand
-    /// @param aY Right operand
+    /// @param scope Computation scope
+    /// @param x Left operand
+    /// @param y Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t GreaterThan( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
+    graph_node_t GreaterThan( scope_t &scope, graph_node_t const &x, graph_node_t const &y );
 
     /// @brief Greater than or equal to
     ///
-    /// At least one of `aX` and `aY` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aLeft` and `aRight` is a vector, then its length should match
+    /// At least one of `x` and `y` should be a @ref MultiTensor nodes. If both operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `left` and `right` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
     /// same as that of the input.
     ///
-    /// @param aScope Computation scope
-    /// @param aX Left operand
-    /// @param aY Right operand
+    /// @param scope Computation scope
+    /// @param x Left operand
+    /// @param y Right operand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t GreaterThanOrEqual( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY );
+    graph_node_t GreaterThanOrEqual( scope_t &scope, graph_node_t const &x, graph_node_t const &y );
 
     /// @brief Choose values from one tensor or another based on a given condition
     ///
-    /// The parameter `aCondition` should be a @ref MultiTensor nodes. If all operands are @ref MultiTensors,
-    /// then they should have the same shape. If one of `aValueIfTrue` and `aValueIfFalse` is a vector, then its length should match
+    /// The parameter `condition` should be a @ref MultiTensor nodes. If all operands are @ref MultiTensors,
+    /// then they should have the same shape. If one of `valueIfTrue` and `valueIfFalse` is a vector, then its length should match
     /// the number of layers of the other operand (which has to be a tensor). The dimension of the output tensor is the
-    /// same as that of `aCondition`.
+    /// same as that of `condition`.
     ///
-    /// @param aScope Computation scope
-    /// @param aCondition Condition to test
-    /// @param aValueIfTrue Value to use if condition is true
-    /// @param aValueIfFalse Value to use if condition is false
+    /// @param scope Computation scope
+    /// @param condition Condition to test
+    /// @param valueIfTrue Value to use if condition is true
+    /// @param valueIfFalse Value to use if condition is false
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Where( scope_t &aScope, graph_node_t const &aCondition, graph_node_t const &aValueIfTrue, graph_node_t const &aValueIfFalse );
+    graph_node_t Where( scope_t &scope, graph_node_t const &condition, graph_node_t const &valueIfTrue,
+                        graph_node_t const &valueIfFalse );
 
     /// @brief Computes the pointwise mix of two tensors
     ///
-    /// All of `aA`, `aB` and `aT` should be @ref MultiTensors of the same shape and type. This function computes the tensor
-    /// @f$ (1-t)\cdot A + t\cdot B @f$, the shape of which is the same as the common shape of `aA`, `aB` and `aT`
+    /// All of `A`, `B` and `t` should be @ref MultiTensors of the same shape and type. This function computes the tensor
+    /// @f$ (1-t)\cdot A + t\cdot B @f$, the shape of which is the same as the common shape of `A`, `B` and `t`
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aA Input tensor
-    /// @param aB Input tensor
-    /// @param aT Input tensor
+    /// @param scope Parent computation scope
+    /// @param array Array to repeat
+    /// @param A Input tensor
+    /// @param B Input tensor
+    /// @param t Input tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Mix( scope_t &aScope, graph_node_t const &aA, graph_node_t const &aB, graph_node_t const &aT );
+    graph_node_t Mix( scope_t &scope, graph_node_t const &A, graph_node_t const &B, graph_node_t const &t );
 
     /// @brief Affine transforms
     ///
-    /// The parameter `aX` has to be a @ref MultiTensor. The other two parameters can be any vectors, or scalars. This node
-    /// computes the affine transformation @f$ a\cdot X+b @f$, the output of which has the same shape as `aX`. If either of
-    /// `aA` or `aB` is a @ref MultiTensor, then is should have the same shape as `aX`, and is either one is a vector, then
-    /// its length should match the number of layers of `aX`.
+    /// The parameter `x` has to be a @ref MultiTensor. The other two parameters can be any vectors, or scalars. This node
+    /// computes the affine transformation @f$ a\cdot X+b @f$, the output of which has the same shape as `x`. If either of
+    /// `A` or `B` is a @ref MultiTensor, then is should have the same shape as `x`, and is either one is a vector, then
+    /// its length should match the number of layers of `x`.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aA Input tensor
-    /// @param aB Input tensor
-    /// @param aT Input tensor
+    /// @param scope Parent computation scope
+    /// @param A Input tensor
+    /// @param B Input tensor
+    /// @param x Input tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t AffineTransform( scope_t &aScope, graph_node_t const &aA, graph_node_t const &aX, graph_node_t const &aB );
+    graph_node_t AffineTransform( scope_t &scope, graph_node_t const &A, graph_node_t const &x, graph_node_t const &B );
 
     /// @brief Computes a set of ranges of values with a regular step.
     ///
-    /// The two vectors contained in `aLeft` and `aRight` should have the same length and contain floating
+    /// The two vectors contained in `left` and `right` should have the same length and contain floating
     /// point values. This is roughly a generazed version of numpy's `np.arange`. The resulting output tensor
-    /// will have rank 1, with one layer for every element of `aLeft`. Each layer will have dimension
+    /// will have rank 1, with one layer for every element of `left`. Each layer will have dimension
     /// @f$ (R - L) / \Delta @f$
     ///
-    /// @param aScope Parent computation scope
-    /// @param aLeft Lower bounds
-    /// @param aRight Upper bounds
-    /// @param aDelta Range step
+    /// @param scope Parent computation scope
+    /// @param left Lower bounds
+    /// @param right Upper bounds
+    /// @param delta Range step
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t ARange( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight, graph_node_t const &aDelta );
+    graph_node_t ARange( scope_t &scope, graph_node_t const &left, graph_node_t const &right, graph_node_t const &delta );
 
     /// @brief Computes evenly spaced numbers in the intervals specified by two tensors
     ///
     /// Roughly equivalent to numpy's np.linspace. The two input tensors should have the same shape. The interval between them
-    /// is subdivided into `aRepetitions` many subintervals, where each element in `aRepetitions` is matched with the corresponding
+    /// is subdivided into `repetitions` many subintervals, where each element in `repetitions` is matched with the corresponding
     /// layer of the input tensors. If the input multi-tensor have rank @f$ N @f$ , then the output multi-tensor will have rank
     /// @f$ N+1 @f$. The last dimension of the output multi-tensor is the number of subdivisions.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aRepetitions Nummber of repetitions
+    /// @param scope Parent computation scope
+    /// @param array Array to repeat
+    /// @param repetitions Nummber of repetitions
     /// @param aOut Output tensor.
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t LinearSpace( scope_t &aScope, graph_node_t const &aLeft, graph_node_t const &aRight, graph_node_t const &aSubdivisions );
+    graph_node_t LinearSpace( scope_t &scope, graph_node_t const &left, graph_node_t const &right, graph_node_t const &subdivisions );
 
     /// @brief Repeat each element of a multi-tensor.
     ///
@@ -539,14 +541,14 @@ namespace SE::TensorOps
     /// far as dimension and rank are concerned, if the input multi-tensor has rank @f$ N @f$ , then, the repeated multi-tensor
     /// will have rank @f$ N+1 @f$. The last dimension of the output multi-tensor is the number of repetitions.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aRepetitions Nummber of repetitions
+    /// @param scope Parent computation scope
+    /// @param array Array to repeat
+    /// @param repetitions Nummber of repetitions
     /// @param aOut Output tensor.
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Repeat( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aRepetitions );
+    graph_node_t Repeat( scope_t &scope, graph_node_t const &array, graph_node_t const &repetitions );
 
     /// @brief Repeat each layer of a multi-tensor.
     ///
@@ -555,55 +557,55 @@ namespace SE::TensorOps
     /// concerned, if the input multi-tensor has rank @f$ N @f$ , then, the repeated multi-tensor will have rank @f$ N+1 @f$.
     /// The first dimension of the output multi-tensor is the number of repetitions.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aRepetitions Nummber of repetitions
+    /// @param scope Parent computation scope
+    /// @param array Array to repeat
+    /// @param repetitions Nummber of repetitions
     /// @param aOut Output tensor.
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Tile( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aRepetitions );
+    graph_node_t Tile( scope_t &scope, graph_node_t const &array, graph_node_t const &repetitions );
 
     /// @brief Texture sampling
     ///
-    /// Samples the textures in `aTextures` at the coordinates specified by `aX` and `aY`. The tensors `aX` and `aY`
-    /// should have the same shape, which will be the output shape. `aTextures` should represent a vector of
-    /// @ref sTextureData whose length matches the number of layers in the tensors `aX` and `aY`. Each layer of the
+    /// Samples the textures in `textures` at the coordinates specified by `x` and `y`. The tensors `x` and `y`
+    /// should have the same shape, which will be the output shape. `textures` should represent a vector of
+    /// @ref sTextureData whose length matches the number of layers in the tensors `x` and `y`. Each layer of the
     /// output will be sampled from the corresponding texture in `aTestures`
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aRepetitions Nummber of repetitions
+    /// @param scope Parent computation scope
+    /// @param array Array to repeat
+    /// @param repetitions Nummber of repetitions
     /// @param aOut Output tensor.
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Sample2D( scope_t &aScope, graph_node_t const &aX, graph_node_t const &aY, graph_node_t const &aTextures );
+    graph_node_t Sample2D( scope_t &scope, graph_node_t const &x, graph_node_t const &y, graph_node_t const &textures );
 
     /// @brief Fixed point conversion
     ///
     /// Converts a tensor of floating point numbers into a tensor of integers by multiplying each element by a scaling factor.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray Array to repeat
-    /// @param aRepetitions Nummber of repetitions
+    /// @param scope Parent computation scope
+    /// @param array Array to repeat
+    /// @param repetitions Nummber of repetitions
     /// @param aOut Output tensor.
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t ToFixedPoint( scope_t &aScope, scalar_type_t aOutputType, graph_node_t const &aArray, graph_node_t const &aScaling );
+    graph_node_t ToFixedPoint( scope_t &scope, scalar_type_t outputType, graph_node_t const &array, graph_node_t const &scaling );
 
     /// @brief Collapse a @ref MultiTensor into a @ref MultiTensor having only one layer
     ///
     /// The dimensions of each layer of the @ref MultiTensor should be equal. Furthermore, the memory area is shared between the
     /// input and the output multitensors, so that there is no actual copying involved.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to collapse
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to collapse
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Collapse( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Collapse( scope_t &scope, graph_node_t const &array );
 
     /// @brief Expand the first dimension of a @ref MultiTensor with only one layer into a multi-layered MultiTensor
     ///
@@ -611,12 +613,12 @@ namespace SE::TensorOps
     /// Furthermore, the memory area is shared between the input and the output multitensors, so that there is no actual copying
     /// involved.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to expand
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to expand
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Expand( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Expand( scope_t &scope, graph_node_t const &array );
 
     /// @brief Reshape the input @ref MultiTensor
     ///
@@ -624,218 +626,218 @@ namespace SE::TensorOps
     /// the old and new shapes should be compatible in having equal products, and equal element sizes. The memory is shared between
     /// the input and the output tensors, so that no copying is involved.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to reshape
-    /// @param aNewShape New shape for the output tensor
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to reshape
+    /// @param newShape New shape for the output tensor
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Reshape( scope_t &aScope, graph_node_t const &aArray, Cuda::tensor_shape_t &aNewShape );
+    graph_node_t Reshape( scope_t &scope, graph_node_t const &array, Cuda::tensor_shape_t &newShape );
 
     /// @brief Relayout the input @ref MultiTensor
     ///
     /// Applies a new layout to the input MultiTensor. The new layout should have the same size as the old layout.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to relayout
-    /// @param aNewLayout New layout
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to relayout
+    /// @param newLayout New layout
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Relayout( scope_t &aScope, graph_node_t const &aArray, tensor_shape_t &aNewLayout );
+    graph_node_t Relayout( scope_t &scope, graph_node_t const &array, tensor_shape_t &newLayout );
 
     /// @brief Flatten the input @ref MultiTensor
     ///
     /// The output multi-tensor will have the same number of layers as the input, but it will have rank 1, and the dimension of each
     /// layer will be the product of the corresponding layer in the input.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to flatten
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to flatten
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Flatten( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Flatten( scope_t &scope, graph_node_t const &array );
 
     /// @brief Slice the input @ref MultiTensor
     ///
-    /// The output multi-tensor will have the same number of layers as the input. The nodes `aBegin` and `aEnd` denote the start and
+    /// The output multi-tensor will have the same number of layers as the input. The nodes `begin` and `end` denote the start and
     /// end indices of the slice respectively, and should correspond to either a scalar value, or a vector whose entries are uint32_t.
-    /// Entries at `aBegin` and `aEnd` are included in the slice. For now, slicing a multi-tensor only acts on the last dimension.
+    /// Entries at `begin` and `end` are included in the slice. For now, slicing a multi-tensor only acts on the last dimension.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to slice
-    /// @param aBegin Lower bound
-    /// @param aEnd Upper bound
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to slice
+    /// @param begin Lower bound
+    /// @param end Upper bound
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Slice( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd );
+    graph_node_t Slice( scope_t &scope, graph_node_t const &array, graph_node_t const &begin, graph_node_t const &end );
 
     /// @brief Sum the last dimension of the input @ref MultiTensor
     ///
     /// The output multi-tensor will have the same number of layers as the input. For now, summing a multi-tensor only considers
     /// the last dimension.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to sum
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to sum
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Summation( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Summation( scope_t &scope, graph_node_t const &array );
 
     /// @brief Sum the last dimension of the input @ref MultiTensor
     ///
-    /// The output multi-tensor will have the same number of layers as the input. The nodes `aBegin` and `aEnd` denote the start and
+    /// The output multi-tensor will have the same number of layers as the input. The nodes `begin` and `end` denote the start and
     /// end indices of the sum respectively, and should correspond to either a scalar value, or a vector whose entries are uint32_t.
-    /// Entries at `aBegin` and `aEnd` are included in the sum. For now, summing a multi-tensor only considers the last dimension.
+    /// Entries at `begin` and `end` are included in the sum. For now, summing a multi-tensor only considers the last dimension.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to flatten
-    /// @param aBegin Lower bound
-    /// @param aEnd Upper bound
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to flatten
+    /// @param begin Lower bound
+    /// @param end Upper bound
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Summation( scope_t &aScope, graph_node_t const &aArray, graph_node_t const &aBegin, graph_node_t const &aEnd );
+    graph_node_t Summation( scope_t &scope, graph_node_t const &array, graph_node_t const &begin, graph_node_t const &end );
 
     /// @brief Count the number of `true` elements in the last dimension of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same number of layers as the input. For now, counting the true values in a multi-tensor
     /// only considers the last dimension.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t CountTrue( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t CountTrue( scope_t &scope, graph_node_t const &array );
 
     /// @brief Count the number of non-zero elements in the last dimension of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same number of layers as the input. For now, counting the non-zero values of a
     /// multi-tensor only considers the last dimension.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t CountNonZero( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t CountNonZero( scope_t &scope, graph_node_t const &array );
 
     /// @brief Count the number of zero elements in the last dimension of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same number of layers as the input. For now, counting the zero values of a multi-tensor
     /// only considers the last dimension.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t CountZero( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t CountZero( scope_t &scope, graph_node_t const &array );
 
     /// @brief Compute the pointwise floor of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Floor( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Floor( scope_t &scope, graph_node_t const &array );
 
     /// @brief Compute the pointwise ceiling of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Ceil( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Ceil( scope_t &scope, graph_node_t const &array );
 
     /// @brief Compute the pointwise absolute value of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Abs( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Abs( scope_t &scope, graph_node_t const &array );
 
     /// @brief Compute the pointwise square root value of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Sqrt( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Sqrt( scope_t &scope, graph_node_t const &array );
 
     /// @brief Compute the pointwise rounded value of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Round( scope_t &aScope, graph_node_t const &aArray );
+    graph_node_t Round( scope_t &scope, graph_node_t const &array );
 
     /// @brief Compute the iterated finite difference along the last dimension of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input. The final entries of the output
     /// tensor are set to 0
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
-    /// @param aCount Number of iterations
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
+    /// @param count Number of iterations
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Diff( scope_t &aScope, graph_node_t const &aArray, uint32_t aCount );
+    graph_node_t Diff( scope_t &scope, graph_node_t const &array, uint32_t count );
 
     /// @brief Compute the finite shift along the last dimension of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the input. The final entries of the output
-    /// tensor are set to aFillValue.
+    /// tensor are set to fillValue.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray MultiTensor to process
-    /// @param aCount Number of images to shift
-    /// @param aFillValue Value used to fill the missing positions
+    /// @param scope Parent computation scope
+    /// @param array MultiTensor to process
+    /// @param count Number of images to shift
+    /// @param fillValue Value used to fill the missing positions
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Shift( scope_t &aScope, graph_node_t const &aArray, int32_t aCount, graph_node_t const &aFillValue );
+    graph_node_t Shift( scope_t &scope, graph_node_t const &array, int32_t count, graph_node_t const &fillValue );
 
     /// @brief Compute the 1-dimensional convolution the last dimension of @ref MultiTensor
     ///
     /// The output multi-tensor will have the same dimension as the left.
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray0 MultiTensor to process
-    /// @param aArray1 Convolution kernel
+    /// @param scope Parent computation scope
+    /// @param array0 MultiTensor to process
+    /// @param array1 Convolution kernel
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Conv1D( scope_t &aScope, graph_node_t const &aArray0, graph_node_t const &aArray1 );
+    graph_node_t Conv1D( scope_t &scope, graph_node_t const &array0, graph_node_t const &array1 );
 
     /// @brief Concatenate the given @ref MultiTensors along the last dimension
     ///
-    /// @param aScope Parent computation scope
-    /// @param aArray0 MultiTensor to process
-    /// @param aArray1 MultiTensor to process
+    /// @param scope Parent computation scope
+    /// @param array0 MultiTensor to process
+    /// @param array1 MultiTensor to process
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t HCat( scope_t &aScope, graph_node_t const &aArray0, graph_node_t const &aArray1 );
+    graph_node_t HCat( scope_t &scope, graph_node_t const &array0, graph_node_t const &array1 );
 
 } // namespace SE::TensorOps
