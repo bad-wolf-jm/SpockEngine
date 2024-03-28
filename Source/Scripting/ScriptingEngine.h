@@ -7,7 +7,7 @@
 #include <string>
 
 #include "Cuda/Tensor.h"
-#include "Entities/EntityRegistry.h"
+// #include "Entities/EntityRegistry.h"
 #include "PrimitiveTypes.h"
 
 namespace fs = std::filesystem;

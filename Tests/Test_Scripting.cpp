@@ -495,338 +495,338 @@ TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
              mat3( mat4( vec4{ 1, 2, 3, 1 }, vec4{ 4, 5, 6, 2 }, vec4{ 7, 8, 9, 3 }, vec4{ 10, 11, 12, 4 } ) ) );
 }
 
-TEST_CASE( "LUA Create registry", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA Create registry", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = EntityCollection.Registry.new()" );
-    REQUIRE( true );
-}
+//     scriptingEngine.Execute( "value = EntityCollection.Registry.new()" );
+//     REQUIRE( true );
+// }
 
-TEST_CASE( "LUA Create entity", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA Create entity", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-entity1 = registry:create_entity("NAME")
-entity2 = registry:create_entity(entity0, "NAME_0")
-)" );
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    REQUIRE( lEntity0.IsValid() );
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// entity1 = registry:create_entity("NAME")
+// entity2 = registry:create_entity(entity0, "NAME_0")
+// )" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     REQUIRE( lEntity0.IsValid() );
 
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
-    REQUIRE( lEntity1.Has<tag_t>() );
-    REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME" );
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     REQUIRE( lEntity1.Has<tag_t>() );
+//     REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME" );
 
-    auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
-    REQUIRE( lEntity0.Has<relationship_compoment_t>() );
-    REQUIRE( lEntity2.Has<relationship_compoment_t>() );
-    REQUIRE( lEntity2.Has<tag_t>() );
-    REQUIRE( lEntity2.Get<tag_t>().mValue == "NAME_0" );
+//     auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
+//     REQUIRE( lEntity0.Has<relationship_compoment_t>() );
+//     REQUIRE( lEntity2.Has<relationship_compoment_t>() );
+//     REQUIRE( lEntity2.Has<tag_t>() );
+//     REQUIRE( lEntity2.Get<tag_t>().mValue == "NAME_0" );
 
-    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 1 );
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren[0] == lEntity2 );
-}
+//     REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 1 );
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren[0] == lEntity2 );
+// }
 
-TEST_CASE( "LUA create entity with relationship", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA create entity with relationship", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity_with_relationship()
-entity1 = registry:create_entity_with_relationship("NAME_0")
-)" );
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    REQUIRE( lEntity0.IsValid() );
-    REQUIRE( lEntity0.Has<relationship_compoment_t>() );
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity_with_relationship()
+// entity1 = registry:create_entity_with_relationship("NAME_0")
+// )" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     REQUIRE( lEntity0.IsValid() );
+//     REQUIRE( lEntity0.Has<relationship_compoment_t>() );
 
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
-    REQUIRE( lEntity1.IsValid() );
-    REQUIRE( lEntity1.Has<relationship_compoment_t>() );
-    REQUIRE( lEntity1.Has<tag_t>() );
-    REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME_0" );
-}
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     REQUIRE( lEntity1.IsValid() );
+//     REQUIRE( lEntity1.Has<relationship_compoment_t>() );
+//     REQUIRE( lEntity1.Has<tag_t>() );
+//     REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME_0" );
+// }
 
-TEST_CASE( "LUA Destroy entity", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA Destroy entity", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity("NAME")
-registry:destroy_entity(entity0)
-)" );
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    REQUIRE( !lEntity0.IsValid() );
-}
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity("NAME")
+// registry:destroy_entity(entity0)
+// )" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     REQUIRE( !lEntity0.IsValid() );
+// }
 
-TEST_CASE( "LUA set parent entity", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA set parent entity", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-entity1 = registry:create_entity()
-registry:set_parent(entity1, entity0)
-)" );
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// entity1 = registry:create_entity()
+// registry:set_parent(entity1, entity0)
+// )" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
 
-    REQUIRE( lEntity0.Has<relationship_compoment_t>() );
-    REQUIRE( lEntity1.Has<relationship_compoment_t>() );
+//     REQUIRE( lEntity0.Has<relationship_compoment_t>() );
+//     REQUIRE( lEntity1.Has<relationship_compoment_t>() );
 
-    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 1 );
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren[0] == lEntity1 );
-}
+//     REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 1 );
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren[0] == lEntity1 );
+// }
 
-TEST_CASE( "LUA Relationships", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-entity1 = registry:create_entity()
-entity2 = registry:create_entity()
-entity3 = registry:create_entity()
-registry:set_parent(entity1, entity0)
-registry:set_parent(entity2, entity0)
-registry:set_parent(entity3, entity0)
-)" );
+// TEST_CASE( "LUA Relationships", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// entity1 = registry:create_entity()
+// entity2 = registry:create_entity()
+// entity3 = registry:create_entity()
+// registry:set_parent(entity1, entity0)
+// registry:set_parent(entity2, entity0)
+// registry:set_parent(entity3, entity0)
+// )" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
-    auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
-    auto lEntity3 = scriptingEngine.Get<entity_t>( "entity3" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
+//     auto lEntity3 = scriptingEngine.Get<entity_t>( "entity3" );
 
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 3 );
-    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity3.Get<relationship_compoment_t>().mParent == lEntity0 );
-}
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 3 );
+//     REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity3.Get<relationship_compoment_t>().mParent == lEntity0 );
+// }
 
-TEST_CASE( "LUA Removing parent removes from siblings", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-entity1 = registry:create_entity()
-entity2 = registry:create_entity()
-entity3 = registry:create_entity()
-registry:set_parent(entity1, entity0)
-registry:set_parent(entity2, entity0)
-registry:set_parent(entity3, entity0)
-registry:set_parent(entity3, entity2)
-)" );
+// TEST_CASE( "LUA Removing parent removes from siblings", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// entity1 = registry:create_entity()
+// entity2 = registry:create_entity()
+// entity3 = registry:create_entity()
+// registry:set_parent(entity1, entity0)
+// registry:set_parent(entity2, entity0)
+// registry:set_parent(entity3, entity0)
+// registry:set_parent(entity3, entity2)
+// )" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
-    auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
-    auto lEntity3 = scriptingEngine.Get<entity_t>( "entity3" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
+//     auto lEntity3 = scriptingEngine.Get<entity_t>( "entity3" );
 
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 2 );
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 2 );
 
-    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity3.Get<relationship_compoment_t>().mParent == lEntity2 );
-}
+//     REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity3.Get<relationship_compoment_t>().mParent == lEntity2 );
+// }
 
-TEST_CASE( "LUA Ability to set parent to NULL", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-entity1 = registry:create_entity()
-entity2 = registry:create_entity()
-entity3 = registry:create_entity()
-registry:set_parent(entity1, entity0)
-registry:set_parent(entity2, entity0)
-registry:set_parent(entity3, entity0)
-registry:set_parent(entity3, EntityCollection.Entity.new())
-)" );
+// TEST_CASE( "LUA Ability to set parent to NULL", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// entity1 = registry:create_entity()
+// entity2 = registry:create_entity()
+// entity3 = registry:create_entity()
+// registry:set_parent(entity1, entity0)
+// registry:set_parent(entity2, entity0)
+// registry:set_parent(entity3, entity0)
+// registry:set_parent(entity3, EntityCollection.Entity.new())
+// )" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
-    auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
-    auto lEntity3 = scriptingEngine.Get<entity_t>( "entity3" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
+//     auto lEntity3 = scriptingEngine.Get<entity_t>( "entity3" );
 
-    REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 2 );
-    REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
-    REQUIRE( !( lEntity3.Get<relationship_compoment_t>().mParent ) );
-}
+//     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 2 );
+//     REQUIRE( lEntity1.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
+//     REQUIRE( !( lEntity3.Get<relationship_compoment_t>().mParent ) );
+// }
 
-struct ComponentA
-{
-    float a = 0.0f;
+// struct ComponentA
+// {
+//     float a = 0.0f;
 
-    ComponentA()                     = default;
-    ComponentA( const ComponentA & ) = default;
-};
+//     ComponentA()                     = default;
+//     ComponentA( const ComponentA & ) = default;
+// };
 
-TEST_CASE( "LUA add component", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA add component", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    auto x                   = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+//     auto x                   = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-entity0:add(dtypes.ComponentA())
-entity1 = registry:create_entity()
-entity1:add(dtypes.ComponentA(4.0))
-)" );
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    REQUIRE( lEntity0.Has<ComponentA>() );
-    REQUIRE( lEntity0.Get<ComponentA>().a == ComponentA{}.a );
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// entity0:add(dtypes.ComponentA())
+// entity1 = registry:create_entity()
+// entity1:add(dtypes.ComponentA(4.0))
+// )" );
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     REQUIRE( lEntity0.Has<ComponentA>() );
+//     REQUIRE( lEntity0.Get<ComponentA>().a == ComponentA{}.a );
 
-    auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
-    REQUIRE( lEntity1.Has<ComponentA>() );
-    REQUIRE( lEntity1.Get<ComponentA>().a == 4.0f );
-}
+//     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
+//     REQUIRE( lEntity1.Has<ComponentA>() );
+//     REQUIRE( lEntity1.Get<ComponentA>().a == 4.0f );
+// }
 
-TEST_CASE( "LUA remove component", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
-    auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+// TEST_CASE( "LUA remove component", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
+//     auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-)" );
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// )" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    lEntity0.Add<ComponentA>();
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     lEntity0.Add<ComponentA>();
 
-    scriptingEngine.Execute( "entity0:remove(dtypes.ComponentA)" );
+//     scriptingEngine.Execute( "entity0:remove(dtypes.ComponentA)" );
 
-    REQUIRE( !lEntity0.Has<ComponentA>() );
-}
+//     REQUIRE( !lEntity0.Has<ComponentA>() );
+// }
 
-TEST_CASE( "LUA replace component", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
-    auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+// TEST_CASE( "LUA replace component", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
+//     auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
-    scriptingEngine.Execute( R"(
-registry = EntityCollection.Registry.new()
-entity0 = registry:create_entity()
-)" );
+//     scriptingEngine.Execute( R"(
+// registry = EntityCollection.Registry.new()
+// entity0 = registry:create_entity()
+// )" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    lEntity0.Add<ComponentA>();
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     lEntity0.Add<ComponentA>();
 
-    scriptingEngine.Execute( "entity0:replace(dtypes.ComponentA(4.0))" );
+//     scriptingEngine.Execute( "entity0:replace(dtypes.ComponentA(4.0))" );
 
-    REQUIRE( lEntity0.Get<ComponentA>().a == 4.0f );
-}
+//     REQUIRE( lEntity0.Get<ComponentA>().a == 4.0f );
+// }
 
-TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
-{
-    entity_registry_t lRegistry{};
-    script_bindings   scriptingEngine{};
+// TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
+// {
+//     entity_registry_t lRegistry{};
+//     script_bindings   scriptingEngine{};
 
-    scriptingEngine.Define( "registry0", &lRegistry );
-    scriptingEngine.Execute( "entity0 = registry0:create_entity()" );
+//     scriptingEngine.Define( "registry0", &lRegistry );
+//     scriptingEngine.Execute( "entity0 = registry0:create_entity()" );
 
-    auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
-    REQUIRE( lEntity0.IsValid() );
-}
+//     auto lEntity0 = scriptingEngine.Get<entity_t>( "entity0" );
+//     REQUIRE( lEntity0.IsValid() );
+// }
 
-TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
-{
-    entity_registry_t lRegistry{};
-    auto              lEntity0 = lRegistry.CreateEntity();
+// TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
+// {
+//     entity_registry_t lRegistry{};
+//     auto              lEntity0 = lRegistry.CreateEntity();
 
-    script_bindings scriptingEngine{};
-    auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+//     script_bindings scriptingEngine{};
+//     auto            x        = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
-    scriptingEngine.Define( "registry0", &lRegistry ).Define( "entity0", lEntity0 );
-    scriptingEngine.Execute( "entity0:add(dtypes.ComponentA(4.0))" );
+//     scriptingEngine.Define( "registry0", &lRegistry ).Define( "entity0", lEntity0 );
+//     scriptingEngine.Execute( "entity0:add(dtypes.ComponentA(4.0))" );
 
-    REQUIRE( lEntity0.Has<ComponentA>() );
-    REQUIRE( lEntity0.Get<ComponentA>().a == 4.0 );
-}
+//     REQUIRE( lEntity0.Has<ComponentA>() );
+//     REQUIRE( lEntity0.Get<ComponentA>().a == 4.0 );
+// }
 
-TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
-{
-    entity_registry_t lRegistry{};
-    script_bindings   scriptingEngine{};
-    auto              x      = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
-    scriptingEngine.Define( "registry", &lRegistry );
+// TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
+// {
+//     entity_registry_t lRegistry{};
+//     script_bindings   scriptingEngine{};
+//     auto              x      = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+//     scriptingEngine.Define( "registry", &lRegistry );
 
-    bool lComponentAddedCalled = false;
-    lRegistry.OnComponentAdded<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentAddedCalled = true; } );
+//     bool lComponentAddedCalled = false;
+//     lRegistry.OnComponentAdded<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentAddedCalled = true; } );
 
-    scriptingEngine.Execute( "entity0 = registry:create_entity()" );
-    REQUIRE( !lComponentAddedCalled );
+//     scriptingEngine.Execute( "entity0 = registry:create_entity()" );
+//     REQUIRE( !lComponentAddedCalled );
 
-    scriptingEngine.Execute( "entity0:add(dtypes.ComponentA(3.0))" );
-    REQUIRE( lComponentAddedCalled );
-}
+//     scriptingEngine.Execute( "entity0:add(dtypes.ComponentA(3.0))" );
+//     REQUIRE( lComponentAddedCalled );
+// }
 
-TEST_CASE( "LUA OnComponentUpdated event", "[CORE_ENTITIES]" )
-{
-    entity_registry_t lRegistry{};
-    script_bindings   scriptingEngine{};
-    auto              x      = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
-    scriptingEngine.Define( "registry", &lRegistry );
+// TEST_CASE( "LUA OnComponentUpdated event", "[CORE_ENTITIES]" )
+// {
+//     entity_registry_t lRegistry{};
+//     script_bindings   scriptingEngine{};
+//     auto              x      = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+//     scriptingEngine.Define( "registry", &lRegistry );
 
-    bool lComponentUpdatedCalled = false;
-    lRegistry.OnComponentUpdated<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentUpdatedCalled = true; } );
+//     bool lComponentUpdatedCalled = false;
+//     lRegistry.OnComponentUpdated<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentUpdatedCalled = true; } );
 
-    scriptingEngine.Execute( R"(
-entity0 = registry:create_entity()
-entity0:add(dtypes.ComponentA())
-)" );
-    REQUIRE( !lComponentUpdatedCalled );
+//     scriptingEngine.Execute( R"(
+// entity0 = registry:create_entity()
+// entity0:add(dtypes.ComponentA())
+// )" );
+//     REQUIRE( !lComponentUpdatedCalled );
 
-    scriptingEngine.Execute( "entity0:replace(dtypes.ComponentA(3.0))" );
-    REQUIRE( lComponentUpdatedCalled );
-}
+//     scriptingEngine.Execute( "entity0:replace(dtypes.ComponentA(3.0))" );
+//     REQUIRE( lComponentUpdatedCalled );
+// }
 
-TEST_CASE( "LUA OnComponentDestroyed event", "[CORE_ENTITIES]" )
-{
-    entity_registry_t lRegistry{};
-    script_bindings   scriptingEngine{};
-    auto              x      = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
-    x["a"]                   = &ComponentA::a;
-    x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
-    scriptingEngine.Define( "registry", &lRegistry );
+// TEST_CASE( "LUA OnComponentDestroyed event", "[CORE_ENTITIES]" )
+// {
+//     entity_registry_t lRegistry{};
+//     script_bindings   scriptingEngine{};
+//     auto              x      = scriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+//     x["a"]                   = &ComponentA::a;
+//     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
+//     scriptingEngine.Define( "registry", &lRegistry );
 
-    bool lComponentDestroyedCalled = false;
-    lRegistry.OnComponentDestroyed<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentDestroyedCalled = true; } );
+//     bool lComponentDestroyedCalled = false;
+//     lRegistry.OnComponentDestroyed<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentDestroyedCalled = true; } );
 
-    scriptingEngine.Execute( R"(
-entity0 = registry:create_entity()
-entity0:add(dtypes.ComponentA())
-)" );
-    REQUIRE( !lComponentDestroyedCalled );
+//     scriptingEngine.Execute( R"(
+// entity0 = registry:create_entity()
+// entity0:add(dtypes.ComponentA())
+// )" );
+//     REQUIRE( !lComponentDestroyedCalled );
 
-    scriptingEngine.Execute( "entity0:remove(dtypes.ComponentA)" );
-    REQUIRE( lComponentDestroyedCalled );
-}
+//     scriptingEngine.Execute( "entity0:remove(dtypes.ComponentA)" );
+//     REQUIRE( lComponentDestroyedCalled );
+// }
 
 TEST_CASE( "LUA TensorShape", "[CORE_SCRIPTING]" )
 {

@@ -166,10 +166,10 @@ namespace SE::Core
         //     dataTable["width"]        = imageData.mWidth;
         //     dataTable["height"]       = imageData.mHeight;
 
-        //     auto lDataVector = vector_t<uint8_t>( imageData.mByteSize );
+        //     auto dataVector = vector_t<uint8_t>( imageData.mByteSize );
         //     for( uint32_t i = 0; i < imageData.mByteSize; i++ )
-        //         lDataVector[i] = imageData.mPixelData[i];
-        //     dataTable["pixel_data"] = lDataVector;
+        //         dataVector[i] = imageData.mPixelData[i];
+        //     dataTable["pixel_data"] = dataVector;
 
         //     return dataTable;
         // };
@@ -183,10 +183,10 @@ namespace SE::Core
             dataTable["color_format"] = imageData.mFormat;
             dataTable["width"]        = imageData.mWidth;
             dataTable["height"]       = imageData.mHeight;
-            auto lDataVector           = vector_t<uint8_t>( imageData.mByteSize );
+            auto dataVector           = vector_t<uint8_t>( imageData.mByteSize );
             for( uint32_t i = 0; i < imageData.mByteSize; i++ )
-                lDataVector[i] = imageData.mPixelData[i];
-            dataTable["pixel_data"] = lDataVector;
+                dataVector[i] = imageData.mPixelData[i];
+            dataTable["pixel_data"] = dataVector;
 
             return dataTable;
         };

@@ -38,7 +38,7 @@ namespace SE::Cuda::Internal
     ///
     struct gpu_device_pointer_view_t
     {
-        raw_pointer_t mDevicePointer = 0; //!< Pointer to an area of GPU memory
+        raw_pointer_t DevicePointer = 0; //!< Pointer to an area of GPU memory
 
         /// @brief Default constructor
         gpu_device_pointer_view_t() = default;
@@ -48,86 +48,86 @@ namespace SE::Cuda::Internal
 
         /// @brief View on the a portion of the buffer.
         ///
-        /// This opens a view on an initial part of the buffer represented by `aParent`. Note that opening a view
+        /// This opens a view on an initial part of the buffer represented by `parent`. Note that opening a view
         /// that is larger than the original buffer will result in a runtime error.
         ///
         /// @exception  std::runtime_error the parent pointer is not large enough to accomodate the view
         ///
-        /// @param aSize   Number of elements of the parent buffer to be included in the view.
-        /// @param aOffset   Offset into the buffer where the view should start, in bytes.
-        /// @param aParent Reference to the underlying device pointer handle.
+        /// @param size   Number of elements of the parent buffer to be included in the view.
+        /// @param offset   Offset into the buffer where the view should start, in bytes.
+        /// @param parent Reference to the underlying device pointer handle.
         ///
-        gpu_device_pointer_view_t( size_t aSize, size_t aOffset, gpu_device_pointer_view_t const &aParent )
-            : mSize{ aSize }
+        gpu_device_pointer_view_t( size_t size, size_t offset, gpu_device_pointer_view_t const &parent )
+            : _size{ size }
         {
-            if( ( aSize + aOffset ) > aParent.Size() )
+            if( ( size + offset ) > parent.Size() )
                 throw std::runtime_error(
                     fmt::format( "View upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                                 aOffset, aSize, aParent.Size() ) );
+                                 offset, size, parent.Size() ) );
 
-            mDevicePointer = ( aParent.mDevicePointer + aOffset );
+            DevicePointer = ( parent.DevicePointer + offset );
         }
 
         /// @brief Wrap a non-owning memory view around an already existing CUDA pointer.
         ///
         /// This constructor wraps an already allocated CUDA buffer into a pointer view structure. Note that
-        /// `aParent` should point to an area at least @code{.cpp} aSize @endcode bytes in size
+        /// `parent` should point to an area at least @code{.cpp} size @endcode bytes in size
         ///
-        /// @param aSize The presumed size of the memory buffer pointed to by `aParent`, in bytes.
-        /// @param aParent Reference ot the parent buffer.
+        /// @param size The presumed size of the memory buffer pointed to by `parent`, in bytes.
+        /// @param parent Reference ot the parent buffer.
         ///
-        gpu_device_pointer_view_t( size_t aSize, gpu_device_pointer_view_t const &aParent )
-            : gpu_device_pointer_view_t( aSize, 0, aParent )
+        gpu_device_pointer_view_t( size_t size, gpu_device_pointer_view_t const &parent )
+            : gpu_device_pointer_view_t( size, 0, parent )
         {
         }
 
         /// @brief Wrap a non-owning memory view around an already existing CUDA pointer.
         ///
         /// This constructor wraps an already allocated CUDA buffer into a pointer view structure. Note that
-        /// `aDevicePointer` should point to an area at least @code{.cpp} aSize @endcode bytes in size
+        /// `devicePointer` should point to an area at least @code{.cpp} size @endcode bytes in size
         ///
-        /// @param aSize The presumed size of the memory buffer pointed to by `aDevicePointer`, in bytes.
-        /// @param aDevicePointer An already allocated pointer to device memory.
+        /// @param size The presumed size of the memory buffer pointed to by `devicePointer`, in bytes.
+        /// @param devicePointer An already allocated pointer to device memory.
         ///
-        gpu_device_pointer_view_t( size_t aSize, void *aDevicePointer )
-            : mSize{ aSize }
+        gpu_device_pointer_view_t( size_t size, void *devicePointer )
+            : _size{ size }
         {
-            mDevicePointer = (raw_pointer_t)aDevicePointer;
+            DevicePointer = (raw_pointer_t)devicePointer;
         }
 
         /// @brief Upload data to the device at a given offset.
         ///
-        /// Uploads the contents of a vector of type `_Ty` to the device. The size of `aArray`, in bytes, should be less
+        /// Uploads the contents of a vector of type `_Ty` to the device. The size of `array`, in bytes, should be less
         /// than the size of the underlying device buffer, or a runtime error will be raised. Nothing happens to the device
-        /// data beyond `aArray.size()` if `aArray.size()` is less than the size of the buffer.
+        /// data beyond `array.size()` if `array.size()` is less than the size of the buffer.
         ///
         /// @exception  std::runtime_error If trying to upload more data than there is space available
         ///
-        /// @param aArray Array of data to upload to the device
-        /// @param aOffset The offset at which to copy the array.
+        /// @param array Array of data to upload to the device
+        /// @param offset The offset at which to copy the array.
         ///
         template <typename _Ty>
-        void Upload( vector_t<_Ty> &aArray, uint32_t aOffset ) const
+        void Upload( vector_t<_Ty> &array, uint32_t offset ) const
         {
-            if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
+            if( ( array.size() + offset ) * sizeof( _Ty ) > _size )
                 throw std::runtime_error(
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                                 aOffset, aArray.size(), mSize / sizeof( _Ty ) )
+                                 offset, array.size(), _size / sizeof( _Ty ) )
                         .c_str() );
 
-            MemCopyHostToDevice( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ) );
+            MemCopyHostToDevice( (void *)( DataAs<_Ty>() + offset ), (void *)array.data(), array.size() * sizeof( _Ty ) );
         }
 
         template <typename _Ty>
-        void Upload( vector_t<_Ty> const &aArray, uint32_t aOffset ) const
+        void Upload( vector_t<_Ty> const &array, uint32_t offset ) const
         {
-            if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
+            if( ( array.size() + offset ) * sizeof( _Ty ) > _size )
                 throw std::runtime_error(
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                                 aOffset, aArray.size(), mSize / sizeof( _Ty ) )
+                                 offset, array.size(), _size / sizeof( _Ty ) )
                         .c_str() );
 
-            MemCopyHostToDevice( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ) );
+            MemCopyHostToDevice( (void *)( DataAs<_Ty>() + offset ), (void *)array.data(), array.size() * sizeof( _Ty ) );
         }
 
         /// @brief Overloaded member provided for convenience
@@ -135,81 +135,81 @@ namespace SE::Cuda::Internal
         /// Uploads the contents of the vector passed as parameter to the GPU with offset 0. This method has
         /// 4 overloads which can't seem to be avoided.
         ///
-        /// @param aArray Array of data to upload to the device
+        /// @param array Array of data to upload to the device
         ///
         template <typename _Ty>
-        void Upload( vector_t<_Ty> &aArray )
+        void Upload( vector_t<_Ty> &array )
         {
-            Upload<_Ty>( aArray, 0 );
+            Upload<_Ty>( array, 0 );
         }
         template <typename _Ty>
-        void Upload( vector_t<_Ty> &aArray ) const
+        void Upload( vector_t<_Ty> &array ) const
         {
-            Upload<_Ty>( aArray, 0 );
+            Upload<_Ty>( array, 0 );
         }
         template <typename _Ty>
-        void Upload( vector_t<_Ty> const &aArray )
+        void Upload( vector_t<_Ty> const &array )
         {
-            Upload<_Ty>( aArray, 0 );
+            Upload<_Ty>( array, 0 );
         }
         template <typename _Ty>
-        void Upload( vector_t<_Ty> const &aArray ) const
+        void Upload( vector_t<_Ty> const &array ) const
         {
-            Upload<_Ty>( aArray, 0 );
+            Upload<_Ty>( array, 0 );
         }
 
         /// @brief Upload data to the device.
         ///
-        /// Uploads the contents of a raw byte buffer to the GPU. The value of `aByteSize`, should be less than
+        /// Uploads the contents of a raw byte buffer to the GPU. The value of `byteSize`, should be less than
         /// the size of the underlying device buffer, or a runtime error will be raised. Nothing happens to the
-        /// device data beyond `aByteSize` if `aByteSize` is less than the size of the buffer.
+        /// device data beyond `byteSize` if `byteSize` is less than the size of the buffer.
         ///
         /// @exception  std::runtime_error If trying to upload more data than there is space available
         ///
-        /// @param aData     Pointer to a buffer to upload to the GPU
-        /// @param aByteSize Size of the byffer pointed to by `aData`, in bytes
-        /// @param aOffset   Offset at which to upload the data
+        /// @param data     Pointer to a buffer to upload to the GPU
+        /// @param byteSize Size of the byffer pointed to by `data`, in bytes
+        /// @param offset   Offset at which to upload the data
         ///
-        void Upload( const uint8_t *aData, size_t aByteSize, size_t aOffset ) const
+        void Upload( const uint8_t *data, size_t byteSize, size_t offset ) const
         {
-            if( aByteSize + aOffset > Size() )
+            if( byteSize + offset > Size() )
                 throw std::runtime_error(
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                                 aOffset, aByteSize, Size() )
+                                 offset, byteSize, Size() )
                         .c_str() );
-                        
-            MemCopyHostToDevice( (void *)( DataAs<uint8_t>() + aOffset ), (void *)aData, aByteSize );
+
+            MemCopyHostToDevice( (void *)( DataAs<uint8_t>() + offset ), (void *)data, byteSize );
         }
 
         /// @brief Overloaded member provided for convenience
         ///
-        /// @param aData     Pointer to the data to uploac
-        /// @param aByteSize Size of the byffer pointed to by `aData`, in bytes
+        /// @param data     Pointer to the data to uploac
+        /// @param byteSize Size of the byffer pointed to by `data`, in bytes
         ///
-        void Upload( const uint8_t *aData, size_t aByteSize ) const
+        void Upload( const uint8_t *data, size_t byteSize ) const
         {
-            Upload( aData, aByteSize, 0 );
+            Upload( data, byteSize, 0 );
         }
 
         /// @brief Overloaded member provided for convenience
         ///
-        /// @param aData Element to upload
+        /// @param data Element to upload
         ///
         template <typename _Ty>
-        void Upload( _Ty &aElement ) const
+        void Upload( _Ty &element ) const
         {
-            Upload( reinterpret_cast<const uint8_t *>( &aElement ), sizeof( _Ty ) );
+            Upload( reinterpret_cast<const uint8_t *>( &element ), sizeof( _Ty ) );
         }
 
         /// @brief Overloaded member provided for convenience
         ///
-        /// @param aData   Element to upload
-        /// @param aOffset Position at which to upload the element
+        /// @param data   Element to upload
+        /// @param offset Position at which to upload the element
         ///
         template <typename _Ty>
-        void Upload( _Ty &aElement, uint32_t aOffset ) const
+        void Upload( _Ty &element, uint32_t offset ) const
         {
-            Upload( reinterpret_cast<const uint8_t *>( &aElement ), sizeof( _Ty ), aOffset * sizeof( _Ty ) );
+            Upload( reinterpret_cast<const uint8_t *>( &element ), sizeof( _Ty ), offset * sizeof( _Ty ) );
         }
 
         /// @brief Downloads data from the device.
@@ -218,20 +218,20 @@ namespace SE::Cuda::Internal
         ///
         /// @exception  std::runtime_error If trying to fetch more data than there is space available
         ///
-        /// @param aOffset Where the fetch starts
-        /// @param aSize   Size of the buffer to fetch, in bytes
+        /// @param offset Where the fetch starts
+        /// @param size   Size of the buffer to fetch, in bytes
         ///
         /// @return newly allocated `vector_t` containing the data.
         ///
         template <typename _Ty>
-        vector_t<_Ty> Fetch( size_t aOffset, size_t aSize ) const
+        vector_t<_Ty> Fetch( size_t offset, size_t size ) const
         {
-            if( ( aSize + aOffset ) * sizeof( _Ty ) > Size() )
+            if( ( size + offset ) * sizeof( _Ty ) > Size() )
                 throw std::runtime_error(
-                    fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", aSize, Size() ).c_str() );
-            vector_t<_Ty> lHostArray( aSize );
-            MemCopyDeviceToHost( reinterpret_cast<void *>( lHostArray.data() ), reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ),
-                                 aSize * sizeof( _Ty ) );
+                    fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", size, Size() ).c_str() );
+            vector_t<_Ty> lHostArray( size );
+            MemCopyDeviceToHost( reinterpret_cast<void *>( lHostArray.data() ), reinterpret_cast<void *>( DataAs<_Ty>() + offset ),
+                                 size * sizeof( _Ty ) );
             return lHostArray;
         }
 
@@ -246,7 +246,7 @@ namespace SE::Cuda::Internal
         template <typename _Ty>
         vector_t<_Ty> Fetch() const
         {
-            return Fetch<_Ty>( mSize / sizeof( _Ty ) );
+            return Fetch<_Ty>( _size / sizeof( _Ty ) );
         }
 
         /// @brief Overloaded member provided for convenience
@@ -255,14 +255,14 @@ namespace SE::Cuda::Internal
         ///
         /// @exception  std::runtime_error If trying to fetch more data than there is space available
         ///
-        /// @param aSize   Size of the buffer to fetch, in bytes
+        /// @param size   Size of the buffer to fetch, in bytes
         ///
         /// @return newly allocated `vector_t` containing the data.
         ///
         template <typename _Ty>
-        vector_t<_Ty> Fetch( size_t aSize ) const
+        vector_t<_Ty> Fetch( size_t size ) const
         {
-            return Fetch<_Ty>( 0, aSize );
+            return Fetch<_Ty>( 0, size );
         }
 
         /// @brief Set the content of the buffer to 0
@@ -272,41 +272,41 @@ namespace SE::Cuda::Internal
         ///
         void Zero() const
         {
-            CUDA_ASSERT( cudaMemset( (void *)mDevicePointer, 0, mSize ) );
+            CUDA_ASSERT( cudaMemset( (void *)DevicePointer, 0, _size ) );
         }
 
         /// @brief Size of the allocated buffer, in bytes.
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const
         {
-            return mSize;
+            return _size;
         }
 
         /// @brief Size of the allocated buffer, in elements of type `_Ty`.
         template <typename _Ty>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
         {
-            return mSize / sizeof( _Ty );
+            return _size / sizeof( _Ty );
         }
 
         /// @brief Return the underlying device pointer as a pointer to an array of type `_Ty`.
         template <typename _Ty>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() const
         {
-            return (_Ty *)mDevicePointer;
+            return (_Ty *)DevicePointer;
         }
 
         /// @brief Number of elements in the buffer.
         raw_pointer_t RawDevicePtr() const
         {
-            return mDevicePointer;
+            return DevicePointer;
         }
 
       protected:
-        size_t mSize = 0;
+        size_t _size = 0;
 
         /** @brief Trivial constructor. The device pointer member should be set in a subclass */
-        gpu_device_pointer_view_t( size_t aSize )
-            : mSize{ aSize }
+        gpu_device_pointer_view_t( size_t size )
+            : _size{ size }
         {
         }
     };
@@ -320,10 +320,10 @@ namespace SE::Cuda::Internal
         gpu_device_pointer_t()                               = default;
         gpu_device_pointer_t( const gpu_device_pointer_t & ) = default;
 
-        gpu_device_pointer_t( size_t aSize )
+        gpu_device_pointer_t( size_t size )
         {
-            mSize = aSize;
-            CUDA_ASSERT( cudaMalloc( (void **)&mDevicePointer, aSize ) );
+            _size = size;
+            CUDA_ASSERT( cudaMalloc( (void **)&DevicePointer, size ) );
         }
 
         ~gpu_device_pointer_t() = default;
@@ -331,17 +331,18 @@ namespace SE::Cuda::Internal
         /// @brief Free the allocated memory.
         void Dispose()
         {
-            if( mDevicePointer != 0 )
-                CUDA_ASSERT( cudaFree( (void *)mDevicePointer ) );
-            mDevicePointer = 0;
+            if( DevicePointer != 0 )
+                CUDA_ASSERT( cudaFree( (void *)DevicePointer ) );
+
+            DevicePointer = 0;
         }
 
-        void Resize( uint32_t aNewSize )
+        void Resize( uint32_t newSize )
         {
             Dispose();
 
-            mSize = aNewSize;
-            CUDA_ASSERT( cudaMalloc( (void **)&mDevicePointer, mSize ) );
+            _size = newSize;
+            CUDA_ASSERT( cudaMalloc( (void **)&DevicePointer, _size ) );
         }
     };
 

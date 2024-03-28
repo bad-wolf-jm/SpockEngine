@@ -63,7 +63,7 @@ namespace SE::Core
         define_vector_types( mathModule );
         define_matrix_types( mathModule );
 
-        open_entity_registry_library( _scriptState );
+        // open_entity_registry_library( _scriptState );
 
         auto cudaModule = _scriptState["Cuda"].get_or_create<sol::table>();
         open_tensor_library( cudaModule );

@@ -41,23 +41,23 @@ namespace SE::Cuda
 
         memory_buffer_t( const memory_buffer_t & ) = default;
 
-        memory_buffer_t View( size_t aSize, size_t aOffset )
+        memory_buffer_t View( size_t size, size_t offset )
         {
-            return memory_buffer_t( aSize, aOffset, *this );
+            return memory_buffer_t( size, offset, *this );
         }
 
-        memory_buffer_t View( size_t aSize, size_t aOffset ) const
+        memory_buffer_t View( size_t size, size_t offset ) const
         {
-            return memory_buffer_t( aSize, aOffset, *this );
+            return memory_buffer_t( size, offset, *this );
         }
 
-        memory_buffer_t( size_t aSize, void *aDevicePointer )
-            : Internal::gpu_device_pointer_view_t( aSize, aDevicePointer )
+        memory_buffer_t( size_t size, void *devicePointer )
+            : Internal::gpu_device_pointer_view_t( size, devicePointer )
         {
         }
 
-        memory_buffer_t( size_t aSize, size_t aOffset, Internal::gpu_device_pointer_view_t const &aDevicePointer )
-            : Internal::gpu_device_pointer_view_t( aSize, aOffset, aDevicePointer )
+        memory_buffer_t( size_t size, size_t offset, Internal::gpu_device_pointer_view_t const &devicePointer )
+            : Internal::gpu_device_pointer_view_t( size, offset, devicePointer )
         {
         }
     };
@@ -77,26 +77,26 @@ namespace SE::Cuda
         memory_pool_t()  = default;
         ~memory_pool_t() = default;
 
-        /// @brief Allocates `aTotalSize` bytes of memory on the GPU
+        /// @brief Allocates `totalSize` bytes of memory on the GPU
         ///
-        /// @param aTotalSize Size, in bytes, of the memory to allocate.
+        /// @param totalSize Size, in bytes, of the memory to allocate.
         ///
-        memory_pool_t( size_t aTotalSize );
+        memory_pool_t( size_t totalSize );
 
         /// @brief Allocates buffer from the pool.
         ///
         /// @exception  std::runtime_error If trying to allocate more memory than is available in the pool
         ///
-        /// @param aBytes Size, in bytes, of the buffer to allocate.
+        /// @param bytes Size, in bytes, of the buffer to allocate.
         ///
-        memory_buffer_t Allocate( size_t aBytes );
+        memory_buffer_t Allocate( size_t bytes );
 
         /// @brief Resets the pool.
         void Reset();
 
       protected:
-        size_t mFreePtr   = 0; //!< Pointer to the free area of the memory pool
-        size_t mTotalSize = 0; //!< Total size of the memory pool, in bytes.
+        size_t _freePtr   = 0; //!< Pointer to the free area of the memory pool
+        size_t _totalSize = 0; //!< Total size of the memory pool, in bytes.
     };
 
 } // namespace SE::Cuda

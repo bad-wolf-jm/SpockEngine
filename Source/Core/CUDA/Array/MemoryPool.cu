@@ -15,28 +15,28 @@
 namespace SE::Cuda
 {
 
-    memory_pool_t::memory_pool_t( size_t aTotalSize )
-        : Internal::gpu_device_pointer_t( aTotalSize )
-        , mTotalSize{ aTotalSize }
+    memory_pool_t::memory_pool_t( size_t totalSize )
+        : Internal::gpu_device_pointer_t( totalSize )
+        , _totalSize{ totalSize }
     {
         Reset();
     }
 
-    memory_buffer_t memory_pool_t::Allocate( size_t aBytes )
+    memory_buffer_t memory_pool_t::Allocate( size_t bytes )
     {
-        size_t lAlignedBytes = ( ( aBytes >> 3 ) + 1 ) << 3;
-        if( ( mFreePtr + lAlignedBytes ) > mTotalSize )
+        size_t alignedBytes = ( ( bytes >> 3 ) + 1 ) << 3;
+        if( ( _freePtr + alignedBytes ) > _totalSize )
             throw std::runtime_error( "MemoryPool is out of space!!" );
 
-        size_t lStart = mFreePtr;
-        mFreePtr += lAlignedBytes;
-        return memory_buffer_t( aBytes, lStart, *this );
+        size_t start = _freePtr;
+        _freePtr += alignedBytes;
+        return memory_buffer_t( bytes, start, *this );
     }
 
     void memory_pool_t::Reset()
     {
         Zero();
-        mFreePtr = 0;
+        _freePtr = 0;
     }
 
 } // namespace SE::Cuda

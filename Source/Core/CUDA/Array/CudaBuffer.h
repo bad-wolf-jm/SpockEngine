@@ -32,19 +32,19 @@ namespace SE::Cuda
 
         gpu_memory_view_t( const gpu_memory_view_t & ) = default;
 
-        gpu_memory_view_t( size_t a_Size, size_t a_Offset, Internal::gpu_device_pointer_view_t &a_DevicePointer )
-            : Internal::gpu_device_pointer_view_t( a_Size, a_Offset, a_DevicePointer )
+        gpu_memory_view_t( size_t size, size_t offset, Internal::gpu_device_pointer_view_t &devicePointer )
+            : Internal::gpu_device_pointer_view_t( size, offset, devicePointer )
         {
         }
 
-        gpu_memory_view_t( size_t a_Size, void *a_DevicePointer )
-            : Internal::gpu_device_pointer_view_t( a_Size, a_DevicePointer )
+        gpu_memory_view_t( size_t size, void *devicePointer )
+            : Internal::gpu_device_pointer_view_t( size, devicePointer )
         {
         }
 
-        gpu_memory_view_t View( size_t a_Size, size_t a_Offset )
+        gpu_memory_view_t View( size_t size, size_t offset )
         {
-            return gpu_memory_view_t( a_Size, a_Offset, *this );
+            return gpu_memory_view_t( size, offset, *this );
         }
     };
 
@@ -53,33 +53,33 @@ namespace SE::Cuda
       public:
         gpu_memory_t() = default;
 
-        gpu_memory_t( size_t a_Size )
-            : Internal::gpu_device_pointer_t( a_Size ){};
+        gpu_memory_t( size_t size )
+            : Internal::gpu_device_pointer_t( size ){};
 
         ~gpu_memory_t() = default;
 
         template <typename _Ty>
-        static gpu_memory_t Create( uint32_t aSize )
+        static gpu_memory_t Create( uint32_t size )
         {
-            return gpu_memory_t( aSize * sizeof( _Ty ) );
+            return gpu_memory_t( size * sizeof( _Ty ) );
         }
 
         template <typename _Ty>
-        static gpu_memory_t Create( vector_t<_Ty> aVec )
+        static gpu_memory_t Create( vector_t<_Ty> vec )
         {
-            gpu_memory_t lOut = gpu_memory_t::Create<_Ty>( aVec.size() );
-            lOut.Upload( aVec );
-            return lOut;
+            gpu_memory_t out = gpu_memory_t::Create<_Ty>( vec.size() );
+            out.Upload( vec );
+            return out;
         }
 
         raw_pointer_t RawDevicePtr()
         {
-            return mDevicePointer;
+            return DevicePointer;
         }
 
         raw_pointer_t *RawDevicePtrP()
         {
-            return &( mDevicePointer );
+            return &( DevicePointer );
         }
     };
 

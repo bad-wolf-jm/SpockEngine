@@ -55,23 +55,23 @@ namespace SE::Cuda
 
         /// @brief Allocates a generalized tensor of the given shape from a memory pool
         ///
-        /// @param aMemoryPool The memory pool from which to allocate the tensor
-        /// @param aShape      The shape of the tensor to allocate
+        /// @param memoryPool The memory pool from which to allocate the tensor
+        /// @param shape      The shape of the tensor to allocate
         ///
-        multi_tensor_t( memory_pool_t &aMemoryPool, const tensor_shape_t &aShape );
+        multi_tensor_t( memory_pool_t &memoryPool, const tensor_shape_t &shape );
 
         /// @brief Create a generalized tensor of the given shape using a preallocated buffer from a memory pool
         ///
-        /// @param aMemoryPool The memory pool from which to allocate the tensor
-        /// @param aMemoryBuffer Preallocated buffer to hold data
-        /// @param aShape      The shape of the tensor to allocate
+        /// @param memoryPool The memory pool from which to allocate the tensor
+        /// @param memoryBuffer Preallocated buffer to hold data
+        /// @param shape      The shape of the tensor to allocate
         ///
-        multi_tensor_t( memory_pool_t &aMemoryPool, memory_buffer_t &aMemoryBuffer, const tensor_shape_t &aShape );
+        multi_tensor_t( memory_pool_t &memoryPool, memory_buffer_t &memoryBuffer, const tensor_shape_t &shape );
 
         /// @brief Retrieves the shape of the tensor
         SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF tensor_shape_t &Shape()
         {
-            return mShape;
+            return _shape;
         }
 
         /// @brief Retrieve a pointer to the i-th layer
@@ -83,8 +83,9 @@ namespace SE::Cuda
         template <typename _Ty>
         SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF _Ty *DeviceBufferAt( uint32_t i ) const
         {
-            buffer_size_info_t lBufferSize = mShape.GetBufferSizeAs<_Ty>( i );
-            return DataAs<_Ty>() + lBufferSize.mOffset;
+            buffer_size_info_t bufferSize = _shape.GetBufferSizeAs<_Ty>( i );
+
+            return DataAs<_Ty>() + bufferSize.mOffset;
         }
 
         /// @brief Retrieve a view into the i-th layer
@@ -95,8 +96,8 @@ namespace SE::Cuda
         ///
         memory_buffer_t BufferAt( uint32_t i ) const
         {
-            auto &lBufferInfo = mShape.GetBufferSize( i );
-            return mMemoryBuffer.View( lBufferInfo.mSize, lBufferInfo.mOffset );
+            auto &bufferInfo = _shape.GetBufferSize( i );
+            return _memoryBuffer.View( bufferInfo.mSize, bufferInfo.mOffset );
         }
 
         /// @brief Fetch the contents of the i-th layer
@@ -112,8 +113,9 @@ namespace SE::Cuda
         template <typename _Tx>
         vector_t<_Tx> FetchBufferAt( uint32_t i ) const
         {
-            auto &lBufferInfo = mShape.GetBufferSizeAs<_Tx>( i );
-            return mMemoryBuffer.Fetch<_Tx>( lBufferInfo.mOffset, lBufferInfo.mSize );
+            auto &bufferInfo = _shape.GetBufferSizeAs<_Tx>( i );
+
+            return _memoryBuffer.Fetch<_Tx>( bufferInfo.mOffset, bufferInfo.mSize );
         }
 
         /// @brief Fetch the contents of the underlying buffer
@@ -130,7 +132,7 @@ namespace SE::Cuda
         template <typename _Tx>
         vector_t<_Tx> FetchFlattened() const
         {
-            return mMemoryBuffer.Fetch<_Tx>();
+            return _memoryBuffer.Fetch<_Tx>();
         }
 
         /// @brief Upload the contents of a vector to the tensor
@@ -139,12 +141,12 @@ namespace SE::Cuda
         ///
         /// @tparam _Tx Type of the elements to upload.
         ///
-        /// @param aArray Data to upload
+        /// @param array Data to upload
         ///
         template <typename _Tx>
-        void Upload( vector_t<_Tx> const &aArray ) const
+        void Upload( vector_t<_Tx> const &array ) const
         {
-            mMemoryBuffer.Upload<_Tx>( aArray );
+            _memoryBuffer.Upload<_Tx>( array );
         }
 
         /// @brief Upload the contents of a vector to the i-thy layer of a tensor
@@ -153,14 +155,14 @@ namespace SE::Cuda
         ///
         /// @tparam _Tx Type of the elements to upload.
         ///
-        /// @param aArray  Data to upload
-        /// @param aLayer  Layer into which the data should be copied
-        /// @param aOffset Offset into the layer, in `_Ty`
+        /// @param array  Data to upload
+        /// @param layer  Layer into which the data should be copied
+        /// @param offset Offset into the layer, in `_Ty`
         ///
         template <typename _Tx>
-        void Upload( vector_t<_Tx> const &aArray, uint32_t aLayer, uint32_t aOffset ) const
+        void Upload( vector_t<_Tx> const &array, uint32_t layer, uint32_t offset ) const
         {
-            BufferAt( aLayer ).Upload<_Tx>( aArray, aOffset );
+            BufferAt( layer ).Upload<_Tx>( array, offset );
         }
 
         /// @brief Overloaded member provided for convenience.
@@ -170,43 +172,43 @@ namespace SE::Cuda
         ///
         /// @tparam _Tx Type of the elements to upload.
         ///
-        /// @param aArray  Data to upload
-        /// @param aLayer  Layer into which the data should be copied
+        /// @param array  Data to upload
+        /// @param layer  Layer into which the data should be copied
         ///
         template <typename _Tx>
-        void Upload( vector_t<_Tx> const &aArray, uint32_t aLayer ) const
+        void Upload( vector_t<_Tx> const &array, uint32_t layer ) const
         {
-            Upload( aArray, aLayer, 0 );
+            Upload( array, layer, 0 );
         }
 
         /// @brief Size, in bytes, of the tensor.
         SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const
         {
-            return mMemoryBuffer.Size();
+            return _memoryBuffer.Size();
         }
 
         /// @brief Size of the tensor as elements of type `_Ty`.
         template <typename _Tx>
         SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
         {
-            return mMemoryBuffer.SizeAs<_Tx>();
+            return _memoryBuffer.SizeAs<_Tx>();
         }
 
         /// @brief Pointer to the underlying data as type `_Ty`.
         template <typename _Tx>
         SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF _Tx *DataAs() const
         {
-            return mMemoryBuffer.DataAs<_Tx>();
+            return _memoryBuffer.DataAs<_Tx>();
         }
 
         memory_buffer_t &GetMemoryBuffer()
         {
-            return mMemoryBuffer;
+            return _memoryBuffer;
         }
 
       private:
-        tensor_shape_t  mShape{};        //!< Shape of the tensor
-        memory_buffer_t mMemoryBuffer{}; //!< Memory buffer assigned to the tensor
+        tensor_shape_t  _shape{};        //!< Shape of the tensor
+        memory_buffer_t _memoryBuffer{}; //!< Memory buffer assigned to the tensor
     };
 
 } // namespace SE::Cuda
