@@ -85,6 +85,13 @@ namespace SE::Core
         UNKNOWN = 10
     };
 
+    enum class broadcast_hint_t : uint8_t
+    {
+        LEFT  = 0,
+        RIGHT = 1,
+        NONE  = 2
+    };
+
     using scalar_value_t = std::variant<float, double, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t>;
     
     /// @brief Returns the size in bytes for the passed in typs

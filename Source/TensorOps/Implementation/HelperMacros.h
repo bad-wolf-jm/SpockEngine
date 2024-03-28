@@ -12,7 +12,6 @@
 #include <curand.h>
 #include <vector>
 
-#include "../ScalarTypes.h"
 #include "Core/Definitions.h"
 #include "Core/Logging.h"
 
@@ -137,13 +136,13 @@ namespace SE::TensorOps::Private
     constexpr uint32_t ThreadsPerBlock = 1024;
 
     template <typename _Type>
-    vector_t<_Type> Resolve( vector_t<scalar_value_t> const &aValue )
+    vector_t<_Type> Resolve( vector_t<scalar_value_t> const &value )
     {
-        vector_t<_Type> lValue( aValue.size() );
-        for( uint32_t i = 0; i < aValue.size(); i++ )
+        vector_t<_Type> valueVector( value.size() );
+        for( uint32_t i = 0; i < value.size(); i++ )
         {
-            lValue[i] = std::get<_Type>( aValue[i] );
+            valueVector[i] = std::get<_Type>( value[i] );
         }
-        return lValue;
+        return valueVector;
     }
 } // namespace SE::TensorOps::Private

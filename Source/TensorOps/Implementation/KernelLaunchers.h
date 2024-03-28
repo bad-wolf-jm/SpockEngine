@@ -16,8 +16,6 @@
 #include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/Math/Types.h"
 
-#include "../ScalarTypes.h"
-
 namespace SE::TensorOps
 {
 

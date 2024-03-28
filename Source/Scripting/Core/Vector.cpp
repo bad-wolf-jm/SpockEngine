@@ -1,6 +1,5 @@
 #include "Vector.h"
 #include "Core/Entity/Collection.h"
-#include "TensorOps/ScalarTypes.h"
 #include "Scripting/PrimitiveTypes.h"
 
 namespace SE::Core

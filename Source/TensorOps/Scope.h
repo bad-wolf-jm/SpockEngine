@@ -22,7 +22,6 @@
 
 #include "NodeComponents.h"
 #include "NodeControllers.h"
-#include "ScalarTypes.h"
 
 namespace SE::TensorOps
 {

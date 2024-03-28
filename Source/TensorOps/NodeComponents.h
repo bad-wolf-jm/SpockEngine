@@ -16,10 +16,9 @@
 #include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/Entity/Collection.h"
 
-#include "ScalarTypes.h"
-
 namespace SE::TensorOps
 {
+
     using namespace SE::Core;
 
     using multi_tensor_t  = SE::Cuda::multi_tensor_t;
@@ -78,8 +77,8 @@ namespace SE::TensorOps
     {
         graph_operation_controller_t *mControllerInstance = nullptr;
 
-        std::function<graph_operation_controller_t *()>      mInstantiateController;
-        std::function<void( graph_operation_t * )> mDestroyController;
+        std::function<graph_operation_controller_t *()> mInstantiateController;
+        std::function<void( graph_operation_t * )>      mDestroyController;
 
         template <typename T, typename... Args>
         void Bind( Args &&...args )
@@ -121,7 +120,7 @@ namespace SE::TensorOps
     {
         vector_t<_Ty> mValue = {}; //!< Values to upload
 
-        vector_value_t()                                = default;
+        vector_value_t()                         = default;
         vector_value_t( const vector_value_t & ) = default;
 
         size_t Size()
@@ -135,12 +134,12 @@ namespace SE::TensorOps
         size_t          mSize = 0; //!< Size hint for the underlying memory buffer
         memory_buffer_t mValue{};  //!< GPU area where the values should be uploaded. This is typically allocated from a pool
 
-        vector_buffer_t()                                 = default;
+        vector_buffer_t()                          = default;
         vector_buffer_t( const vector_buffer_t & ) = default;
     };
 
-    using u32_vector_t         = vector_value_t<uint32_t>;
-    using f32_vector_t         = vector_value_t<float>;
+    using u32_vector_t          = vector_value_t<uint32_t>;
+    using f32_vector_t          = vector_value_t<float>;
     using scalar_value_vector_t = vector_value_t<scalar_value_t>;
 
     /// @brief sTypeComponent
@@ -186,7 +185,7 @@ namespace SE::TensorOps
         graph_node_t mRight{}; //!< Upper bound. Should be a vector.
         graph_node_t mDelta{}; //!< Difference. Should be a vector.
 
-        arange_operation_t()                           = default;
+        arange_operation_t()                             = default;
         arange_operation_t( const arange_operation_t & ) = default;
     };
 
@@ -200,7 +199,7 @@ namespace SE::TensorOps
         graph_node_t mLeftOperand;  //!< Left operand
         graph_node_t mRightOperand; //!< Right operand
 
-        binary_operation_t()                                    = default;
+        binary_operation_t()                             = default;
         binary_operation_t( const binary_operation_t & ) = default;
     };
 
@@ -213,7 +212,7 @@ namespace SE::TensorOps
         graph_node_t mBroadcastDimension;        //!< Size of the broadcast dimension
         uint32_t     mMaxBroadcastDimension = 0; //!< Maximum size of the broadcast dimension
 
-        broadcast_info_t()                                  = default;
+        broadcast_info_t()                           = default;
         broadcast_info_t( const broadcast_info_t & ) = default;
     };
 
@@ -221,7 +220,7 @@ namespace SE::TensorOps
     {
         graph_node_t mOperand; //!< Left operand
 
-        not_operation_t()                                 = default;
+        not_operation_t()                          = default;
         not_operation_t( const not_operation_t & ) = default;
     };
 
@@ -229,7 +228,7 @@ namespace SE::TensorOps
     {
         graph_node_t mOperand; //!< Left operand
 
-        bitwise_not_operation_t()                                        = default;
+        bitwise_not_operation_t()                                  = default;
         bitwise_not_operation_t( const bitwise_not_operation_t & ) = default;
     };
 
@@ -241,7 +240,7 @@ namespace SE::TensorOps
         bool         mStrictLower; //!< Use strict inequality for lower bound
         bool         mStrictUpper; //!< Use strict inequality for upper bound
 
-        in_interval_operation_t()                                        = default;
+        in_interval_operation_t()                                  = default;
         in_interval_operation_t( const in_interval_operation_t & ) = default;
     };
 
@@ -256,7 +255,7 @@ namespace SE::TensorOps
         graph_node_t mArray;       //!< @ref MultiTensor to repeat.
         graph_node_t mRepetitions; //!< Number of times the elements of the @ref MultiTensor should be repeated
 
-        repeat_operation_t()                                    = default;
+        repeat_operation_t()                             = default;
         repeat_operation_t( const repeat_operation_t & ) = default;
     };
 
@@ -271,7 +270,7 @@ namespace SE::TensorOps
         graph_node_t mArray;       //!< @ref MultiTensor to repeat.
         graph_node_t mRepetitions; //!< Number of times the elements of the @ref MultiTensor should be tiled
 
-        tile_operation_t()                                  = default;
+        tile_operation_t()                           = default;
         tile_operation_t( const tile_operation_t & ) = default;
     };
 
@@ -286,7 +285,7 @@ namespace SE::TensorOps
         graph_node_t mRight{};        //!< Upper bound
         graph_node_t mSubdivisions{}; //!< Number of subdivisions
 
-        linear_space_operation_t()                                = default;
+        linear_space_operation_t()                                   = default;
         linear_space_operation_t( const linear_space_operation_t & ) = default;
     };
 
@@ -296,7 +295,7 @@ namespace SE::TensorOps
         graph_node_t mValueIfTrue{};  //!< Upper bound
         graph_node_t mValueIfFalse{}; //!< Number of subdivisions
 
-        where_operation_t()                                   = default;
+        where_operation_t()                            = default;
         where_operation_t( const where_operation_t & ) = default;
     };
 
@@ -311,7 +310,7 @@ namespace SE::TensorOps
         graph_node_t mB{}; //!< Right
         graph_node_t mT{}; //!< Coefficient
 
-        mix_operation_t()                            = default;
+        mix_operation_t()                          = default;
         mix_operation_t( const mix_operation_t & ) = default;
     };
 
@@ -323,7 +322,7 @@ namespace SE::TensorOps
     {
         scalar_value_t mValue = 0.0f;
 
-        scalar_node_t()                               = default;
+        scalar_node_t()                        = default;
         scalar_node_t( const scalar_node_t & ) = default;
     };
 
@@ -410,7 +409,7 @@ namespace SE::TensorOps
     {
         scalar_type_t mType = scalar_type_t::FLOAT32; //!< Type
 
-        random_uniform_initializer_t()                                             = default;
+        random_uniform_initializer_t()                                       = default;
         random_uniform_initializer_t( const random_uniform_initializer_t & ) = default;
     };
 
@@ -425,7 +424,7 @@ namespace SE::TensorOps
         scalar_value_t mMean = 0.0f;                   //!< Expected value
         scalar_value_t mStd  = 1.0f;                   //!< Standard deviation
 
-        random_normal_initializer_t()                                            = default;
+        random_normal_initializer_t()                                      = default;
         random_normal_initializer_t( const random_normal_initializer_t & ) = default;
     };
 
@@ -467,7 +466,7 @@ namespace SE::TensorOps
         graph_node_t mY{};        //!< Y coordinates of the texture samples
         graph_node_t mTextures{}; //!< Textures to sample from
 
-        sample2D_operation_t()                             = default;
+        sample2D_operation_t()                               = default;
         sample2D_operation_t( const sample2D_operation_t & ) = default;
     };
 
@@ -482,7 +481,7 @@ namespace SE::TensorOps
         graph_node_t  mArray{};                            //!< Input tensor/
         graph_node_t  mScaling{};                          //!< Scaling factor.
 
-        convert_to_fixed_point_t()                                     = default;
+        convert_to_fixed_point_t()                                   = default;
         convert_to_fixed_point_t( const convert_to_fixed_point_t & ) = default;
     };
 
@@ -496,7 +495,7 @@ namespace SE::TensorOps
         graph_node_t mX{}; //!< Variable
         graph_node_t mB{}; //!< Translation
 
-        affine_transform_operation_t()                               = default;
+        affine_transform_operation_t()                                       = default;
         affine_transform_operation_t( const affine_transform_operation_t & ) = default;
     };
 
@@ -512,7 +511,7 @@ namespace SE::TensorOps
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
-        array_slice_operation_t()                                   = default;
+        array_slice_operation_t()                                  = default;
         array_slice_operation_t( const array_slice_operation_t & ) = default;
     };
 
@@ -528,7 +527,7 @@ namespace SE::TensorOps
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
-        array_sum_operation_t()                                       = default;
+        array_sum_operation_t()                                = default;
         array_sum_operation_t( const array_sum_operation_t & ) = default;
     };
 
@@ -546,7 +545,7 @@ namespace SE::TensorOps
         graph_node_t mBlockSizes1;       //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
         uint32_t     mMaxBlockSize1 = 0; //!< Maximum value of the `aBlockSizes1` parameter
 
-        conv1d_operation_t()                               = default;
+        conv1d_operation_t()                             = default;
         conv1d_operation_t( const conv1d_operation_t & ) = default;
     };
 
@@ -559,7 +558,7 @@ namespace SE::TensorOps
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
-        count_true_operation_t()                                  = default;
+        count_true_operation_t()                                 = default;
         count_true_operation_t( const count_true_operation_t & ) = default;
     };
 
@@ -585,7 +584,7 @@ namespace SE::TensorOps
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
-        count_zero_operation_t()                                  = default;
+        count_zero_operation_t()                                 = default;
         count_zero_operation_t( const count_zero_operation_t & ) = default;
     };
 
@@ -594,7 +593,7 @@ namespace SE::TensorOps
     {
         graph_node_t mArray; //!< Tensor to transform
 
-        floor_operation_t()                              = default;
+        floor_operation_t()                            = default;
         floor_operation_t( const floor_operation_t & ) = default;
     };
 
@@ -603,7 +602,7 @@ namespace SE::TensorOps
     {
         graph_node_t mArray; //!< Tensor to transform
 
-        ceiling_operation_t()                             = default;
+        ceiling_operation_t()                              = default;
         ceiling_operation_t( const ceiling_operation_t & ) = default;
     };
 
@@ -612,7 +611,7 @@ namespace SE::TensorOps
     {
         graph_node_t mArray; //!< Tensor to transform
 
-        abs_operation_t()                            = default;
+        abs_operation_t()                          = default;
         abs_operation_t( const abs_operation_t & ) = default;
     };
 
@@ -621,7 +620,7 @@ namespace SE::TensorOps
     {
         graph_node_t mArray; //!< Tensor to transform
 
-        sqrt_operation_t()                             = default;
+        sqrt_operation_t()                           = default;
         sqrt_operation_t( const sqrt_operation_t & ) = default;
     };
 
@@ -630,7 +629,7 @@ namespace SE::TensorOps
     {
         graph_node_t mArray; //!< Tensor to transform
 
-        round_operation_t()                              = default;
+        round_operation_t()                            = default;
         round_operation_t( const round_operation_t & ) = default;
     };
 
@@ -645,7 +644,7 @@ namespace SE::TensorOps
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
-        diff_operation_t()                             = default;
+        diff_operation_t()                           = default;
         diff_operation_t( const diff_operation_t & ) = default;
     };
 
@@ -661,7 +660,7 @@ namespace SE::TensorOps
 
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `aBlockSizes` parameter
 
-        shift_operation_t()                              = default;
+        shift_operation_t()                            = default;
         shift_operation_t( const shift_operation_t & ) = default;
     };
 
@@ -677,7 +676,7 @@ namespace SE::TensorOps
         graph_node_t mElementCount0; //!< Length of the last dimension of `mArray0`
         graph_node_t mElementCount1; //!< Length of the last dimension of `mArray1`
 
-        hcat_operation_t()                             = default;
+        hcat_operation_t()                           = default;
         hcat_operation_t( const hcat_operation_t & ) = default;
     };
 } // namespace SE::TensorOps

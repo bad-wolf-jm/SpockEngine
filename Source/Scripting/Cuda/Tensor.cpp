@@ -3,7 +3,6 @@
 #include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/Definitions.h"
 
-#include "TensorOps/ScalarTypes.h"
 #include "TensorOps/Scope.h"
 
 #include "Core/Logging.h"

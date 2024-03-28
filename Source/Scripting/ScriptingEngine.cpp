@@ -4,7 +4,6 @@
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Cuda/Tensor.h"
-// #include "Math/Module.h"
 #include "Math/MatrixTypes.h"
 #include "Math/VectorTypes.h"
 #include <type_traits>
@@ -12,7 +11,6 @@
 #include "ArrayTypes.h"
 #include "Scripting/Core/Texture.h"
 #include "Scripting/Cuda/Texture.h"
-#include "TensorOps/ScalarTypes.h"
 
 namespace SE::Core
 {
