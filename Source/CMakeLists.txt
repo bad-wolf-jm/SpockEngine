@@ -10,6 +10,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Logging.cpp
     Core/Definitions.cpp
 
+    Core/multi_tensor/tensor_shape.cu
+
     Core/CUDA/Cuda.cpp
     Core/CUDA/Array/MultiTensor.cu
     Core/CUDA/Array/MemoryPool.cu
