@@ -83,8 +83,8 @@ namespace SE::Core
             if( i >= Rank )
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", Rank + i, CountLayers() ) );
-            for( auto &lShape : Shape )
-                dimension.push_back( lShape[i] );
+            for( auto &shape : Shape )
+                dimension.push_back( shape[i] );
         }
         else
         {
@@ -92,8 +92,8 @@ namespace SE::Core
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", Rank + i, CountLayers() ) );
 
-            for( auto &lShape : Shape )
-                dimension.push_back( lShape[Rank + i] );
+            for( auto &shape : Shape )
+                dimension.push_back( shape[Rank + i] );
         }
         return dimension;
     }
@@ -182,6 +182,7 @@ namespace SE::Core
                 k++;
             }
         }
+        
         DeviceSideData.Shape.Upload( dimensions );
         DeviceSideData.MaxDimensions.Upload( MaxDimensions );
         DeviceSideData.BufferSizes.Upload( BufferSizes );

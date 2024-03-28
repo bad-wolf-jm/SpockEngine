@@ -60,20 +60,20 @@ namespace SE::Core
         /// @brief Constructs a tensor shape from the data provided.
         ///
         ///
-        /// @param aShape       Vector of individual tensor dimensions.  All elements of `aShape` should have the same size.
-        /// @param aElementSize Size, in bytes, of individual tensor elements.
+        /// @param shape       Vector of individual tensor dimensions.  All elements of `shape` should have the same size.
+        /// @param elementSize Size, in bytes, of individual tensor elements.
         ///
-        tensor_shape_t( vector_t<vector_t<uint32_t>> const &aShape, size_t aElementSize );
+        tensor_shape_t( vector_t<vector_t<uint32_t>> const &shape, size_t elementSize );
 
         /// @brief Constructs a tensor shape of rank 1 from the data provided.
         ///
         /// This is an overload provided for convenience. The passed-in shape will be converted to a vector of size one vectors
         /// and passed to the real constructor. Use this to build tensor shapes synamically.
         ///
-        /// @param aShape       Vector of individual tensor dimensions.  All elements of `aShape` should have the same size.
-        /// @param aElementSize Size, in bytes, of individual tensor elements.
+        /// @param shape       Vector of individual tensor dimensions.  All elements of `shape` should have the same size.
+        /// @param elementSize Size, in bytes, of individual tensor elements.
         ///
-        tensor_shape_t( vector_t<uint32_t> const &aShape, size_t aElementSize );
+        tensor_shape_t( vector_t<uint32_t> const &shape, size_t elementSize );
 
         /** @brief Returns the number of layers in the sTensorShape*/
         size_t CountLayers() const
@@ -103,25 +103,25 @@ namespace SE::Core
 
         /// @brief Flatten the tensor shape up to a given dimension
         ///
-        /// The dimension values up to but not including `aToDimension` are multiplied together and thus collapsed into a
+        /// The dimension values up to but not including `toDimension` are multiplied together and thus collapsed into a
         /// single dimension. The remaining dimensions are left alone. This operation does not change the buffer size. If
-        /// `aToDimension` is negative, then it is interpreted as an index from the end of the dimension array. Tn this case,
-        /// the final `aToDimension` values are left untouched, and the others are multiplied together and collapsed into a
+        /// `toDimension` is negative, then it is interpreted as an index from the end of the dimension array. Tn this case,
+        /// the final `toDimension` values are left untouched, and the others are multiplied together and collapsed into a
         /// single dimension.
         ///
-        /// @param aToDimension Index of dimensions to collapse
+        /// @param toDimension Index of dimensions to collapse
         ///
-        void Flatten( int32_t aToDimension );
+        void Flatten( int32_t toDimension );
 
         /// @brief Trim the tensor shape up to a given dimension
         ///
-        /// The dimension values up to but not including `aToDimension` are preservedm and the remaining dimensions are discarded.
-        /// This operation does changes the buffer size. If `aToDimension` is negative, then it is interpreted as an index from
-        /// the end of the dimension array. Tn this case, the final `aToDimension` values are preserved, and the others are discarded.
+        /// The dimension values up to but not including `toDimension` are preservedm and the remaining dimensions are discarded.
+        /// This operation does changes the buffer size. If `toDimension` is negative, then it is interpreted as an index from
+        /// the end of the dimension array. Tn this case, the final `toDimension` values are preserved, and the others are discarded.
         ///
-        /// @param aToDimension Index of dimensions to collapse
+        /// @param toDimension Index of dimensions to collapse
         ///
-        void Trim( int32_t aToDimension );
+        void Trim( int32_t toDimension );
 
         /// @brief Retrieves the vector of i-th dimensions of the sTensorShape
         ///
@@ -133,17 +133,17 @@ namespace SE::Core
         ///
         vector_t<uint32_t> const GetDimension( int32_t i ) const;
 
-        /// @brief Adds a new dimension at position `aPosition` to the sTensorShape
+        /// @brief Adds a new dimension at position `position` to the sTensorShape
         ///
         /// If i >= 0, this is the ordinary i-th dimension. If i < 0, then we insert the new dimension at the i-th
         /// position counted from the end of the shape vector.  For example, if the shape of a multi-tensor x is given
         /// by {{1, 2, 3}, {4, 5, 6}}, then InsertDimension(2, {11, 11}) --> {{1, 2, 11, 3}, {4, 5, 11, 6}}, whereas
         /// InsertDimension(-3, {11, 11}) --> {{1, 11, 2, 3}, {4, 11, 5, 6}}
         ///
-        /// @param aPosition  Position at which ti insert the new dimension
-        /// @param aDimension New dimension vector to insert .
+        /// @param position  Position at which ti insert the new dimension
+        /// @param dimension New dimension vector to insert .
         ///
-        void InsertDimension( int32_t aPosition, vector_t<uint32_t> aDimension );
+        void InsertDimension( int32_t position, vector_t<uint32_t> dimension );
 
         /// @brief Retrieves the size and offset, in bytes of the i-th layer of the sTensorShape
         buffer_size_info_t const &GetBufferSize( uint32_t i ) const
@@ -159,9 +159,9 @@ namespace SE::Core
         SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF buffer_size_info_t GetBufferSizeAs( uint32_t i ) const
         {
 #ifdef __CUDACC__
-            auto lData = DeviceSideData.BufferSizes.DataAs<buffer_size_info_t>()[i];
-            return buffer_size_info_t{ lData.Size / static_cast<uint32_t>( sizeof( _Ty ) ),
-                                       lData.Offset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+            auto data = DeviceSideData.BufferSizes.DataAs<buffer_size_info_t>()[i];
+            return buffer_size_info_t{ data.Size / static_cast<uint32_t>( sizeof( _Ty ) ),
+                                       data.Offset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #else
             if( i >= CountLayers() )
                 throw std::out_of_range(
@@ -172,34 +172,34 @@ namespace SE::Core
         }
 
         template <typename _AsType>
-        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t aLayer, uint32_t i ) const
+        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t layer, uint32_t i ) const
         {
 #ifdef __CUDACC__
-            auto lData = DeviceSideData.BufferSizes.DataAs<buffer_size_info_t>()[aLayer];
-            return ( i * sizeof( _AsType ) ) < lData.Size;
+            auto data = DeviceSideData.BufferSizes.DataAs<buffer_size_info_t>()[layer];
+            return ( i * sizeof( _AsType ) ) < data.Size;
 #else
-            if( aLayer >= CountLayers() )
+            if( layer >= CountLayers() )
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
-            auto lData = mBufferSizes[aLayer];
-            return ( i * sizeof( _AsType ) ) < lData.mSize;
+            auto data = mBufferSizes[layer];
+            return ( i * sizeof( _AsType ) ) < data.mSize;
 #endif
         }
 
         /// @brief Retrieves the size and offset vectors
         vector_t<buffer_size_info_t> GetTypedBufferSizes() const
         {
-            vector_t<buffer_size_info_t> lReturn( BufferSizes.begin(), BufferSizes.end() );
-            for( auto &x : lReturn )
+            vector_t<buffer_size_info_t> returnValue( BufferSizes.begin(), BufferSizes.end() );
+            for( auto &x : returnValue )
             {
                 x.Size /= ElementSize;
                 x.Offset /= ElementSize;
             }
-            return lReturn;
+            return returnValue;
         }
 
-        bool operator!=( const tensor_shape_t &aRhs );
-        bool operator==( const tensor_shape_t &aRhs );
+        bool operator!=( const tensor_shape_t &rhs );
+        bool operator==( const tensor_shape_t &rhs );
 
         /// @brief Upload the dimension data to the GPU.
         ///
