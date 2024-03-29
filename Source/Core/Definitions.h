@@ -17,8 +17,9 @@
 #include <filesystem>
 #include <memory>
 #include <string>
-#include <vector>
 #include <variant>
+#include <vector>
+#include "Math/Types.h"
 
 namespace SE::Core
 {
@@ -82,7 +83,12 @@ namespace SE::Core
         INT16   = 7,
         INT32   = 8,
         INT64   = 9,
-        UNKNOWN = 10
+        VEC2    = 10,
+        VEC3    = 11,
+        VEC4    = 12,
+        MAT3    = 13,
+        MAT4    = 14,
+        UNKNOWN = 15
     };
 
     enum class broadcast_hint_t : uint8_t
@@ -92,8 +98,9 @@ namespace SE::Core
         NONE  = 2
     };
 
-    using scalar_value_t = std::variant<float, double, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t>;
-    
+    using scalar_value_t = std::variant<float, double, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t,
+                                        math::vec2, math::vec3, math::vec4, math::mat3, math::mat4>;
+
     /// @brief Returns the size in bytes for the passed in typs
     ///
     /// @param aType Type of element
