@@ -11,26 +11,26 @@
 class Timestep
 {
   public:
-    Timestep( float aTime = 0.0f )
-        : mTime( aTime )
+    Timestep( float time = 0.0f )
+        : _time( time )
     {
     }
 
     operator float() const
     {
-        return mTime;
+        return _time;
     }
 
     float GetMilliseconds() const
     {
-        return mTime;
+        return _time;
     }
     
     float GetSeconds() const
     {
-        return mTime / 1000.0f;
+        return _time / 1000.0f;
     }
 
   private:
-    float mTime = 0.0f;
+    float _time = 0.0f;
 };

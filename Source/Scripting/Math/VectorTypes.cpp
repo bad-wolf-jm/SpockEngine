@@ -82,11 +82,11 @@ namespace SE::Core
         module["perpendicular"] = []( vec2 self ) { return perpendicular( self ); };
         module["det"]           = []( vec2 self, vec2 other ) { return det( self, other ); };
 
-        new_vector2_type<ivec2>( module, "ivec2" );
-        declare_vector_operation<ivec2>( module );
+        // new_vector2_type<ivec2>( module, "ivec2" );
+        // declare_vector_operation<ivec2>( module );
 
-        new_vector2_type<uvec2>( module, "uvec2" );
-        declare_vector_operation<uvec2>( module );
+        // new_vector2_type<uvec2>( module, "uvec2" );
+        // declare_vector_operation<uvec2>( module );
 
         auto lVec3Type     = new_vector3_type<vec3>( module, "vec3" );
         lVec3Type["cross"] = []( vec3 self, vec3 other ) -> vec3 { return cross( self, other ); };
@@ -94,19 +94,19 @@ namespace SE::Core
         declare_vector_operation<vec3>( module );
         module["cross"] = []( vec3 self, vec3 other ) -> vec3 { return cross( self, other ); };
 
-        new_vector3_type<ivec3>( module, "ivec3" );
-        declare_vector_operation<ivec3>( module );
+        // new_vector3_type<ivec3>( module, "ivec3" );
+        // declare_vector_operation<ivec3>( module );
 
-        new_vector3_type<uvec3>( module, "uvec3" );
-        declare_vector_operation<uvec3>( module );
+        // new_vector3_type<uvec3>( module, "uvec3" );
+        // declare_vector_operation<uvec3>( module );
 
         new_vector4_type<vec4>( module, "vec4" );
         declare_vector_operation<vec4>( module );
 
-        new_vector4_type<ivec4>( module, "ivec4" );
-        declare_vector_operation<ivec4>( module );
+        // new_vector4_type<ivec4>( module, "ivec4" );
+        // declare_vector_operation<ivec4>( module );
 
-        new_vector4_type<uvec4>( module, "uvec4" );
-        declare_vector_operation<uvec4>( module );
+        // new_vector4_type<uvec4>( module, "uvec4" );
+        // declare_vector_operation<uvec4>( module );
     }
 } // namespace SE::Core

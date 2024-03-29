@@ -28,22 +28,3 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine 
 }
 
 #endif
-
-#ifdef __CUDACC__
-#    define SE_CUDA_HOST_DEVICE_FUNCTION_DEF __device__ __host__
-#    define SE_CUDA_DEVICE_FUNCTION_DEF      __device__
-#    define SE_CUDA_INLINE                   __forceinline__
-#    define CUDA_KERNEL_DEFINITION           __global__
-#else
-#    define SE_CUDA_INLINE
-#    define SE_CUDA_HOST_DEVICE_FUNCTION_DEF
-#    define SE_CUDA_DEVICE_FUNCTION_DEF
-#    define CUDA_KERNEL_DEFINITION
-#endif
-
-#define RETURN_UNLESS( condition ) \
-    do                             \
-    {                              \
-        if( !( condition ) )       \
-            return;                \
-    } while( 0 )

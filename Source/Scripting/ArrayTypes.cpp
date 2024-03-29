@@ -75,13 +75,13 @@ namespace SE::Core
         new_array_type<float>( module, "F32Array" );
         new_array_type<double>( module, "F64Array" );
 
-        new_array_type<math::uvec2>( module, "UVec2Array" );
-        new_array_type<math::uvec3>( module, "UVec3Array" );
-        new_array_type<math::uvec4>( module, "UVec4Array" );
+        // new_array_type<math::uvec2>( module, "UVec2Array" );
+        // new_array_type<math::uvec3>( module, "UVec3Array" );
+        // new_array_type<math::uvec4>( module, "UVec4Array" );
 
-        new_array_type<math::ivec2>( module, "IVec2Array" );
-        new_array_type<math::ivec3>( module, "IVec3Array" );
-        new_array_type<math::ivec4>( module, "IVec4Array" );
+        // new_array_type<math::ivec2>( module, "IVec2Array" );
+        // new_array_type<math::ivec3>( module, "IVec3Array" );
+        // new_array_type<math::ivec4>( module, "IVec4Array" );
 
         new_array_type<math::vec2>( module, "Vec2Array" );
         new_array_type<math::vec3>( module, "Vec3Array" );

@@ -21,7 +21,6 @@
 
 #include <filesystem>
 #include <fstream>
-#include <gli/generate_mipmaps.hpp>
 
 namespace SE::Core
 {

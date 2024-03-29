@@ -20,15 +20,15 @@
 namespace math
 {
 
-    /** @brief 2 dimensional vector with integer coordinates. Compatible with GLSL type `ivec2`
-     * and HLSL type int2.
-     */
-    using ivec2 = glm::ivec2;
+    // /** @brief 2 dimensional vector with integer coordinates. Compatible with GLSL type `ivec2`
+    //  * and HLSL type int2.
+    //  */
+    // using ivec2 = glm::ivec2;
 
-    /** @brief 2 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec2`
-     * and HLSL type uint2.
-     */
-    using uvec2 = glm::uvec2;
+    // /** @brief 2 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec2`
+    //  * and HLSL type uint2.
+    //  */
+    // using uvec2 = glm::uvec2;
 
     /** @brief 2 dimensional vector with floating point coordinates. Compatible with GLSL type `vec2`
      * and HLSL type float2.
@@ -37,15 +37,15 @@ namespace math
 
     // 3 dimensional vectors
 
-    /** @brief 3 dimensional vector with integer coordinates. Compatible with GLSL type `ivec3`
-     * and HLSL type int3.
-     */
-    using ivec3 = glm::ivec3;
+    // /** @brief 3 dimensional vector with integer coordinates. Compatible with GLSL type `ivec3`
+    //  * and HLSL type int3.
+    //  */
+    // using ivec3 = glm::ivec3;
 
-    /** @brief 3 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec3`
-     * and HLSL type uint3.
-     */
-    using uvec3 = glm::uvec3;
+    // /** @brief 3 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec3`
+    //  * and HLSL type uint3.
+    //  */
+    // using uvec3 = glm::uvec3;
 
     /** @brief 3 dimensional vector with floating point coordinates. Compatible with GLSL type `vec3`
      * and HLSL type float3.
@@ -54,15 +54,15 @@ namespace math
 
     // 4 dimensional vectors
 
-    /** @brief 4 dimensional vector with integer coordinates. Compatible with GLSL type `ivec4`
-     * and HLSL type int4.
-     */
-    using ivec4 = glm::ivec4;
+    // /** @brief 4 dimensional vector with integer coordinates. Compatible with GLSL type `ivec4`
+    //  * and HLSL type int4.
+    //  */
+    // using ivec4 = glm::ivec4;
 
-    /** @brief 4 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec4`
-     * and HLSL type uint4.
-     */
-    using uvec4 = glm::uvec4;
+    // /** @brief 4 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec4`
+    //  * and HLSL type uint4.
+    //  */
+    // using uvec4 = glm::uvec4;
 
     /** @brief 5 dimensional vector with floating point coordinates. Compatible with GLSL type `vec4`
      * and HLSL type float4.
@@ -107,103 +107,103 @@ namespace math
 
     /** @brief Euclidean length of input vector. */
     template <typename T>
-    inline float length( const T &aVector )
+    inline float length( const T &vector )
     {
-        return glm::length( aVector );
+        return glm::length( vector );
     }
 
     /** @brief Euclidean length of input vector. */
     template <typename T>
-    inline float length2( const T &aVector )
+    inline float length2( const T &vector )
     {
-        return glm::length2( aVector );
+        return glm::length2( vector );
     }
 
     /** @brief Euclidean length of input vector. */
     template <typename T>
-    inline float dist2( const T &aVector0, const T &aVector1 )
+    inline float dist2( const T &vector0, const T &vector1 )
     {
-        return glm::distance2( aVector0, aVector1 );
+        return glm::distance2( vector0, vector1 );
     }
 
     /** @brief Euclidean length of input vector. */
-    inline float det( const vec2 &aVector0, const vec2 &aVector1 )
+    inline float det( const vec2 &vector0, const vec2 &vector1 )
     {
-        return ( aVector0.x * aVector1.y ) - ( aVector0.y * aVector1.x );
+        return ( vector0.x * vector1.y ) - ( vector0.y * vector1.x );
     }
 
     /** @brief Unit vector in the direction of V. */
     template <typename T>
-    T normalize( const T &aVector )
+    T normalize( const T &vector )
     {
-        return glm::normalize( aVector );
+        return glm::normalize( vector );
     }
 
     /** @brief Standard dot-product of v1 and v2. */
     template <typename T>
-    inline float dot( const T &aVector1, const T &aVector2 )
+    inline float dot( const T &vector1, const T &vector2 )
     {
-        return glm::dot( aVector1, aVector2 );
+        return glm::dot( vector1, vector2 );
     }
 
     /** @brief Standard cross-product of v1 and v2. */
-    inline vec3 cross( const vec3 &aVector1, const vec3 &aVector2 )
+    inline vec3 cross( const vec3 &vector1, const vec3 &vector2 )
     {
-        return glm::cross( aVector1, aVector2 );
+        return glm::cross( vector1, vector2 );
     }
 
     /** @brief Returns a vector normal to v1. */
-    inline vec2 perpendicular( const vec2 &aVector1 )
+    inline vec2 perpendicular( const vec2 &vector1 )
     {
-        return { -aVector1.y, aVector1.x };
+        return { -vector1.y, vector1.x };
     }
 
     /** @brief Color conversion. */
-    inline vec3 hsv_to_rgb( float aHue, float aSaturation, float aValue )
+    inline vec3 hsv_to_rgb( float hue, float saturation, float value )
     {
-        aHue -= glm::floor( aHue / 360.0 ) * 360.0f;
+        hue -= glm::floor( hue / 360.0 ) * 360.0f;
 
-        if( aHue < 0 )
-            aHue += 360.0f;
+        if( hue < 0 )
+            hue += 360.0f;
 
-        int lH = static_cast<int>( aHue / 60.0f ) % 6;
+        int h = static_cast<int>( hue / 60.0f ) % 6;
 
-        float lF = aHue / 60.0f - lH;
-        float lP = aValue * ( 1.0f - aSaturation );
-        float lQ = aValue * ( 1.0f - lF * aSaturation );
-        float lT = aValue * ( 1.0f - ( 1.0f - lF ) * aSaturation );
+        float f = hue / 60.0f - h;
+        float p = value * ( 1.0f - saturation );
+        float q = value * ( 1.0f - f * saturation );
+        float t = value * ( 1.0f - ( 1.0f - f ) * saturation );
 
-        switch( lH )
+        switch( h )
         {
         case 0:
-            return vec3( aValue, lT, lP );
+            return vec3( value, t, p );
         case 1:
-            return vec3( lQ, aValue, lP );
+            return vec3( q, value, p );
         case 2:
-            return vec3( lP, aValue, lT );
+            return vec3( p, value, t );
         case 3:
-            return vec3( lP, lQ, aValue );
+            return vec3( p, q, value );
         case 4:
-            return vec3( lT, lP, aValue );
+            return vec3( t, p, value );
         case 5:
-            return vec3( aValue, lP, lQ );
+            return vec3( value, p, q );
         default:
             return vec3( 0, 0, 0 );
         }
     }
 
-    /** @brief Interpolates the vectors `aVector1` and `aVector2` using ratio `aCoefficient` */
+    /** @brief Interpolates the vectors `vector1` and `vector2` using ratio `coefficient` */
     template <typename T>
-    T mix( T aVector1, T aVector2, float aCoefficient )
+    T mix( T vector1, T vector2, float coefficient )
     {
-        return glm::mix( aVector1, aVector2, aCoefficient );
+        return glm::mix( vector1, vector2, coefficient );
     }
 
-    /** @brief Sperically interpolates the quaternions `aQuaternion1` and `aQuaternion2` using ratio `aCoefficient` */
+    /** @brief Sperically interpolates the quaternions `quaternion1` and `quaternion2` using ratio `coefficient` */
     template <typename T>
-    T slerp( T aQuaternion1, T aQuaternion2, float aCoefficient )
+    T slerp( T quaternion1, T quaternion2, float coefficient )
     {
-        return glm::slerp( aQuaternion1, aQuaternion2, aCoefficient );
+        return glm::slerp( quaternion1, quaternion2, coefficient );
     }
 
 } // namespace math

@@ -37,13 +37,13 @@ namespace SE::Core
     using f32_array_t = numeric_array_t<float>;
     using f64_array_t = numeric_array_t<double>;
 
-    using uint2_array_t = numeric_array_t<math::uvec2>;
-    using uint3_array_t = numeric_array_t<math::uvec3>;
-    using uint4_array_t = numeric_array_t<math::uvec4>;
+    // using uint2_array_t = numeric_array_t<math::uvec2>;
+    // using uint3_array_t = numeric_array_t<math::uvec3>;
+    // using uint4_array_t = numeric_array_t<math::uvec4>;
 
-    using int2_array_t = numeric_array_t<math::ivec2>;
-    using int3_array_t = numeric_array_t<math::ivec3>;
-    using int4_array_t = numeric_array_t<math::ivec4>;
+    // using int2_array_t = numeric_array_t<math::ivec2>;
+    // using int3_array_t = numeric_array_t<math::ivec3>;
+    // using int4_array_t = numeric_array_t<math::ivec4>;
 
     using float2_array_t = numeric_array_t<math::vec2>;
     using float3_array_t = numeric_array_t<math::vec3>;

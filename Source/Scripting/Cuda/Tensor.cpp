@@ -116,13 +116,13 @@ namespace SE::Core
         multiTensorType["upload_f32"] = MakeUploadFunction<float>();
         multiTensorType["upload_f64"] = MakeUploadFunction<double>();
 
-        multiTensorType["upload_uvec2"] = MakeUploadFunction<math::uvec2>();
-        multiTensorType["upload_uvec3"] = MakeUploadFunction<math::uvec3>();
-        multiTensorType["upload_uvec4"] = MakeUploadFunction<math::uvec4>();
+        // multiTensorType["upload_uvec2"] = MakeUploadFunction<math::uvec2>();
+        // multiTensorType["upload_uvec3"] = MakeUploadFunction<math::uvec3>();
+        // multiTensorType["upload_uvec4"] = MakeUploadFunction<math::uvec4>();
 
-        multiTensorType["upload_ivec2"] = MakeUploadFunction<math::ivec2>();
-        multiTensorType["upload_ivec3"] = MakeUploadFunction<math::ivec3>();
-        multiTensorType["upload_ivec4"] = MakeUploadFunction<math::ivec4>();
+        // multiTensorType["upload_ivec2"] = MakeUploadFunction<math::ivec2>();
+        // multiTensorType["upload_ivec3"] = MakeUploadFunction<math::ivec3>();
+        // multiTensorType["upload_ivec4"] = MakeUploadFunction<math::ivec4>();
 
         multiTensorType["upload_vec2"] = MakeUploadFunction<math::vec2>();
         multiTensorType["upload_vec3"] = MakeUploadFunction<math::vec3>();
@@ -144,13 +144,13 @@ namespace SE::Core
         multiTensorType["fetch_f32"] = MakeFetchFunction<float>();
         multiTensorType["fetch_f64"] = MakeFetchFunction<double>();
 
-        multiTensorType["fetch_uvec2"] = MakeFetchFunction<math::uvec2>();
-        multiTensorType["fetch_uvec3"] = MakeFetchFunction<math::uvec3>();
-        multiTensorType["fetch_uvec4"] = MakeFetchFunction<math::uvec4>();
+        // multiTensorType["fetch_uvec2"] = MakeFetchFunction<math::uvec2>();
+        // multiTensorType["fetch_uvec3"] = MakeFetchFunction<math::uvec3>();
+        // multiTensorType["fetch_uvec4"] = MakeFetchFunction<math::uvec4>();
 
-        multiTensorType["fetch_ivec2"] = MakeFetchFunction<math::ivec2>();
-        multiTensorType["fetch_ivec3"] = MakeFetchFunction<math::ivec3>();
-        multiTensorType["fetch_ivec4"] = MakeFetchFunction<math::ivec4>();
+        // multiTensorType["fetch_ivec2"] = MakeFetchFunction<math::ivec2>();
+        // multiTensorType["fetch_ivec3"] = MakeFetchFunction<math::ivec3>();
+        // multiTensorType["fetch_ivec4"] = MakeFetchFunction<math::ivec4>();
 
         multiTensorType["fetch_vec2"] = MakeFetchFunction<math::vec2>();
         multiTensorType["fetch_vec3"] = MakeFetchFunction<math::vec3>();

@@ -23,172 +23,173 @@ namespace math
         return glm::two_pi<_Ty>();
     }
 
-    inline mat4 LookAt( vec3 const &aEye, vec3 const &aCenter, vec3 const &aUp )
+    inline mat4 look_at( vec3 const &eye, vec3 const &center, vec3 const &up )
     {
-        return glm::lookAt( aEye, aCenter, aUp );
+        return glm::lookAt( eye, center, up );
     }
 
-    inline mat4 Orthogonal( vec2 const &aXSpan, vec2 const &aYSpan, vec2 const &aDepth )
+    inline mat4 orthogonal( vec2 const &xSpan, vec2 const &ySpan, vec2 const &depth )
     {
-        return glm::ortho( aXSpan.x, aXSpan.y, aYSpan.x, aYSpan.y, aDepth.x, aDepth.y );
+        return glm::ortho( xSpan.x, xSpan.y, ySpan.x, ySpan.y, depth.x, depth.y );
     }
 
-    inline mat4 Orthogonal( float aWidth, float aHeight )
+    inline mat4 orthogonal( float width, float height )
     {
-        return glm::ortho( 0.f, aWidth, 0.f, aHeight, -1.f, 1.f );
+        return glm::ortho( 0.f, width, 0.f, height, -1.f, 1.f );
     }
 
-    inline mat4 Orthogonal( vec2 const &aSize )
+    inline mat4 orthogonal( vec2 const &size )
     {
-        return glm::ortho( 0.f, aSize.x, 0.f, aSize.y, -1.f, 1.f );
+        return glm::ortho( 0.f, size.x, 0.f, size.y, -1.f, 1.f );
     }
 
-    inline mat4 PerspectiveLH( float aFov, float aAspect, float aNear, float aFar )
+    // inline mat4 perspective_lh( float fov, float aspect, float nearDistance, float farDistance )
+    // {
+    //     return glm::perspectiveLH( fov / aspect, aspect, nearDistance, farDistance );
+    // }
+
+    // inline mat4 PerspectiveRH( float fov, float aspect, float nearDistance, float farDistance )
+    // {
+    //     return glm::perspectiveRH( fov / aspect, aspect, nearDistance, farDistance );
+    // }
+
+    inline mat4 perspective( float fov, float aspect, float nearDistance, float farDistance )
     {
-        return glm::perspectiveLH( aFov / aAspect, aAspect, aNear, aFar );
+        return glm::perspective( fov / aspect, aspect, nearDistance, farDistance );
     }
 
-    inline mat4 PerspectiveRH( float aFov, float aAspect, float aNear, float aFar )
+    inline mat4 rotation( float angle, vec3 const &axis )
     {
-        return glm::perspectiveRH( aFov / aAspect, aAspect, aNear, aFar );
+        return glm::rotate( mat4( 1.0 ), angle, axis );
     }
 
-    inline mat4 Perspective( float aFov, float aAspect, float aNear, float aFar )
+    inline mat3 comatrix( mat3 const &matrix )
     {
-        return glm::perspective( aFov / aAspect, aAspect, aNear, aFar );
+        mat3 out;
+
+        out[0][0] = ( matrix[1][1] * matrix[2][2] - matrix[2][1] * matrix[1][2] );
+        out[1][0] = -( matrix[0][1] * matrix[2][2] - matrix[2][1] * matrix[0][2] );
+        out[2][0] = ( matrix[0][1] * matrix[1][2] - matrix[1][1] * matrix[0][2] );
+
+        out[0][1] = -( matrix[1][0] * matrix[2][2] - matrix[2][0] * matrix[1][2] );
+        out[1][1] = ( matrix[0][0] * matrix[2][2] - matrix[2][0] * matrix[0][2] );
+        out[2][1] = -( matrix[0][0] * matrix[1][2] - matrix[1][0] * matrix[0][2] );
+
+        out[0][2] = ( matrix[1][0] * matrix[2][1] - matrix[2][0] * matrix[1][1] );
+        out[1][2] = -( matrix[0][0] * matrix[2][1] - matrix[2][0] * matrix[0][1] );
+        out[2][2] = ( matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1] );
+
+        return out;
     }
 
-    inline mat4 Rotation( float aAngle, vec3 const &aAxis )
+    inline vec3 up_direction( mat4 const &matrix )
     {
-        return glm::rotate( mat4( 1.0 ), aAngle, aAxis );
+        return vec3( matrix[1] );
     }
 
-    inline mat3 Comatrix( mat3 const &aMatrix )
+    inline vec3 right_direction( mat4 const &matrix )
     {
-        mat3 lOut;
-
-        lOut[0][0] = ( aMatrix[1][1] * aMatrix[2][2] - aMatrix[2][1] * aMatrix[1][2] );
-        lOut[1][0] = -( aMatrix[0][1] * aMatrix[2][2] - aMatrix[2][1] * aMatrix[0][2] );
-        lOut[2][0] = ( aMatrix[0][1] * aMatrix[1][2] - aMatrix[1][1] * aMatrix[0][2] );
-
-        lOut[0][1] = -( aMatrix[1][0] * aMatrix[2][2] - aMatrix[2][0] * aMatrix[1][2] );
-        lOut[1][1] = ( aMatrix[0][0] * aMatrix[2][2] - aMatrix[2][0] * aMatrix[0][2] );
-        lOut[2][1] = -( aMatrix[0][0] * aMatrix[1][2] - aMatrix[1][0] * aMatrix[0][2] );
-
-        lOut[0][2] = ( aMatrix[1][0] * aMatrix[2][1] - aMatrix[2][0] * aMatrix[1][1] );
-        lOut[1][2] = -( aMatrix[0][0] * aMatrix[2][1] - aMatrix[2][0] * aMatrix[0][1] );
-        lOut[2][2] = ( aMatrix[0][0] * aMatrix[1][1] - aMatrix[1][0] * aMatrix[0][1] );
-
-        return lOut;
+        return vec3( matrix[0] );
     }
 
-    inline vec3 UpDirection( mat4 const &aMatrix )
+    inline vec3 backward_direction( mat4 const &matrix )
     {
-        return vec3( aMatrix[1] );
+        return vec3( matrix[2] );
     }
 
-    inline vec3 RightDirection( mat4 const &aMatrix )
+    inline mat3 normal_matrix( mat4 const &matrix )
     {
-        return vec3( aMatrix[0] );
+        return comatrix( mat3( matrix ) );
     }
 
-    inline vec3 BackwardDirection( mat4 const &aMatrix )
+    inline mat4 from_components( mat3 const &rotation, vec3 const &translation )
     {
-        return vec3( aMatrix[2] );
+        auto out  = glm::mat4( rotation );
+        out[3][0] = translation[0];
+        out[3][1] = translation[1];
+        out[3][2] = translation[2];
+        return out;
     }
 
-    inline mat3 NormalMatrix( mat4 const &aMatrix )
+    inline mat4 from_diagonal( vec4 const &diagonal )
     {
-        return Comatrix( mat3( aMatrix ) );
+        glm::mat4 out( 0.0f );
+        out[0][0] = diagonal[0];
+        out[1][1] = diagonal[1];
+        out[2][2] = diagonal[2];
+        out[3][3] = diagonal[3];
+        return out;
     }
 
-    inline mat4 FromComponents( mat3 const &aRotation, vec3 const &aTranslation )
+    inline mat3 from_diagonal( vec3 const &diagonal )
     {
-        auto lOut  = glm::mat4( aRotation );
-        lOut[3][0] = aTranslation[0];
-        lOut[3][1] = aTranslation[1];
-        lOut[3][2] = aTranslation[2];
-        return lOut;
-    }
-
-    inline mat4 FromDiagonal( vec4 const &aDiagonal )
-    {
-        glm::mat4 lOut( 0.0f );
-        lOut[0][0] = aDiagonal[0];
-        lOut[1][1] = aDiagonal[1];
-        lOut[2][2] = aDiagonal[2];
-        lOut[3][3] = aDiagonal[3];
-        return lOut;
-    }
-
-    inline mat3 FromDiagonal( vec3 const &aDiagonal )
-    {
-        glm::mat3 lOut{ 0.0f };
-        lOut[0][0] = aDiagonal[0];
-        lOut[1][1] = aDiagonal[1];
-        lOut[2][2] = aDiagonal[2];
-        return lOut;
-    }
-
-    template <typename T>
-    T Inverse( T const &a_Matrix )
-    {
-        return glm::inverse( a_Matrix );
-    }
-    template <typename T>
-    float Determinant( T const &a_Matrix )
-    {
-        return glm::determinant( a_Matrix );
+        glm::mat3 out{ 0.0f };
+        out[0][0] = diagonal[0];
+        out[1][1] = diagonal[1];
+        out[2][2] = diagonal[2];
+        return out;
     }
 
     template <typename T>
-    T Transpose( T const &a_Matrix )
+    T inverse( T const &matrix )
     {
-        return glm::transpose( a_Matrix );
+        return glm::inverse( matrix );
     }
 
-    inline mat3 Rotation( mat4 const &aMatrix )
+    template <typename T>
+    float determinant( T const &matrix )
     {
-        mat3 lOut = glm::mat3( aMatrix );
-        lOut[0]   = lOut[0] / length( lOut[0] );
-        lOut[1]   = lOut[1] / length( lOut[1] );
-        lOut[2]   = lOut[2] / length( lOut[2] );
-        return lOut;
+        return glm::determinant( matrix );
     }
 
-    inline quat Quaternion( mat4 const &aMatrix )
+    template <typename T>
+    T transpose( T const &matrix )
     {
-        return glm::quat_cast( Rotation( aMatrix ) );
+        return glm::transpose( matrix );
     }
 
-    inline mat4 Translate( mat4 const &aMatrix, vec3 const &aAxis )
+    inline mat3 rotation( mat4 const &matrix )
     {
-        return glm::translate( aMatrix, aAxis );
+        mat3 out = glm::mat3( matrix );
+        out[0]   = out[0] / length( out[0] );
+        out[1]   = out[1] / length( out[1] );
+        out[2]   = out[2] / length( out[2] );
+        return out;
     }
 
-    inline mat4 Scale( mat4 const &aMatrix, vec3 const &aAxis )
+    inline quat quaternion( mat4 const &matrix )
     {
-        return glm::scale( aMatrix, aAxis );
+        return glm::quat_cast( rotation( matrix ) );
     }
 
-    inline mat4 Translation( vec3 const &aAxis )
+    inline mat4 translate( mat4 const &matrix, vec3 const &axis )
     {
-        return glm::translate( mat4( 1.0 ), aAxis );
+        return glm::translate( matrix, axis );
     }
 
-    inline vec3 Translation( mat4 const &aMatrix )
+    inline mat4 scale( mat4 const &matrix, vec3 const &axis )
     {
-        return glm::vec3( aMatrix[3] );
+        return glm::scale( matrix, axis );
     }
 
-    inline vec3 Scaling( mat4 const &aMatrix )
+    inline mat4 translation( vec3 const &axis )
     {
-        return glm::vec3( glm::length( aMatrix[0] ), glm::length( aMatrix[1] ), glm::length( aMatrix[2] ) );
+        return glm::translate( mat4( 1.0 ), axis );
     }
 
-    inline mat4 Scaling( vec3 const &aVector )
+    inline vec3 translation( mat4 const &matrix )
     {
-        return Scale( mat4( 1.0 ), aVector );
+        return glm::vec3( matrix[3] );
+    }
+
+    inline vec3 scaling( mat4 const &matrix )
+    {
+        return glm::vec3( glm::length( matrix[0] ), glm::length( matrix[1] ), glm::length( matrix[2] ) );
+    }
+
+    inline mat4 scaling( vec3 const &vector )
+    {
+        return scale( mat4( 1.0 ), vector );
     }
 
 } // namespace math

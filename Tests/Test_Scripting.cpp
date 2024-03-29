@@ -272,187 +272,187 @@ value = value0:dot(value1)
     REQUIRE( scriptingEngine.Get<float>( "value" ) == dot( vec4{ 1.0f, 2.0f, 3.0f, 1.2f }, vec4{ 3.0f, 6.0f, 9.0f, 1.25f } ) );
 }
 
-TEST_CASE( "LUA iVec2 type", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA iVec2 type", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = Math.ivec2(1, 2)" );
-    REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 1, 2 } );
+//     scriptingEngine.Execute( "value = Math.ivec2(1, 2)" );
+//     REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 1, 2 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.ivec2(0, 0)
-value.x = 3
-value.y = 4
-)" );
-    REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 3, 4 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.ivec2(0, 0)
+// value.x = 3
+// value.y = 4
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 3, 4 } );
 
-    scriptingEngine.Execute( R"(
-value0 = Math.ivec2(1, 2)
-value1 = Math.ivec2(3, 4)
-value = value0 + value1
-)" );
-    REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 4, 6 } );
+//     scriptingEngine.Execute( R"(
+// value0 = Math.ivec2(1, 2)
+// value1 = Math.ivec2(3, 4)
+// value = value0 + value1
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 4, 6 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.ivec2(1, 2) * 2
-)" );
-    REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 2, 4 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.ivec2(1, 2) * 2
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 2, 4 } );
 
-    scriptingEngine.Execute( "value = 2 * Math.ivec2(1, 2)" );
-    REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 2, 4 } );
-}
+//     scriptingEngine.Execute( "value = 2 * Math.ivec2(1, 2)" );
+//     REQUIRE( scriptingEngine.Get<ivec2>( "value" ) == ivec2{ 2, 4 } );
+// }
 
-TEST_CASE( "LUA iVec3 type", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA iVec3 type", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = Math.ivec3(1, 2, 3)" );
-    REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 1, 2, 3 } );
+//     scriptingEngine.Execute( "value = Math.ivec3(1, 2, 3)" );
+//     REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 1, 2, 3 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.ivec3(0, 0, 0)
-value.x = 3
-value.y = 4
-value.z = 1
-)" );
-    REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 3, 4, 1 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.ivec3(0, 0, 0)
+// value.x = 3
+// value.y = 4
+// value.z = 1
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 3, 4, 1 } );
 
-    scriptingEngine.Execute( R"(
-value0 = Math.ivec3(1, 2, 3)
-value1 = Math.ivec3(3, 4, 5)
-value = value0 + value1
-)" );
-    REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 4, 6, 8 } );
+//     scriptingEngine.Execute( R"(
+// value0 = Math.ivec3(1, 2, 3)
+// value1 = Math.ivec3(3, 4, 5)
+// value = value0 + value1
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 4, 6, 8 } );
 
-    scriptingEngine.Execute( "value = Math.ivec3(1, 2, 3) * 2" );
-    REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 2, 4, 6 } );
+//     scriptingEngine.Execute( "value = Math.ivec3(1, 2, 3) * 2" );
+//     REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 2, 4, 6 } );
 
-    scriptingEngine.Execute( R"(
-value = 2 * Math.ivec3(1, 2, 3)
-)" );
-    REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 2, 4, 6 } );
-}
+//     scriptingEngine.Execute( R"(
+// value = 2 * Math.ivec3(1, 2, 3)
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec3>( "value" ) == ivec3{ 2, 4, 6 } );
+// }
 
-TEST_CASE( "LUA iVec4 type", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA iVec4 type", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = Math.ivec4(1, 2, 3, 4)" );
-    REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 1, 2, 3, 4 } );
+//     scriptingEngine.Execute( "value = Math.ivec4(1, 2, 3, 4)" );
+//     REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 1, 2, 3, 4 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.ivec4(0, 0, 0, 4)
-value.x = 3
-value.y = 4
-value.z = 1
-value.w = 2
-)" );
-    REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 3, 4, 1, 2 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.ivec4(0, 0, 0, 4)
+// value.x = 3
+// value.y = 4
+// value.z = 1
+// value.w = 2
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 3, 4, 1, 2 } );
 
-    scriptingEngine.Execute( R"(
-value0 = Math.ivec4(1, 2, 3, 4)
-value1 = Math.ivec4(3, 4, 5, 6)
-value = value0 + value1
-)" );
-    REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 4, 6, 8, 10 } );
+//     scriptingEngine.Execute( R"(
+// value0 = Math.ivec4(1, 2, 3, 4)
+// value1 = Math.ivec4(3, 4, 5, 6)
+// value = value0 + value1
+// )" );
+//     REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 4, 6, 8, 10 } );
 
-    scriptingEngine.Execute( "value = Math.ivec4(1, 2, 3, 4) * 2" );
-    REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 2, 4, 6, 8 } );
+//     scriptingEngine.Execute( "value = Math.ivec4(1, 2, 3, 4) * 2" );
+//     REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 2, 4, 6, 8 } );
 
-    scriptingEngine.Execute( "value = 2 *Math.ivec4(1, 2, 3, 4)" );
-    REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 2, 4, 6, 8 } );
-}
+//     scriptingEngine.Execute( "value = 2 *Math.ivec4(1, 2, 3, 4)" );
+//     REQUIRE( scriptingEngine.Get<ivec4>( "value" ) == ivec4{ 2, 4, 6, 8 } );
+// }
 
-TEST_CASE( "LUA uVec2 type", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA uVec2 type", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = Math.uvec2(1, 2)" );
-    REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 1, 2 } );
+//     scriptingEngine.Execute( "value = Math.uvec2(1, 2)" );
+//     REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 1, 2 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.uvec2(0, 0)
-value.x = 3
-value.y = 4
-)" );
-    REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 3, 4 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.uvec2(0, 0)
+// value.x = 3
+// value.y = 4
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 3, 4 } );
 
-    scriptingEngine.Execute( R"(
-value0 = Math.uvec2(1, 2)
-value1 = Math.uvec2(3, 4)
-value = value0 + value1
-)" );
-    REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 4, 6 } );
+//     scriptingEngine.Execute( R"(
+// value0 = Math.uvec2(1, 2)
+// value1 = Math.uvec2(3, 4)
+// value = value0 + value1
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 4, 6 } );
 
-    scriptingEngine.Execute( "value = Math.uvec2(1, 2) * 2" );
-    REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 2, 4 } );
+//     scriptingEngine.Execute( "value = Math.uvec2(1, 2) * 2" );
+//     REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 2, 4 } );
 
-    scriptingEngine.Execute( R"(
-value = 2 * Math.uvec2(1, 2)
-)" );
-    REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 2, 4 } );
-}
+//     scriptingEngine.Execute( R"(
+// value = 2 * Math.uvec2(1, 2)
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec2>( "value" ) == uvec2{ 2, 4 } );
+// }
 
-TEST_CASE( "LUA uVec3 type", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA uVec3 type", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = Math.uvec3(1, 2, 3)" );
-    REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 1, 2, 3 } );
+//     scriptingEngine.Execute( "value = Math.uvec3(1, 2, 3)" );
+//     REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 1, 2, 3 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.uvec3(0, 0, 0)
-value.x = 3
-value.y = 4
-value.z = 1
-)" );
-    REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 3, 4, 1 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.uvec3(0, 0, 0)
+// value.x = 3
+// value.y = 4
+// value.z = 1
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 3, 4, 1 } );
 
-    scriptingEngine.Execute( R"(
-value0 = Math.uvec3(1, 2, 3)
-value1 = Math.uvec3(3, 4, 5)
-value = value0 + value1
-)" );
-    REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 4, 6, 8 } );
+//     scriptingEngine.Execute( R"(
+// value0 = Math.uvec3(1, 2, 3)
+// value1 = Math.uvec3(3, 4, 5)
+// value = value0 + value1
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 4, 6, 8 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.uvec3(1, 2, 3) * 2
-)" );
-    REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 2, 4, 6 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.uvec3(1, 2, 3) * 2
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 2, 4, 6 } );
 
-    scriptingEngine.Execute( "value = 2 * Math.uvec3(1, 2, 3)" );
-    REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 2, 4, 6 } );
-}
+//     scriptingEngine.Execute( "value = 2 * Math.uvec3(1, 2, 3)" );
+//     REQUIRE( scriptingEngine.Get<uvec3>( "value" ) == uvec3{ 2, 4, 6 } );
+// }
 
-TEST_CASE( "LUA uVec4 type", "[CORE_SCRIPTING]" )
-{
-    script_bindings scriptingEngine{};
+// TEST_CASE( "LUA uVec4 type", "[CORE_SCRIPTING]" )
+// {
+//     script_bindings scriptingEngine{};
 
-    scriptingEngine.Execute( "value = Math.uvec4(1, 2, 3, 4)" );
-    REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 1, 2, 3, 4 } );
+//     scriptingEngine.Execute( "value = Math.uvec4(1, 2, 3, 4)" );
+//     REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 1, 2, 3, 4 } );
 
-    scriptingEngine.Execute( R"(
-value = Math.uvec4(0, 0, 0, 4)
-value.x = 3
-value.y = 4
-value.z = 1
-value.w = 2
-)" );
-    REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 3, 4, 1, 2 } );
+//     scriptingEngine.Execute( R"(
+// value = Math.uvec4(0, 0, 0, 4)
+// value.x = 3
+// value.y = 4
+// value.z = 1
+// value.w = 2
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 3, 4, 1, 2 } );
 
-    scriptingEngine.Execute( R"(
-value0 = Math.uvec4(1, 2, 3, 4)
-value1 = Math.uvec4(3, 4, 5, 6)
-value = value0 + value1
-)" );
-    REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 4, 6, 8, 10 } );
+//     scriptingEngine.Execute( R"(
+// value0 = Math.uvec4(1, 2, 3, 4)
+// value1 = Math.uvec4(3, 4, 5, 6)
+// value = value0 + value1
+// )" );
+//     REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 4, 6, 8, 10 } );
 
-    scriptingEngine.Execute( "value = Math.uvec4(1, 2, 3, 4) * 2" );
-    REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 2, 4, 6, 8 } );
+//     scriptingEngine.Execute( "value = Math.uvec4(1, 2, 3, 4) * 2" );
+//     REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 2, 4, 6, 8 } );
 
-    scriptingEngine.Execute( "value = 2 * Math.uvec4(1, 2, 3, 4)" );
-    REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 2, 4, 6, 8 } );
-}
+//     scriptingEngine.Execute( "value = 2 * Math.uvec4(1, 2, 3, 4)" );
+//     REQUIRE( scriptingEngine.Get<uvec4>( "value" ) == uvec4{ 2, 4, 6, 8 } );
+// }
 
 TEST_CASE( "LUA Mat3 type", "[CORE_SCRIPTING]" )
 {
@@ -465,7 +465,7 @@ TEST_CASE( "LUA Mat3 type", "[CORE_SCRIPTING]" )
     REQUIRE( scriptingEngine.Get<mat3>( "value" ) == mat3{ 4.0 } );
 
     scriptingEngine.Execute( "value = Math.mat3(Math.vec3(1, 2, 3))" );
-    REQUIRE( scriptingEngine.Get<mat3>( "value" ) == FromDiagonal( vec3{ 1, 2, 3 } ) );
+    REQUIRE( scriptingEngine.Get<mat3>( "value" ) == from_diagonal( vec3{ 1, 2, 3 } ) );
 
     scriptingEngine.Execute( "value = Math.mat3(Math.vec3(1, 2, 3),Math.vec3(4, 5, 6), Math.vec3(7, 8, 9))" );
     REQUIRE( scriptingEngine.Get<mat3>( "value" ) == mat3( vec3{ 1, 2, 3 }, vec3{ 4, 5, 6 }, vec3{ 7, 8, 9 } ) );
@@ -482,7 +482,7 @@ TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
     REQUIRE( scriptingEngine.Get<mat4>( "value" ) == mat4{ 4.0 } );
 
     scriptingEngine.Execute( "value = Math.mat4(Math.vec4(1, 2, 3, 4))" );
-    REQUIRE( scriptingEngine.Get<mat4>( "value" ) == FromDiagonal( vec4{ 1, 2, 3, 4 } ) );
+    REQUIRE( scriptingEngine.Get<mat4>( "value" ) == from_diagonal( vec4{ 1, 2, 3, 4 } ) );
 
     scriptingEngine.Execute(
         "value = Math.mat4(Math.vec4(1, 2, 3, 1),Math.vec4(4, 5, 6, 2), Math.vec4(7, 8, 9, 3), Math.vec4(10, 11, 12, 4))" );
