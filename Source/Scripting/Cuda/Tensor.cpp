@@ -202,8 +202,8 @@ namespace SE::Core
         declare_primitive_type<multi_tensor_value_t>( opsModule, "sMultiTensorComponent" );
 
         // clang-format off
-        auto lConstantInitializerComponent = opsModule.new_usertype<constant_value_initializer_t>("sConstantValueInitializerComponent");
-        lConstantInitializerComponent[call_constructor] = [](scalar_type_t aType, double value)
+        auto constantInitializerComponent = opsModule.new_usertype<constant_value_initializer_t>("sConstantValueInitializerComponent");
+        constantInitializerComponent[call_constructor] = [](scalar_type_t aType, double value)
         {
             switch(aType)
             {
@@ -233,10 +233,10 @@ namespace SE::Core
             }
         };
 
-        auto lVectorInitializerComponent = opsModule.new_usertype<vector_initializer_t>( "sVectorInitializerComponent" );
+        auto vectorInitializerComponent = opsModule.new_usertype<vector_initializer_t>( "sVectorInitializerComponent" );
 
         // clang-format off
-        lVectorInitializerComponent[call_constructor] = factories(
+        vectorInitializerComponent[call_constructor] = factories(
             []( vector_t<float> value)    { return vector_initializer_t{ value }; },
             []( vector_t<double> value)   { return vector_initializer_t{ value }; },
             []( vector_t<uint8_t> value)  { return vector_initializer_t{ value }; },
@@ -250,9 +250,9 @@ namespace SE::Core
         );
         // clang-format on
 
-        auto lDataInitializerComponent = opsModule.new_usertype<data_initializer_t>( "sDataInitializerComponent" );
+        auto dataInitializerComponent = opsModule.new_usertype<data_initializer_t>( "sDataInitializerComponent" );
         // clang-format off
-        lDataInitializerComponent[call_constructor] = factories(
+        dataInitializerComponent[call_constructor] = factories(
             []( vector_t<float> value)    { return data_initializer_t{ value }; },
             []( vector_t<double> value)   { return data_initializer_t{ value }; },
             []( vector_t<uint8_t> value)  { return data_initializer_t{ value }; },
@@ -266,14 +266,14 @@ namespace SE::Core
         );
         // clang-format on
 
-        auto lRandomUniformInitializerComponent =
+        auto randomUniformInitializerComponent =
             opsModule.new_usertype<random_uniform_initializer_t>( "sRandomUniformInitializerComponent" );
-        lRandomUniformInitializerComponent[call_constructor] = []( scalar_type_t value )
+        randomUniformInitializerComponent[call_constructor] = []( scalar_type_t value )
         { return random_uniform_initializer_t{ value }; };
 
-        auto lRandomNormalInitializerComponent =
+        auto randomNormalInitializerComponent =
             opsModule.new_usertype<random_normal_initializer_t>( "sRandomNormalInitializerComponent" );
-        lRandomNormalInitializerComponent[call_constructor] = []( scalar_type_t value, double mean, double std )
+        randomNormalInitializerComponent[call_constructor] = []( scalar_type_t value, double mean, double std )
         {
             switch( value )
             {
@@ -353,9 +353,15 @@ namespace SE::Core
         opsModule["Slice"]    = TensorOps::Slice;
         opsModule["HCat"]     = TensorOps::HCat;
 
-        opsModule["Summation"] = overload( []( scope_t &scope, graph_node_t const &array ) { return Summation( scope, array ); },
-                                            []( scope_t &scope, graph_node_t const &array, graph_node_t const &aBegin,
-                                                graph_node_t const &aEnd ) { return Summation( scope, array, aBegin, aEnd ); } );
+        // clang-format off
+        opsModule["Summation"] = overload( 
+            []( scope_t &scope, graph_node_t const &array ) { return Summation( scope, array ); },
+            []( scope_t &scope, graph_node_t const &array, graph_node_t const &begin, graph_node_t const &end ) 
+            { 
+                return Summation( scope, array, begin, end ); 
+            } 
+        );
+        //clang-format on
 
         opsModule["CountTrue"]    = TensorOps::CountTrue;
         opsModule["CountNonZero"] = TensorOps::CountNonZero;

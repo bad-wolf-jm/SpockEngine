@@ -19,8 +19,7 @@ namespace SE::Core
             scriptState["length2"]   = []( _VecType vector ) -> _VecType::value_type { return length2( vector ); };
             scriptState["dist2"]     = []( _VecType vector0, _VecType vector1 ) -> _VecType::value_type
             { return dist2( vector0, vector1 ); };
-            scriptState["dot"] = []( _VecType vector0, _VecType vector1 ) -> _VecType::value_type
-            { return dot( vector0, vector1 ); };
+            scriptState["dot"] = []( _VecType vector0, _VecType vector1 ) -> _VecType::value_type { return dot( vector0, vector1 ); };
             scriptState["mix"] = []( _VecType vector0, _VecType vector1, float coefficient ) -> _VecType
             { return mix<_VecType>( vector0, vector1, coefficient ); };
         }

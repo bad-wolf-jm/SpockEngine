@@ -47,11 +47,11 @@ namespace SE::Core
 
         // clang-format off
         textureSampler2DType[call_constructor] = factories( 
-                []( ref_t<Cuda::texture2d_t> &texture, sol::table createInfo )
-                { 
-                    return Cuda::texture_sampler2d_t( texture, parse_sampler_info( createInfo ) ); 
-                }
-            );
+            []( ref_t<Cuda::texture2d_t> &texture, sol::table createInfo )
+            { 
+                return Cuda::texture_sampler2d_t( texture, parse_sampler_info( createInfo ) ); 
+            }
+        );
         // clang-format on
     }
 }; // namespace SE::Core
