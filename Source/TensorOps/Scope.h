@@ -18,7 +18,6 @@
 
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"
-#include "Core/CUDA/CudaAssert.h"
 
 #include "NodeComponents.h"
 #include "NodeControllers.h"

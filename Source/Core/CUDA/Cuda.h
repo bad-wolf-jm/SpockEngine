@@ -25,6 +25,21 @@
 #    define CUDA_KERNEL_DEFINITION
 #endif
 
+#ifndef CUDA_ASSERT
+#    define CUDA_ASSERT( err ) __CUDA_ASSERT( (cudaError_t)err, __FILE__, __LINE__ )
+
+inline void __CUDA_ASSERT( cudaError_t err, const char *file, const int line )
+{
+    if( CUDA_SUCCESS == err )
+        return;
+
+    const char *errorStr = cudaGetErrorString( err );
+    SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", err, errorStr, file, line );
+    throw std::runtime_error( "CUDA_ASSERT()" );
+}
+
+#endif
+
 #define RETURN_UNLESS( condition ) \
     do                             \
     {                              \
@@ -44,24 +59,24 @@ namespace SE::Cuda
 
     void SyncDevice();
 
-    void Malloc( void **aDestination, size_t aSize );
-    void Free( void **aDestination );
-    void MemCopyHostToDevice( void *aDestination, void *aSource, size_t aSize );
-    void MemCopyDeviceToHost( void *aDestination, void *aSource, size_t aSize );
+    void Malloc( void **destination, size_t size );
+    void Free( void **destination );
+    void MemCopyHostToDevice( void *destination, void *source, size_t size );
+    void MemCopyDeviceToHost( void *destination, void *source, size_t size );
 
-    void MallocArray( array_t *aDestination, color_format aFormat, size_t aWidth, size_t aHeight );
-    void FreeArray( array_t *aDestination );
-    void ArrayCopyHostToDevice( array_t aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize );
-    void ArrayCopyDeviceToHost( array_t aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize );
+    void MallocArray( array_t *destination, color_format format, size_t width, size_t height );
+    void FreeArray( array_t *destination );
+    void ArrayCopyHostToDevice( array_t destination, size_t widthOffset, size_t heightOffset, void *source, size_t size );
+    void ArrayCopyDeviceToHost( array_t destination, void *source, size_t widthOffset, size_t heightOffset, size_t size );
 
-    void ImportExternalMemory( external_memory_t *aDestination, void *aExternalBuffer, size_t aSize );
-    void DestroyExternalMemory( external_memory_t *aDestination );
+    void ImportExternalMemory( external_memory_t *destination, void *externalBuffer, size_t size );
+    void DestroyExternalMemory( external_memory_t *destination );
 
-    void GetMappedMipmappedArray( mipmapped_array_t *aDestination, external_memory_t aExternalMemoryHandle, color_format aFormat,
-                                  int32_t aWidth, int32_t aHeight );
-    void GeMipmappedArrayLevel( array_t *aDestination, mipmapped_array_t aMipMappedArray, uint32_t aLevel );
-    void FreeMipmappedArray( mipmapped_array_t *aDestination );
+    void GetMappedMipmappedArray( mipmapped_array_t *destination, external_memory_t externalMemoryHandle, color_format format,
+                                  int32_t width, int32_t height );
+    void GeMipmappedArrayLevel( array_t *destination, mipmapped_array_t mipMappedArray, uint32_t aLevel );
+    void FreeMipmappedArray( mipmapped_array_t *destination );
 
-    void CreateTextureObject( texture_object_t *aDestination, array_t aDataArray, texture_sampling_info_t aSpec );
-    void FreeTextureObject( texture_object_t *aDestination );
+    void CreateTextureObject( texture_object_t *destination, array_t dataArray, texture_sampling_info_t spec );
+    void FreeTextureObject( texture_object_t *destination );
 } // namespace SE::Cuda

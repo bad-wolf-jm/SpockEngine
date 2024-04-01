@@ -8,8 +8,6 @@
 
 #include "Conversion.h"
 
-#include "Core/CUDA/CudaAssert.h"
-
 using namespace SE::Core;
 namespace SE::Cuda
 {
