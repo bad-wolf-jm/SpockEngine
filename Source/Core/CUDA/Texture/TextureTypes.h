@@ -45,21 +45,21 @@ namespace SE::Core
     };
 
     /** @brief Minification and magnification filters */
-    enum class sampler_filter_t : uint8_t
+    enum class sampler_filter : uint8_t
     {
         NEAREST = 0, /**!< specifies nearest filtering. */
         LINEAR  = 1  /**!< specifies linear filtering. */
     };
 
     /** @brief Mipmap filter*/
-    enum class sampler_mipmap_t : uint8_t
+    enum class sampler_mipmap : uint8_t
     {
         NEAREST = 0, /**!< specifies nearest filtering. */
         LINEAR  = 1  /**!< specifies linear filtering. */
     };
 
     /** @brief Wrapping mode for samplers*/
-    enum class sampler_wrapping_t : uint32_t
+    enum class sampler_wrapping : uint32_t
     {
         REPEAT                 = 0, /**!< specifies that the repeat wrap mode will be used. */
         MIRRORED_REPEAT        = 1, /**!< specifies that the mirrored repeat  wrap mode will be used. */
@@ -75,11 +75,11 @@ namespace SE::Core
      */
     struct texture_sampling_info_t
     {
-        sampler_filter_t   mFilter                = sampler_filter_t::LINEAR;
-        sampler_mipmap_t   mMipFilter             = sampler_mipmap_t::LINEAR;
-        sampler_wrapping_t mWrapping              = sampler_wrapping_t::CLAMP_TO_BORDER;
-        bool               mNormalizedCoordinates = false;
-        bool               mNormalizedValues      = false;
+        sampler_filter   mFilter                = sampler_filter::LINEAR;
+        sampler_mipmap   mMipFilter             = sampler_mipmap::LINEAR;
+        sampler_wrapping mWrapping              = sampler_wrapping::CLAMP_TO_BORDER;
+        bool             mNormalizedCoordinates = false;
+        bool             mNormalizedValues      = false;
 
         std::array<float, 2> mScaling     = { 1.0f, 1.0f };             //!< Specified the scaling to be used.
         std::array<float, 2> mOffset      = { 0.0f, 0.0f };             //!< Specified the offset to be used.
@@ -90,7 +90,7 @@ namespace SE::Core
     };
 
     /** @brief */
-    enum class texture_type_t : uint8_t
+    enum class texture_type : uint8_t
     {
         UNKNOWN          = 0,
         TEXTURE_2D       = 1, //!< The texture is an ordinary 2 dimensional image
@@ -107,47 +107,47 @@ namespace SE::Core
      */
     struct image_data_t
     {
-        color_format    mFormat    = color_format::UNDEFINED; //!< Image format
-        size_t            mWidth     = 0;                         //!< Width of the image, in pixels
-        size_t            mHeight    = 0;                         //!< Height of the image, in pixels
-        size_t            mByteSize  = 0;                         //!< Size of the pixel data pointer, in bytes
-        vector_t<uint8_t> mPixelData = {};                        //!< Raw pixel data
+        color_format      mFormat    = color_format::UNDEFINED; //!< Image format
+        size_t            mWidth     = 0;                       //!< Width of the image, in pixels
+        size_t            mHeight    = 0;                       //!< Height of the image, in pixels
+        size_t            mByteSize  = 0;                       //!< Size of the pixel data pointer, in bytes
+        vector_t<uint8_t> mPixelData = {};                      //!< Raw pixel data
 
         template <typename PixelType>
-        static image_data_t Create( color_format aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
+        static image_data_t Create( color_format format, size_t width, size_t height, uint8_t *pixelData )
         {
-            image_data_t o_ImageData{};
-            o_ImageData.mWidth     = aWidth;
-            o_ImageData.mHeight    = aHeight;
-            o_ImageData.mFormat    = aFormat;
-            o_ImageData.mByteSize  = aHeight * aWidth * sizeof( PixelType );
-            o_ImageData.mPixelData = vector_t<uint8_t>( aPixelData, aPixelData + o_ImageData.mByteSize );
+            image_data_t imageData{};
+            imageData.mWidth     = width;
+            imageData.mHeight    = height;
+            imageData.mFormat    = format;
+            imageData.mByteSize  = height * width * sizeof( PixelType );
+            imageData.mPixelData = vector_t<uint8_t>( pixelData, pixelData + imageData.mByteSize );
 
-            return o_ImageData;
+            return imageData;
         }
     };
 
     /// @brief Load an image file using stb_image. The image can be in any format that stb_image can handle
-    image_data_t LoadImageData( fs::path const &aPath );
+    image_data_t LoadImageData( fs::path const &path );
 
     struct texture_create_info_t
     {
-        texture_type_t mType =
-            texture_type_t::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
+        texture_type mType =
+            texture_type::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
 
         color_format mFormat         = color_format::UNDEFINED; /**!< Specifies the color format used for the texture*/
-        int32_t        mWidth          = 0;                         /**!< Width of the texture, in pixels*/
-        int32_t        mHeight         = 0;                         /**!< Height of the texture, in pixels*/
-        int32_t        mDepth          = 0;                         /**!< Depth of the texture, in pixels (for 3D textures only)*/
-        int32_t        mMipLevels      = 1; /**!< Specifies the length of the mip chain associated with the texture*/
-        int32_t        mLayers         = 1; /**!< Depth of the texture, in pixels (for 3D textures only)*/
-        bool           mIsDepthTexture = false;
+        int32_t      mWidth          = 0;                       /**!< Width of the texture, in pixels*/
+        int32_t      mHeight         = 0;                       /**!< Height of the texture, in pixels*/
+        int32_t      mDepth          = 0;                       /**!< Depth of the texture, in pixels (for 3D textures only)*/
+        int32_t      mMipLevels      = 1; /**!< Specifies the length of the mip chain associated with the texture*/
+        int32_t      mLayers         = 1; /**!< Depth of the texture, in pixels (for 3D textures only)*/
+        bool         mIsDepthTexture = false;
 
         texture_create_info_t()                                = default;
         texture_create_info_t( texture_create_info_t const & ) = default;
     };
 
-    enum cube_face_t : uint8_t
+    enum cube_face : uint8_t
     {
         POSITIVE_X = 0,
         NEGATIVE_X = 1,

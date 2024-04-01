@@ -72,10 +72,10 @@ namespace SE::Cuda
 
         /** @brief Create a new sampler for the given texture and configuration
          *
-         * @param aTexture Texture to sample
-         * @param aSamplingInfo Sampling data
+         * @param texture Texture to sample
+         * @param samplingInfo Sampling data
          */
-        texture_sampler_cubemap_t( ref_t<texture2d_t> &aTexture, const texture_sampling_info_t &aSamplingInfo );
+        texture_sampler_cubemap_t( ref_t<texture2d_t> &texture, const texture_sampling_info_t &samplingInfo );
 
         void InitializeTextureSampler();
     };

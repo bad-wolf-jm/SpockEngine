@@ -52,8 +52,8 @@ namespace SE::Cuda
          *
          * Create a texture from the provided raw data, according to the requested specification
          *
-         * @param aSpec Texture specification
-         * @param aData Texture data
+         * @param spec Texture specification
+         * @param data Texture data
          */
         texture2d_t() = default;
 
@@ -61,47 +61,47 @@ namespace SE::Cuda
          *
          * Create a texture from the provided raw data, according to the requested specification
          *
-         * @param aSpec Texture specification
-         * @param aData Texture data
+         * @param spec Texture specification
+         * @param data Texture data
          */
-        texture2d_t( texture_create_info_t &aSpec, vector_t<uint8_t> aData );
+        texture2d_t( texture_create_info_t &spec, vector_t<uint8_t> data );
 
         /** @brief Constructor
          *
          * Create a texture from the provided raw data, according to the requested specification
          *
-         * @param aSpec Texture specification
-         * @param aData Texture data
-         * @param aSize Data size, in bytes
+         * @param spec Texture specification
+         * @param data Texture data
+         * @param size Data size, in bytes
          */
-        texture2d_t( texture_create_info_t &aSpec, uint8_t *aData, size_t aSize );
+        texture2d_t( texture_create_info_t &spec, uint8_t *data, size_t size );
 
         /** @brief Constructor
          *
          * Create a texture from the provided imagedata, according to the requested specification.
          *
-         * @param aSpec      Texture specification
-         * @param aImageData Texture image data
+         * @param spec      Texture specification
+         * @param imageData Texture image data
          */
-        texture2d_t( texture_create_info_t &aSpec, image_data_t &aImageData );
+        texture2d_t( texture_create_info_t &spec, image_data_t &imageData );
 
         /** @brief Constructor
          *
          * Create a texture from the provided imagedata, according to the requested specification.
          *
-         * @param aSpec      Texture specification
-         * @param aImageData Texture image data
+         * @param spec      Texture specification
+         * @param imageData Texture image data
          */
-        texture2d_t( texture_create_info_t &aSpec, void *aExternalBuffer, size_t aImageMemorySize );
+        texture2d_t( texture_create_info_t &spec, void *externalBuffer, size_t imageMemorySize );
 
         /** @brief Constructor
          *
          * Create a texture from the provided imagedata, according to the requested specification.
          *
-         * @param aSpec      Texture specification
-         * @param aImageData Texture image data
+         * @param spec      Texture specification
+         * @param imageData Texture image data
          */
-        // Texture2D( sTextureCreateInfo &aSpec, Graphics::Texture2D &aImageData );
+        // Texture2D( sTextureCreateInfo &spec, Graphics::Texture2D &imageData );
 
         /** @brief Destructor */
         ~texture2d_t();
@@ -155,10 +155,11 @@ namespace SE::Cuda
 
         /** @brief Create a new sampler for the given texture and configuration
          *
-         * @param aTexture Texture to sample
-         * @param aSamplingInfo Sampling data
+         * @param texture Texture to sample
+         * @param samplingInfo Sampling data
          */
-        texture_sampler2d_t( ref_t<texture2d_t> &aTexture, const texture_sampling_info_t &aSamplingInfo );
+        texture_sampler2d_t( ref_t<texture2d_t> &texture, const texture_sampling_info_t &samplingInfo );
+        
         void InitializeTextureSampler();
     };
 } // namespace SE::Cuda

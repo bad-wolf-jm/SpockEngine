@@ -12,36 +12,36 @@
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    texture2d_t::texture2d_t( texture_create_info_t &aSpec, vector_t<uint8_t> aData )
-        : mSpec( aSpec )
+    texture2d_t::texture2d_t( texture_create_info_t &spec, vector_t<uint8_t> data )
+        : mSpec( spec )
     {
         MallocArray( &mInternalCudaArray, mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ) );
-        ArrayCopyHostToDevice( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData.data() ), aData.size() );
+        ArrayCopyHostToDevice( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( data.data() ), data.size() );
     }
 
-    texture2d_t::texture2d_t( texture_create_info_t &aSpec, uint8_t *aData, size_t aSize )
-        : mSpec( aSpec )
+    texture2d_t::texture2d_t( texture_create_info_t &spec, uint8_t *data, size_t size )
+        : mSpec( spec )
     {
         MallocArray( &mInternalCudaArray, mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ) );
-        ArrayCopyHostToDevice( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData ), aSize );
+        ArrayCopyHostToDevice( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( data ), size );
     }
 
-    texture2d_t::texture2d_t( texture_create_info_t &aSpec, image_data_t &aImageData )
-        : mSpec( aSpec )
+    texture2d_t::texture2d_t( texture_create_info_t &spec, image_data_t &imageData )
+        : mSpec( spec )
     {
-        mSpec.mFormat = aImageData.mFormat;
-        mSpec.mWidth  = aImageData.mWidth;
-        mSpec.mHeight = aImageData.mHeight;
+        mSpec.mFormat = imageData.mFormat;
+        mSpec.mWidth  = imageData.mWidth;
+        mSpec.mHeight = imageData.mHeight;
 
         MallocArray( &mInternalCudaArray, mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ) );
-        ArrayCopyHostToDevice( mInternalCudaArray, 0, 0, aImageData.mPixelData.data(), aImageData.mByteSize );
+        ArrayCopyHostToDevice( mInternalCudaArray, 0, 0, imageData.mPixelData.data(), imageData.mByteSize );
     }
 
-    texture2d_t::texture2d_t( texture_create_info_t &aSpec, void *aExternalBuffer, size_t aImageMemorySize )
-        : mSpec( aSpec )
-        , mImageMemorySize{ aImageMemorySize }
+    texture2d_t::texture2d_t( texture_create_info_t &spec, void *externalBuffer, size_t imageMemorySize )
+        : mSpec( spec )
+        , mImageMemorySize{ imageMemorySize }
     {
-        ImportExternalMemory( &mExternalMemoryHandle, aExternalBuffer, aImageMemorySize );
+        ImportExternalMemory( &mExternalMemoryHandle, externalBuffer, imageMemorySize );
         GetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle, mSpec.mFormat, mSpec.mWidth, mSpec.mHeight );
         GeMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 );
     }
@@ -53,9 +53,9 @@ namespace SE::Cuda
         DestroyExternalMemory( &mExternalMemoryHandle );
     }
 
-    texture_sampler2d_t::texture_sampler2d_t( ref_t<texture2d_t> &aTexture, const texture_sampling_info_t &aSamplingSpec )
-        : mTexture{ aTexture }
-        , mSpec{ aSamplingSpec }
+    texture_sampler2d_t::texture_sampler2d_t( ref_t<texture2d_t> &texture, const texture_sampling_info_t &samplingSpec )
+        : mTexture{ texture }
+        , mSpec{ samplingSpec }
     {
         InitializeTextureSampler();
     }

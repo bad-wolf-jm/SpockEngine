@@ -158,8 +158,8 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lSamplingInfo.mNormalizedValues        = true;
             Cuda::texture_sampler2d_t lTextureSampler = Cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
 
-            REQUIRE( lTextureSampler.mSpec.mFilter == sampler_filter_t::LINEAR );
-            REQUIRE( lTextureSampler.mSpec.mWrapping == sampler_wrapping_t::CLAMP_TO_BORDER );
+            REQUIRE( lTextureSampler.mSpec.mFilter == sampler_filter::LINEAR );
+            REQUIRE( lTextureSampler.mSpec.mWrapping == sampler_wrapping::CLAMP_TO_BORDER );
             REQUIRE( lTextureSampler.mSpec.mBorderColor[0] == 0.0f );
             REQUIRE( lTextureSampler.mSpec.mBorderColor[1] == 0.0f );
             REQUIRE( lTextureSampler.mSpec.mBorderColor[2] == 0.0f );

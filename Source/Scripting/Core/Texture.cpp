@@ -16,7 +16,7 @@ namespace SE::Core
     texture_create_info_t parse_create_info( sol::table table )
     {
         texture_create_info_t createInfo{};
-        createInfo.mType      = table["type"].valid() ? table["type"] : texture_type_t::TEXTURE_2D;
+        createInfo.mType      = table["type"].valid() ? table["type"] : texture_type::TEXTURE_2D;
         createInfo.mFormat    = table["color_format"].valid() ? table["color_format"] : color_format::UNDEFINED;
         createInfo.mWidth     = table["width"].valid() ? table["width"] : 0;
         createInfo.mHeight    = table["height"].valid() ? table["height"] : 0;
@@ -60,10 +60,10 @@ namespace SE::Core
     texture_sampling_info_t parse_sampler_info( sol::table table )
     {
         texture_sampling_info_t samplingInfo{};
-        samplingInfo.mFilter = table["minification"].valid() ? table["minification"] : sampler_filter_t::LINEAR;
+        samplingInfo.mFilter = table["minification"].valid() ? table["minification"] : sampler_filter::LINEAR;
         // samplingInfo.mMagnification = table["magnification"].valid() ? table["magnification"] : eSamplerFilter::LINEAR;
-        samplingInfo.mMipFilter = table["mip"].valid() ? table["mip"] : sampler_mipmap_t::LINEAR;
-        samplingInfo.mWrapping  = table["wrapping"].valid() ? table["wrapping"] : sampler_wrapping_t::CLAMP_TO_BORDER;
+        samplingInfo.mMipFilter = table["mip"].valid() ? table["mip"] : sampler_mipmap::LINEAR;
+        samplingInfo.mWrapping  = table["wrapping"].valid() ? table["wrapping"] : sampler_wrapping::CLAMP_TO_BORDER;
 
         auto lScaling = table.get<sol::table>( "scaling" );
         if( !lScaling.valid() )
@@ -103,7 +103,7 @@ namespace SE::Core
 
     void require_texture( sol::table &scriptingState )
     {
-        scriptingState.new_enum( "eTextureType", "TEXTURE_2D", texture_type_t::TEXTURE_2D, "TEXTURE_3D", texture_type_t::TEXTURE_3D );
+        scriptingState.new_enum( "eTextureType", "TEXTURE_2D", texture_type::TEXTURE_2D, "TEXTURE_3D", texture_type::TEXTURE_3D );
 
         // clang-format off
         scriptingState.new_enum( "eColorFormat",
@@ -131,16 +131,16 @@ namespace SE::Core
             "BGRA8_SRGB",          color_format::BGRA8_SRGB );
         // clang-format on
 
-        scriptingState.new_enum( "eSamplerFilter", "NEAREST", sampler_filter_t::NEAREST, "LINEAR", sampler_filter_t::LINEAR );
-        scriptingState.new_enum( "eSamplerMipmap", "NEAREST", sampler_mipmap_t::NEAREST, "LINEAR", sampler_mipmap_t::LINEAR );
+        scriptingState.new_enum( "eSamplerFilter", "NEAREST", sampler_filter::NEAREST, "LINEAR", sampler_filter::LINEAR );
+        scriptingState.new_enum( "eSamplerMipmap", "NEAREST", sampler_mipmap::NEAREST, "LINEAR", sampler_mipmap::LINEAR );
 
         // clang-format off
         scriptingState.new_enum( "eSamplerWrapping",
-            "REPEAT",          sampler_wrapping_t::REPEAT,
-            "MIRRORED_REPEAT", sampler_wrapping_t::MIRRORED_REPEAT,
-            "CLAMP_TO_EDGE",   sampler_wrapping_t::CLAMP_TO_EDGE,
-            "CLAMP_TO_BORDER", sampler_wrapping_t::CLAMP_TO_BORDER,
-            "MIRROR_CLAMP_TO_BORDER", sampler_wrapping_t::MIRROR_CLAMP_TO_BORDER );
+            "REPEAT",          sampler_wrapping::REPEAT,
+            "MIRRORED_REPEAT", sampler_wrapping::MIRRORED_REPEAT,
+            "CLAMP_TO_EDGE",   sampler_wrapping::CLAMP_TO_EDGE,
+            "CLAMP_TO_BORDER", sampler_wrapping::CLAMP_TO_BORDER,
+            "MIRROR_CLAMP_TO_BORDER", sampler_wrapping::MIRROR_CLAMP_TO_BORDER );
         // clang-format on
 
         // auto lTextureData2DType = scriptingState.new_usertype<texture_data2d_t>( "TextureData2D" );

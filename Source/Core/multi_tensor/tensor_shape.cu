@@ -50,7 +50,7 @@ namespace SE::Core
         size_t currentOffset = 0;
         for( size_t dimIdx = 0; dimIdx < Shape.size(); dimIdx++ )
         {
-            auto &lDim = Shape[dimIdx];
+            auto &dim = Shape[dimIdx];
 
             Strides[dimIdx]            = vector_t<uint32_t>( Rank );
             Strides[dimIdx][Rank - 1] = 1;
@@ -58,11 +58,11 @@ namespace SE::Core
             uint32_t size = ElementSize;
             for( uint32_t i = 0; i < Rank; i++ )
             {
-                MaxDimensions[i] = std::max( MaxDimensions[i], lDim[i] );
+                MaxDimensions[i] = std::max( MaxDimensions[i], dim[i] );
                 if( i < Rank - 1 )
-                    Strides[dimIdx][Rank - i - 2] = Strides[dimIdx][Rank - i - 1] * lDim[Rank - i - 1];
+                    Strides[dimIdx][Rank - i - 2] = Strides[dimIdx][Rank - i - 1] * dim[Rank - i - 1];
 
-                size *= lDim[i];
+                size *= dim[i];
             }
 
             BufferSizes[dimIdx].Size   = size;
@@ -182,7 +182,7 @@ namespace SE::Core
                 k++;
             }
         }
-        
+
         DeviceSideData.Shape.Upload( dimensions );
         DeviceSideData.MaxDimensions.Upload( MaxDimensions );
         DeviceSideData.BufferSizes.Upload( BufferSizes );

@@ -12,9 +12,9 @@
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    texture_sampler_cubemap_t::texture_sampler_cubemap_t( ref_t<texture2d_t> &aTexture, const texture_sampling_info_t &aSamplingSpec )
-        : mTexture{ aTexture }
-        , mSpec{ aSamplingSpec }
+    texture_sampler_cubemap_t::texture_sampler_cubemap_t( ref_t<texture2d_t> &texture, const texture_sampling_info_t &samplingSpec )
+        : mTexture{ texture }
+        , mSpec{ samplingSpec }
     {
         InitializeTextureSampler();
     }

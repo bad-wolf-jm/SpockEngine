@@ -24,7 +24,7 @@ namespace SE::Cuda
 {
     using namespace SE::Core;
 
-    cudaChannelFormatDesc  ToCudaChannelDesc( color_format aColorFormat );
-    cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping_t aAddressMode );
-    cudaTextureFilterMode  ToCudaFilterMode( sampler_filter_t aFilterMode );
+    cudaChannelFormatDesc  ToCudaChannelDesc( color_format colorFormat );
+    cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping addressMode );
+    cudaTextureFilterMode  ToCudaFilterMode( sampler_filter filterMode );
 } // namespace SE::Cuda

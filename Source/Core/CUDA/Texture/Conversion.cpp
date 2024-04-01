@@ -12,9 +12,9 @@ using namespace SE::Core;
 namespace SE::Cuda
 {
     /// @brief Convert our internal color format into a CUDA channel description
-    cudaChannelFormatDesc ToCudaChannelDesc( color_format aColorFormat )
+    cudaChannelFormatDesc ToCudaChannelDesc( color_format colorFormat )
     {
-        switch( aColorFormat )
+        switch( colorFormat )
         {
         case color_format::R32_FLOAT:
             return cudaCreateChannelDesc( 32, 0, 0, 0, cudaChannelFormatKindFloat );
@@ -37,31 +37,31 @@ namespace SE::Cuda
     }
 
     /// @brief Convert our wrapping descriptor into a CUDA wrapping descriptor
-    cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping_t aAddressMode )
+    cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping addressMode )
     {
-        switch( aAddressMode )
+        switch( addressMode )
         {
-        case sampler_wrapping_t::REPEAT:
+        case sampler_wrapping::REPEAT:
             return cudaAddressModeWrap;
-        case sampler_wrapping_t::MIRRORED_REPEAT:
+        case sampler_wrapping::MIRRORED_REPEAT:
             return cudaAddressModeMirror;
-        case sampler_wrapping_t::CLAMP_TO_EDGE:
+        case sampler_wrapping::CLAMP_TO_EDGE:
             return cudaAddressModeClamp;
-        case sampler_wrapping_t::CLAMP_TO_BORDER:
-        case sampler_wrapping_t::MIRROR_CLAMP_TO_BORDER:
+        case sampler_wrapping::CLAMP_TO_BORDER:
+        case sampler_wrapping::MIRROR_CLAMP_TO_BORDER:
         default:
             return cudaAddressModeBorder;
         }
     }
 
     /// @brief Convert our filtering descriptor into a CUDA filtering descriptor
-    cudaTextureFilterMode ToCudaFilterMode( sampler_filter_t aFilterMode )
+    cudaTextureFilterMode ToCudaFilterMode( sampler_filter filterMode )
     {
-        switch( aFilterMode )
+        switch( filterMode )
         {
-        case sampler_filter_t::NEAREST:
+        case sampler_filter::NEAREST:
             return cudaFilterModePoint;
-        case sampler_filter_t::LINEAR:
+        case sampler_filter::LINEAR:
         default:
             return cudaFilterModeLinear;
         }
