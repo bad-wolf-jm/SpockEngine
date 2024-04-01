@@ -17,13 +17,13 @@
 #ifndef CUDA_ASSERT
 #    define CUDA_ASSERT( err ) __CUDA_ASSERT( (cudaError_t)err, __FILE__, __LINE__ )
 
-inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine )
+inline void __CUDA_ASSERT( cudaError_t err, const char *file, const int line )
 {
-    if( CUDA_SUCCESS == aErr )
+    if( CUDA_SUCCESS == err )
         return;
 
-    const char *errorStr = cudaGetErrorString( aErr );
-    SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", aErr, errorStr, aFile, aLine );
+    const char *errorStr = cudaGetErrorString( err );
+    SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", err, errorStr, file, line );
     throw std::runtime_error( "CUDA_ASSERT()" );
 }
 
