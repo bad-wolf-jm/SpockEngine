@@ -21,7 +21,7 @@
 #include <vector>
 #include "Math/Types.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     template <typename _Ty>
     using ref_t = std::shared_ptr<_Ty>;

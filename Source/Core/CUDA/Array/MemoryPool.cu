@@ -12,7 +12,7 @@
 
 #include "Core/Logging.h"
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
 
     memory_pool_t::memory_pool_t( size_t totalSize )

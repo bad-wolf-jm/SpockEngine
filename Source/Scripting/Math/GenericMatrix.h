@@ -3,7 +3,7 @@
 #include "Scripting/PrimitiveTypes.h"
 #include <sol/sol.hpp>
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace sol;
 

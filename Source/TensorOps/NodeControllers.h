@@ -11,11 +11,11 @@
 #include "Implementation/HelperMacros.h"
 #include "NodeComponents.h"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
 
-    using namespace SE::Core;
-    using namespace SE::Cuda;
+    using namespace numlua::core;
+    using namespace numlua::cuda;
 
     /// @struct sMultiTensorRunner
     ///

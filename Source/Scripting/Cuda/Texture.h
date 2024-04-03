@@ -4,7 +4,7 @@
 
 #include "Core/Entity/Collection.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     void require_cuda_texture( sol::table &scriptingState );
 }; // names

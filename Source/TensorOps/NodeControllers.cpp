@@ -16,10 +16,10 @@
 
 #include "Core/CUDA/Texture/Texture2D.h"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
 
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     void sARangeOperationController::Run()
     {

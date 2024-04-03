@@ -34,7 +34,7 @@ inline void __CUDA_ASSERT( cudaError_t err, const char *file, const int line )
         return;
 
     const char *errorStr = cudaGetErrorString( err );
-    SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", err, errorStr, file, line );
+    numlua::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", err, errorStr, file, line );
     throw std::runtime_error( "CUDA_ASSERT()" );
 }
 
@@ -47,9 +47,9 @@ inline void __CUDA_ASSERT( cudaError_t err, const char *file, const int line )
             return;                \
     } while( 0 )
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     using raw_pointer_t     = CUdeviceptr;
     using array_t           = cudaArray_t;

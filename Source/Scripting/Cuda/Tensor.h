@@ -5,7 +5,7 @@
 #include "Core/Entity/Collection.h"
 #include "Core/CUDA/Array/MultiTensor.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     void open_tensor_library( sol::table &scriptingState );
 }; // namespace SE::Core

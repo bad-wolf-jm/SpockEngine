@@ -25,7 +25,7 @@
 #include <uuid_v4.h>
 
 using namespace math;
-namespace SE::Core
+namespace numlua::core
 {
     struct tag_t
     {

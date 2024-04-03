@@ -1,6 +1,6 @@
 #include "TypeReflection.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     [[nodiscard]] entt::id_type get_type_id( const sol::table &object )
     {

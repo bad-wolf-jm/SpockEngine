@@ -13,7 +13,7 @@
 #include "Core/CUDA/CudaAssert.h"
 #include "PointerView.h"
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
 
 #pragma once

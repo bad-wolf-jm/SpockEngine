@@ -6,7 +6,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Vector.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     template <typename _Ty>
     struct numeric_array_t

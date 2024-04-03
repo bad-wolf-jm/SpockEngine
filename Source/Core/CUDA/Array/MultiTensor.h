@@ -17,7 +17,7 @@
 
 #include "Core/multi_tensor/tensor_shape.h"
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
     /// @brief Generalized tensor structures
     ///

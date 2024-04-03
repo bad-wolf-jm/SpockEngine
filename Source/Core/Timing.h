@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace SE::Core
+namespace numlua::core
 {
     class every_n_milliseconds_t
     {

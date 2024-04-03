@@ -22,7 +22,7 @@
 #include <filesystem>
 #include <fstream>
 
-namespace SE::Core
+namespace numlua::core
 {
 
     image_data_t LoadImageData( fs::path const &path )
@@ -64,7 +64,7 @@ namespace SE::Core
         imageData.mWidth    = static_cast<size_t>( width );
         imageData.mHeight   = static_cast<size_t>( height );
         imageData.mByteSize = imageData.mWidth * imageData.mHeight * componentCount * channelSize;
-        
+
         return imageData;
     }
 } // namespace SE::Core

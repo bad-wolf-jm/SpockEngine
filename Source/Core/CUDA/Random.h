@@ -2,7 +2,7 @@
 
 #include "CudaAssert.h"
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
     /*! simple 24-bit linear congruence generator */
     template <unsigned int N = 16>

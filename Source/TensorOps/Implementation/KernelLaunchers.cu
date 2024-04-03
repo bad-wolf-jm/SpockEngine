@@ -21,7 +21,7 @@
 
 #include "DeviceKernels.inl"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
 
     struct RandomNumberGenerator

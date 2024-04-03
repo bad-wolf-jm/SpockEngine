@@ -9,7 +9,7 @@
 
 #include "Core/Logging.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace sol;
 

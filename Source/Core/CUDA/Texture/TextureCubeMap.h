@@ -22,10 +22,10 @@
 
 /** \namespace SE::Cuda
  */
-namespace SE::Cuda
+namespace numlua::cuda
 {
 
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     class texture_sampler_cubemap_t;
 

@@ -2,7 +2,7 @@
 
 #include "Core/Math/Types.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace math;
 

@@ -5,7 +5,7 @@
 
 #include "Scripting/PrimitiveTypes.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace sol;
 

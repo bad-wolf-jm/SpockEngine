@@ -9,8 +9,8 @@
 #include "Conversion.h"
 #include "Texture2D.h"
 
-using namespace SE::Core;
-namespace SE::Cuda
+using namespace numlua::core;
+namespace numlua::cuda
 {
     texture2d_t::texture2d_t( texture_create_info_t &spec, vector_t<uint8_t> data )
         : mSpec( spec )

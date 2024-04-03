@@ -18,9 +18,9 @@
  * @brief Internal definition
  *
  */
-namespace SE::Cuda::Internal
+namespace numlua::cuda::Internal
 {
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     /// @struct sGPUDevicePointerView
     ///

@@ -16,17 +16,17 @@
 #include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/Entity/Collection.h"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
 
-    using namespace SE::Core;
+    using namespace numlua::core;
 
-    using multi_tensor_t  = SE::Cuda::multi_tensor_t;
-    using memory_buffer_t = SE::Cuda::memory_buffer_t;
-    using memory_pool_t   = SE::Cuda::memory_pool_t;
-    using tensor_shape_t  = SE::Cuda::tensor_shape_t;
+    using multi_tensor_t  = numlua::cuda::multi_tensor_t;
+    using memory_buffer_t = numlua::cuda::memory_buffer_t;
+    using memory_pool_t   = numlua::cuda::memory_pool_t;
+    using tensor_shape_t  = numlua::cuda::tensor_shape_t;
 
-    using graph_node_t = SE::Core::entity_t;
+    using graph_node_t = numlua::core::entity_t;
 
     /// @brief sGraphOperationController
     ///

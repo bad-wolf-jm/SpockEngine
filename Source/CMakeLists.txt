@@ -6,7 +6,7 @@ message(STATUS ${SHADER_EMBEDDED_FILES})
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-add_library(LTSimulationEngineRuntime STATIC
+add_library(libnumlua STATIC
     Core/Logging.cpp
     Core/Definitions.cpp
 
@@ -35,7 +35,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scripting/ScriptingEngine.cpp
 )
 
-target_link_libraries(LTSimulationEngineRuntime PRIVATE
+target_link_libraries(libnumlua PRIVATE
     fmt
     winmm
     version
@@ -46,8 +46,8 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     lua::lua
 )
 
-target_compile_definitions(LTSimulationEngineRuntime PUBLIC LTSimulationEngineRuntime )
-target_compile_options(LTSimulationEngineRuntime PRIVATE
+target_compile_definitions(libnumlua PUBLIC libnumlua )
+target_compile_options(libnumlua PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj>)
 

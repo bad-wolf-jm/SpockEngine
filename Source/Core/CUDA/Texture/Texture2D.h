@@ -21,10 +21,10 @@
 
 /** \namespace SE::Cuda
  */
-namespace SE::Cuda
+namespace numlua::cuda
 {
 
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     class texture_sampler2d_t;
 
@@ -159,7 +159,7 @@ namespace SE::Cuda
          * @param samplingInfo Sampling data
          */
         texture_sampler2d_t( ref_t<texture2d_t> &texture, const texture_sampling_info_t &samplingInfo );
-        
+
         void InitializeTextureSampler();
     };
 } // namespace SE::Cuda

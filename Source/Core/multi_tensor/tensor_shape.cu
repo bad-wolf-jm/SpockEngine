@@ -1,6 +1,6 @@
 #include "tensor_shape.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     tensor_shape_t::tensor_shape_t( vector_t<vector_t<uint32_t>> const &shape, size_t elementSize )
     {

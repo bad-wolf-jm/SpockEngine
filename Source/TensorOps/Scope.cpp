@@ -12,9 +12,9 @@
 
 #include "Implementation/KernelLaunchers.h"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
-    using namespace SE::Cuda;
+    using namespace numlua::cuda;
 
     scope_t::scope_t( uint32_t memorySize )
     {
@@ -671,18 +671,18 @@ namespace SE::TensorOps
         assert( ( y.HasAny<multi_tensor_value_t, scalar_node_t, scalar_value_vector_t>() ) );
 
         assert( x.Has<multi_tensor_value_t>() || y.Has<multi_tensor_value_t>() );
-        assert( textures.Has<vector_value_t<Cuda::texture_sampler2d_t::DeviceData>>() );
+        assert( textures.Has<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>() );
 
         if( x.Has<multi_tensor_value_t>() && y.Has<multi_tensor_value_t>() )
             assert( SameShape( x, y ) );
 
         if( x.Has<multi_tensor_value_t>() )
             assert( x.Get<multi_tensor_value_t>().Shape().CountLayers() ==
-                    textures.Get<vector_value_t<Cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
+                    textures.Get<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
 
         if( y.Has<multi_tensor_value_t>() )
             assert( y.Get<multi_tensor_value_t>().Shape().CountLayers() ==
-                    textures.Get<vector_value_t<Cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
+                    textures.Get<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
 
         assert( SameType( x, y ) );
 

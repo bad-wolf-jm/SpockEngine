@@ -12,7 +12,7 @@
 
 namespace fs = std::filesystem;
 
-namespace SE::Core
+namespace numlua::core
 {
 
     using environment_t = sol::environment;

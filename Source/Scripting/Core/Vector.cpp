@@ -2,7 +2,7 @@
 #include "Core/Entity/Collection.h"
 #include "Scripting/PrimitiveTypes.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace entt::literals;
 

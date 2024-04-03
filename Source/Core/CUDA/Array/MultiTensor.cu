@@ -9,7 +9,7 @@
 #include "MultiTensor.h"
 #include <stdexcept>
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
     multi_tensor_t::multi_tensor_t( memory_pool_t &memoryPool, const tensor_shape_t &shape )
         : _shape{ shape }

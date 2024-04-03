@@ -12,7 +12,7 @@
 #include "Scripting/Core/Texture.h"
 #include "Scripting/Cuda/Texture.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace math;
     using namespace sol;

@@ -1,7 +1,7 @@
 #include "Logging.h"
 
 #include <vector>
-namespace SE::Logging
+namespace numlua::Logging
 {
     static std::ofstream gLogFile;
 

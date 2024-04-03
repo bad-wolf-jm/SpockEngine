@@ -15,9 +15,9 @@
 
 namespace fs = std::filesystem;
 
-using namespace SE;
-using namespace SE::Core;
-using namespace SE::Cuda;
+using namespace numlua;
+using namespace numlua::core;
+using namespace numlua::cuda;
 
 TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
 {
@@ -156,7 +156,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
 
             texture_sampling_info_t lSamplingInfo{};
             lSamplingInfo.mNormalizedValues        = true;
-            Cuda::texture_sampler2d_t lTextureSampler = Cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
+            cuda::texture_sampler2d_t lTextureSampler = cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
 
             REQUIRE( lTextureSampler.mSpec.mFilter == sampler_filter::LINEAR );
             REQUIRE( lTextureSampler.mSpec.mWrapping == sampler_wrapping::CLAMP_TO_BORDER );
@@ -185,7 +185,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             texture_sampling_info_t lSamplingInfo{};
             lSamplingInfo.mScaling                 = std::array<float, 2>{ 3.0f, 4.0f };
             lSamplingInfo.mNormalizedValues        = true;
-            Cuda::texture_sampler2d_t lTextureSampler = Cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
+            cuda::texture_sampler2d_t lTextureSampler = cuda::texture_sampler2d_t( lTexture, lSamplingInfo );
 
             REQUIRE( TestUtils::VectorEqual( lTextureSampler.mSpec.mScaling, std::array<float, 2>{ 3.0f, 4.0f } ) );
         }

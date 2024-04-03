@@ -10,7 +10,7 @@
 
 #include "Core/CUDA/Array/MultiTensor.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     namespace
     {
@@ -58,41 +58,41 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        auto FetchFlattened( Cuda::multi_tensor_t &self, sol::this_state scriptState )
+        auto FetchFlattened( cuda::multi_tensor_t &self, sol::this_state scriptState )
         {
             auto x = self.FetchFlattened<_Ty>();
             return sol::make_reference( scriptState, std::move( x ) );
         }
 
         template <typename _Ty>
-        auto FetchBufferAt( Cuda::multi_tensor_t &self, uint32_t layer, sol::this_state scriptState )
+        auto FetchBufferAt( cuda::multi_tensor_t &self, uint32_t layer, sol::this_state scriptState )
         {
             auto x = self.FetchBufferAt<_Ty>( layer );
             return sol::make_reference( scriptState, std::move( x ) );
         }
 
         template <typename _Ty>
-        size_t SizeAs( Cuda::multi_tensor_t &self )
+        size_t SizeAs( cuda::multi_tensor_t &self )
         {
             return self.SizeAs<_Ty>();
         }
 
         template <typename _Ty>
-        void Upload0( Cuda::multi_tensor_t &self, sol::table &array )
+        void Upload0( cuda::multi_tensor_t &self, sol::table &array )
         {
             auto &array0 = array.as<vector_t<_Ty>>();
             self.Upload<_Ty>( array0 );
         }
 
         template <typename _Ty>
-        void Upload1( Cuda::multi_tensor_t &self, sol::table &array, uint32_t layer )
+        void Upload1( cuda::multi_tensor_t &self, sol::table &array, uint32_t layer )
         {
             auto array0 = array.as<vector_t<_Ty>>();
             self.Upload( array0, layer, 0 );
         }
 
         template <typename _Ty>
-        void Upload2( Cuda::multi_tensor_t &self, sol::table &array, uint32_t layer, uint32_t offset )
+        void Upload2( cuda::multi_tensor_t &self, sol::table &array, uint32_t layer, uint32_t offset )
         {
             auto array0 = array.as<vector_t<_Ty>>();
             self.Upload<_Ty>( array0, offset );

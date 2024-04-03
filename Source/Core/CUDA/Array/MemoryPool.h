@@ -17,7 +17,7 @@
  * @brief
  *
  */
-namespace SE::Cuda
+namespace numlua::cuda
 {
 
     class memory_pool_t;

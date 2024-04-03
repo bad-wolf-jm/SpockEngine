@@ -16,7 +16,7 @@
 #include <mutex>
 #include <thread>
 
-namespace SE::Core
+namespace numlua::core
 {
 
     /// @brief sProfilingEvent

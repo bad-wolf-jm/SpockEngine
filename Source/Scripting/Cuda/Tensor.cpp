@@ -10,11 +10,11 @@
 #include "Scripting/ArrayTypes.h"
 #include "Scripting/PrimitiveTypes.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     using namespace sol;
     using namespace entt::literals;
-    using namespace SE::TensorOps;
+    using namespace numlua::mtops;
 
     namespace
     {
@@ -22,25 +22,25 @@ namespace SE::Core
         auto MakeUploadFunction()
         {
             return overload(
-                []( Cuda::multi_tensor_t &self, numeric_array_t<_Ty> &values )
+                []( cuda::multi_tensor_t &self, numeric_array_t<_Ty> &values )
                 {
                     self.Upload( values.mArray );
 
                     return self;
                 },
-                []( Cuda::multi_tensor_t &self, vector_t<_Ty> &values )
+                []( cuda::multi_tensor_t &self, vector_t<_Ty> &values )
                 {
                     self.Upload( values );
 
                     return self;
                 },
-                []( Cuda::multi_tensor_t &self, numeric_array_t<_Ty> &values, uint32_t layer )
+                []( cuda::multi_tensor_t &self, numeric_array_t<_Ty> &values, uint32_t layer )
                 {
                     self.Upload( values.mArray, layer );
 
                     return self;
                 },
-                []( Cuda::multi_tensor_t &self, vector_t<_Ty> &values, uint32_t layer )
+                []( cuda::multi_tensor_t &self, vector_t<_Ty> &values, uint32_t layer )
                 {
                     self.Upload( values, layer );
 
@@ -51,14 +51,14 @@ namespace SE::Core
         template <typename _Ty>
         auto MakeFetchFunction()
         {
-            return overload( []( Cuda::multi_tensor_t &self ) { return self.FetchFlattened<_Ty>(); },
-                             []( Cuda::multi_tensor_t &self, uint32_t layer ) { return self.FetchBufferAt<_Ty>( layer ); } );
+            return overload( []( cuda::multi_tensor_t &self ) { return self.FetchFlattened<_Ty>(); },
+                             []( cuda::multi_tensor_t &self, uint32_t layer ) { return self.FetchBufferAt<_Ty>( layer ); } );
         }
     } // namespace
 
     void open_tensor_library( sol::table &scriptingState )
     {
-        auto tensorShapeType = scriptingState.new_usertype<Cuda::tensor_shape_t>( "TensorShape" );
+        auto tensorShapeType = scriptingState.new_usertype<cuda::tensor_shape_t>( "TensorShape" );
 
         // clang-format off
         tensorShapeType[call_constructor] = factories(
@@ -79,24 +79,24 @@ namespace SE::Core
                     }
                 }
 
-                return Cuda::tensor_shape_t( shape, elementSize );
+                return cuda::tensor_shape_t( shape, elementSize );
             } );
         // clang-format on
 
-        tensorShapeType["get_dimension"] = []( Cuda::tensor_shape_t &self, int32_t i ) { return self.GetDimension( i ); };
-        tensorShapeType["trim"]          = []( Cuda::tensor_shape_t &self, int32_t i ) { self.Trim( i ); };
-        tensorShapeType["flatten"]       = []( Cuda::tensor_shape_t &self, int32_t i ) { self.Flatten( i ); };
+        tensorShapeType["get_dimension"] = []( cuda::tensor_shape_t &self, int32_t i ) { return self.GetDimension( i ); };
+        tensorShapeType["trim"]          = []( cuda::tensor_shape_t &self, int32_t i ) { self.Trim( i ); };
+        tensorShapeType["flatten"]       = []( cuda::tensor_shape_t &self, int32_t i ) { self.Flatten( i ); };
 
-        auto memoryPoolType = scriptingState.new_usertype<Cuda::memory_pool_t>(
-            "MemoryPool", constructors<Cuda::memory_pool_t( uint32_t aMemorySize )>() );
-        memoryPoolType["reset"]    = []( Cuda::memory_pool_t &self ) { self.Reset(); };
-        memoryPoolType["allocate"] = []( Cuda::memory_pool_t &self, int32_t bytes ) { return self.Allocate( bytes ); };
+        auto memoryPoolType = scriptingState.new_usertype<cuda::memory_pool_t>(
+            "MemoryPool", constructors<cuda::memory_pool_t( uint32_t aMemorySize )>() );
+        memoryPoolType["reset"]    = []( cuda::memory_pool_t &self ) { self.Reset(); };
+        memoryPoolType["allocate"] = []( cuda::memory_pool_t &self, int32_t bytes ) { return self.Allocate( bytes ); };
 
-        auto multiTensorType = scriptingState.new_usertype<Cuda::multi_tensor_t>(
+        auto multiTensorType = scriptingState.new_usertype<cuda::multi_tensor_t>(
             "MultiTensor",
-            constructors<Cuda::multi_tensor_t( Cuda::memory_pool_t & aMemoryPool, const Cuda::tensor_shape_t &shape )>() );
-        multiTensorType["size"]    = []( Cuda::multi_tensor_t &self ) { return self.Size(); };
-        multiTensorType["size_as"] = []( Cuda::multi_tensor_t &self, const sol::object &aTypeOrID )
+            constructors<cuda::multi_tensor_t( cuda::memory_pool_t & aMemoryPool, const cuda::tensor_shape_t &shape )>() );
+        multiTensorType["size"]    = []( cuda::multi_tensor_t &self ) { return self.Size(); };
+        multiTensorType["size_as"] = []( cuda::multi_tensor_t &self, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = invoke_meta_function( deduce_type( aTypeOrID ), "SizeAs"_hs, self );
 
@@ -160,20 +160,20 @@ namespace SE::Core
         multiTensorType["fetch_mat4"] = MakeFetchFunction<math::mat4>();
 
         auto scopeType =
-            scriptingState.new_usertype<TensorOps::scope_t>( "Scope", constructors<TensorOps::scope_t( uint32_t aMemorySize )>() );
-        scopeType["reset"] = []( TensorOps::scope_t &self ) { self.Reset(); };
+            scriptingState.new_usertype<mtops::scope_t>( "Scope", constructors<mtops::scope_t( uint32_t aMemorySize )>() );
+        scopeType["reset"] = []( mtops::scope_t &self ) { self.Reset(); };
 
         // clang-format off
         scopeType["run"] = overload(
-            []( TensorOps::scope_t &self, TensorOps::graph_node_t &aNode ) { self.Run( aNode ); },
-            []( TensorOps::scope_t &self, vector_t<TensorOps::graph_node_t> aNode ) { self.Run( aNode ); },
-            []( TensorOps::scope_t &self, sol::table aNode )
+            []( mtops::scope_t &self, mtops::graph_node_t &aNode ) { self.Run( aNode ); },
+            []( mtops::scope_t &self, vector_t<mtops::graph_node_t> aNode ) { self.Run( aNode ); },
+            []( mtops::scope_t &self, sol::table aNode )
             {
-                vector_t<TensorOps::graph_node_t> lOpNodes{};
+                vector_t<mtops::graph_node_t> lOpNodes{};
 
                 for (uint32_t i=0; i < aNode.size(); i++)
                 {
-                    auto lNode = aNode.get<TensorOps::graph_node_t>( i + 1 );
+                    auto lNode = aNode.get<mtops::graph_node_t>( i + 1 );
                     lOpNodes.push_back( lNode );
                 }
 
@@ -286,72 +286,72 @@ namespace SE::Core
 
         // clang-format off
         opsModule["MultiTensorValue"] = overload(
-            []( scope_t &scope, constant_value_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+            []( scope_t &scope, constant_value_initializer_t const &initializer, cuda::tensor_shape_t const &shape ) {
                 return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &scope, vector_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+            []( scope_t &scope, vector_initializer_t const &initializer, cuda::tensor_shape_t const &shape ) {
                 return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &scope, data_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+            []( scope_t &scope, data_initializer_t const &initializer, cuda::tensor_shape_t const &shape ) {
                 return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &scope, random_uniform_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+            []( scope_t &scope, random_uniform_initializer_t const &initializer, cuda::tensor_shape_t const &shape ) {
                 return MultiTensorValue( scope, initializer, shape );
             },
-            []( scope_t &scope, random_normal_initializer_t const &initializer, Cuda::tensor_shape_t const &shape ) {
+            []( scope_t &scope, random_normal_initializer_t const &initializer, cuda::tensor_shape_t const &shape ) {
                 return MultiTensorValue( scope, initializer, shape );
             }
         );
         // clang-format on
 
-        opsModule["Add"]      = TensorOps::Add;
-        opsModule["Subtract"] = TensorOps::Subtract;
-        opsModule["Divide"]   = TensorOps::Divide;
-        opsModule["Multiply"] = TensorOps::Multiply;
-        opsModule["Floor"]    = TensorOps::Floor;
-        opsModule["Ceil"]     = TensorOps::Ceil;
-        opsModule["Abs"]      = TensorOps::Abs;
-        opsModule["Sqrt"]     = TensorOps::Sqrt;
-        opsModule["Round"]    = TensorOps::Round;
-        opsModule["Diff"]     = TensorOps::Diff;
-        opsModule["Shift"]    = TensorOps::Shift;
+        opsModule["Add"]      = mtops::Add;
+        opsModule["Subtract"] = mtops::Subtract;
+        opsModule["Divide"]   = mtops::Divide;
+        opsModule["Multiply"] = mtops::Multiply;
+        opsModule["Floor"]    = mtops::Floor;
+        opsModule["Ceil"]     = mtops::Ceil;
+        opsModule["Abs"]      = mtops::Abs;
+        opsModule["Sqrt"]     = mtops::Sqrt;
+        opsModule["Round"]    = mtops::Round;
+        opsModule["Diff"]     = mtops::Diff;
+        opsModule["Shift"]    = mtops::Shift;
 
-        opsModule["And"] = TensorOps::And;
-        opsModule["Or"]  = TensorOps::Or;
-        opsModule["Not"] = TensorOps::Not;
+        opsModule["And"] = mtops::And;
+        opsModule["Or"]  = mtops::Or;
+        opsModule["Not"] = mtops::Not;
 
-        opsModule["BitwiseAnd"] = TensorOps::BitwiseAnd;
-        opsModule["BitwiseOr"]  = TensorOps::BitwiseOr;
-        opsModule["BitwiseNot"] = TensorOps::BitwiseNot;
+        opsModule["BitwiseAnd"] = mtops::BitwiseAnd;
+        opsModule["BitwiseOr"]  = mtops::BitwiseOr;
+        opsModule["BitwiseNot"] = mtops::BitwiseNot;
 
-        opsModule["InInterval"] = TensorOps::InInterval;
+        opsModule["InInterval"] = mtops::InInterval;
 
-        opsModule["Equal"]              = TensorOps::Equal;
-        opsModule["LessThan"]           = TensorOps::LessThan;
-        opsModule["LessThanOrEqual"]    = TensorOps::LessThanOrEqual;
-        opsModule["GreaterThan"]        = TensorOps::GreaterThan;
-        opsModule["GreaterThanOrEqual"] = TensorOps::GreaterThanOrEqual;
+        opsModule["Equal"]              = mtops::Equal;
+        opsModule["LessThan"]           = mtops::LessThan;
+        opsModule["LessThanOrEqual"]    = mtops::LessThanOrEqual;
+        opsModule["GreaterThan"]        = mtops::GreaterThan;
+        opsModule["GreaterThanOrEqual"] = mtops::GreaterThanOrEqual;
 
-        opsModule["Where"] = TensorOps::Where;
+        opsModule["Where"] = mtops::Where;
 
-        opsModule["Mix"]    = TensorOps::Mix;
-        opsModule["Affine"] = TensorOps::AffineTransform;
+        opsModule["Mix"]    = mtops::Mix;
+        opsModule["Affine"] = mtops::AffineTransform;
 
-        opsModule["ARange"]      = TensorOps::ARange;
-        opsModule["LinearSpace"] = TensorOps::LinearSpace;
-        opsModule["Repeat"]      = TensorOps::Repeat;
-        opsModule["Tile"]        = TensorOps::Tile;
+        opsModule["ARange"]      = mtops::ARange;
+        opsModule["LinearSpace"] = mtops::LinearSpace;
+        opsModule["Repeat"]      = mtops::Repeat;
+        opsModule["Tile"]        = mtops::Tile;
 
-        opsModule["Sample2D"]     = TensorOps::Sample2D;
-        opsModule["ToFixedPoint"] = TensorOps::ToFixedPoint;
+        opsModule["Sample2D"]     = mtops::Sample2D;
+        opsModule["ToFixedPoint"] = mtops::ToFixedPoint;
 
-        opsModule["Collapse"] = TensorOps::Collapse;
-        opsModule["Expand"]   = TensorOps::Expand;
-        opsModule["Reshape"]  = TensorOps::Reshape;
-        opsModule["Relayout"] = TensorOps::Relayout;
-        opsModule["Flatten"]  = TensorOps::Flatten;
-        opsModule["Slice"]    = TensorOps::Slice;
-        opsModule["HCat"]     = TensorOps::HCat;
+        opsModule["Collapse"] = mtops::Collapse;
+        opsModule["Expand"]   = mtops::Expand;
+        opsModule["Reshape"]  = mtops::Reshape;
+        opsModule["Relayout"] = mtops::Relayout;
+        opsModule["Flatten"]  = mtops::Flatten;
+        opsModule["Slice"]    = mtops::Slice;
+        opsModule["HCat"]     = mtops::HCat;
 
         // clang-format off
         opsModule["Summation"] = overload( 
@@ -363,10 +363,10 @@ namespace SE::Core
         );
         //clang-format on
 
-        opsModule["CountTrue"]    = TensorOps::CountTrue;
-        opsModule["CountNonZero"] = TensorOps::CountNonZero;
-        opsModule["CountZero"]    = TensorOps::CountZero;
+        opsModule["CountTrue"]    = mtops::CountTrue;
+        opsModule["CountNonZero"] = mtops::CountNonZero;
+        opsModule["CountZero"]    = mtops::CountZero;
 
-        opsModule["Conv1D"] = TensorOps::Conv1D;
+        opsModule["Conv1D"] = mtops::Conv1D;
     }
 }; // namespace SE::Core

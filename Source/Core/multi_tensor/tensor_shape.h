@@ -6,7 +6,7 @@
 #include "Core/CUDA/Cuda.h"
 #include "Core/CUDA/Array/MemoryPool.h"
 
-namespace SE::Core
+namespace numlua::core
 {
 
     /// @brief Buffer offset structure
@@ -47,9 +47,9 @@ namespace SE::Core
 
         struct
         {
-            Cuda::memory_buffer_t Shape{};
-            Cuda::memory_buffer_t MaxDimensions{};
-            Cuda::memory_buffer_t BufferSizes{};
+            cuda::memory_buffer_t Shape{};
+            cuda::memory_buffer_t MaxDimensions{};
+            cuda::memory_buffer_t BufferSizes{};
         } DeviceSideData; //!< Data shared with GPU.
 
         tensor_shape_t()                         = default;

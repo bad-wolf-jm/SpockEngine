@@ -22,9 +22,9 @@
 #include "NodeComponents.h"
 #include "NodeControllers.h"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
-    using graph_node_t = SE::Core::entity_t;
+    using graph_node_t = numlua::core::entity_t;
 
     struct scope_t
     {
@@ -75,13 +75,13 @@ namespace SE::TensorOps
         void Run( vector_t<graph_node_t> const &node );
 
         /// @brief Access the underlying nodes registry
-        SE::Core::entity_registry_t &GetNodesRegistry()
+        numlua::core::entity_registry_t &GetNodesRegistry()
         {
             return _nodesRegistry;
         };
 
       private:
-        SE::Core::entity_registry_t _nodesRegistry{};     //!< Underlying node database
+        numlua::core::entity_registry_t _nodesRegistry{};     //!< Underlying node database
         std::optional<string_t>     _name = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<string_t, graph_node_t> _namedNodes = {}; //!< Mapping of node names to OpNodes
     };
@@ -95,7 +95,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     graph_node_t MultiTensorValue( scope_t &scope, constant_value_initializer_t const &initializer,
-                                   Cuda::tensor_shape_t const &shape );
+                                   cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given vector of values
     ///
@@ -108,7 +108,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &scope, vector_initializer_t const &initializer, Cuda::tensor_shape_t const &shape );
+    graph_node_t MultiTensorValue( scope_t &scope, vector_initializer_t const &initializer, cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with the given data
     ///
@@ -120,7 +120,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &scope, data_initializer_t const &initializer, Cuda::tensor_shape_t const &shape );
+    graph_node_t MultiTensorValue( scope_t &scope, data_initializer_t const &initializer, cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with uniformly distributed random values
     ///
@@ -131,7 +131,7 @@ namespace SE::TensorOps
     /// @return The newly created computation node
     ///
     graph_node_t MultiTensorValue( scope_t &scope, random_uniform_initializer_t const &initializer,
-                                   Cuda::tensor_shape_t const &shape );
+                                   cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MultiTensor initialized with normally distributed random values
     ///
@@ -141,7 +141,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t MultiTensorValue( scope_t &scope, random_normal_initializer_t const &initializer, Cuda::tensor_shape_t const &shape );
+    graph_node_t MultiTensorValue( scope_t &scope, random_normal_initializer_t const &initializer, cuda::tensor_shape_t const &shape );
 
     /// @brief Create a constant @ref MemoryBuffer initialized with the given vector
     ///
@@ -630,7 +630,7 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    graph_node_t Reshape( scope_t &scope, graph_node_t const &array, Cuda::tensor_shape_t &newShape );
+    graph_node_t Reshape( scope_t &scope, graph_node_t const &array, cuda::tensor_shape_t &newShape );
 
     /// @brief Relayout the input @ref MultiTensor
     ///

@@ -5,7 +5,7 @@
 #include "Core/CUDA/Texture/TextureTypes.h"
 #include "Core/Entity/Collection.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     image_data_t            parse_image_data( sol::table table );
     texture_create_info_t   parse_create_info( sol::table table );

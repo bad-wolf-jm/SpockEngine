@@ -19,9 +19,9 @@
  *
  * @brief Basic logging functions.
  */
-namespace SE::Logging
+namespace numlua::Logging
 {
-    using namespace SE::Core;
+    using namespace numlua::core;
     namespace fs = std::filesystem;
     enum class LogLevel : uint8_t
     {

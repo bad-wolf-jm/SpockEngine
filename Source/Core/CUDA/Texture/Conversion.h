@@ -20,9 +20,9 @@
 
 /** \namespace SE::Cuda
  */
-namespace SE::Cuda
+namespace numlua::cuda
 {
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     cudaChannelFormatDesc  ToCudaChannelDesc( color_format colorFormat );
     cudaTextureAddressMode ToCudaAddressMode( sampler_wrapping addressMode );

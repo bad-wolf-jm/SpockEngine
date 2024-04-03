@@ -124,14 +124,14 @@ inline void __CURAND_ASSERT( curandStatus_t err, const char *file, const int lin
     if( CURAND_STATUS_SUCCESS == err )
         return;
 
-    SE::Logging::Error( "CURAND_ASSERT() API error = {} from file <{}>, line {}.\n", err, file, line );
+    numlua::Logging::Error( "CURAND_ASSERT() API error = {} from file <{}>, line {}.\n", err, file, line );
     exit( EXIT_FAILURE );
 }
 #endif
 
-namespace SE::TensorOps::Private
+namespace numlua::mtops::Private
 {
-    using namespace SE::Core;
+    using namespace numlua::core;
 
     constexpr uint32_t ThreadsPerBlock = 1024;
 
@@ -145,4 +145,4 @@ namespace SE::TensorOps::Private
         }
         return valueVector;
     }
-} // namespace SE::TensorOps::Private
+} // namespace SE::mtops::Private

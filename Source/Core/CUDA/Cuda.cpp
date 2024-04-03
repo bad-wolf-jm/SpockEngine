@@ -2,7 +2,7 @@
 
 #include "Texture/Conversion.h"
 
-namespace SE::Cuda
+namespace numlua::cuda
 {
     void SyncDevice()
     {

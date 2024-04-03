@@ -5,7 +5,7 @@
 #include "Core/Entity/Collection.h"
 // #include "Core/Cuda/Texture/TextureData.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     void open_vector_library( sol::table &scriptingState );
 }; // namespace SE::Core

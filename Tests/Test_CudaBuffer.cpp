@@ -18,7 +18,7 @@
 #include "Core/CUDA/Array/PointerView.h"
 #include "Core/Math/Types.h"
 
-using namespace SE::Cuda;
+using namespace numlua::cuda;
 using namespace TestUtils;
 
 struct TestStruct

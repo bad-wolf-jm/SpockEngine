@@ -8,8 +8,8 @@
 
 #include "Conversion.h"
 
-using namespace SE::Core;
-namespace SE::Cuda
+using namespace numlua::core;
+namespace numlua::cuda
 {
     /// @brief Convert our internal color format into a CUDA channel description
     cudaChannelFormatDesc ToCudaChannelDesc( color_format colorFormat )

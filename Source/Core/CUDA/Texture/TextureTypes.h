@@ -16,7 +16,7 @@
 
 namespace fs = std::filesystem;
 
-namespace SE::Core
+namespace numlua::core
 {
     enum class color_format : uint32_t
     {

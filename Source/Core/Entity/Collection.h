@@ -18,7 +18,7 @@
 
 #include <unordered_map>
 
-namespace SE::Core
+namespace numlua::core
 {
 
     /// \class EntityRegistry
@@ -372,7 +372,7 @@ namespace SE::Core
 
 /// @brief Hash entities so they can be used in unordered maps and sets
 template <>
-struct std::hash<SE::Core::entity_t>
+struct std::hash<numlua::core::entity_t>
 {
-    std::size_t operator()( SE::Core::entity_t const &k ) const { return std::hash<uint32_t>()( static_cast<uint32_t>( k ) ); }
+    std::size_t operator()( numlua::core::entity_t const &k ) const { return std::hash<uint32_t>()( static_cast<uint32_t>( k ) ); }
 };

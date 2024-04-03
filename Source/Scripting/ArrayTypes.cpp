@@ -1,6 +1,6 @@
 #include "ArrayTypes.h"
 
-namespace SE::Core
+namespace numlua::core
 {
     namespace
     {

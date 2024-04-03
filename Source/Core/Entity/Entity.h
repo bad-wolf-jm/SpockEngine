@@ -11,7 +11,7 @@
 #include "entt/entt.hpp"
 #include <functional>
 
-namespace SE::Core::Internal
+namespace numlua::core::Internal
 {
 
     /// \class Entity

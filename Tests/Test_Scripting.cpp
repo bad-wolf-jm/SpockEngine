@@ -18,9 +18,9 @@
 #include "Core/Entity/Collection.h"
 
 using namespace math;
-using namespace SE::Core;
-using namespace SE::Cuda;
-using namespace SE::TensorOps;
+using namespace numlua::core;
+using namespace numlua::cuda;
+using namespace numlua::mtops;
 using namespace TestUtils;
 
 TEST_CASE( "LUA Arrays", "[CORE_SCRIPTING]" )
@@ -1173,7 +1173,7 @@ TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
     value = Cuda.Texture2D(texture_create_info, texture)
 )" );
 
-    auto &lCudaTexture = scriptingEngine.GetRef<SE::Cuda::texture2d_t>( "value" );
+    auto &lCudaTexture = scriptingEngine.GetRef<numlua::cuda::texture2d_t>( "value" );
     REQUIRE( lCudaTexture.mSpec.mFormat == color_format::RGBA8_UNORM );
     REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
     REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
@@ -1206,7 +1206,7 @@ TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
     value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
 )" );
 
-    auto &lCudaTextureSampler = scriptingEngine.GetRef<SE::Cuda::texture_sampler2d_t>( "value" );
+    auto &lCudaTextureSampler = scriptingEngine.GetRef<numlua::cuda::texture_sampler2d_t>( "value" );
     REQUIRE( lCudaTextureSampler.mSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
     REQUIRE( lCudaTextureSampler.mSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
     REQUIRE( lCudaTextureSampler.mSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );

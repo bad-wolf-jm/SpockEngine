@@ -9,8 +9,8 @@
 #include "Conversion.h"
 #include "TextureCubeMap.h"
 
-using namespace SE::Core;
-namespace SE::Cuda
+using namespace numlua::core;
+namespace numlua::cuda
 {
     texture_sampler_cubemap_t::texture_sampler_cubemap_t( ref_t<texture2d_t> &texture, const texture_sampling_info_t &samplingSpec )
         : mTexture{ texture }

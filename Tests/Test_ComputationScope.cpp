@@ -11,8 +11,8 @@
 #include "TensorOps/NodeComponents.h"
 #include "TensorOps/Scope.h"
 
-using namespace SE::Core;
-using namespace SE::TensorOps;
+using namespace numlua::core;
+using namespace numlua::mtops;
 using namespace TestUtils;
 
 std::vector<uint8_t> RandomBooleanValues( std::vector<uint32_t> dim )
@@ -5406,7 +5406,7 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     auto               kernelensor =
         MultiTensorValue( scope, kernelInitializer, tensor_shape_t( { KDim1, KDim2, KDim3 }, sizeof( uint32_t ) ) );
 
-    auto result0 = SE::TensorOps::HCat( scope, inputTensor, kernelensor );
+    auto result0 = numlua::mtops::HCat( scope, inputTensor, kernelensor );
     scope.Run( result0 );
 
     auto outputShape = result0.Get<multi_tensor_value_t>().Shape();

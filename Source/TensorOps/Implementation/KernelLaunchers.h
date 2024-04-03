@@ -16,10 +16,10 @@
 #include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/Math/Types.h"
 
-namespace SE::TensorOps
+namespace numlua::mtops
 {
 
-    using namespace SE::Cuda;
+    using namespace numlua::cuda;
 
     struct TextureData
     {
