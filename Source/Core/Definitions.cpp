@@ -1,7 +1,7 @@
 #include "Definitions.h"
+
 namespace numlua::core
 {
-
     size_t size_of( scalar_type_t type )
     {
         switch( type )

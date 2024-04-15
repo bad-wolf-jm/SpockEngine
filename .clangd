@@ -1,0 +1,4 @@
+# .clangd
+CompileFlags:
+   CompilationDatabase: Build/CoreLibrary/
+   Add: [-std=c++17]

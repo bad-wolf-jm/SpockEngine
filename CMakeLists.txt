@@ -7,8 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # set(PROGRAM_FILES "C:\\Users\\jalbe")
 
-include_directories("ThirdParty/mono/include")
-message(STATUS ${CMAKE_SIZEOF_VOID_P})
+# include_directories("ThirdParty/mono/include")
+# message(STATUS ${CMAKE_SIZEOF_VOID_P})
 
 include(cmake/configure_optix.cmake)
 include_directories(${OptiX_INCLUDE})
