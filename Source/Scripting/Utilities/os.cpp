@@ -1,5 +1,8 @@
 #include "os.h"
 #include <windows.h>
+
+#include "common.h"
+
 #define PATH_MAX 1024
 namespace numlua::core
 {
@@ -164,17 +167,6 @@ namespace numlua::core
             return 1;
         }
 
-        void do_translate( char *value, const char sep )
-        {
-            char *ch;
-            for( ch = value; *ch != '\0'; ++ch )
-            {
-                if( *ch == '/' || *ch == '\\' )
-                {
-                    *ch = sep;
-                }
-            }
-        }
         int os_copyfile( lua_State *L )
         {
             int         z;
@@ -216,23 +208,6 @@ namespace numlua::core
                 lua_pushboolean( L, 1 );
                 return 1;
             }
-        }
-
-        int do_getcwd( char *buffer, size_t size )
-        {
-            int result;
-
-            wchar_t wbuffer[PATH_MAX];
-
-            result = ( GetCurrentDirectoryW( PATH_MAX, wbuffer ) != 0 );
-            if( result )
-            {
-                WideCharToMultiByte( CP_UTF8, 0, wbuffer, -1, buffer, (int)size, NULL, NULL );
-
-                do_translate( buffer, '/' );
-            }
-
-            return result;
         }
 
         int os_getpass( lua_State *L )
