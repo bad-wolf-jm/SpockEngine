@@ -52,7 +52,7 @@ namespace numlua::core
         {
             auto &dim = Shape[dimIdx];
 
-            Strides[dimIdx]            = vector_t<uint32_t>( Rank );
+            Strides[dimIdx]           = vector_t<uint32_t>( Rank );
             Strides[dimIdx][Rank - 1] = 1;
 
             uint32_t size = ElementSize;
@@ -67,7 +67,7 @@ namespace numlua::core
 
             BufferSizes[dimIdx].Size   = size;
             BufferSizes[dimIdx].Offset = currentOffset;
-            MaxBufferSize                = std::max( MaxBufferSize, BufferSizes[dimIdx].Size / ElementSize );
+            MaxBufferSize              = std::max( MaxBufferSize, BufferSizes[dimIdx].Size / ElementSize );
             currentOffset += BufferSizes[dimIdx].Size;
         }
 
@@ -187,4 +187,4 @@ namespace numlua::core
         DeviceSideData.MaxDimensions.Upload( MaxDimensions );
         DeviceSideData.BufferSizes.Upload( BufferSizes );
     }
-}
+} // namespace numlua::core
