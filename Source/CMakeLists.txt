@@ -52,3 +52,14 @@ target_compile_options(libnumlua PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj>)
 
     # /wd4068
+# file(GLOB TEST_DATA_FILES "Include/*.cpp")
+
+add_executable(numlua WIN32
+    Interpreter/main.cpp
+)
+
+target_include_directories(numlua PRIVATE Source C:/vcpkg/installed/x64-windows/include ${CUDA_INCLUDE_DIRS})
+
+target_compile_options( numlua PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=20012"> )
+target_link_libraries( numlua libnumlua ) 
+set_target_properties( numlua PROPERTIES LINK_FLAGS "/DEBUG /SUBSYSTEM:CONSOLE" )

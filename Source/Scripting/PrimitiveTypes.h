@@ -98,83 +98,83 @@ namespace numlua::core
             self.Upload<_Ty>( array0, offset );
         }
 
-        template <typename _Ty>
-        auto Valid( entity_t &self )
-        {
-            return self.IsValid();
-        }
-
-        template <typename _Ty>
-        auto Add( entity_t &self, const sol::table &instance, sol::this_state scriptState )
-        {
-            auto &newComponent = self.Add<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
-            return sol::make_reference( scriptState, std::ref( newComponent ) );
-        }
-
-        template <typename _Ty>
-        auto AddOrReplace( entity_t &self, const sol::table &instance, sol::this_state scriptState )
-        {
-            auto &newComponent = self.AddOrReplace<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
-            return sol::make_reference( scriptState, std::ref( newComponent ) );
-        }
-
-        template <typename _Ty>
-        auto Replace( entity_t &self, const sol::table &instance, sol::this_state scriptState )
-        {
-            auto &newComponent = self.Replace<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
-            return sol::make_reference( scriptState, std::ref( newComponent ) );
-        }
-
-        template <typename _Ty>
-        auto TryAdd( entity_t &self, const sol::table &instance, sol::this_state scriptState )
-        {
-            auto &newComponent = self.TryAdd<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
-            return sol::make_reference( scriptState, std::ref( newComponent ) );
-        }
-
-        template <typename _Ty>
-        auto Tag( entity_t &self )
-        {
-            self.Tag<_Ty>();
-        }
-
-        template <typename _Ty>
-        auto Untag( entity_t &self )
-        {
-            self.Untag<_Ty>();
-        }
-
-        template <typename _Ty>
-        auto Get( entity_t &self, sol::this_state scriptState )
-        {
-            auto &newComponent = self.Get<_Ty>();
-            return sol::make_reference( scriptState, std::ref( newComponent ) );
-        }
-
-        template <typename _Ty>
-        auto TryGet( entity_t &self, sol::this_state scriptState )
-        {
-            auto &newComponent = self.TryGet<_Ty>( _Ty{} );
-            return sol::make_reference( scriptState, std::ref( newComponent ) );
-        }
-
-        template <typename _Ty>
-        auto Has( entity_t &self )
-        {
-            return self.Has<_Ty>();
-        }
-
-        template <typename _Ty>
-        auto Remove( entity_t &self )
-        {
-            self.Remove<_Ty>();
-        }
-
-        template <typename _Ty>
-        auto TryRemove( entity_t &self )
-        {
-            self.TryRemove<_Ty>();
-        }
+//        template <typename _Ty>
+//        auto Valid( entity_t &self )
+//        {
+//            return self.IsValid();
+//        }
+//
+//        template <typename _Ty>
+//        auto Add( entity_t &self, const sol::table &instance, sol::this_state scriptState )
+//        {
+//            auto &newComponent = self.Add<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
+//            return sol::make_reference( scriptState, std::ref( newComponent ) );
+//        }
+//
+//        template <typename _Ty>
+//        auto AddOrReplace( entity_t &self, const sol::table &instance, sol::this_state scriptState )
+//        {
+//            auto &newComponent = self.AddOrReplace<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
+//            return sol::make_reference( scriptState, std::ref( newComponent ) );
+//        }
+//
+//        template <typename _Ty>
+//        auto Replace( entity_t &self, const sol::table &instance, sol::this_state scriptState )
+//        {
+//            auto &newComponent = self.Replace<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
+//            return sol::make_reference( scriptState, std::ref( newComponent ) );
+//        }
+//
+//        template <typename _Ty>
+//        auto TryAdd( entity_t &self, const sol::table &instance, sol::this_state scriptState )
+//        {
+//            auto &newComponent = self.TryAdd<_Ty>( instance.valid() ? instance.as<_Ty>() : _Ty{} );
+//            return sol::make_reference( scriptState, std::ref( newComponent ) );
+//        }
+//
+//        template <typename _Ty>
+//        auto Tag( entity_t &self )
+//        {
+//            self.Tag<_Ty>();
+//        }
+//
+//        template <typename _Ty>
+//        auto Untag( entity_t &self )
+//        {
+//            self.Untag<_Ty>();
+//        }
+//
+//        template <typename _Ty>
+//        auto Get( entity_t &self, sol::this_state scriptState )
+//        {
+//            auto &newComponent = self.Get<_Ty>();
+//            return sol::make_reference( scriptState, std::ref( newComponent ) );
+//        }
+//
+//        template <typename _Ty>
+//        auto TryGet( entity_t &self, sol::this_state scriptState )
+//        {
+//            auto &newComponent = self.TryGet<_Ty>( _Ty{} );
+//            return sol::make_reference( scriptState, std::ref( newComponent ) );
+//        }
+//
+//        template <typename _Ty>
+//        auto Has( entity_t &self )
+//        {
+//            return self.Has<_Ty>();
+//        }
+//
+//        template <typename _Ty>
+//        auto Remove( entity_t &self )
+//        {
+//            self.Remove<_Ty>();
+//        }
+//
+//        template <typename _Ty>
+//        auto TryRemove( entity_t &self )
+//        {
+//            self.TryRemove<_Ty>();
+//        }
     } // namespace
 
     template <typename _Ty>
@@ -203,26 +203,26 @@ namespace numlua::core
         newType.template func<&Upload1<_Ty>>( "Upload1"_hs );
         newType.template func<&Upload2<_Ty>>( "Upload2"_hs );
 
-        if constexpr( std::is_class<_Ty>::value && std::is_empty<_Ty>::value )
-        {
-            newType.template func<&Valid<_Ty>>( "Valid"_hs );
-            newType.template func<&Tag<_Ty>>( "Tag"_hs );
-            newType.template func<&Untag<_Ty>>( "Untag"_hs );
-            newType.template func<&Has<_Ty>>( "Has"_hs );
-        }
-        else if constexpr( std::is_class<_Ty>::value )
-        {
-            newType.template func<&Valid<_Ty>>( "Valid"_hs );
-            newType.template func<&Add<_Ty>>( "Add"_hs );
-            newType.template func<&AddOrReplace<_Ty>>( "AddOrReplace"_hs );
-            newType.template func<&Replace<_Ty>>( "Replace"_hs );
-            newType.template func<&TryAdd<_Ty>>( "TryAdd"_hs );
-            newType.template func<&Get<_Ty>>( "Get"_hs );
-            newType.template func<&TryGet<_Ty>>( "TryGet"_hs );
-            newType.template func<&Has<_Ty>>( "Has"_hs );
-            newType.template func<&Remove<_Ty>>( "Remove"_hs );
-            newType.template func<&TryRemove<_Ty>>( "TryRemove"_hs );
-        }
+//        if constexpr( std::is_class<_Ty>::value && std::is_empty<_Ty>::value )
+//        {
+//            newType.template func<&Valid<_Ty>>( "Valid"_hs );
+//            newType.template func<&Tag<_Ty>>( "Tag"_hs );
+//            newType.template func<&Untag<_Ty>>( "Untag"_hs );
+//            newType.template func<&Has<_Ty>>( "Has"_hs );
+//        }
+//        else if constexpr( std::is_class<_Ty>::value )
+//        {
+//            newType.template func<&Valid<_Ty>>( "Valid"_hs );
+//            newType.template func<&Add<_Ty>>( "Add"_hs );
+//            newType.template func<&AddOrReplace<_Ty>>( "AddOrReplace"_hs );
+//            newType.template func<&Replace<_Ty>>( "Replace"_hs );
+//            newType.template func<&TryAdd<_Ty>>( "TryAdd"_hs );
+//            newType.template func<&Get<_Ty>>( "Get"_hs );
+//            newType.template func<&TryGet<_Ty>>( "TryGet"_hs );
+//            newType.template func<&Has<_Ty>>( "Has"_hs );
+//            newType.template func<&Remove<_Ty>>( "Remove"_hs );
+//            newType.template func<&TryRemove<_Ty>>( "TryRemove"_hs );
+//        }
 
         return newLuaType;
     }
