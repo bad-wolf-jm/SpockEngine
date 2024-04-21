@@ -1,5 +1,6 @@
 #include "os.h"
-
+#include <windows.h>
+#define PATH_MAX 1024
 namespace numlua::core
 {
     namespace details
@@ -163,6 +164,17 @@ namespace numlua::core
             return 1;
         }
 
+        void do_translate( char *value, const char sep )
+        {
+            char *ch;
+            for( ch = value; *ch != '\0'; ++ch )
+            {
+                if( *ch == '/' || *ch == '\\' )
+                {
+                    *ch = sep;
+                }
+            }
+        }
         int os_copyfile( lua_State *L )
         {
             int         z;
@@ -644,6 +656,26 @@ namespace numlua::core
                 bytes[offset++] = (unsigned char)( value & 0xff );
                 value >>= 8;
             }
+        }
+
+        uint32_t do_hash( const char *str, int seed )
+        {
+            /* DJB2 hashing; see http://www.cse.yorku.ca/~oz/hash.html */
+
+            uint32_t hash = 5381;
+
+            if( seed != 0 )
+            {
+                hash = hash * 33 + seed;
+            }
+
+            while( *str )
+            {
+                hash = hash * 33 + ( *str );
+                str++;
+            }
+
+            return hash;
         }
 
         int os_uuid( lua_State *L )
