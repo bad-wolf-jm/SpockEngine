@@ -30,19 +30,19 @@ namespace numlua::linalg
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>( _Ty _x )
             : x{ _x } , y{ _x } , z{ _x } , w{ _x } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(vec2_type<_Ty> const& v, _Ty _z, _Ty _w )
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(vect<2, _Ty> const& v, _Ty _z, _Ty _w )
             : x{ v.x } , y{ v.y } , z{ _z } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, vec2_type<_Ty> const& v, _Ty _w )
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, vect<2,_Ty> const& v, _Ty _w )
             : x{ _x } , y{ v.x } , z{ v.y } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, _Ty _y, vec2_type<_Ty> const& v)
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, _Ty _y, vect<2, _Ty> const& v)
             : x{ _x } , y{ _y } , z{ v.x } , w{ v.y } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(vec3_type<_Ty> const& v, _Ty _w )
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(vect<3, _Ty> const& v, _Ty _w )
             : x{ v.x } , y{ v.y } , z{ v.z } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, vec3_type<_Ty> const& v )
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, vect<3, _Ty> const& v )
             : x{ _x } , y{ v.x } , z{ v.y } , w{ v.z } { }
 
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>( vect<4, _Ty> const &v )
