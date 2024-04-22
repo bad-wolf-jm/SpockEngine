@@ -5,7 +5,6 @@ namespace numlua::core
 {
     namespace details
     {
-
         void do_getabsolute( char *result, const char *value, const char *relative_to )
         {
             int   i;
@@ -130,13 +129,10 @@ namespace numlua::core
             do_normalize( L, dst, p2 );
 
             /* same directory? */
-#if PLATFORM_WINDOWS
+
             if( _stricmp( src, dst ) == 0 )
             {
-#else
-            if( strcmp( src, dst ) == 0 )
-            {
-#endif
+
                 lua_pushstring( L, "." );
                 return 1;
             }
@@ -156,13 +152,10 @@ namespace numlua::core
 
             last = -1;
             i    = 0;
-#if PLATFORM_WINDOWS
+
             while( src[i] && dst[i] && tolower( src[i] ) == tolower( dst[i] ) )
             {
-#else
-            while( src[i] && dst[i] && src[i] == dst[i] )
-            {
-#endif
+
                 if( src[i] == '/' )
                 {
                     last = i;
