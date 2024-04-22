@@ -1,10 +1,10 @@
 
 #pragma once
-
+#include "core.h"
 namespace numlua::linalg
 {
     template <typename _Ty>
-    struct vec3_type
+    struct vect<3, _Ty>
     {
         using value_type = _Ty;
 

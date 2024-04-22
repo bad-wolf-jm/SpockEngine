@@ -1,11 +1,11 @@
 #pragma once
 
-#include <cstdint> 
+#include "core.h"
 
 namespace numlua::linalg
 {
     template <typename _Ty>
-    struct vec2_type
+    struct vect<2, _Ty>
     {
         using value_type = _Ty;
 
@@ -19,6 +19,4 @@ namespace numlua::linalg
         };
     };
 
-    using int2 = vec2_type<int32_t>;
-    using float2 = vec2_type<float>;
 } // namespace numlua::linalg
