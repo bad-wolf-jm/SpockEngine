@@ -367,12 +367,6 @@ namespace numlua::linalg
     }
 
     template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v1, vec<1, T, Q> const &v2 )
-    {
-        return vect<4, _Ty>( v1 ) /= v2;
-    }
-
-    template <typename _Ty>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( T scalar, vect<4, _Ty> const &v )
     {
         return vect<4, _Ty>( scalar ) /= v;
@@ -489,7 +483,7 @@ namespace numlua::linalg
     }
 
     template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator>>( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> operator>>( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     {
         return vect<4, _Ty>( v1 ) >>= v2;
     }
