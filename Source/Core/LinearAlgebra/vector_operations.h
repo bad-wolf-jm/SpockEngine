@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "Core/Cuda/Cuda.h"
 #include "core.h"
 #include <functional>
 
@@ -84,7 +83,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<L, T> call( vect<L, T> const &a, vect<L, T> const &b )
             {
-                return detail::functor2<vec, L, T, Q>::call( std::plus<T>(), a, b );
+                return detail::functor2<vect, L, T>::call( std::plus<T>(), a, b );
             }
         };
 
@@ -93,7 +92,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<L, T> call( vect<L, T> const &a, vect<L, T> const &b )
             {
-                return detail::functor2<vec, L, T, Q>::call( std::minus<T>(), a, b );
+                return detail::functor2<vect, L, T>::call( std::minus<T>(), a, b );
             }
         };
 
@@ -102,7 +101,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<L, T> call( vect<L, T> const &a, vect<L, T> const &b )
             {
-                return detail::functor2<vec, L, T, Q>::call( std::multiplies<T>(), a, b );
+                return detail::functor2<vect, L, T>::call( std::multiplies<T>(), a, b );
             }
         };
 
@@ -111,7 +110,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<L, T> call( vect<L, T> const &a, vect<L, T> const &b )
             {
-                return detail::functor2<vec, L, T, Q>::call( std::divides<T>(), a, b );
+                return detail::functor2<vect, L, T>::call( std::divides<T>(), a, b );
             }
         };
 
@@ -120,7 +119,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<L, T> call( vect<L, T> const &a, vect<L, T> const &b )
             {
-                return detail::functor2<vec, L, T, Q>::call( std::modulus<T>(), a, b );
+                return detail::functor2<vect, L, T>::call( std::modulus<T>(), a, b );
             }
         };
 
@@ -191,7 +190,7 @@ namespace numlua::linalg
             {
                 bool b = true;
                 for( length_t i = 0; b && i < L; ++i )
-                    b = (v1[i] == v2[i]);
+                    b = ( v1[i] == v2[i] );
                 return b;
             }
         };
@@ -199,10 +198,10 @@ namespace numlua::linalg
         template <length_t L, typename T, int IsInt, std::size_t Size>
         struct compute_vec_nequal<L, T, IsInt, Size, false>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static bool call( vec<4, T, Q> const &v1, vec<4, T, Q> const &v2 )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static bool call( vect<4, T> const &v1, vect<4, T> const &v2 )
             {
-                return !compute_vec_equal<L, T, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call(
-                    v1, v2 );
+                return !compute_vec_equal<L, T, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call( v1,
+                                                                                                                                v2 );
             }
         };
 

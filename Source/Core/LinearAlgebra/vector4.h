@@ -1,6 +1,6 @@
 
 #pragma once
-#include "Core/Cuda/Cuda.h"
+
 #include "core.h"
 #include "vector2.h"
 #include "vector3.h"
@@ -148,7 +148,7 @@ namespace numlua::linalg
 
         // -- Increment and decrement operators --
 
-        template <typename T, qualifier Q>
+        template <typename T>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator++()
         {
             ++this->x;
@@ -158,7 +158,7 @@ namespace numlua::linalg
             return *this;
         }
 
-        template <typename T, qualifier Q>
+        template <typename T>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator--()
         {
             --this->x;
@@ -168,7 +168,7 @@ namespace numlua::linalg
             return *this;
         }
 
-        template <typename T, qualifier Q>
+        template <typename T>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator++( int )
         {
             vect<4, _Ty> Result( *this );
@@ -176,7 +176,7 @@ namespace numlua::linalg
             return Result;
         }
 
-        template <typename T, qualifier Q>
+        template <typename T>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator--( int )
         {
             vect<4, _Ty> Result( *this );
