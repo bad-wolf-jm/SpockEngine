@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.h"
+#include "vector_operations.h"
 
 namespace numlua::linalg
 {
@@ -60,6 +61,89 @@ namespace numlua::linalg
                 // clang-format on
             }
         }
+
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator=( vect<2, _Ty> const &v )
+        {
+            this->x = static_cast<_Ty>( v.x );
+            this->y = static_cast<_Ty>( v.y );
+
+            return *this;
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator+=( U scalar )
+        {
+            return ( *this = detail::compute_vec_add<2, _Ty>::call( *this, vect<2, _Ty>( scalar ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator+=( vect<2, U> const &v )
+        {
+            return ( *this = detail::compute_vec_add<2, _Ty>::call( *this, vect<2, _Ty>( v ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator-=( U scalar )
+        {
+            return ( *this = detail::compute_vec_sub<2, _Ty>::call( *this, vect<2, _Ty>( scalar ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator-=( vect<2, U> const &v )
+        {
+            return ( *this = detail::compute_vec_sub<2, _Ty>::call( *this, vect<2, _Ty>( v ) ) );
+        }
+
     };
 
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( vect<2, _Ty> const &v )
+    // {
+    //     return v;
+    // }
+
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( vect<2, _Ty> const &v, _Ty scalar )
+    // {
+    //     return vect<2, _Ty>( v ) += scalar;
+    // }
+
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( _Ty scalar, vect<2, _Ty> const &v )
+    // {
+    //     return vect<2, _Ty>( v ) += scalar;
+    // }
+
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( vect<2, _Ty> const &v1, vect<2, _Ty> const &v2 )
+    // {
+    //     return vect<2, _Ty>( v1 ) += v2;
+    // }
+
+    namespace detail
+    {
+        template <template <length_t L, typename T> class vec, typename R, typename T>
+        struct functor1<vec, 2, R, T>
+        {
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vec<2, R> call( R ( *Func )( T x ), vec<2, T> const &v )
+            {
+                return vec<2, R>( Func( v.x ), Func( v.y ) );
+            }
+        };
+
+        template <template <length_t L, typename T> class vec, typename T>
+        struct functor2<vec, 2, T>
+        {
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vec<2, T> call( T ( *Func )( T x, T y ), vec<2, T> const &a, vec<3, T> const &b )
+            {
+                return vec<2, T>( Func( a.x, b.x ), Func( a.y, b.y ) );
+            }
+
+            template <class Fct>
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vec<2, T> call( Fct Func, vec<2, T> const &a, vec<2, T> const &b )
+            {
+                return vec<2, T>( Func( a.x, b.x ), Func( a.y, b.y ) );
+            }
+        };
+    } // namespace detail
 } // namespace numlua::linalg

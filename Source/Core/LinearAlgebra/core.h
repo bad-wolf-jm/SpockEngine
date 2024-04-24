@@ -13,7 +13,7 @@ namespace numlua::linalg
 
     namespace detail
     {
-        template <template <length_t L, typename T> class vec, length_t L, typename T>
+        template <template <length_t L, typename T> class vec, length_t L,typename R, typename T>
         struct functor1
         {
         };
