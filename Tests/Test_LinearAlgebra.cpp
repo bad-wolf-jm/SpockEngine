@@ -75,6 +75,8 @@ TEST_CASE( "4D Vectors", "[LINEAR_ALGEBRA]" )
 
 TEST_CASE( "Algrbraic operations on vectors", "[LINEAR_ALGEBRA]" )
 {
+    constexpr float scalarConstant = 4.5f;
+    
     {
         auto const v1 = linalg::float2( 1.0f, 2.0f );
         auto const v2 = linalg::float2( 2.0f, 3.0f );

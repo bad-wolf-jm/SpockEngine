@@ -105,31 +105,30 @@ namespace numlua::linalg
             return ( *this = detail::compute_vec_sub<3, _Ty>::call( *this, vect<3, _Ty>( v ) ) );
         }
 
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> &operator*=( U scalar )
+        {
+            return ( *this = detail::compute_vec_mul<3, _Ty>::call( *this, vect<3, _Ty>( scalar ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> &operator*=( vect<3, U> const &v )
+        {
+            return ( *this = detail::compute_vec_mul<3, _Ty>::call( *this, vect<3, _Ty>( v ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> &operator/=( U scalar )
+        {
+            return ( *this = detail::compute_vec_div<3, _Ty>::call( *this, vect<3, _Ty>( scalar ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> &operator/=( vect<3, U> const &v )
+        {
+            return ( *this = detail::compute_vec_div<3, _Ty>::call( *this, vect<3, _Ty>( v ) ) );
+        }
     };
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> operator+( vect<3, _Ty> const &v )
-    // {
-    //     return v;
-    // }
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> operator+( vect<3, _Ty> const &v, _Ty scalar )
-    // {
-    //     return vect<3, _Ty>( v ) += scalar;
-    // }
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> operator+( _Ty scalar, vect<3, _Ty> const &v )
-    // {
-    //     return vect<3, _Ty>( v ) += scalar;
-    // }
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> operator+( vect<3, _Ty> const &v1, vect<3, _Ty> const &v2 )
-    // {
-    //     return vect<3, _Ty>( v1 ) += v2;
-    // }
 
     namespace detail
     {

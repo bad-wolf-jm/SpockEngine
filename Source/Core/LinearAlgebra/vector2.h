@@ -94,31 +94,30 @@ namespace numlua::linalg
             return ( *this = detail::compute_vec_sub<2, _Ty>::call( *this, vect<2, _Ty>( v ) ) );
         }
 
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator*=( U scalar )
+        {
+            return ( *this = detail::compute_vec_mul<2, _Ty>::call( *this, vect<2, _Ty>( scalar ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator*=( vect<2, U> const &v )
+        {
+            return ( *this = detail::compute_vec_mul<2, _Ty>::call( *this, vect<2, _Ty>( v ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator/=( U scalar )
+        {
+            return ( *this = detail::compute_vec_div<2, _Ty>::call( *this, vect<2, _Ty>( scalar ) ) );
+        }
+
+        template <typename U>
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> &operator/=( vect<2, U> const &v )
+        {
+            return ( *this = detail::compute_vec_div<2, _Ty>::call( *this, vect<2, _Ty>( v ) ) );
+        }
     };
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( vect<2, _Ty> const &v )
-    // {
-    //     return v;
-    // }
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( vect<2, _Ty> const &v, _Ty scalar )
-    // {
-    //     return vect<2, _Ty>( v ) += scalar;
-    // }
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( _Ty scalar, vect<2, _Ty> const &v )
-    // {
-    //     return vect<2, _Ty>( v ) += scalar;
-    // }
-
-    // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty> operator+( vect<2, _Ty> const &v1, vect<2, _Ty> const &v2 )
-    // {
-    //     return vect<2, _Ty>( v1 ) += v2;
-    // }
 
     namespace detail
     {
