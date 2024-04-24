@@ -138,7 +138,7 @@ namespace numlua::linalg
                 bool b = true;
                 for( size_t i = 0; b && i < L; ++i )
                     b = ( v1[i] == v2[i] );
-                
+
                 return b;
             }
         };
@@ -146,7 +146,7 @@ namespace numlua::linalg
         template <size_t L, typename T>
         struct compute_vec_nequal
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static bool call( vect<4, T> const &v1, vect<4, T> const &v2 )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static bool call( vect<L, T> const &v1, vect<L, T> const &v2 )
             {
                 return !compute_vec_equal<L, T>::call( v1, v2 );
             }

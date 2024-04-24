@@ -94,4 +94,15 @@ namespace numlua::linalg
         return vect<L, _Ty>( v1 ) /= v2;
     }
 
+    template <size_t L, typename _Ty>
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( vect<L, _Ty> const &v1, vect<L, _Ty> const &v2 )
+    {
+        return detail::compute_vec_equal<L, _Ty>::call( v1, v2 );
+    }
+
+    template <size_t L, typename _Ty>
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( vect<L, _Ty> const &v1, vect<L, _Ty> const &v2 )
+    {
+        return detail::compute_vec_nequal<L, _Ty>::call( v1, v2 );
+    }
 } // namespace numlua::linalg
