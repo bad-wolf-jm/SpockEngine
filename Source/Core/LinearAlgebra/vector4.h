@@ -61,7 +61,7 @@ namespace numlua::linalg
         {
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr _Ty &operator[]( length_type i )
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr _Ty &operator[]( size_t i )
         {
             // GLM_ASSERT_LENGTH( i, this->length() );
             switch( i )
@@ -76,7 +76,7 @@ namespace numlua::linalg
             }
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr _Ty &operator[]( length_type i ) const
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr _Ty const &operator[]( size_t i ) const
         {
             // GLM_ASSERT_LENGTH( i, this->length() );
             switch( i )
@@ -91,6 +91,7 @@ namespace numlua::linalg
             }
         }
 
+#if 0
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator=( vect<4, _Ty> const &v )
         {
             this->x = static_cast<_Ty>( v.x );
@@ -287,8 +288,10 @@ namespace numlua::linalg
         //     return ( *this = detail::compute_vec_shift_right<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
         //                                                      detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( v ) ) );
         // }
+#endif
     };
 
+#if 0
     // -- Unary constant operators --
     template <typename _Ty>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator+( vect<4, _Ty> const &v )
@@ -390,29 +393,29 @@ namespace numlua::linalg
 
     // -- Binary bit operators --
 
-    template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( vect<4, _Ty> const &v, T scalar )
-    {
-        return vect<4, _Ty>( v ) %= scalar;
-    }
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( vect<4, _Ty> const &v, T scalar )
+    // {
+    //     return vect<4, _Ty>( v ) %= scalar;
+    // }
 
-    template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( T scalar, vect<4, _Ty> const &v )
-    {
-        return vect<4, _Ty>( scalar ) %= v;
-    }
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( T scalar, vect<4, _Ty> const &v )
+    // {
+    //     return vect<4, _Ty>( scalar ) %= v;
+    // }
 
-    template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
-    {
-        return vect<4, _Ty>( v1 ) %= v2;
-    }
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // {
+    //     return vect<4, _Ty>( v1 ) %= v2;
+    // }
 
-    template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator&( vect<4, _Ty> const &v, T scalar )
-    {
-        return vect<4, _Ty>( v ) &= scalar;
-    }
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator&( vect<4, _Ty> const &v, T scalar )
+    // {
+    //     return vect<4, _Ty>( v ) &= scalar;
+    // }
 
     // template <typename _Ty>
     // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator&( T scalar, vect<4, _Ty> const &v )
@@ -501,37 +504,38 @@ namespace numlua::linalg
     // template <typename _Ty>
     // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator~( vect<4, _Ty> const &v )
     // {
-    //     return detail::compute_vec_bitwise_not<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call(
+    //     return detail::compute_vec_bitwise_not<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
+    //     detail::is_aligned<Q>::value>::call(
     //         v );
     // }
 
     // -- Boolean operators --
 
-     template <typename _Ty>
+    template <typename _Ty>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     {
         return detail::compute_vec_equal<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call( v1,
                                                                                                                                   v2 );
     }
 
-     template <typename _Ty>
+    template <typename _Ty>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     {
         return detail::compute_vec_nequal<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call(
             v1, v2 );
     }
 
-     template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vec<4, bool, Q> operator&&( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
-    {
-        return vec<4, bool, Q>( v1.x && v2.x, v1.y && v2.y, v1.z && v2.z, v1.w && v2.w );
-    }
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vec<4, bool, Q> operator&&( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
+    // {
+    //     return vec<4, bool, Q>( v1.x && v2.x, v1.y && v2.y, v1.z && v2.z, v1.w && v2.w );
+    // }
 
-     template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vec<4, bool, Q> operator||( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
-    {
-        return vec<4, bool, Q>( v1.x || v2.x, v1.y || v2.y, v1.z || v2.z, v1.w || v2.w );
-    }
+    // template <typename _Ty>
+    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vec<4, bool, Q> operator||( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
+    // {
+    //     return vec<4, bool, Q>( v1.x || v2.x, v1.y || v2.y, v1.z || v2.z, v1.w || v2.w );
+    // }
 
     namespace detail
     {
@@ -559,12 +563,13 @@ namespace numlua::linalg
             }
         };
     } // namespace detail
+#endif
 } // namespace numlua::linalg
 
 template <typename _Ty>
-struct fmt::formatter<numlua::linalg::vect<4, _Ty><_Ty>> : fmt::formatter<std::string_view>
+struct fmt::formatter<numlua::linalg::vect<4, _Ty>> : fmt::formatter<std::string_view>
 {
-    auto format( numlua::linalg::vect<4, _Ty><_Ty> value, format_context &ctx ) -> format_context::iterator
+    auto format( numlua::linalg::vect<4, _Ty> value, format_context &ctx ) -> format_context::iterator
     {
         auto const &formattedValue = fmt::format( "vec4({}, {}, {}, {})", value.x, value.y, value.z, value.w );
 
