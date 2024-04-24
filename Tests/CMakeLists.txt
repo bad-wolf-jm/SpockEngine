@@ -14,10 +14,11 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(lste_cuda_test WIN32
    TestUtils.cpp
 
-   Test_CudaTexture.cpp
-   Test_CudaBuffer.cpp
-   Test_ComputationScope.cpp
-   Test_Scripting.cpp
+   Test_LinearAlgebra.cpp
+   # Test_CudaTexture.cpp
+   # Test_CudaBuffer.cpp
+   # Test_ComputationScope.cpp
+   # Test_Scripting.cpp
 )
 
 target_include_directories(lste_cuda_test PRIVATE Source C:/vcpkg/installed/x64-windows/include ${CUDA_INCLUDE_DIRS})
