@@ -30,8 +30,15 @@ namespace numlua::linalg
             return 2;
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type       &operator[]( length_type i ) noexcept;
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type const &operator[]( length_type i ) const noexcept;
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type &operator[]( length_type i ) noexcept
+        {
+            return this->value[i];
+        }
+        
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type const &operator[]( length_type i ) const noexcept
+        {
+            return this->value[i];
+        }
 
         // -- Constructors --
 
