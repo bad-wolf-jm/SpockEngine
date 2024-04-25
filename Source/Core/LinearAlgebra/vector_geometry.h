@@ -1,4 +1,5 @@
 #include "core.h"
+
 #include <cmath>
 
 namespace numlua::linalg
@@ -56,6 +57,7 @@ namespace numlua::linalg
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static T call( vect<4, T> const &a, vect<4, T> const &b )
             {
                 vect<4, T> tmp( a * b );
+
                 return ( tmp.x + tmp.y ) + ( tmp.z + tmp.w );
             }
         };
@@ -65,15 +67,11 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static vect<3, T> call( vect<3, T> const &x, vect<3, T> const &y )
             {
-                GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'cross' accepts only floating-point inputs" );
-
                 return vect<3, T>( x.y * y.z - y.y * x.z, x.z * y.x - y.z * x.x, x.x * y.y - y.x * x.y );
             }
 
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static vect<4, T> call( vect<4, T> const &x, vect<4, T> const &y )
             {
-                GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'cross' accepts only floating-point inputs" );
-
                 return vect<4, T>( x.y * y.z - y.y * x.z, x.z * y.x - y.z * x.x, x.x * y.y - y.x * x.y, 0.0f );
             }
         };
@@ -83,8 +81,6 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &v )
             {
-                GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs" );
-
                 return v * inversesqrt( dot( v, v ) );
             }
         };
@@ -95,8 +91,6 @@ namespace numlua::linalg
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &N, vect<L, T> const &I,
                                                                        vect<L, T> const &Nref )
             {
-                GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs" );
-
                 return dot( Nref, I ) < static_cast<T>( 0 ) ? N : -N;
             }
         };
@@ -129,9 +123,6 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &v )
             {
-                GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559 || GLM_CONFIG_UNRESTRICTED_FLOAT,
-                                   "'log2' only accept floating-point inputs. Include <glm/gtc/integer.hpp> for integer inputs." );
-
                 return detail::functor1<vec, L, T, T, Q>::call( log2, v );
             }
         };
@@ -176,16 +167,12 @@ namespace numlua::linalg
     template <typename genType>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF genType length( genType x )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<genType>::is_iec559, "'length' accepts only floating-point inputs" );
-
         return abs( x );
     }
 
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF T length( vect<L, T> const &v )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'length' accepts only floating-point inputs" );
-
         return detail::compute_length<L, T, Q, detail::is_aligned<Q>::value>::call( v );
     }
 
@@ -193,8 +180,6 @@ namespace numlua::linalg
     template <typename genType>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF genType distance( genType const &p0, genType const &p1 )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<genType>::is_iec559, "'distance' accepts only floating-point inputs" );
-
         return length( p1 - p0 );
     }
 
@@ -208,16 +193,12 @@ namespace numlua::linalg
     template <typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR T dot( T x, T y )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'dot' accepts only floating-point inputs" );
-
         return x * y;
     }
 
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR T dot( vect<L, T> const &x, vect<L, T> const &y )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'dot' accepts only floating-point inputs" );
-
         return detail::compute_dot<vect<L, T>, T, detail::is_aligned<Q>::value>::call( x, y );
     }
 
@@ -240,8 +221,6 @@ namespace numlua::linalg
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> normalize( vect<L, T> const &x )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs" );
-
         return detail::compute_normalize<L, T, Q, detail::is_aligned<Q>::value>::call( x );
     }
 
@@ -275,7 +254,6 @@ namespace numlua::linalg
     template <typename genType>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF genType refract( genType const &I, genType const &N, genType eta )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<genType>::is_iec559, "'refract' accepts only floating-point inputs" );
         genType const dotValue( dot( N, I ) );
         genType const k( static_cast<genType>( 1 ) - eta * eta * ( static_cast<genType>( 1 ) - dotValue * dotValue ) );
 
@@ -285,8 +263,6 @@ namespace numlua::linalg
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> refract( vect<L, T> const &I, vect<L, T> const &N, T eta )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559, "'refract' accepts only floating-point inputs" );
-
         return detail::compute_refract<L, T, Q, detail::is_aligned<Q>::value>::call( I, N, eta );
     }
 
@@ -333,9 +309,6 @@ namespace numlua::linalg
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> sqrt( vect<L, T> const &x )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559 || GLM_CONFIG_UNRESTRICTED_FLOAT,
-                           "'sqrt' only accept floating-point inputs" );
-
         return detail::compute_sqrt<L, T, Q, detail::is_aligned<Q>::value>::call( x );
     }
 
@@ -349,9 +322,6 @@ namespace numlua::linalg
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> inversesqrt( vect<L, T> const &x )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<T>::is_iec559 || GLM_CONFIG_UNRESTRICTED_FLOAT,
-                           "'inversesqrt' only accept floating-point inputs" );
-
         return detail::compute_inversesqrt<L, T, Q, detail::is_aligned<Q>::value>::call( x );
     }
 
@@ -359,9 +329,6 @@ namespace numlua::linalg
     template <typename genType>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR genType radians( genType degrees )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<genType>::is_iec559 || GLM_CONFIG_UNRESTRICTED_FLOAT,
-                           "'radians' only accept floating-point input" );
-
         return degrees * static_cast<genType>( 0.01745329251994329576923690768489 );
     }
 
@@ -375,9 +342,6 @@ namespace numlua::linalg
     template <typename genType>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR genType degrees( genType radians )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<genType>::is_iec559 || GLM_CONFIG_UNRESTRICTED_FLOAT,
-                           "'degrees' only accept floating-point input" );
-
         return radians * static_cast<genType>( 57.295779513082320876798154814105 );
     }
 
@@ -431,9 +395,6 @@ namespace numlua::linalg
     template <typename genType>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF genType atan( genType y, genType x )
     {
-        GLM_STATIC_ASSERT( std::numeric_limits<genType>::is_iec559 || GLM_CONFIG_UNRESTRICTED_FLOAT,
-                           "'atan' only accept floating-point input" );
-
         return ::std::atan2( y, x );
     }
 
