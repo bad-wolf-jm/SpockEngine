@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <limits>
 
-namespace glm
+namespace numlua::linalg
 {
     template <typename T>
     struct matrix<2, 2, T>
@@ -166,7 +166,7 @@ namespace glm
         {
             this->value[0] /= scalar;
             this->value[1] /= scalar;
-            
+
             return *this;
         }
 
@@ -309,6 +309,7 @@ namespace glm
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         matrix<2, 2, T> m1_copy( m1 );
+        
         return m1_copy /= m2;
     }
 
@@ -326,7 +327,3 @@ namespace glm
         return ( m1[0] != m2[0] ) || ( m1[1] != m2[1] );
     }
 } // namespace glm
-
-#ifndef GLM_EXTERNAL_TEMPLATE
-#    include "type_mat2x2.inl"
-#endif
