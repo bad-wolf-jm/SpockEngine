@@ -37,19 +37,39 @@ namespace numlua::linalg
 
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix() = default;
 
-        constexpr matrix( matrix<2, 2, T> const &m );
+        constexpr matrix( matrix<2, 2, T> const &m )
+            : value{ m[0], m[1] }
+        {
+        }
 
-        constexpr matrix( T scalar );
-        constexpr matrix( T const &x1, T const &y1, T const &x2, T const &y2 );
-        constexpr matrix( col_type const &v1, col_type const &v2 );
+        constexpr matrix( T scalar )
+            : value{ col_type( scalar, 0 ), col_type( 0, scalar ) }
+        {
+        }
+
+        constexpr matrix( T const &x1, T const &y1, T const &x2, T const &y2 )
+            : value{ col_type( x0, y0 ), col_type( x1, y1 ) }
+        {
+        }
+
+        constexpr matrix( col_type const &v1, col_type const &v2 )
+            : value{ v0, v1 }
+        {
+        }
 
         // -- Conversions --
 
         template <typename U, typename V, typename M, typename N>
-        constexpr matrix( U const &x1, V const &y1, M const &x2, N const &y2 );
+        constexpr matrix( U const &x1, V const &y1, M const &x2, N const &y2 )
+            : value{ col_type( static_cast<T>( x1 ), value_type( y1 ) ), col_type( static_cast<T>( x2 ), value_type( y2 ) ) }
+        {
+        }
 
         template <typename U, typename V>
-        constexpr matrix( vect<2, U> const &v1, vect<2, V> const &v2 );
+        constexpr matrix( vect<2, U> const &v1, vect<2, V> const &v2 )
+            : value{ col_type( v1 ), col_type( v2 ) }
+        {
+        }
 
         // -- Matrix conversions --
 
@@ -309,7 +329,7 @@ namespace numlua::linalg
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         matrix<2, 2, T> m1_copy( m1 );
-        
+
         return m1_copy /= m2;
     }
 
@@ -326,4 +346,4 @@ namespace numlua::linalg
     {
         return ( m1[0] != m2[0] ) || ( m1[1] != m2[1] );
     }
-} // namespace glm
+} // namespace numlua::linalg
