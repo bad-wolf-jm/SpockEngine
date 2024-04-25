@@ -32,7 +32,7 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_dot<vect<2, T>, T, Aligned>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static T call( vect<2, T> const &a, vect<2, T> const &b )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static T call( vect<2, T> const &a, vect<2, T> const &b )
             {
                 vect<2, T> tmp( a * b );
 
@@ -43,7 +43,7 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_dot<vect<3, T>, T, Aligned>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static T call( vect<3, T> const &a, vect<3, T> const &b )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static T call( vect<3, T> const &a, vect<3, T> const &b )
             {
                 vect<3, T> tmp( a * b );
 
@@ -54,7 +54,7 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_dot<vect<4, T>, T, Aligned>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static T call( vect<4, T> const &a, vect<4, T> const &b )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static T call( vect<4, T> const &a, vect<4, T> const &b )
             {
                 vect<4, T> tmp( a * b );
 
@@ -65,12 +65,12 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_cross
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static vect<3, T> call( vect<3, T> const &x, vect<3, T> const &y )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<3, T> call( vect<3, T> const &x, vect<3, T> const &y )
             {
                 return vect<3, T>( x.y * y.z - y.y * x.z, x.z * y.x - y.z * x.x, x.x * y.y - y.x * x.y );
             }
 
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR static vect<4, T> call( vect<4, T> const &x, vect<4, T> const &y )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<4, T> call( vect<4, T> const &x, vect<4, T> const &y )
             {
                 return vect<4, T>( x.y * y.z - y.y * x.z, x.z * y.x - y.z * x.x, x.x * y.y - y.x * x.y, 0.0f );
             }
@@ -88,8 +88,7 @@ namespace numlua::linalg
         template <length_t L, typename T, bool Aligned>
         struct compute_faceforward
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &N, vect<L, T> const &I,
-                                                                       vect<L, T> const &Nref )
+            SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &N, vect<L, T> const &I, vect<L, T> const &Nref )
             {
                 return dot( Nref, I ) < static_cast<T>( 0 ) ? N : -N;
             }
@@ -109,8 +108,8 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &I, vect<L, T> const &N, T eta )
             {
-                T const            dotValue( dot( N, I ) );
-                T const            k( static_cast<T>( 1 ) - eta * eta * ( static_cast<T>( 1 ) - dotValue * dotValue ) );
+                T const          dotValue( dot( N, I ) );
+                T const          k( static_cast<T>( 1 ) - eta * eta * ( static_cast<T>( 1 ) - dotValue * dotValue ) );
                 vect<L, T> const Result =
                     ( k >= static_cast<T>( 0 ) ) ? ( eta * I - ( eta * dotValue + std::sqrt( k ) ) * N ) : vect<L, T>( 0 );
                 return Result;
@@ -123,7 +122,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &v )
             {
-                return detail::functor1<vec, L, T, T, Q>::call( log2, v );
+                return detail::functor1<vect, L, T, T>::call( log2, v );
             }
         };
 
@@ -132,7 +131,7 @@ namespace numlua::linalg
         {
             SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vect<L, T> call( vect<L, T> const &x )
             {
-                return detail::functor1<vec, L, T, T, Q>::call( std::sqrt, x );
+                return detail::functor1<vect, L, T, T>::call( std::sqrt, x );
             }
         };
 
@@ -145,22 +144,22 @@ namespace numlua::linalg
             }
         };
 
-        template <length_t L, bool Aligned>
-        struct compute_inversesqrt<L, float, lowp, Aligned>
-        {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vec<L, float, lowp> call( vec<L, float, lowp> const &x )
-            {
-                vec<L, float, lowp>  tmp( x );
-                vec<L, float, lowp>  xhalf( tmp * 0.5f );
-                vec<L, uint, lowp>  *p    = reinterpret_cast<vec<L, uint, lowp> *>( const_cast<vec<L, float, lowp> *>( &x ) );
-                vec<L, uint, lowp>   i    = vec<L, uint, lowp>( 0x5f375a86 ) - ( *p >> vec<L, uint, lowp>( 1 ) );
-                vec<L, float, lowp> *ptmp = reinterpret_cast<vec<L, float, lowp> *>( &i );
-                tmp                       = *ptmp;
-                tmp                       = tmp * ( 1.5f - xhalf * tmp * tmp );
+        // template <length_t L, bool Aligned>
+        // struct compute_inversesqrt<L, float, lowp, Aligned>
+        // {
+        //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF static vec<L, float, lowp> call( vec<L, float, lowp> const &x )
+        //     {
+        //         vec<L, float, lowp>  tmp( x );
+        //         vec<L, float, lowp>  xhalf( tmp * 0.5f );
+        //         vec<L, uint, lowp>  *p    = reinterpret_cast<vec<L, uint, lowp> *>( const_cast<vec<L, float, lowp> *>( &x ) );
+        //         vec<L, uint, lowp>   i    = vec<L, uint, lowp>( 0x5f375a86 ) - ( *p >> vec<L, uint, lowp>( 1 ) );
+        //         vec<L, float, lowp> *ptmp = reinterpret_cast<vec<L, float, lowp> *>( &i );
+        //         tmp                       = *ptmp;
+        //         tmp                       = tmp * ( 1.5f - xhalf * tmp * tmp );
 
-                return tmp;
-            }
-        };
+        //         return tmp;
+        //     }
+        // };
     } // namespace detail
 
     // length
@@ -191,20 +190,20 @@ namespace numlua::linalg
 
     // dot
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR T dot( T x, T y )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr T dot( T x, T y )
     {
         return x * y;
     }
 
     template <length_t L, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR T dot( vect<L, T> const &x, vect<L, T> const &y )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr T dot( vect<L, T> const &x, vect<L, T> const &y )
     {
         return detail::compute_dot<vect<L, T>, T, detail::is_aligned<Q>::value>::call( x, y );
     }
 
     // cross
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR vect<3, T> cross( vect<3, T> const &x, vect<3, T> const &y )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, T> cross( vect<3, T> const &x, vect<3, T> const &y )
     {
         return detail::compute_cross<T, Q, detail::is_aligned<Q>::value>::call( x, y );
     }
@@ -327,26 +326,26 @@ namespace numlua::linalg
 
     // radians
     template <typename genType>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR genType radians( genType degrees )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr genType radians( genType degrees )
     {
         return degrees * static_cast<genType>( 0.01745329251994329576923690768489 );
     }
 
     template <length_t L, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR vect<L, T> radians( vect<L, T> const &v )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<L, T> radians( vect<L, T> const &v )
     {
         return detail::functor1<vec, L, T, T, Q>::call( radians, v );
     }
 
     // degrees
     template <typename genType>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR genType degrees( genType radians )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr genType degrees( genType radians )
     {
         return radians * static_cast<genType>( 57.295779513082320876798154814105 );
     }
 
     template <length_t L, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF GLM_CONSTEXPR vect<L, T> degrees( vect<L, T> const &v )
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<L, T> degrees( vect<L, T> const &v )
     {
         return detail::functor1<vec, L, T, T, Q>::call( degrees, v );
     }
