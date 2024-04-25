@@ -82,13 +82,6 @@ namespace glm
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T> &operator*=( U s );
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T> &operator/=( U s );
-
-        // -- Increment and decrement operators --
-
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T> &operator++();
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T> &operator--();
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T>  operator++( int );
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T>  operator--( int );
     };
 
     // -- Unary operators --
