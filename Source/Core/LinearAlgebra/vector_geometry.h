@@ -321,13 +321,7 @@ namespace numlua::linalg
         return detail::functor1<vec, L, T, T, Q>::call( exp2, x );
     }
 
-    // log2, ln2 = 0.69314718055994530941723212145818f
-    template <typename genType>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF genType log2( genType x )
-    {
-        return log2( vec<1, genType>( x ) ).x;
-    }
-
+    using std::log2;
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> log2( vect<L, T> const &x )
     {
@@ -395,7 +389,6 @@ namespace numlua::linalg
 
     // sin
     using ::std::sin;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> sin( vect<L, T> const &v )
     {
@@ -404,7 +397,6 @@ namespace numlua::linalg
 
     // cos
     using std::cos;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> cos( vect<L, T> const &v )
     {
@@ -413,7 +405,6 @@ namespace numlua::linalg
 
     // tan
     using std::tan;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> tan( vect<L, T> const &v )
     {
@@ -422,7 +413,6 @@ namespace numlua::linalg
 
     // asin
     using std::asin;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> asin( vect<L, T> const &v )
     {
@@ -431,7 +421,6 @@ namespace numlua::linalg
 
     // acos
     using std::acos;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> acos( vect<L, T> const &v )
     {
@@ -455,7 +444,6 @@ namespace numlua::linalg
     }
 
     using std::atan;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> atan( vect<L, T> const &v )
     {
@@ -464,7 +452,6 @@ namespace numlua::linalg
 
     // sinh
     using std::sinh;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> sinh( vect<L, T> const &v )
     {
@@ -473,7 +460,6 @@ namespace numlua::linalg
 
     // cosh
     using std::cosh;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> cosh( vect<L, T> const &v )
     {
@@ -482,7 +468,6 @@ namespace numlua::linalg
 
     // tanh
     using std::tanh;
-
     template <length_t L, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF vect<L, T> tanh( vect<L, T> const &v )
     {
