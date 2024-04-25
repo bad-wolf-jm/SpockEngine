@@ -11,14 +11,14 @@
 namespace glm
 {
     template <typename T, qualifier Q>
-    struct matrix<4, 4, T, Q>
+    struct matrix<4, 4, T>
     {
-        typedef vect<4, T, Q>      col_type;
-        typedef vect<4, T, Q>      row_type;
-        typedef matrix<4, 4, T, Q> type;
-        typedef matrix<4, 4, T, Q> transpose_type;
-        typedef T                  value_type;
-        typedef size_t             length_type;
+        typedef vect<4, T>      col_type;
+        typedef vect<4, T>      row_type;
+        typedef matrix<4, 4, T> type;
+        typedef matrix<4, 4, T> transpose_type;
+        typedef T               value_type;
+        typedef size_t          length_type;
 
       private:
         col_type value[4];
@@ -54,132 +54,126 @@ namespace glm
                           Z4 const &z4, W4 const &w4 );
 
         template <typename V1, typename V2, typename V3, typename V4>
-        constexpr matrix( vect<4, V1, Q> const &v1, vect<4, V2, Q> const &v2, vect<4, V3, Q> const &v3, vect<4, V4, Q> const &v4 );
+        constexpr matrix( vect<4, V1> const &v1, vect<4, V2> const &v2, vect<4, V3> const &v3, vect<4, V4> const &v4 );
 
         // -- Matrix conversions --
 
         template <typename U, qualifier P>
         constexpr matrix( matrix<4, 4, U, P> const &m );
 
-        constexpr matrix( matrix<2, 2, T, Q> const &x );
-        constexpr matrix( matrix<3, 3, T, Q> const &x );
-        constexpr matrix( matrix<2, 3, T, Q> const &x );
-        constexpr matrix( matrix<3, 2, T, Q> const &x );
-        constexpr matrix( matrix<2, 4, T, Q> const &x );
-        constexpr matrix( matrix<4, 2, T, Q> const &x );
-        constexpr matrix( matrix<3, 4, T, Q> const &x );
-        constexpr matrix( matrix<4, 3, T, Q> const &x );
+        constexpr matrix( matrix<2, 2, T> const &x );
+        constexpr matrix( matrix<3, 3, T> const &x );
+        constexpr matrix( matrix<2, 3, T> const &x );
+        constexpr matrix( matrix<3, 2, T> const &x );
+        constexpr matrix( matrix<2, 4, T> const &x );
+        constexpr matrix( matrix<4, 2, T> const &x );
+        constexpr matrix( matrix<3, 4, T> const &x );
+        constexpr matrix( matrix<4, 3, T> const &x );
 
         // -- Unary arithmetic operators --
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator=( matrix<4, 4, U, Q> const &m );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator=( matrix<4, 4, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator+=( U s );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator+=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator+=( matrix<4, 4, U, Q> const &m );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator+=( matrix<4, 4, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator-=( U s );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator-=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator-=( matrix<4, 4, U, Q> const &m );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator-=( matrix<4, 4, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator*=( U s );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator*=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator*=( matrix<4, 4, U, Q> const &m );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator*=( matrix<4, 4, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator/=( U s );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator/=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator/=( matrix<4, 4, U, Q> const &m );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator/=( matrix<4, 4, U> const &m );
 
         // -- Increment and decrement operators --
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator++();
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> &operator--();
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q>  operator++( int );
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q>  operator--( int );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator++();
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> &operator--();
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T>  operator++( int );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T>  operator--( int );
     };
 
     // -- Unary operators --
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator+( matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator+( matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator-( matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator-( matrix<4, 4, T> const &m );
 
     // -- Binary operators --
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator+( matrix<4, 4, T, Q> const &m, T scalar );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator+( matrix<4, 4, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator+( T scalar, matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator+( T scalar, matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator+( matrix<4, 4, T, Q> const &m1,
-                                                                             matrix<4, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator+( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator-( matrix<4, 4, T, Q> const &m, T scalar );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator-( matrix<4, 4, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator-( T scalar, matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator-( T scalar, matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator-( matrix<4, 4, T, Q> const &m1,
-                                                                             matrix<4, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator-( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator*( matrix<4, 4, T, Q> const &m, T scalar );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator*( matrix<4, 4, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator*( T scalar, matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator*( T scalar, matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T, Q>::col_type
-    operator*( matrix<4, 4, T, Q> const &m, typename matrix<4, 4, T, Q>::row_type const &v );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T>::col_type
+    operator*( matrix<4, 4, T> const &m, typename matrix<4, 4, T>::row_type const &v );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T, Q>::row_type
-    operator*( typename matrix<4, 4, T, Q>::col_type const &v, matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T>::row_type
+    operator*( typename matrix<4, 4, T>::col_type const &v, matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 4, T, Q> operator*( matrix<4, 4, T, Q> const &m1,
-                                                                             matrix<2, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 4, T> operator*( matrix<4, 4, T> const &m1, matrix<2, 4, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 4, T, Q> operator*( matrix<4, 4, T, Q> const &m1,
-                                                                             matrix<3, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 4, T> operator*( matrix<4, 4, T> const &m1, matrix<3, 4, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator*( matrix<4, 4, T, Q> const &m1,
-                                                                             matrix<4, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator*( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator/( matrix<4, 4, T, Q> const &m, T scalar );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator/( matrix<4, 4, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator/( T scalar, matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator/( T scalar, matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T, Q>::col_type
-    operator/( matrix<4, 4, T, Q> const &m, typename matrix<4, 4, T, Q>::row_type const &v );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T>::col_type
+    operator/( matrix<4, 4, T> const &m, typename matrix<4, 4, T>::row_type const &v );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T, Q>::row_type
-    operator/( typename matrix<4, 4, T, Q>::col_type const &v, matrix<4, 4, T, Q> const &m );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<4, 4, T>::row_type
+    operator/( typename matrix<4, 4, T>::col_type const &v, matrix<4, 4, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T, Q> operator/( matrix<4, 4, T, Q> const &m1,
-                                                                             matrix<4, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 4, T> operator/( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
 
     // -- Boolean operators --
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( matrix<4, 4, T, Q> const &m1, matrix<4, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( matrix<4, 4, T, Q> const &m1, matrix<4, 4, T, Q> const &m2 );
+    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
 } // namespace glm
 
 #ifndef GLM_EXTERNAL_TEMPLATE
