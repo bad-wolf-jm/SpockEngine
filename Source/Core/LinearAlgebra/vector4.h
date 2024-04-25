@@ -149,49 +149,49 @@ namespace numlua::linalg
             return ( *this = detail::compute_vec_div<4, _Ty>::call( *this, vect<4, _Ty>( v ) ) );
         }
 
-#if 0
         // -- Increment and decrement operators --
 
-        template <typename T>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator++()
-        {
-            ++this->x;
-            ++this->y;
-            ++this->z;
-            ++this->w;
+        // template <typename T>
+        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator++()
+        // {
+        //     ++this->x;
+        //     ++this->y;
+        //     ++this->z;
+        //     ++this->w;
 
-            return *this;
-        }
+        //     return *this;
+        // }
 
-        template <typename T>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator--()
-        {
-            --this->x;
-            --this->y;
-            --this->z;
-            --this->w;
+        // template <typename T>
+        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator--()
+        // {
+        //     --this->x;
+        //     --this->y;
+        //     --this->z;
+        //     --this->w;
 
-            return *this;
-        }
+        //     return *this;
+        // }
 
-        template <typename T>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator++( int )
-        {
-            vect<4, _Ty> Result( *this );
-            ++*this;
+        // template <typename T>
+        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator++( int )
+        // {
+        //     vect<4, _Ty> Result( *this );
+        //     ++*this;
 
-            return Result;
-        }
+        //     return Result;
+        // }
 
-        template <typename T>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator--( int )
-        {
-            vect<4, _Ty> Result( *this );
-            --*this;
+        // template <typename T>
+        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator--( int )
+        // {
+        //     vect<4, _Ty> Result( *this );
+        //     --*this;
 
-            return Result;
-        }
+        //     return Result;
+        // }
 
+#if 0
         // -- Unary bit operators --
 
         // template <typename U>
@@ -346,41 +346,41 @@ namespace numlua::linalg
     //     return vect<4, _Ty>( v1 ) -= v2;
     // }
 
-//     template <typename _Ty>
-//     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( vect<4, _Ty> const &v, T scalar )
-//     {
-//         return vect<4, _Ty>( v ) *= scalar;
-//     }
-// 
-//     template <typename _Ty>
-//     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( T scalar, vect<4, _Ty> const &v )
-//     {
-//         return vect<4, _Ty>( v ) *= scalar;
-//     }
-// 
-//     template <typename _Ty>
-//     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
-//     {
-//         return vect<4, _Ty>( v1 ) *= v2;
-//     }
-// 
-//     template <typename _Ty>
-//     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v, T scalar )
-//     {
-//         return vect<4, _Ty>( v ) /= scalar;
-//     }
-// 
-//     template <typename _Ty>
-//     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( T scalar, vect<4, _Ty> const &v )
-//     {
-//         return vect<4, _Ty>( scalar ) /= v;
-//     }
-// 
-//     template <typename _Ty>
-//     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
-//     {
-//         return vect<4, _Ty>( v1 ) /= v2;
-//     }
+    //     template <typename _Ty>
+    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( vect<4, _Ty> const &v, T scalar )
+    //     {
+    //         return vect<4, _Ty>( v ) *= scalar;
+    //     }
+    //
+    //     template <typename _Ty>
+    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( T scalar, vect<4, _Ty> const &v )
+    //     {
+    //         return vect<4, _Ty>( v ) *= scalar;
+    //     }
+    //
+    //     template <typename _Ty>
+    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    //     {
+    //         return vect<4, _Ty>( v1 ) *= v2;
+    //     }
+    //
+    //     template <typename _Ty>
+    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v, T scalar )
+    //     {
+    //         return vect<4, _Ty>( v ) /= scalar;
+    //     }
+    //
+    //     template <typename _Ty>
+    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( T scalar, vect<4, _Ty> const &v )
+    //     {
+    //         return vect<4, _Ty>( scalar ) /= v;
+    //     }
+    //
+    //     template <typename _Ty>
+    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    //     {
+    //         return vect<4, _Ty>( v1 ) /= v2;
+    //     }
 
 #if 0
     // -- Binary bit operators --
