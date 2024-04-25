@@ -36,9 +36,8 @@ namespace glm
 
         // -- Constructors --
 
-        GLM_DEFAULTED_DEFAULT_CTOR_DECL constexpr matrix() GLM_DEFAULT_CTOR;
-        template <qualifier P>
-        constexpr matrix( matrix<3, 3, T, P> const &m );
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix() = default;
+        constexpr matrix( matrix<3, 3, T> const &m );
 
         constexpr matrix( T scalar );
         constexpr matrix( T x0, T y0, T z0, T x1, T y1, T z1, T x2, T y2, T z2 );
@@ -54,8 +53,8 @@ namespace glm
 
         // -- Matrix conversions --
 
-        template <typename U, qualifier P>
-        constexpr matrix( matrix<3, 3, U, P> const &m );
+        template <typename U>
+        constexpr matrix( matrix<3, 3, U> const &m );
 
         constexpr matrix( matrix<2, 2, T> const &x );
         constexpr matrix( matrix<4, 4, T> const &x );
