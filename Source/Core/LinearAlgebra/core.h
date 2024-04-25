@@ -11,6 +11,11 @@ namespace numlua::linalg
     {
     };
 
+    template <size_t Rows, size_t Columns, typename _Ty>
+    struct matrix
+    {
+    };
+
     namespace detail
     {
         template <template <length_t L, typename T> class vec, length_t L,typename R, typename T>
