@@ -1,11 +1,11 @@
 #pragma once
 
 #include "core.h"
-#include "matrix_4x4.h"
+#include "matrix2x2.h"
 
 namespace numlua::linalg
 {
-    using float2x2 = mat<2, 2, float>;
+    using float2x2 = matrix<2, 2, float>;
 
     template <size_t _R, size_t _C, typename T>
     LINALG_FUNCTION matrix<_R, _C, T> operator+( matrix<2, 2, T> const &m )

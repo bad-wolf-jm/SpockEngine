@@ -55,12 +55,12 @@ namespace numlua::linalg
         }
 
         constexpr matrix( T const &x1, T const &y1, T const &x2, T const &y2 )
-            : value{ col_type( x0, y0 ), col_type( x1, y1 ) }
+            : value{ col_type( x1, y1 ), col_type( x2, y2 ) }
         {
         }
 
         constexpr matrix( col_type const &v1, col_type const &v2 )
-            : value{ v0, v1 }
+            : value{ v1, v2 }
         {
         }
 
@@ -86,42 +86,42 @@ namespace numlua::linalg
         {
         }
 
-        constexpr matrix( matrix<3, 3, T> const &x )
+        constexpr matrix( matrix<3, 3, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<4, 4, T> const &x )
+        constexpr matrix( matrix<4, 4, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<2, 3, T> const &x )
+        constexpr matrix( matrix<2, 3, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<3, 2, T> const &x )
+        constexpr matrix( matrix<3, 2, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<2, 4, T> const &x )
+        constexpr matrix( matrix<2, 4, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<4, 2, T> const &x )
+        constexpr matrix( matrix<4, 2, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<3, 4, T> const &x )
+        constexpr matrix( matrix<3, 4, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
 
-        constexpr matrix( matrix<4, 3, T> const &x )
+        constexpr matrix( matrix<4, 3, T> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
@@ -141,7 +141,7 @@ namespace numlua::linalg
         LINALG_FUNCTION matrix<2, 2, T> &operator+=( U s )
         {
             for( int i = 0; i < length(); i++ )
-                this->value[i] += m[i];
+                this->value[i] += s;
 
             return *this;
         }
@@ -159,7 +159,7 @@ namespace numlua::linalg
         LINALG_FUNCTION matrix<2, 2, T> &operator-=( U s )
         {
             for( int i = 0; i < length(); i++ )
-                this->value[i] -= m[i];
+                this->value[i] -= s;
 
             return *this;
         }
@@ -177,7 +177,7 @@ namespace numlua::linalg
         LINALG_FUNCTION matrix<2, 2, T> &operator*=( U s )
         {
             for( int i = 0; i < length(); i++ )
-                this->value[i] *= m[i];
+                this->value[i] *= s;
 
             return *this;
         }
@@ -192,7 +192,7 @@ namespace numlua::linalg
         LINALG_FUNCTION matrix<2, 2, T> &operator/=( U s )
         {
             for( int i = 0; i < length(); i++ )
-                this->value[i] /= m[i];
+                this->value[i] /= s;
 
             return *this;
         }
@@ -266,14 +266,14 @@ namespace numlua::linalg
     LINALG_FUNCTION typename matrix<2, 2, T>::col_type operator*( matrix<2, 2, T> const                    &m,
                                                                   typename matrix<2, 2, T>::row_type const &v )
     {
-        return vec<2, T>( m[0][0] * v.x + m[1][0] * v.y, m[0][1] * v.x + m[1][1] * v.y );
+        return vect<2, T>( m[0][0] * v.x + m[1][0] * v.y, m[0][1] * v.x + m[1][1] * v.y );
     }
 
     template <typename T>
     LINALG_FUNCTION typename matrix<2, 2, T>::row_type operator*( typename matrix<2, 2, T>::col_type const &v,
                                                                   matrix<2, 2, T> const                    &m )
     {
-        return vec<2, T>( v.x * m[0][0] + v.y * m[0][1], v.x * m[1][0] + v.y * m[1][1] );
+        return vect<2, T>( v.x * m[0][0] + v.y * m[0][1], v.x * m[1][0] + v.y * m[1][1] );
     }
 
     template <typename T>
