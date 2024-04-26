@@ -31,12 +31,12 @@ namespace glm
             return 3;
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type       &operator[]( length_type i ) noexcept;
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type const &operator[]( length_type i ) const noexcept;
+        LINALG_FUNCTION col_type       &operator[]( length_type i ) noexcept;
+        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept;
 
         // -- Constructors --
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix() = default;
+        LINALG_FUNCTION matrix() = default;
         constexpr matrix( matrix<3, 3, T> const &m );
 
         constexpr matrix( T scalar );
@@ -68,100 +68,100 @@ namespace glm
         // -- Unary arithmetic operators --
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator=( matrix<3, 3, U> const &m );
+        LINALG_FUNCTION matrix<3, 3, T> &operator=( matrix<3, 3, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator+=( U s );
+        LINALG_FUNCTION matrix<3, 3, T> &operator+=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator+=( matrix<3, 3, U> const &m );
+        LINALG_FUNCTION matrix<3, 3, T> &operator+=( matrix<3, 3, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator-=( U s );
+        LINALG_FUNCTION matrix<3, 3, T> &operator-=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator-=( matrix<3, 3, U> const &m );
+        LINALG_FUNCTION matrix<3, 3, T> &operator-=( matrix<3, 3, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator*=( U s );
+        LINALG_FUNCTION matrix<3, 3, T> &operator*=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator*=( matrix<3, 3, U> const &m );
+        LINALG_FUNCTION matrix<3, 3, T> &operator*=( matrix<3, 3, U> const &m );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator/=( U s );
+        LINALG_FUNCTION matrix<3, 3, T> &operator/=( U s );
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> &operator/=( matrix<3, 3, U> const &m );
+        LINALG_FUNCTION matrix<3, 3, T> &operator/=( matrix<3, 3, U> const &m );
     };
 
     // -- Unary operators --
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator+( matrix<3, 3, T> const &m );
+    LINALG_FUNCTION matrix<3, 3, T> operator+( matrix<3, 3, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator-( matrix<3, 3, T> const &m );
+    LINALG_FUNCTION matrix<3, 3, T> operator-( matrix<3, 3, T> const &m );
 
     // -- Binary operators --
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator+( matrix<3, 3, T> const &m, T scalar );
+    LINALG_FUNCTION matrix<3, 3, T> operator+( matrix<3, 3, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator+( T scalar, matrix<3, 3, T> const &m );
+    LINALG_FUNCTION matrix<3, 3, T> operator+( T scalar, matrix<3, 3, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator+( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
+    LINALG_FUNCTION matrix<3, 3, T> operator+( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator-( matrix<3, 3, T> const &m, T scalar );
+    LINALG_FUNCTION matrix<3, 3, T> operator-( matrix<3, 3, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator-( T scalar, matrix<3, 3, T> const &m );
+    LINALG_FUNCTION matrix<3, 3, T> operator-( T scalar, matrix<3, 3, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator-( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
+    LINALG_FUNCTION matrix<3, 3, T> operator-( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator*( matrix<3, 3, T> const &m, T scalar );
+    LINALG_FUNCTION matrix<3, 3, T> operator*( matrix<3, 3, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator*( T scalar, matrix<3, 3, T> const &m );
+    LINALG_FUNCTION matrix<3, 3, T> operator*( T scalar, matrix<3, 3, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<3, 3, T>::col_type
-    operator*( matrix<3, 3, T> const &m, typename matrix<3, 3, T>::row_type const &v );
+    LINALG_FUNCTION typename matrix<3, 3, T>::col_type operator*( matrix<3, 3, T> const                    &m,
+                                                                  typename matrix<3, 3, T>::row_type const &v );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<3, 3, T>::row_type
-    operator*( typename matrix<3, 3, T>::col_type const &v, matrix<3, 3, T> const &m );
+    LINALG_FUNCTION typename matrix<3, 3, T>::row_type operator*( typename matrix<3, 3, T>::col_type const &v,
+                                                                  matrix<3, 3, T> const                    &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator*( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
+    LINALG_FUNCTION matrix<3, 3, T> operator*( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 3, T> operator*( matrix<3, 3, T> const &m1, matrix<2, 3, T> const &m2 );
+    LINALG_FUNCTION matrix<2, 3, T> operator*( matrix<3, 3, T> const &m1, matrix<2, 3, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 3, T> operator*( matrix<3, 3, T> const &m1, matrix<4, 3, T> const &m2 );
+    LINALG_FUNCTION matrix<4, 3, T> operator*( matrix<3, 3, T> const &m1, matrix<4, 3, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator/( matrix<3, 3, T> const &m, T scalar );
+    LINALG_FUNCTION matrix<3, 3, T> operator/( matrix<3, 3, T> const &m, T scalar );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator/( T scalar, matrix<3, 3, T> const &m );
+    LINALG_FUNCTION matrix<3, 3, T> operator/( T scalar, matrix<3, 3, T> const &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<3, 3, T>::col_type
-    operator/( matrix<3, 3, T> const &m, typename matrix<3, 3, T>::row_type const &v );
+    LINALG_FUNCTION typename matrix<3, 3, T>::col_type operator/( matrix<3, 3, T> const                    &m,
+                                                                  typename matrix<3, 3, T>::row_type const &v );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<3, 3, T>::row_type
-    operator/( typename matrix<3, 3, T>::col_type const &v, matrix<3, 3, T> const &m );
+    LINALG_FUNCTION typename matrix<3, 3, T>::row_type operator/( typename matrix<3, 3, T>::col_type const &v,
+                                                                  matrix<3, 3, T> const                    &m );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 3, T> operator/( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
+    LINALG_FUNCTION matrix<3, 3, T> operator/( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
 
     // -- Boolean operators --
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
+    LINALG_FUNCTION bool operator==( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
 
     template <typename T, qualifier Q>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
+    LINALG_FUNCTION bool operator!=( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
 } // namespace glm
 
 #ifndef GLM_EXTERNAL_TEMPLATE

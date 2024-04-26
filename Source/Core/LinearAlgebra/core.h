@@ -2,6 +2,8 @@
 
 #include "Core/Cuda/Cuda.h"
 
+#define LINALG_FUNCTION SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr
+
 namespace numlua::linalg
 {
     using length_t = size_t;

@@ -30,19 +30,19 @@ namespace numlua::linalg
             return 2;
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type &operator[]( length_type i ) noexcept
+        LINALG_FUNCTION col_type &operator[]( length_type i ) noexcept
         {
             return this->value[i];
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type const &operator[]( length_type i ) const noexcept
+        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept
         {
             return this->value[i];
         }
 
         // -- Constructors --
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix() = default;
+        LINALG_FUNCTION matrix() = default;
 
         constexpr matrix( matrix<2, 2, T> const &m )
             : value{ m[0], m[1] }
@@ -129,7 +129,7 @@ namespace numlua::linalg
         // -- Unary arithmetic operators --
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix<2, 2, T> &operator=( matrix<2, 2, U> const &m )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] = m[i];
@@ -138,7 +138,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator+=( U s )
+        LINALG_FUNCTION matrix<2, 2, T> &operator+=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] += m[i];
@@ -147,7 +147,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator+=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix<2, 2, T> &operator+=( matrix<2, 2, U> const &m )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] += m[i];
@@ -156,7 +156,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator-=( U s )
+        LINALG_FUNCTION matrix<2, 2, T> &operator-=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] -= m[i];
@@ -165,7 +165,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator-=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix<2, 2, T> &operator-=( matrix<2, 2, U> const &m )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] -= m[i];
@@ -174,7 +174,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator*=( U s )
+        LINALG_FUNCTION matrix<2, 2, T> &operator*=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] *= m[i];
@@ -183,13 +183,13 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator*=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix<2, 2, T> &operator*=( matrix<2, 2, U> const &m )
         {
             return ( *this = *this * m );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator/=( U s )
+        LINALG_FUNCTION matrix<2, 2, T> &operator/=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] /= m[i];
@@ -198,7 +198,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator/=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix<2, 2, T> &operator/=( matrix<2, 2, U> const &m )
         {
             return *this *= inverse( m );
         }
@@ -207,7 +207,7 @@ namespace numlua::linalg
     // -- Unary operators --
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator-( matrix<2, 2, T> const &m )
+    LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m )
     {
         return matrix<2, 2, T>( -m[0], -m[1] );
     }
@@ -215,76 +215,76 @@ namespace numlua::linalg
     // -- Binary operators --
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator+( matrix<2, 2, T> const &m, T scalar )
+    LINALG_FUNCTION matrix<2, 2, T> operator+( matrix<2, 2, T> const &m, T scalar )
     {
         return matrix<2, 2, T>( m[0] + scalar, m[1] + scalar );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator+( T scalar, matrix<2, 2, T> const &m )
+    LINALG_FUNCTION matrix<2, 2, T> operator+( T scalar, matrix<2, 2, T> const &m )
     {
         return matrix<2, 2, T>( m[0] + scalar, m[1] + scalar );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator+( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    LINALG_FUNCTION matrix<2, 2, T> operator+( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         return matrix<2, 2, T>( m1[0] + m2[0], m1[1] + m2[1] );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator-( matrix<2, 2, T> const &m, T scalar )
+    LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m, T scalar )
     {
         return matrix<2, 2, T>( m[0] - scalar, m[1] - scalar );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator-( T scalar, matrix<2, 2, T> const &m )
+    LINALG_FUNCTION matrix<2, 2, T> operator-( T scalar, matrix<2, 2, T> const &m )
     {
         return matrix<2, 2, T>( scalar - m[0], scalar - m[1] );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator-( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         return matrix<2, 2, T>( m1[0] - m2[0], m1[1] - m2[1] );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator*( matrix<2, 2, T> const &m, T scalar )
+    LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<2, 2, T> const &m, T scalar )
     {
         return matrix<2, 2, T>( m[0] * scalar, m[1] * scalar );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator*( T scalar, matrix<2, 2, T> const &m )
+    LINALG_FUNCTION matrix<2, 2, T> operator*( T scalar, matrix<2, 2, T> const &m )
     {
         return matrix<2, 2, T>( m[0] * scalar, m[1] * scalar );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<2, 2, T>::col_type
-    operator*( matrix<2, 2, T> const &m, typename matrix<2, 2, T>::row_type const &v )
+    LINALG_FUNCTION typename matrix<2, 2, T>::col_type operator*( matrix<2, 2, T> const                    &m,
+                                                                  typename matrix<2, 2, T>::row_type const &v )
     {
         return vec<2, T>( m[0][0] * v.x + m[1][0] * v.y, m[0][1] * v.x + m[1][1] * v.y );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<2, 2, T>::row_type
-    operator*( typename matrix<2, 2, T>::col_type const &v, matrix<2, 2, T> const &m )
+    LINALG_FUNCTION typename matrix<2, 2, T>::row_type operator*( typename matrix<2, 2, T>::col_type const &v,
+                                                                  matrix<2, 2, T> const                    &m )
     {
         return vec<2, T>( v.x * m[0][0] + v.y * m[0][1], v.x * m[1][0] + v.y * m[1][1] );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         return matrix<2, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
                                 m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<3, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<3, 2, T> const &m2 )
+    LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<3, 2, T> const &m2 )
     {
         return matrix<3, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
                                 m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1],
@@ -292,7 +292,7 @@ namespace numlua::linalg
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<4, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<4, 2, T> const &m2 )
+    LINALG_FUNCTION matrix<4, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<4, 2, T> const &m2 )
     {
         return matrix<4, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
                                 m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1],
@@ -301,19 +301,19 @@ namespace numlua::linalg
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator/( matrix<2, 2, T> const &m, T scalar )
+    LINALG_FUNCTION matrix<2, 2, T> operator/( matrix<2, 2, T> const &m, T scalar )
     {
         return matrix<2, 2, T>( m[0] / scalar, m[1] / scalar );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator/( T scalar, matrix<2, 2, T> const &m )
+    LINALG_FUNCTION matrix<2, 2, T> operator/( T scalar, matrix<2, 2, T> const &m )
     {
         return matrix<2, 2, T>( scalar / m[0], scalar / m[1] );
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    LINALG_FUNCTION matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         matrix<2, 2, T> m1_copy( m1 );
 

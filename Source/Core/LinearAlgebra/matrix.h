@@ -8,28 +8,27 @@ namespace numlua::linalg
     using float2x2 = mat<2, 2, float>;
 
     template <size_t _Rows, size_t _Columns, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<_Rows, _Columns, T> operator+( matrix<2, 2, T> const &m )
+    LINALG_FUNCTION matrix<_Rows, _Columns, T> operator+( matrix<2, 2, T> const &m )
     {
         return m;
     }
 
     template <size_t _Rows, size_t _Columns, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<_Rows, _Columns, T>::col_type
-    operator/( matrix<_Rows, _Columns, T> const &m, typename matrix<_Rows, _Columns, T>::row_type const &v )
+    LINALG_FUNCTION typename matrix<_Rows, _Columns, T>::col_type operator/( matrix<_Rows, _Columns, T> const                    &m,
+                                                                             typename matrix<_Rows, _Columns, T>::row_type const &v )
     {
         return inverse( m ) * v;
     }
 
     template <size_t _Rows, size_t _Columns, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<_Rows, _Columns, T>::row_type
-    operator/( typename matrix<_Rows, _Columns, T>::col_type const &v, matrix<_Rows, _Columns, T> const &m )
+    LINALG_FUNCTION typename matrix<_Rows, _Columns, T>::row_type operator/( typename matrix<_Rows, _Columns, T>::col_type const &v,
+                                                                             matrix<_Rows, _Columns, T> const                    &m )
     {
         return v * inverse( m );
     }
 
     template <size_t _Rows, size_t _Columns, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( matrix<_Rows, _Columns, T> const &m1,
-                                                                matrix<_Rows, _Columns, T> const &m2 )
+    LINALG_FUNCTION bool operator==( matrix<_Rows, _Columns, T> const &m1, matrix<_Rows, _Columns, T> const &m2 )
     {
         bool result = true;
 
@@ -40,8 +39,7 @@ namespace numlua::linalg
     }
 
     template <size_t _Rows, size_t _Columns, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( matrix<_Rows, _Columns, T> const &m1,
-                                                                matrix<_Rows, _Columns, T> const &m2 )
+    LINALG_FUNCTION bool operator!=( matrix<_Rows, _Columns, T> const &m1, matrix<_Rows, _Columns, T> const &m2 )
     {
         bool result = false;
 
