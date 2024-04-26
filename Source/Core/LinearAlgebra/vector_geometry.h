@@ -32,7 +32,7 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_dot<vect<2, T>, T, Aligned>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static T call( vect<2, T> const &a, vect<2, T> const &b )
+            LINALG_FUNCTION static T call( vect<2, T> const &a, vect<2, T> const &b )
             {
                 vect<2, T> tmp( a * b );
 
@@ -43,7 +43,7 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_dot<vect<3, T>, T, Aligned>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static T call( vect<3, T> const &a, vect<3, T> const &b )
+            LINALG_FUNCTION static T call( vect<3, T> const &a, vect<3, T> const &b )
             {
                 vect<3, T> tmp( a * b );
 
@@ -54,7 +54,7 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_dot<vect<4, T>, T, Aligned>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static T call( vect<4, T> const &a, vect<4, T> const &b )
+            LINALG_FUNCTION static T call( vect<4, T> const &a, vect<4, T> const &b )
             {
                 vect<4, T> tmp( a * b );
 
@@ -65,12 +65,12 @@ namespace numlua::linalg
         template <typename T, bool Aligned>
         struct compute_cross
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<3, T> call( vect<3, T> const &x, vect<3, T> const &y )
+            LINALG_FUNCTION static vect<3, T> call( vect<3, T> const &x, vect<3, T> const &y )
             {
                 return vect<3, T>( x.y * y.z - y.y * x.z, x.z * y.x - y.z * x.x, x.x * y.y - y.x * x.y );
             }
 
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vect<4, T> call( vect<4, T> const &x, vect<4, T> const &y )
+            LINALG_FUNCTION static vect<4, T> call( vect<4, T> const &x, vect<4, T> const &y )
             {
                 return vect<4, T>( x.y * y.z - y.y * x.z, x.z * y.x - y.z * x.x, x.x * y.y - y.x * x.y, 0.0f );
             }
@@ -190,20 +190,20 @@ namespace numlua::linalg
 
     // dot
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr T dot( T x, T y )
+    LINALG_FUNCTION T dot( T x, T y )
     {
         return x * y;
     }
 
     template <length_t L, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr T dot( vect<L, T> const &x, vect<L, T> const &y )
+    LINALG_FUNCTION T dot( vect<L, T> const &x, vect<L, T> const &y )
     {
         return detail::compute_dot<vect<L, T>, T, detail::is_aligned<Q>::value>::call( x, y );
     }
 
     // cross
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, T> cross( vect<3, T> const &x, vect<3, T> const &y )
+    LINALG_FUNCTION vect<3, T> cross( vect<3, T> const &x, vect<3, T> const &y )
     {
         return detail::compute_cross<T, Q, detail::is_aligned<Q>::value>::call( x, y );
     }
@@ -326,26 +326,26 @@ namespace numlua::linalg
 
     // radians
     template <typename genType>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr genType radians( genType degrees )
+    LINALG_FUNCTION genType radians( genType degrees )
     {
         return degrees * static_cast<genType>( 0.01745329251994329576923690768489 );
     }
 
     template <length_t L, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<L, T> radians( vect<L, T> const &v )
+    LINALG_FUNCTION vect<L, T> radians( vect<L, T> const &v )
     {
         return detail::functor1<vec, L, T, T, Q>::call( radians, v );
     }
 
     // degrees
     template <typename genType>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr genType degrees( genType radians )
+    LINALG_FUNCTION genType degrees( genType radians )
     {
         return radians * static_cast<genType>( 57.295779513082320876798154814105 );
     }
 
     template <length_t L, typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<L, T> degrees( vect<L, T> const &v )
+    LINALG_FUNCTION vect<L, T> degrees( vect<L, T> const &v )
     {
         return detail::functor1<vec, L, T, T, Q>::call( degrees, v );
     }

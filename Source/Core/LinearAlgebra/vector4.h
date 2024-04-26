@@ -27,33 +27,33 @@ namespace numlua::linalg
         };
 
         // clang-format off
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>( _Ty _x, _Ty _y, _Ty _z, _Ty _w )
+        LINALG_FUNCTION vect<4, _Ty>( _Ty _x, _Ty _y, _Ty _z, _Ty _w )
             : x{ _x } , y{ _y } , z{ _z } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>( _Ty _x )
+        LINALG_FUNCTION vect<4, _Ty>( _Ty _x )
             : x{ _x } , y{ _x } , z{ _x } , w{ _x } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(vect<2, _Ty> const& v, _Ty _z, _Ty _w )
+        LINALG_FUNCTION vect<4, _Ty>(vect<2, _Ty> const& v, _Ty _z, _Ty _w )
             : x{ v.x } , y{ v.y } , z{ _z } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, vect<2,_Ty> const& v, _Ty _w )
+        LINALG_FUNCTION vect<4, _Ty>(_Ty _x, vect<2,_Ty> const& v, _Ty _w )
             : x{ _x } , y{ v.x } , z{ v.y } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, _Ty _y, vect<2, _Ty> const& v)
+        LINALG_FUNCTION vect<4, _Ty>(_Ty _x, _Ty _y, vect<2, _Ty> const& v)
             : x{ _x } , y{ _y } , z{ v.x } , w{ v.y } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(vect<3, _Ty> const& v, _Ty _w )
+        LINALG_FUNCTION vect<4, _Ty>(vect<3, _Ty> const& v, _Ty _w )
             : x{ v.x } , y{ v.y } , z{ v.z } , w{ _w } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>(_Ty _x, vect<3, _Ty> const& v )
+        LINALG_FUNCTION vect<4, _Ty>(_Ty _x, vect<3, _Ty> const& v )
             : x{ _x } , y{ v.x } , z{ v.y } , w{ v.z } { }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>( vect<4, _Ty> const &v )
+        LINALG_FUNCTION vect<4, _Ty>( vect<4, _Ty> const &v )
             : x{ v.x } , y{ v.y } , z{ v.z } , w{ v.w } { }
         // clang-format on
 
         template <typename X, typename Y, typename Z, typename W>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty>( X _x, Y _y, Z _z, W _w )
+        LINALG_FUNCTION vect<4, _Ty>( X _x, Y _y, Z _z, W _w )
             : x( static_cast<_Ty>( _x ) )
             , y( static_cast<_Ty>( _y ) )
             , z( static_cast<_Ty>( _z ) )
@@ -61,7 +61,7 @@ namespace numlua::linalg
         {
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr _Ty &operator[]( size_t i )
+        LINALG_FUNCTION _Ty &operator[]( size_t i )
         {
             // GLM_ASSERT_LENGTH( i, this->length() );
             switch( i )
@@ -76,7 +76,7 @@ namespace numlua::linalg
             }
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr _Ty const &operator[]( size_t i ) const
+        LINALG_FUNCTION _Ty const &operator[]( size_t i ) const
         {
             // GLM_ASSERT_LENGTH( i, this->length() );
             switch( i )
@@ -91,7 +91,7 @@ namespace numlua::linalg
             }
         }
 
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator=( vect<4, _Ty> const &v )
+        LINALG_FUNCTION vect<4, _Ty> &operator=( vect<4, _Ty> const &v )
         {
             this->x = static_cast<_Ty>( v.x );
             this->y = static_cast<_Ty>( v.y );
@@ -102,49 +102,49 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator+=( U scalar )
+        LINALG_FUNCTION vect<4, _Ty> &operator+=( U scalar )
         {
             return ( *this = detail::compute_vec_add<4, _Ty>::call( *this, vect<4, _Ty>( scalar ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator+=( vect<4, U> const &v )
+        LINALG_FUNCTION vect<4, _Ty> &operator+=( vect<4, U> const &v )
         {
             return ( *this = detail::compute_vec_add<4, _Ty>::call( *this, vect<4, _Ty>( v ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator-=( U scalar )
+        LINALG_FUNCTION vect<4, _Ty> &operator-=( U scalar )
         {
             return ( *this = detail::compute_vec_sub<4, _Ty>::call( *this, vect<4, _Ty>( scalar ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator-=( vect<4, U> const &v )
+        LINALG_FUNCTION vect<4, _Ty> &operator-=( vect<4, U> const &v )
         {
             return ( *this = detail::compute_vec_sub<4, _Ty>::call( *this, vect<4, _Ty>( v ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator*=( U scalar )
+        LINALG_FUNCTION vect<4, _Ty> &operator*=( U scalar )
         {
             return ( *this = detail::compute_vec_mul<4, _Ty>::call( *this, vect<4, _Ty>( scalar ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator*=( vect<4, U> const &v )
+        LINALG_FUNCTION vect<4, _Ty> &operator*=( vect<4, U> const &v )
         {
             return ( *this = detail::compute_vec_mul<4, _Ty>::call( *this, vect<4, _Ty>( v ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator/=( U scalar )
+        LINALG_FUNCTION vect<4, _Ty> &operator/=( U scalar )
         {
             return ( *this = detail::compute_vec_div<4, _Ty>::call( *this, vect<4, _Ty>( scalar ) ) );
         }
 
         template <typename U>
-        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator/=( vect<4, U> const &v )
+        LINALG_FUNCTION vect<4, _Ty> &operator/=( vect<4, U> const &v )
         {
             return ( *this = detail::compute_vec_div<4, _Ty>::call( *this, vect<4, _Ty>( v ) ) );
         }
@@ -152,7 +152,7 @@ namespace numlua::linalg
         // -- Increment and decrement operators --
 
         // template <typename T>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator++()
+        // LINALG_FUNCTION vect<4, _Ty> &operator++()
         // {
         //     ++this->x;
         //     ++this->y;
@@ -163,7 +163,7 @@ namespace numlua::linalg
         // }
 
         // template <typename T>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator--()
+        // LINALG_FUNCTION vect<4, _Ty> &operator--()
         // {
         //     --this->x;
         //     --this->y;
@@ -174,7 +174,7 @@ namespace numlua::linalg
         // }
 
         // template <typename T>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator++( int )
+        // LINALG_FUNCTION vect<4, _Ty> operator++( int )
         // {
         //     vect<4, _Ty> Result( *this );
         //     ++*this;
@@ -183,7 +183,7 @@ namespace numlua::linalg
         // }
 
         // template <typename T>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator--( int )
+        // LINALG_FUNCTION vect<4, _Ty> operator--( int )
         // {
         //     vect<4, _Ty> Result( *this );
         //     --*this;
@@ -195,20 +195,20 @@ namespace numlua::linalg
         // -- Unary bit operators --
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator%=( U scalar )
+        // LINALG_FUNCTION vect<4, _Ty> &operator%=( U scalar )
         // {
         //     return ( *this = detail::compute_vec_mod<4, T, Q, detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( scalar ) )
         //     );
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator%=( vec<4, U, Q> const &v )
+        // LINALG_FUNCTION vect<4, _Ty> &operator%=( vec<4, U, Q> const &v )
         // {
         //     return ( *this = detail::compute_vec_mod<4, T, Q, detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( v ) ) );
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator&=( U scalar )
+        // LINALG_FUNCTION vect<4, _Ty> &operator&=( U scalar )
         // {
         //     return (
         //         *this =
@@ -217,7 +217,7 @@ namespace numlua::linalg
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator&=( vec<4, U, Q> const &v )
+        // LINALG_FUNCTION vect<4, _Ty> &operator&=( vec<4, U, Q> const &v )
         // {
         //     return (
         //         *this =
@@ -226,7 +226,7 @@ namespace numlua::linalg
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator|=( U scalar )
+        // LINALG_FUNCTION vect<4, _Ty> &operator|=( U scalar )
         // {
         //     return (
         //         *this = detail::compute_vec_or<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
@@ -235,7 +235,7 @@ namespace numlua::linalg
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator|=( vec<4, U, Q> const &v )
+        // LINALG_FUNCTION vect<4, _Ty> &operator|=( vec<4, U, Q> const &v )
         // {
         //     return (
         //         *this = detail::compute_vec_or<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
@@ -244,7 +244,7 @@ namespace numlua::linalg
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator^=( U scalar )
+        // LINALG_FUNCTION vect<4, _Ty> &operator^=( U scalar )
         // {
         //     return (
         //         *this =
@@ -253,7 +253,7 @@ namespace numlua::linalg
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator^=( vec<4, U, Q> const &v )
+        // LINALG_FUNCTION vect<4, _Ty> &operator^=( vec<4, U, Q> const &v )
         // {
         //     return (
         //         *this =
@@ -262,28 +262,28 @@ namespace numlua::linalg
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator<<=( U scalar )
+        // LINALG_FUNCTION vect<4, _Ty> &operator<<=( U scalar )
         // {
         //     return ( *this = detail::compute_vec_shift_left<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
         //                                                     detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( scalar ) ) );
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator<<=( vec<4, U, Q> const &v )
+        // LINALG_FUNCTION vect<4, _Ty> &operator<<=( vec<4, U, Q> const &v )
         // {
         //     return ( *this = detail::compute_vec_shift_left<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
         //                                                     detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( v ) ) );
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator>>=( U scalar )
+        // LINALG_FUNCTION vect<4, _Ty> &operator>>=( U scalar )
         // {
         //     return ( *this = detail::compute_vec_shift_right<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
         //                                                      detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( scalar ) ) );
         // }
 
         // template <typename U>
-        // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> &operator>>=( vec<4, U, Q> const &v )
+        // LINALG_FUNCTION vect<4, _Ty> &operator>>=( vec<4, U, Q> const &v )
         // {
         //     return ( *this = detail::compute_vec_shift_right<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
         //                                                      detail::is_aligned<Q>::value>::call( *this, vect<4, _Ty>( v ) ) );
@@ -293,91 +293,91 @@ namespace numlua::linalg
 
     // -- Unary constant operators --
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator+( vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator+( vect<4, _Ty> const &v )
     // {
     //     return v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator+( vect<4, _Ty> const &v, _Ty scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator+( vect<4, _Ty> const &v, _Ty scalar )
     // {
     //     return vect<4, _Ty>( v ) += scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator+( _Ty scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator+( _Ty scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( v ) += scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator+( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator+( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) += v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator-( vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator-( vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( 0 ) -= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator-( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator-( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) -= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator-( vect<4, _Ty> const &v1, vec<1, T, Q> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator-( vect<4, _Ty> const &v1, vec<1, T, Q> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) -= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator-( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator-( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) -= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator-( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator-( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) -= v2;
     // }
 
     //     template <typename _Ty>
-    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( vect<4, _Ty> const &v, T scalar )
+    //     LINALG_FUNCTION vect<4, _Ty> operator*( vect<4, _Ty> const &v, T scalar )
     //     {
     //         return vect<4, _Ty>( v ) *= scalar;
     //     }
     //
     //     template <typename _Ty>
-    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( T scalar, vect<4, _Ty> const &v )
+    //     LINALG_FUNCTION vect<4, _Ty> operator*( T scalar, vect<4, _Ty> const &v )
     //     {
     //         return vect<4, _Ty>( v ) *= scalar;
     //     }
     //
     //     template <typename _Ty>
-    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator*( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    //     LINALG_FUNCTION vect<4, _Ty> operator*( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     //     {
     //         return vect<4, _Ty>( v1 ) *= v2;
     //     }
     //
     //     template <typename _Ty>
-    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v, T scalar )
+    //     LINALG_FUNCTION vect<4, _Ty> operator/( vect<4, _Ty> const &v, T scalar )
     //     {
     //         return vect<4, _Ty>( v ) /= scalar;
     //     }
     //
     //     template <typename _Ty>
-    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( T scalar, vect<4, _Ty> const &v )
+    //     LINALG_FUNCTION vect<4, _Ty> operator/( T scalar, vect<4, _Ty> const &v )
     //     {
     //         return vect<4, _Ty>( scalar ) /= v;
     //     }
     //
     //     template <typename _Ty>
-    //     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator/( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    //     LINALG_FUNCTION vect<4, _Ty> operator/( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     //     {
     //         return vect<4, _Ty>( v1 ) /= v2;
     //     }
@@ -386,115 +386,115 @@ namespace numlua::linalg
     // -- Binary bit operators --
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator%( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) %= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator%( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) %= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator%( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator%( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) %= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator&( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator&( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) &= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator&( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator&( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) &= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator&( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator&( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) &= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator|( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator|( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) |= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator|( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator|( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) |= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator|( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator|( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) |= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator^( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator^( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) ^= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator^( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator^( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) ^= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator^( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator^( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) ^= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator<<( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator<<( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) <<= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator<<( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator<<( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) <<= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator<<( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<4, _Ty> operator<<( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) <<= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator>>( vect<4, _Ty> const &v, T scalar )
+    // LINALG_FUNCTION vect<4, _Ty> operator>>( vect<4, _Ty> const &v, T scalar )
     // {
     //     return vect<4, _Ty>( v ) >>= scalar;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator>>( T scalar, vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator>>( T scalar, vect<4, _Ty> const &v )
     // {
     //     return vect<4, _Ty>( scalar ) >>= v;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty> operator>>( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    // LINALG_FUNCTION vect<3, _Ty> operator>>( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     // {
     //     return vect<4, _Ty>( v1 ) >>= v2;
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<4, _Ty> operator~( vect<4, _Ty> const &v )
+    // LINALG_FUNCTION vect<4, _Ty> operator~( vect<4, _Ty> const &v )
     // {
     //     return detail::compute_vec_bitwise_not<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8,
     //     detail::is_aligned<Q>::value>::call(
@@ -504,27 +504,27 @@ namespace numlua::linalg
     // -- Boolean operators --
 
     template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    LINALG_FUNCTION bool operator==( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     {
         return detail::compute_vec_equal<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call( v1,
                                                                                                                                   v2 );
     }
 
     template <typename _Ty>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
+    LINALG_FUNCTION bool operator!=( vect<4, _Ty> const &v1, vect<4, _Ty> const &v2 )
     {
         return detail::compute_vec_nequal<4, T, Q, detail::is_int<T>::value, sizeof( T ) * 8, detail::is_aligned<Q>::value>::call(
             v1, v2 );
     }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vec<4, bool, Q> operator&&( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
+    // LINALG_FUNCTION vec<4, bool, Q> operator&&( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
     // {
     //     return vec<4, bool, Q>( v1.x && v2.x, v1.y && v2.y, v1.z && v2.z, v1.w && v2.w );
     // }
 
     // template <typename _Ty>
-    // SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vec<4, bool, Q> operator||( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
+    // LINALG_FUNCTION vec<4, bool, Q> operator||( vec<4, bool, Q> const &v1, vec<4, bool, Q> const &v2 )
     // {
     //     return vec<4, bool, Q>( v1.x || v2.x, v1.y || v2.y, v1.z || v2.z, v1.w || v2.w );
     // }
@@ -535,7 +535,7 @@ namespace numlua::linalg
         template <template <length_t L, typename T> class vec, typename R, typename T>
         struct functor1<vec, 4, R, T>
         {
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vec<4, R> call( R ( *Func )( T x ), vec<4, T> const &v )
+            LINALG_FUNCTION static vec<4, R> call( R ( *Func )( T x ), vec<4, T> const &v )
             {
                 return vec<4, R>( Func( v.x ), Func( v.y ), Func( v.z ), Func( v.w ) );
             }
@@ -550,7 +550,7 @@ namespace numlua::linalg
             }
 
             template <class Fct>
-            SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr static vec<4, T> call( Fct Func, vec<4, T> const &a, vec<4, T> const &b )
+            LINALG_FUNCTION static vec<4, T> call( Fct Func, vec<4, T> const &a, vec<4, T> const &b )
             {
                 return vec<4, T>( Func( a.x, b.x ), Func( a.y, b.y ), Func( a.z, b.z ), Func( a.w, b.w ) );
             }
