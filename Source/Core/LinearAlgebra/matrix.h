@@ -27,7 +27,7 @@ namespace numlua::linalg
         return v * inverse( m );
     }
 
-    template <typename T>
+    template <size_t _Rows, size_t _Columns, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( matrix<_Rows, _Columns, T> const &m1,
                                                                 matrix<_Rows, _Columns, T> const &m2 )
     {
@@ -39,7 +39,7 @@ namespace numlua::linalg
         return result;
     }
 
-    template <typename T>
+    template <size_t _Rows, size_t _Columns, typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( matrix<_Rows, _Columns, T> const &m1,
                                                                 matrix<_Rows, _Columns, T> const &m2 )
     {
