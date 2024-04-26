@@ -9,7 +9,7 @@
 #include <cstddef>
 #include <limits>
 
-namespace glm
+namespace numlua::linalg
 {
     template <typename T, qualifier Q>
     struct matrix<3, 2, T>
@@ -84,67 +84,67 @@ namespace glm
         LINALG_FUNCTION matrix<3, 2, T> &operator/=( U s );
     };
 
-    // -- Unary operators --
+    // // -- Unary operators --
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator+( matrix<3, 2, T> const &m );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator+( matrix<3, 2, T> const &m );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator-( matrix<3, 2, T> const &m );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator-( matrix<3, 2, T> const &m );
 
-    // -- Binary operators --
+    // // -- Binary operators --
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator+( matrix<3, 2, T> const &m, T scalar );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator+( matrix<3, 2, T> const &m, T scalar );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator+( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator+( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator-( matrix<3, 2, T> const &m, T scalar );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator-( matrix<3, 2, T> const &m, T scalar );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator-( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator-( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<3, 2, T> const &m, T scalar );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<3, 2, T> const &m, T scalar );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator*( T scalar, matrix<3, 2, T> const &m );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator*( T scalar, matrix<3, 2, T> const &m );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION typename matrix<3, 2, T>::col_type operator*( matrix<3, 2, T> const                    &m,
-                                                                  typename matrix<3, 2, T>::row_type const &v );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION typename matrix<3, 2, T>::col_type operator*( matrix<3, 2, T> const                    &m,
+    //                                                               typename matrix<3, 2, T>::row_type const &v );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION typename matrix<3, 2, T>::row_type operator*( typename matrix<3, 2, T>::col_type const &v,
-                                                                  matrix<3, 2, T> const                    &m );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION typename matrix<3, 2, T>::row_type operator*( typename matrix<3, 2, T>::col_type const &v,
+    //                                                               matrix<3, 2, T> const                    &m );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<3, 2, T> const &m1, matrix<2, 3, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<3, 2, T> const &m1, matrix<2, 3, T> const &m2 );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<3, 2, T> const &m1, matrix<3, 3, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<3, 2, T> const &m1, matrix<3, 3, T> const &m2 );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<4, 2, T> operator*( matrix<3, 2, T> const &m1, matrix<4, 3, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<4, 2, T> operator*( matrix<3, 2, T> const &m1, matrix<4, 3, T> const &m2 );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator/( matrix<3, 2, T> const &m, T scalar );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator/( matrix<3, 2, T> const &m, T scalar );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION matrix<3, 2, T> operator/( T scalar, matrix<3, 2, T> const &m );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION matrix<3, 2, T> operator/( T scalar, matrix<3, 2, T> const &m );
 
-    // -- Boolean operators --
+    // // -- Boolean operators --
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION bool operator==( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION bool operator==( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
 
-    template <typename T, qualifier Q>
-    LINALG_FUNCTION bool operator!=( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
+    // template <typename T, qualifier Q>
+    // LINALG_FUNCTION bool operator!=( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
 
 } // namespace glm
 
-#ifndef GLM_EXTERNAL_TEMPLATE
-#    include "type_mat3x2.inl"
-#endif
+// #ifndef GLM_EXTERNAL_TEMPLATE
+// #    include "type_mat3x2.inl"
+// #endif
