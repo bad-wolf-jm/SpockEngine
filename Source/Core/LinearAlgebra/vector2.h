@@ -27,6 +27,12 @@ namespace numlua::linalg
 
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty>( vect<2, _Ty> const &v )
             : x{ v.x } , y{ v.y } { }
+
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty>( vect<3, _Ty> const &v )
+            : x{ v.x } , y{ v.y } { }
+
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<2, _Ty>( vect<4, _Ty> const &v )
+            : x{ v.x } , y{ v.y } { }
         // clang-format on
 
         template <typename X, typename Y, typename Z, typename W>

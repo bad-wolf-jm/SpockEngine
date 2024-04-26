@@ -26,6 +26,9 @@ namespace numlua::linalg
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty>( _Ty _x )
             : x{ _x } , y{ _x } , z{ _x } { }
 
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty>( vect<4, _Ty> const &v )
+            : x{ v.x } , y{ v.y } , z{ v.z } { }
+
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr vect<3, _Ty>(vect<2, _Ty> const& v, _Ty _z )
             : x{ v.x } , y{ v.y } , z{ _z } { }
 
