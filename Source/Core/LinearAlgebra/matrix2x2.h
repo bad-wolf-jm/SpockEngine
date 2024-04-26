@@ -34,7 +34,7 @@ namespace numlua::linalg
         {
             return this->value[i];
         }
-        
+
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr col_type const &operator[]( length_type i ) const noexcept
         {
             return this->value[i];
@@ -131,8 +131,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator=( matrix<2, 2, U> const &m )
         {
-            this->value[0] = m[0];
-            this->value[1] = m[1];
+            for( int i = 0; i < length(); i++ )
+                this->value[i] = m[i];
 
             return *this;
         }
@@ -140,8 +140,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator+=( U s )
         {
-            this->value[0] += scalar;
-            this->value[1] += scalar;
+            for( int i = 0; i < length(); i++ )
+                this->value[i] += m[i];
 
             return *this;
         }
@@ -149,8 +149,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator+=( matrix<2, 2, U> const &m )
         {
-            this->value[0] += m[0];
-            this->value[1] += m[1];
+            for( int i = 0; i < length(); i++ )
+                this->value[i] += m[i];
 
             return *this;
         }
@@ -158,8 +158,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator-=( U s )
         {
-            this->value[0] -= scalar;
-            this->value[1] -= scalar;
+            for( int i = 0; i < length(); i++ )
+                this->value[i] -= m[i];
 
             return *this;
         }
@@ -167,8 +167,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator-=( matrix<2, 2, U> const &m )
         {
-            this->value[0] -= m[0];
-            this->value[1] -= m[1];
+            for( int i = 0; i < length(); i++ )
+                this->value[i] -= m[i];
 
             return *this;
         }
@@ -176,8 +176,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator*=( U s )
         {
-            this->value[0] *= scalar;
-            this->value[1] *= scalar;
+            for( int i = 0; i < length(); i++ )
+                this->value[i] *= m[i];
 
             return *this;
         }
@@ -191,8 +191,8 @@ namespace numlua::linalg
         template <typename U>
         SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> &operator/=( U s )
         {
-            this->value[0] /= scalar;
-            this->value[1] /= scalar;
+            for( int i = 0; i < length(); i++ )
+                this->value[i] /= m[i];
 
             return *this;
         }
@@ -205,12 +205,6 @@ namespace numlua::linalg
     };
 
     // -- Unary operators --
-
-    template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator+( matrix<2, 2, T> const &m )
-    {
-        return m;
-    }
 
     template <typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator-( matrix<2, 2, T> const &m )
@@ -319,20 +313,6 @@ namespace numlua::linalg
     }
 
     template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<2, 2, T>::col_type
-    operator/( matrix<2, 2, T> const &m, typename matrix<2, 2, T>::row_type const &v )
-    {
-        return inverse( m ) * v;
-    }
-
-    template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr typename matrix<2, 2, T>::row_type
-    operator/( typename matrix<2, 2, T>::col_type const &v, matrix<2, 2, T> const &m )
-    {
-        return v * inverse( m );
-    }
-
-    template <typename T>
     SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
     {
         matrix<2, 2, T> m1_copy( m1 );
@@ -342,15 +322,4 @@ namespace numlua::linalg
 
     // -- Boolean operators --
 
-    template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator==( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
-    {
-        return ( m1[0] == m2[0] ) && ( m1[1] == m2[1] );
-    }
-
-    template <typename T>
-    SE_CUDA_HOST_DEVICE_FUNCTION_DEF constexpr bool operator!=( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
-    {
-        return ( m1[0] != m2[0] ) || ( m1[1] != m2[1] );
-    }
 } // namespace numlua::linalg
