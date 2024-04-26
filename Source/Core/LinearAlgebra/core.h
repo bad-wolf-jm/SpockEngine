@@ -11,18 +11,18 @@ namespace numlua::linalg
     {
     };
 
-    template <size_t Rows, size_t Columns, typename _Ty>
+    template <size_t _Rows, size_t _Columns, typename _Ty>
     struct matrix
     {
     };
 
     namespace detail
     {
-        template <template <length_t L, typename T> class vec, length_t L,typename R, typename T>
+        template <template <length_t L, typename T> class vec, length_t L, typename R, typename T>
         struct functor1
         {
         };
-        
+
         template <template <length_t L, typename T> class vec, length_t L, typename T>
         struct functor2
         {
