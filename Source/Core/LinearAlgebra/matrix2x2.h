@@ -206,119 +206,119 @@ namespace numlua::linalg
 
     // -- Unary operators --
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m )
-    {
-        return matrix<2, 2, T>( -m[0], -m[1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m )
+    // {
+    //     return matrix<2, 2, T>( -m[0], -m[1] );
+    // }
 
     // -- Binary operators --
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator+( matrix<2, 2, T> const &m, T scalar )
-    {
-        return matrix<2, 2, T>( m[0] + scalar, m[1] + scalar );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator+( matrix<2, 2, T> const &m, T scalar )
+    // {
+    //     return matrix<2, 2, T>( m[0] + scalar, m[1] + scalar );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator+( T scalar, matrix<2, 2, T> const &m )
-    {
-        return matrix<2, 2, T>( m[0] + scalar, m[1] + scalar );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator+( T scalar, matrix<2, 2, T> const &m )
+    // {
+    //     return matrix<2, 2, T>( m[0] + scalar, m[1] + scalar );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator+( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
-    {
-        return matrix<2, 2, T>( m1[0] + m2[0], m1[1] + m2[1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator+( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    // {
+    //     return matrix<2, 2, T>( m1[0] + m2[0], m1[1] + m2[1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m, T scalar )
-    {
-        return matrix<2, 2, T>( m[0] - scalar, m[1] - scalar );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m, T scalar )
+    // {
+    //     return matrix<2, 2, T>( m[0] - scalar, m[1] - scalar );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator-( T scalar, matrix<2, 2, T> const &m )
-    {
-        return matrix<2, 2, T>( scalar - m[0], scalar - m[1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator-( T scalar, matrix<2, 2, T> const &m )
+    // {
+    //     return matrix<2, 2, T>( scalar - m[0], scalar - m[1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
-    {
-        return matrix<2, 2, T>( m1[0] - m2[0], m1[1] - m2[1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator-( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    // {
+    //     return matrix<2, 2, T>( m1[0] - m2[0], m1[1] - m2[1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<2, 2, T> const &m, T scalar )
-    {
-        return matrix<2, 2, T>( m[0] * scalar, m[1] * scalar );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<2, 2, T> const &m, T scalar )
+    // {
+    //     return matrix<2, 2, T>( m[0] * scalar, m[1] * scalar );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator*( T scalar, matrix<2, 2, T> const &m )
-    {
-        return matrix<2, 2, T>( m[0] * scalar, m[1] * scalar );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator*( T scalar, matrix<2, 2, T> const &m )
+    // {
+    //     return matrix<2, 2, T>( m[0] * scalar, m[1] * scalar );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION typename matrix<2, 2, T>::col_type operator*( matrix<2, 2, T> const                    &m,
-                                                                  typename matrix<2, 2, T>::row_type const &v )
-    {
-        return vect<2, T>( m[0][0] * v.x + m[1][0] * v.y, m[0][1] * v.x + m[1][1] * v.y );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION typename matrix<2, 2, T>::col_type operator*( matrix<2, 2, T> const                    &m,
+    //                                                               typename matrix<2, 2, T>::row_type const &v )
+    // {
+    //     return vect<2, T>( m[0][0] * v.x + m[1][0] * v.y, m[0][1] * v.x + m[1][1] * v.y );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION typename matrix<2, 2, T>::row_type operator*( typename matrix<2, 2, T>::col_type const &v,
-                                                                  matrix<2, 2, T> const                    &m )
-    {
-        return vect<2, T>( v.x * m[0][0] + v.y * m[0][1], v.x * m[1][0] + v.y * m[1][1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION typename matrix<2, 2, T>::row_type operator*( typename matrix<2, 2, T>::col_type const &v,
+    //                                                               matrix<2, 2, T> const                    &m )
+    // {
+    //     return vect<2, T>( v.x * m[0][0] + v.y * m[0][1], v.x * m[1][0] + v.y * m[1][1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
-    {
-        return matrix<2, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
-                                m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    // {
+    //     return matrix<2, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
+    //                             m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<3, 2, T> const &m2 )
-    {
-        return matrix<3, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
-                                m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1],
-                                m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1], m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<3, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<3, 2, T> const &m2 )
+    // {
+    //     return matrix<3, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
+    //                             m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1],
+    //                             m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1], m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<4, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<4, 2, T> const &m2 )
-    {
-        return matrix<4, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
-                                m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1],
-                                m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1], m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1],
-                                m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1], m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<4, 2, T> operator*( matrix<2, 2, T> const &m1, matrix<4, 2, T> const &m2 )
+    // {
+    //     return matrix<4, 2, T>( m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1], m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1],
+    //                             m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1], m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1],
+    //                             m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1], m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1],
+    //                             m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1], m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator/( matrix<2, 2, T> const &m, T scalar )
-    {
-        return matrix<2, 2, T>( m[0] / scalar, m[1] / scalar );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator/( matrix<2, 2, T> const &m, T scalar )
+    // {
+    //     return matrix<2, 2, T>( m[0] / scalar, m[1] / scalar );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator/( T scalar, matrix<2, 2, T> const &m )
-    {
-        return matrix<2, 2, T>( scalar / m[0], scalar / m[1] );
-    }
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator/( T scalar, matrix<2, 2, T> const &m )
+    // {
+    //     return matrix<2, 2, T>( scalar / m[0], scalar / m[1] );
+    // }
 
-    template <typename T>
-    LINALG_FUNCTION matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
-    {
-        matrix<2, 2, T> m1_copy( m1 );
+    // template <typename T>
+    // LINALG_FUNCTION matrix<2, 2, T> operator/( matrix<2, 2, T> const &m1, matrix<2, 2, T> const &m2 )
+    // {
+    //     matrix<2, 2, T> m1_copy( m1 );
 
-        return m1_copy /= m2;
-    }
+    //     return m1_copy /= m2;
+    // }
 
     // -- Boolean operators --
 
