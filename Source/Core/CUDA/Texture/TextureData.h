@@ -12,7 +12,7 @@
 #include <filesystem>
 #include <memory>
 
-#include <gli/gli.hpp>
+#include <Core/Textures/gli.hpp>
 
 #include "Core/Vector.h"
 
