@@ -1,6 +1,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "Core/LinearAlgebra/matrix.h"
 #include "Core/LinearAlgebra/vector.h"
 
 using namespace numlua;
@@ -314,4 +315,53 @@ TEST_CASE( "Vector division", "[LINEAR_ALGEBRA]" )
         REQUIRE( ( ( v5.x == scalarConstant / v1.x ) && ( v5.y == scalarConstant / v1.y ) && ( v5.z == scalarConstant / v1.z ) &&
                    ( v5.w == scalarConstant / v1.w ) ) );
     }
+}
+
+TEST_CASE( "2x2 Matrix constructors", "[LINEAR_ALGEBRA]" )
+{
+    auto const v0 = linalg::float2x2( 2.0f );
+    REQUIRE( ( v0[0][0] == 2.0f && v0[0][1] == 0.0f && v0[1][0] == 0.0f && v0[1][1] == 2.0f ) );
+
+    auto const v1 = linalg::float2x2( 1.0f, 2.0f, 3.0f, 4.0f );
+    REQUIRE( ( v1[0][0] == 1.0f && v1[0][1] == 2.0f && v1[1][0] == 3.0f && v1[1][1] == 4.0f ) );
+    REQUIRE( ( v1[0] == linalg::float2( 1.0f, 2.0f ) && v1[1] == linalg::float2( 3.0f, 4.0f ) ) );
+
+    auto const vx = linalg::float2( 1.0f, 2.0f );
+    auto const vy = linalg::float2( 3.0f, 4.0f );
+
+    auto const v2 = linalg::float2x2( vx, vy );
+    REQUIRE( ( v2[0][0] == 1.0f && v2[0][1] == 2.0f && v2[1][0] == 3.0f && v2[1][1] == 4.0f ) );
+    REQUIRE( ( v2[0] == vx && v2[1] == vy ) );
+
+    auto v7 = v1;
+    REQUIRE( ( v7[0][0] == 1.0f && v7[0][1] == 2.0f && v7[1][0] == 3.0f && v7[1][1] == 4.0f ) );
+}
+
+TEST_CASE( "2x2 Matrix comparison", "[LINEAR_ALGEBRA]" )
+{
+    constexpr float scalarConstant = 4.5f;
+
+    {
+        auto const v1 = linalg::float2x2( 1.0f, 2.0f, 3.0f, 4.0f );
+        auto const v2 = linalg::float2x2( 1.0f, 2.0f, 3.0f, 4.0f );
+        auto const v3 = linalg::float2x2( 0.0f, 2.0f, 3.0f, 4.0f );
+        auto const v4 = linalg::float2x2( 1.0f, 0.0f, 3.0f, 4.0f );
+        auto const v5 = linalg::float2x2( 1.0f, 2.0f, 0.0f, 4.0f );
+        auto const v6 = linalg::float2x2( 1.0f, 2.0f, 3.0f, 0.0f );
+
+        REQUIRE( v1 == v2 );
+        REQUIRE( v1 != v3 );
+        REQUIRE( v1 != v4 );
+        REQUIRE( v1 != v5 );
+        REQUIRE( v1 != v6 );
+    }
+}
+TEST_CASE( "2x2 Matrix Addition", "[LINEAR_ALGEBRA]" )
+{
+    auto const v0        = linalg::float2x2( 1.0f, 2.0f, 3.0f, 4.0f );
+    auto const v1        = linalg::float2x2( 2.0f, 3.0f, 4.0f, 5.0f );
+    auto const vExpected = linalg::float2x2( 3.0f, 5.0f, 7.0f, 9.0f );
+    auto       v3        = v0 + v1;
+
+    REQUIRE( v3 == vExpected );
 }
