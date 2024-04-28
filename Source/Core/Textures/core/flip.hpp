@@ -9,9 +9,9 @@
 
 namespace numlua::core
 {
-	template <typename texture>
-	texture flip(texture const & Texture);
+    template <typename texture>
+    texture flip( texture const &Texture );
 
-}//namespace numlua::core
+} // namespace numlua::core
 
 #include "flip.inl"

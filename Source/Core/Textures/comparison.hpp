@@ -14,17 +14,17 @@
 
 namespace numlua::core
 {
-	/// Compare two images. Two images are equal when the date is the same.
-	bool operator==(image const& ImageA, image const& ImageB);
+    /// Compare two images. Two images are equal when the date is the same.
+    bool operator==( image const &ImageA, image const &ImageB );
 
-	/// Compare two images. Two images are equal when the date is the same.
-	bool operator!=(image const& ImageA, image const& ImageB);
+    /// Compare two images. Two images are equal when the date is the same.
+    bool operator!=( image const &ImageA, image const &ImageB );
 
-	/// Compare two textures. Two textures are the same when the data, the format and the targets are the same.
-	bool operator==(texture const& A, texture const& B);
+    /// Compare two textures. Two textures are the same when the data, the format and the targets are the same.
+    bool operator==( texture const &A, texture const &B );
 
-	/// Compare two textures. Two textures are the same when the data, the format and the targets are the same.
-	bool operator!=(texture const& A, texture const& B);
-}//namespace numlua::core
+    /// Compare two textures. Two textures are the same when the data, the format and the targets are the same.
+    bool operator!=( texture const &A, texture const &B );
+} // namespace numlua::core
 
 #include "./core/comparison.inl"
