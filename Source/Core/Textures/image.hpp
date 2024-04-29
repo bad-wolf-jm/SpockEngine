@@ -17,7 +17,7 @@ namespace numlua::core
 
       public:
         typedef size_t                      size_type;
-        typedef gli::format                 format_type;
+        typedef numlua::core::format                 format_type;
         typedef storage_linear::extent_type extent_type;
         typedef storage_linear::data_type   data_type;
 

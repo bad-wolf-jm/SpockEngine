@@ -6,7 +6,7 @@ namespace numlua::core
 {
     namespace detail
     {
-        inline d3d10_resource_dimension get_dimension( gli::target Target )
+        inline d3d10_resource_dimension get_dimension( numlua::core::target Target )
         {
             static d3d10_resource_dimension Table[] = // TARGET_COUNT
                 {
@@ -25,7 +25,7 @@ namespace numlua::core
             return Table[Target];
         }
 
-        inline dx::d3dfmt get_fourcc( bool RequireDX10Header, gli::format Format, dx::format const &DXFormat )
+        inline dx::d3dfmt get_fourcc( bool RequireDX10Header, numlua::core::format Format, dx::format const &DXFormat )
         {
             if( RequireDX10Header )
             {

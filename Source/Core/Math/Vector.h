@@ -23,7 +23,7 @@ namespace math
     // /** @brief 2 dimensional vector with integer coordinates. Compatible with GLSL type `ivec2`
     //  * and HLSL type int2.
     //  */
-    // using ivec2 = glm::ivec2;
+    using ivec2 = glm::ivec2;
 
     // /** @brief 2 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec2`
     //  * and HLSL type uint2.
@@ -40,7 +40,7 @@ namespace math
     // /** @brief 3 dimensional vector with integer coordinates. Compatible with GLSL type `ivec3`
     //  * and HLSL type int3.
     //  */
-    // using ivec3 = glm::ivec3;
+    using ivec3 = glm::ivec3;
 
     // /** @brief 3 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec3`
     //  * and HLSL type uint3.
@@ -57,7 +57,7 @@ namespace math
     // /** @brief 4 dimensional vector with integer coordinates. Compatible with GLSL type `ivec4`
     //  * and HLSL type int4.
     //  */
-    // using ivec4 = glm::ivec4;
+    using ivec4 = glm::ivec4;
 
     // /** @brief 4 dimensional vector with unsigned integer coordinates. Compatible with GLSL type `uvec4`
     //  * and HLSL type uint4.

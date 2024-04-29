@@ -4,7 +4,7 @@ namespace numlua::core
 {
     namespace detail
     {
-        inline gl::swizzles translate( gli::swizzles const &Swizzles )
+        inline gl::swizzles translate( numlua::core::swizzles const &Swizzles )
         {
             static gl::swizzle const Table[] = { gl::SWIZZLE_RED,   gl::SWIZZLE_GREEN, gl::SWIZZLE_BLUE,
                                                  gl::SWIZZLE_ALPHA, gl::SWIZZLE_ZERO,  gl::SWIZZLE_ONE };
@@ -307,7 +307,7 @@ namespace numlua::core
         std::copy( &Table[0], &Table[0] + FORMAT_COUNT, this->FormatDesc.begin() );
     }
 
-    inline gl::target const &gl::translate( gli::target Target ) const
+    inline gl::target const &gl::translate( numlua::core::target Target ) const
     {
         static gl::target const Table[] = { gl::TARGET_1D,         gl::TARGET_1D_ARRAY, gl::TARGET_2D,
                                             gl::TARGET_2D_ARRAY,   gl::TARGET_3D,       gl::TARGET_RECT,
@@ -318,7 +318,7 @@ namespace numlua::core
         return Table[Target];
     }
 
-    inline gl::format gl::translate( gli::format Format, gli::swizzles const &Swizzles ) const
+    inline gl::format gl::translate( numlua::core::format Format, numlua::core::swizzles const &Swizzles ) const
     {
         GLI_ASSERT( Format >= FORMAT_FIRST && Format <= FORMAT_LAST );
 
@@ -332,7 +332,7 @@ namespace numlua::core
         return FormatGL;
     }
 
-    inline gli::format gl::find( gl::internal_format InternalFormat, gl::external_format ExternalFormat, gl::type_format Type )
+    inline numlua::core::format gl::find( gl::internal_format InternalFormat, gl::external_format ExternalFormat, gl::type_format Type )
     {
         for( int FormatIndex = FORMAT_FIRST; FormatIndex <= FORMAT_LAST; ++FormatIndex )
         {
@@ -344,12 +344,12 @@ namespace numlua::core
             if( this->FormatDesc[Index].Type != Type )
                 continue;
 
-            return static_cast<gli::format>( FormatIndex );
+            return static_cast<numlua::core::format>( FormatIndex );
         }
-        return gli::FORMAT_UNDEFINED;
+        return numlua::core::FORMAT_UNDEFINED;
     }
 
-    inline gl::swizzles gl::compute_swizzle( format_desc const &FormatDesc, gli::swizzles const &Swizzles ) const
+    inline gl::swizzles gl::compute_swizzle( format_desc const &FormatDesc, numlua::core::swizzles const &Swizzles ) const
     {
         if( !this->has_swizzle( this->Profile ) )
             return swizzles( gl::SWIZZLE_RED, gl::SWIZZLE_GREEN, gl::SWIZZLE_BLUE, gl::SWIZZLE_ALPHA );
@@ -358,6 +358,6 @@ namespace numlua::core
             ( ( FormatDesc.Properties & detail::FORMAT_PROPERTY_BGRA_FORMAT_BIT ) && !has_swizzle( this->Profile ) ) ||
             ( FormatDesc.Properties & detail::FORMAT_PROPERTY_BGRA_TYPE_BIT );
 
-        return detail::translate( IsExternalBGRA ? gli::swizzles( Swizzles.b, Swizzles.g, Swizzles.r, Swizzles.a ) : Swizzles );
+        return detail::translate( IsExternalBGRA ? numlua::core::swizzles( Swizzles.b, Swizzles.g, Swizzles.r, Swizzles.a ) : Swizzles );
     }
 } // namespace numlua::core

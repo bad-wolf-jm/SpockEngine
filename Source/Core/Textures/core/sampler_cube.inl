@@ -4,7 +4,7 @@
 namespace numlua::core
 {
     template <typename T, qualifier P>
-    inline sampler_cube<T, P>::sampler_cube( texture_cube const &Texture, gli::wrap Wrap, filter Mip, filter Min,
+    inline sampler_cube<T, P>::sampler_cube( texture_cube const &Texture, numlua::core::wrap Wrap, filter Mip, filter Min,
                                              texel_type const &BorderColor )
         : sampler( Wrap, Texture.levels() > 1 ? Mip : FILTER_NEAREST, Min )
         , Texture( Texture )

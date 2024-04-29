@@ -13,8 +13,8 @@
 #define STBI_NO_THREAD_LOCALS
 #include "stb_image.h"
 
-#include "Core/Core.h"
-#include "Core/Memory.h"
+// #include "Core/Core.h"
+// #include "Core/Memory.h"
 
 #include "TextureData.h"
 
@@ -22,16 +22,16 @@
 
 #include <filesystem>
 #include <fstream>
-#include <gli/generate_mipmaps.hpp>
+#include <Core/Textures/generate_mipmaps.hpp>
 
-namespace SE::Core
+namespace numlua::core
 {
 
-    sImageData LoadImageData( fs::path const &aPath )
+    image_data_t LoadImageData( fs::path const &aPath )
     {
         constexpr size_t lComponentCount = 4;
 
-        sImageData lImageData{};
+        image_data_t lImageData{};
         int32_t    lActualComponentCount = 0;
         int32_t    lWidth                = 0;
         int32_t    lHeight               = 0;
@@ -43,9 +43,9 @@ namespace SE::Core
 
             float *lData = stbi_loadf( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
-            if( !lData ) return sImageData{};
+            if( !lData ) return image_data_t{};
 
-            lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
+            lImageData.mFormat    = color_format::RGBA32_FLOAT;
             lImageData.mPixelData = vector_t<uint8_t>( (uint8_t*)lData, ((uint8_t*)lData )+ ( lWidth * lHeight * sizeof( float ) ) );
         }
         else
@@ -54,9 +54,9 @@ namespace SE::Core
 
             stbi_uc *lData = stbi_load( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
-            if( !lData ) return sImageData{};
+            if( !lData ) return image_data_t{};
 
-            lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
+            lImageData.mFormat    = color_format::RGBA8_UNORM;
             lImageData.mPixelData = vector_t<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
         }
 
@@ -66,120 +66,120 @@ namespace SE::Core
         return lImageData;
     }
 
-    static const gli::format ToGliType( const eColorFormat &aFormat )
+    static const format ToGliType( const color_format &aFormat )
     {
         switch( aFormat )
         {
-        case eColorFormat::R32_FLOAT: return gli::FORMAT_R32_SFLOAT_PACK32;
-        case eColorFormat::RG32_FLOAT: return gli::FORMAT_RG32_SFLOAT_PACK32;
-        case eColorFormat::RGB32_FLOAT: return gli::FORMAT_RGB32_SFLOAT_PACK32;
-        case eColorFormat::RGBA32_FLOAT: return gli::FORMAT_RGBA32_SFLOAT_PACK32;
-        case eColorFormat::R16_FLOAT: return gli::FORMAT_R16_SFLOAT_PACK16;
-        case eColorFormat::RG16_FLOAT: return gli::FORMAT_RG16_SFLOAT_PACK16;
-        case eColorFormat::RGB16_FLOAT: return gli::FORMAT_RGB16_SFLOAT_PACK16;
-        case eColorFormat::RGBA16_FLOAT: return gli::FORMAT_RGBA16_SFLOAT_PACK16;
-        case eColorFormat::R8_UNORM: return gli::FORMAT_R8_UNORM_PACK8;
-        case eColorFormat::RG8_UNORM: return gli::FORMAT_RG8_UNORM_PACK8;
-        case eColorFormat::RGB8_UNORM: return gli::FORMAT_RGB8_UNORM_PACK8;
-        case eColorFormat::RGBA8_UNORM: return gli::FORMAT_RGBA8_UNORM_PACK8;
-        case eColorFormat::D16_UNORM: return gli::FORMAT_D16_UNORM_PACK16;
-        case eColorFormat::X8_D24_UNORM_PACK32: return gli::FORMAT_D24_UNORM_PACK32;
-        case eColorFormat::D32_SFLOAT: return gli::FORMAT_D32_SFLOAT_PACK32;
-        case eColorFormat::S8_UINT: return gli::FORMAT_R8_SNORM_PACK8;
-        case eColorFormat::D16_UNORM_S8_UINT: return gli::FORMAT_D16_UNORM_S8_UINT_PACK32;
-        case eColorFormat::D24_UNORM_S8_UINT: return gli::FORMAT_D24_UNORM_S8_UINT_PACK32;
-        case eColorFormat::D32_UNORM_S8_UINT: return gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64;
-        default: return gli::FORMAT_UNDEFINED;
+        case color_format::R32_FLOAT: return FORMAT_R32_SFLOAT_PACK32;
+        case color_format::RG32_FLOAT: return FORMAT_RG32_SFLOAT_PACK32;
+        case color_format::RGB32_FLOAT: return FORMAT_RGB32_SFLOAT_PACK32;
+        case color_format::RGBA32_FLOAT: return FORMAT_RGBA32_SFLOAT_PACK32;
+        case color_format::R16_FLOAT: return FORMAT_R16_SFLOAT_PACK16;
+        case color_format::RG16_FLOAT: return FORMAT_RG16_SFLOAT_PACK16;
+        case color_format::RGB16_FLOAT: return FORMAT_RGB16_SFLOAT_PACK16;
+        case color_format::RGBA16_FLOAT: return FORMAT_RGBA16_SFLOAT_PACK16;
+        case color_format::R8_UNORM: return FORMAT_R8_UNORM_PACK8;
+        case color_format::RG8_UNORM: return FORMAT_RG8_UNORM_PACK8;
+        case color_format::RGB8_UNORM: return FORMAT_RGB8_UNORM_PACK8;
+        case color_format::RGBA8_UNORM: return FORMAT_RGBA8_UNORM_PACK8;
+        case color_format::D16_UNORM: return FORMAT_D16_UNORM_PACK16;
+        case color_format::X8_D24_UNORM_PACK32: return FORMAT_D24_UNORM_PACK32;
+        case color_format::D32_SFLOAT: return FORMAT_D32_SFLOAT_PACK32;
+        case color_format::S8_UINT: return FORMAT_R8_SNORM_PACK8;
+        case color_format::D16_UNORM_S8_UINT: return FORMAT_D16_UNORM_S8_UINT_PACK32;
+        case color_format::D24_UNORM_S8_UINT: return FORMAT_D24_UNORM_S8_UINT_PACK32;
+        case color_format::D32_UNORM_S8_UINT: return FORMAT_D32_SFLOAT_S8_UINT_PACK64;
+        default: return FORMAT_UNDEFINED;
         }
     }
 
-    static const eColorFormat ToLtseType( const gli::format &aFormat )
+    static const color_format ToLtseType( const format &aFormat )
     {
         switch( aFormat )
         {
-        case gli::FORMAT_R32_SFLOAT_PACK32: return eColorFormat::R32_FLOAT;
-        case gli::FORMAT_RG32_SFLOAT_PACK32: return eColorFormat::RG32_FLOAT;
-        case gli::FORMAT_RGB32_SFLOAT_PACK32: return eColorFormat::RGB32_FLOAT;
-        case gli::FORMAT_RGBA32_SFLOAT_PACK32: return eColorFormat::RGBA32_FLOAT;
-        case gli::FORMAT_R16_SFLOAT_PACK16: return eColorFormat::R16_FLOAT;
-        case gli::FORMAT_RG16_SFLOAT_PACK16: return eColorFormat::RG16_FLOAT;
-        case gli::FORMAT_RGB16_SFLOAT_PACK16: return eColorFormat::RGB16_FLOAT;
-        case gli::FORMAT_RGBA16_SFLOAT_PACK16: return eColorFormat::RGBA16_FLOAT;
-        case gli::FORMAT_R8_UNORM_PACK8: return eColorFormat::R8_UNORM;
-        case gli::FORMAT_RG8_UNORM_PACK8: return eColorFormat::RG8_UNORM;
-        case gli::FORMAT_RGB8_UNORM_PACK8: return eColorFormat::RGB8_UNORM;
-        case gli::FORMAT_RGBA8_UNORM_PACK8: return eColorFormat::RGBA8_UNORM;
-        case gli::FORMAT_D16_UNORM_PACK16: return eColorFormat::D16_UNORM;
-        case gli::FORMAT_D24_UNORM_PACK32: return eColorFormat::X8_D24_UNORM_PACK32;
-        case gli::FORMAT_D32_SFLOAT_PACK32: return eColorFormat::D32_SFLOAT;
-        case gli::FORMAT_R8_SNORM_PACK8: return eColorFormat::S8_UINT;
-        case gli::FORMAT_D16_UNORM_S8_UINT_PACK32: return eColorFormat::D16_UNORM_S8_UINT;
-        case gli::FORMAT_D24_UNORM_S8_UINT_PACK32: return eColorFormat::D24_UNORM_S8_UINT;
-        case gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64: return eColorFormat::D32_UNORM_S8_UINT;
-        default: return eColorFormat::UNDEFINED;
+        case FORMAT_R32_SFLOAT_PACK32: return color_format::R32_FLOAT;
+        case FORMAT_RG32_SFLOAT_PACK32: return color_format::RG32_FLOAT;
+        case FORMAT_RGB32_SFLOAT_PACK32: return color_format::RGB32_FLOAT;
+        case FORMAT_RGBA32_SFLOAT_PACK32: return color_format::RGBA32_FLOAT;
+        case FORMAT_R16_SFLOAT_PACK16: return color_format::R16_FLOAT;
+        case FORMAT_RG16_SFLOAT_PACK16: return color_format::RG16_FLOAT;
+        case FORMAT_RGB16_SFLOAT_PACK16: return color_format::RGB16_FLOAT;
+        case FORMAT_RGBA16_SFLOAT_PACK16: return color_format::RGBA16_FLOAT;
+        case FORMAT_R8_UNORM_PACK8: return color_format::R8_UNORM;
+        case FORMAT_RG8_UNORM_PACK8: return color_format::RG8_UNORM;
+        case FORMAT_RGB8_UNORM_PACK8: return color_format::RGB8_UNORM;
+        case FORMAT_RGBA8_UNORM_PACK8: return color_format::RGBA8_UNORM;
+        case FORMAT_D16_UNORM_PACK16: return color_format::D16_UNORM;
+        case FORMAT_D24_UNORM_PACK32: return color_format::X8_D24_UNORM_PACK32;
+        case FORMAT_D32_SFLOAT_PACK32: return color_format::D32_SFLOAT;
+        case FORMAT_R8_SNORM_PACK8: return color_format::S8_UINT;
+        case FORMAT_D16_UNORM_S8_UINT_PACK32: return color_format::D16_UNORM_S8_UINT;
+        case FORMAT_D24_UNORM_S8_UINT_PACK32: return color_format::D24_UNORM_S8_UINT;
+        case FORMAT_D32_SFLOAT_S8_UINT_PACK64: return color_format::D32_UNORM_S8_UINT;
+        default: return color_format::UNDEFINED;
         }
     }
 
-    static const gli::target ToGliType( const eTextureType &aTextureType )
+    static const target ToGliType( const texture_type &aTextureType )
     {
         switch( aTextureType )
         {
-        case eTextureType::TEXTURE_3D: return gli::TARGET_3D;
-        case eTextureType::TEXTURE_2D:
-        default: return gli::TARGET_2D;
+        case texture_type::TEXTURE_3D: return TARGET_3D;
+        case texture_type::TEXTURE_2D:
+        default: return TARGET_2D;
         }
     }
 
-    static const eTextureType ToLtseType( const gli::target &aTextureType )
+    static const texture_type ToLtseType( const target &aTextureType )
     {
         switch( aTextureType )
         {
-        case gli::TARGET_3D: return eTextureType::TEXTURE_3D;
-        case gli::TARGET_2D:
-        default: return eTextureType::TEXTURE_2D;
+        case TARGET_3D: return texture_type::TEXTURE_3D;
+        case TARGET_2D:
+        default: return texture_type::TEXTURE_2D;
         }
     }
 
-    static const gli::filter ToGliType( const eSamplerFilter &aTextureType )
+    static const filter ToGliType( const sampler_filter &aTextureType )
     {
         switch( aTextureType )
         {
-        case eSamplerFilter::NEAREST: return gli::FILTER_NEAREST;
-        case eSamplerFilter::LINEAR:
-        default: return gli::FILTER_LINEAR;
+        case sampler_filter::NEAREST: return FILTER_NEAREST;
+        case sampler_filter::LINEAR:
+        default: return FILTER_LINEAR;
         }
     }
 
-    static const gli::filter ToGliType( const eSamplerMipmap &aTextureType )
+    static const filter ToGliType( const sampler_mipmap &aTextureType )
     {
         switch( aTextureType )
         {
-        case eSamplerMipmap::NEAREST: return gli::FILTER_NEAREST;
-        case eSamplerMipmap::LINEAR:
-        default: return gli::FILTER_LINEAR;
+        case sampler_mipmap::NEAREST: return FILTER_NEAREST;
+        case sampler_mipmap::LINEAR:
+        default: return FILTER_LINEAR;
         }
     }
 
-    static const gli::wrap ToGliType( const eSamplerWrapping &aTextureType )
+    static const wrap ToGliType( const sampler_wrapping &aTextureType )
     {
         switch( aTextureType )
         {
-        case eSamplerWrapping::REPEAT: return gli::WRAP_REPEAT;
-        case eSamplerWrapping::MIRRORED_REPEAT: return gli::WRAP_MIRROR_REPEAT;
-        case eSamplerWrapping::CLAMP_TO_EDGE: return gli::WRAP_CLAMP_TO_EDGE;
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return gli::WRAP_MIRROR_CLAMP_TO_BORDER;
-        case eSamplerWrapping::CLAMP_TO_BORDER:
-        default: return gli::WRAP_CLAMP_TO_BORDER;
+        case sampler_wrapping::REPEAT: return WRAP_REPEAT;
+        case sampler_wrapping::MIRRORED_REPEAT: return WRAP_MIRROR_REPEAT;
+        case sampler_wrapping::CLAMP_TO_EDGE: return WRAP_CLAMP_TO_EDGE;
+        case sampler_wrapping::MIRROR_CLAMP_TO_BORDER: return WRAP_MIRROR_CLAMP_TO_BORDER;
+        case sampler_wrapping::CLAMP_TO_BORDER:
+        default: return WRAP_CLAMP_TO_BORDER;
         }
     }
 
-    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo )
+    TextureData::TextureData( texture_create_info_t const &aTextureCreateInfo )
         : mSpec{ aTextureCreateInfo }
     {
         Initialize();
     }
 
-    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, sImageData const &aImageData )
+    TextureData::TextureData( texture_create_info_t const &aTextureCreateInfo, image_data_t const &aImageData )
         : mSpec{ aTextureCreateInfo }
     {
         mSpec.mFormat = aImageData.mFormat;
@@ -191,7 +191,7 @@ namespace SE::Core
         std::memcpy( mInternalTexture.data(), aImageData.mPixelData.data(), aImageData.mByteSize );
     }
 
-    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
+    TextureData::TextureData( texture_create_info_t const &aTextureCreateInfo, fs::path const &aImagePath )
         : mSpec{ aTextureCreateInfo }
     {
         string_t           lExtension     = aImagePath.extension().string();
@@ -199,7 +199,7 @@ namespace SE::Core
 
         if( lGliExtensions.find( lExtension ) != lGliExtensions.end() )
         {
-            mInternalTexture = gli::load( aImagePath.string() );
+            mInternalTexture = load( aImagePath.string() );
 
             mSpec.mType      = ToLtseType( mInternalTexture.target() );
             mSpec.mFormat    = ToLtseType( mInternalTexture.format() );
@@ -210,9 +210,9 @@ namespace SE::Core
         }
         else
         {
-            sImageData lImageData = LoadImageData( aImagePath );
+            image_data_t lImageData = LoadImageData( aImagePath );
 
-            mSpec.mType      = eTextureType::TEXTURE_2D;
+            mSpec.mType      = texture_type::TEXTURE_2D;
             mSpec.mFormat    = lImageData.mFormat;
             mSpec.mWidth     = lImageData.mWidth;
             mSpec.mHeight    = lImageData.mHeight;
@@ -227,7 +227,7 @@ namespace SE::Core
 
     TextureData::TextureData( char const *aKTXData, uint32_t aSize )
     {
-        mInternalTexture = gli::load( aKTXData, aSize );
+        mInternalTexture = load( aKTXData, aSize );
 
         mSpec.mType      = ToLtseType( mInternalTexture.target() );
         mSpec.mFormat    = ToLtseType( mInternalTexture.format() );
@@ -244,15 +244,15 @@ namespace SE::Core
 
         if( lExtension == ".dds" )
         {
-            gli::save_dds( mInternalTexture, aImagePath.string() );
+            save_dds( mInternalTexture, aImagePath.string() );
         }
         else if( lExtension == ".kmg" )
         {
-            gli::save_kmg( mInternalTexture, aImagePath.string() );
+            save_kmg( mInternalTexture, aImagePath.string() );
         }
         else if( lExtension == ".ktx" )
         {
-            gli::save_ktx( mInternalTexture, aImagePath.string() );
+            save_ktx( mInternalTexture, aImagePath.string() );
         }
         else
         {
@@ -263,90 +263,90 @@ namespace SE::Core
     vector_t<char> TextureData::Serialize() const
     {
         vector_t<char> lData;
-        gli::save_ktx( mInternalTexture, lData );
+        save_ktx( mInternalTexture, lData );
 
         return lData;
     }
 
     void TextureData::Initialize()
     {
-        mInternalTexture = gli::texture( ToGliType( mSpec.mType ), ToGliType( mSpec.mFormat ),
-                                         gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels );
+        mInternalTexture = texture( ToGliType( mSpec.mType ), ToGliType( mSpec.mFormat ),
+                                         extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels );
     }
 
-    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo )
+    TextureData2D::TextureData2D( texture_create_info_t const &aCreateInfo )
         : TextureData( aCreateInfo )
     {
-        mInternalTexture2d = gli::texture2d( mInternalTexture );
+        mInternalTexture2d = texture2d( mInternalTexture );
     }
 
-    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData )
+    TextureData2D::TextureData2D( texture_create_info_t const &aCreateInfo, image_data_t const &aImageData )
         : TextureData( aCreateInfo, aImageData )
     {
-        mInternalTexture2d = gli::texture2d( mInternalTexture );
+        mInternalTexture2d = texture2d( mInternalTexture );
 
         if( mSpec.mMipLevels > 1 )
         {
-            mInternalTexture2d = gli::generate_mipmaps( mInternalTexture2d, gli::FILTER_LINEAR );
+            mInternalTexture2d = generate_mipmaps( mInternalTexture2d, FILTER_LINEAR );
         }
     }
 
-    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath )
+    TextureData2D::TextureData2D( texture_create_info_t const &aCreateInfo, fs::path const &aImagePath )
         : TextureData( aCreateInfo, aImagePath )
     {
-        mInternalTexture2d = gli::texture2d( mInternalTexture );
+        mInternalTexture2d = texture2d( mInternalTexture );
     }
 
     TextureData2D::TextureData2D( char const *aKTXData, uint32_t aSize )
         : TextureData( aKTXData, aSize )
     {
-        mInternalTexture2d = gli::texture2d( mInternalTexture );
+        mInternalTexture2d = texture2d( mInternalTexture );
     }
 
-    sImageData TextureData2D::GetImageData()
+    image_data_t TextureData2D::GetImageData()
     {
         vector_t<uint8_t> lImageData( (uint8_t*)mInternalTexture2d.data(), ((uint8_t*)mInternalTexture2d.data()) + mInternalTexture2d.size() );
         return { mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), mInternalTexture2d.size(),
                  std::move( lImageData ) };
     }
 
-    TextureSampler2D::TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo )
-        : gli::sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ),
+    TextureSampler2D::TextureSampler2D( TextureData2D const &aTexture, texture_sampling_info_t const &aSamplingInfo )
+        : sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ),
                                  ToGliType( aSamplingInfo.mMipFilter ), ToGliType( aSamplingInfo.mFilter ),
-                                 gli::vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1],
+                                 vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1],
                                             aSamplingInfo.mBorderColor[2], aSamplingInfo.mBorderColor[3] } )
         , mSamplingSpec{ aSamplingInfo }
     {
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo )
+    TextureDataCubeMap::TextureDataCubeMap( texture_create_info_t const &aCreateInfo )
         : TextureData( aCreateInfo )
     {
-        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+        mInternalTextureCubeMap = texture_cube( mInternalTexture );
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData )
+    TextureDataCubeMap::TextureDataCubeMap( texture_create_info_t const &aCreateInfo, sCubeMapImageData const &aImageData )
         : TextureData( aCreateInfo )
     {
-        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+        mInternalTextureCubeMap = texture_cube( mInternalTexture );
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath )
+    TextureDataCubeMap::TextureDataCubeMap( texture_create_info_t const &aCreateInfo, fs::path const &aImagePath )
         : TextureData( aCreateInfo, aImagePath )
     {
-        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+        mInternalTextureCubeMap = texture_cube( mInternalTexture );
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePath )
+    TextureDataCubeMap::TextureDataCubeMap( texture_create_info_t const &aCreateInfo, sCubeMapImagePathData const &aImagePath )
         : TextureData( aCreateInfo )
     {
-        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+        mInternalTextureCubeMap = texture_cube( mInternalTexture );
     }
 
     TextureDataCubeMap::TextureDataCubeMap( vector_t<uint8_t> aKTXData, uint32_t aSize )
         : TextureData( (const char*)aKTXData.data(), aSize )
     {
-        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+        mInternalTextureCubeMap = texture_cube( mInternalTexture );
     }
 
     sCubeMapImageData TextureDataCubeMap::GetImageData()

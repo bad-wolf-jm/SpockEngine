@@ -92,11 +92,11 @@ namespace numlua::core
 
     inline bool operator==( texture const &A, texture const &B )
     {
-        return gli::equal( A, B );
+        return numlua::core::equal( A, B );
     }
 
     inline bool operator!=( texture const &A, texture const &B )
     {
-        return gli::notEqual( A, B );
+        return numlua::core::notEqual( A, B );
     }
 } // namespace numlua::core

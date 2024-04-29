@@ -473,13 +473,13 @@ namespace numlua::core
         dx();
 
         /// Convert GLI formats into Direct3D formats
-        format const &translate( gli::format Format ) const;
+        format const &translate( numlua::core::format Format ) const;
 
         /// Convert a Direct3D 9 format into a GLI format
-        gli::format find( d3dfmt FourCC ) const;
+        numlua::core::format find( d3dfmt FourCC ) const;
 
         /// Convert a Direct3D 10 format into a GLI format
-        gli::format find( d3dfmt FourCC, dxgiFormat Format ) const;
+        numlua::core::format find( d3dfmt FourCC, dxgiFormat Format ) const;
 
       private:
         std::array<format, FORMAT_COUNT> Translation;

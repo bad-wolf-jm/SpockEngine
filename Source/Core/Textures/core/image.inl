@@ -58,7 +58,7 @@ namespace numlua::core
     } // namespace detail
 
     inline image::image()
-        : Format( gli::FORMAT_UNDEFINED )
+        : Format( numlua::core::FORMAT_UNDEFINED )
         , BaseLevel( 0 )
         , Data( nullptr )
         , Size( 0 )
@@ -168,7 +168,7 @@ namespace numlua::core
     {
         GLI_ASSERT( !this->empty() );
 
-        memset( this->data<gli::byte>(), 0, this->size<gli::byte>() );
+        memset( this->data<numlua::core::byte>(), 0, this->size<numlua::core::byte>() );
     }
 
     template <typename genType>

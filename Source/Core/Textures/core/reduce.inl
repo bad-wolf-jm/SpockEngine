@@ -34,7 +34,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler1d<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler1d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type               TexelIndex( 0 );
                 vec<4, val_type>          Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0 ), SamplerB.template fetch( TexelIndex, 0 ) ) );
@@ -65,7 +65,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler1d_array<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler1d_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type                     TexelIndex( 0 );
                 vec<4, val_type>                Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0 ) ) );
@@ -97,7 +97,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler2d<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler2d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type               TexelIndex( 0 );
                 vec<4, val_type>          Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0 ), SamplerB.template fetch( TexelIndex, 0 ) ) );
@@ -129,7 +129,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler2d_array<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler2d_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type                     TexelIndex( 0 );
                 vec<4, val_type>                Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0 ) ) );
@@ -163,7 +163,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler3d<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler3d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type               TexelIndex( 0 );
                 vec<4, val_type>          Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0 ), SamplerB.template fetch( TexelIndex, 0 ) ) );
@@ -196,7 +196,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler_cube<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler_cube<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type                  TexelIndex( 0 );
                 vec<4, val_type>             Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0 ) ) );
@@ -230,7 +230,7 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler_cube_array<val_type> const SamplerA( A, gli::WRAP_CLAMP_TO_EDGE ), SamplerB( B, gli::WRAP_CLAMP_TO_EDGE );
+                sampler_cube_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
                 extent_type                        TexelIndex( 0 );
                 vec<4, val_type>                   Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0, 0 ) ) );

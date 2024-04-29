@@ -8,7 +8,7 @@ namespace numlua::core
 
     inline texture2d_array::texture2d_array( format_type Format, extent_type const &Extent, size_type Layers,
                                              swizzles_type const &Swizzles )
-        : texture( TARGET_2D_ARRAY, Format, texture::extent_type( Extent, 1 ), Layers, 1, gli::levels( Extent ), Swizzles )
+        : texture( TARGET_2D_ARRAY, Format, texture::extent_type( Extent, 1 ), Layers, 1, numlua::core::levels( Extent ), Swizzles )
     {
     }
 

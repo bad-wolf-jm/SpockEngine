@@ -341,13 +341,13 @@ namespace numlua::core
         gl( profile Profile );
 
         /// Convert GLI targets into OpenGL texture targets
-        target const &translate( gli::target Target ) const;
+        target const &translate( numlua::core::target Target ) const;
 
         /// Convert GLI formats into OpenGL texture formats
-        format translate( gli::format Format, gli::swizzles const &Swizzle ) const;
+        format translate( numlua::core::format Format, numlua::core::swizzles const &Swizzle ) const;
 
         /// Convert an OpenGL format into a GLI format
-        gli::format find( internal_format InternalFormat, external_format ExternalFormat, type_format Type );
+        numlua::core::format find( internal_format InternalFormat, external_format ExternalFormat, type_format Type );
 
       private:
         struct format_desc
@@ -363,7 +363,7 @@ namespace numlua::core
             return Profile == PROFILE_ES30 || Profile == PROFILE_GL33;
         }
 
-        gl::swizzles compute_swizzle( format_desc const &FormatDesc, gli::swizzles const &Swizzle ) const;
+        gl::swizzles compute_swizzle( format_desc const &FormatDesc, numlua::core::swizzles const &Swizzle ) const;
 
         std::array<format_desc, FORMAT_COUNT> FormatDesc;
         profile                               Profile;

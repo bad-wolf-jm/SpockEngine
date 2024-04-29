@@ -61,10 +61,10 @@ namespace numlua::core
             Offset += Header.BytesOfKeyValueData;
 
             gl                GL( gl::PROFILE_KTX );
-            gli::format const Format = GL.find( static_cast<gli::gl::internal_format>( Header.GLInternalFormat ),
-                                                static_cast<gli::gl::external_format>( Header.GLFormat ),
-                                                static_cast<gli::gl::type_format>( Header.GLType ) );
-            GLI_ASSERT( Format != gli::FORMAT_UNDEFINED );
+            numlua::core::format const Format = GL.find( static_cast<numlua::core::gl::internal_format>( Header.GLInternalFormat ),
+                                                static_cast<numlua::core::gl::external_format>( Header.GLFormat ),
+                                                static_cast<numlua::core::gl::type_format>( Header.GLType ) );
+            GLI_ASSERT( Format != numlua::core::FORMAT_UNDEFINED );
 
             texture::size_type const BlockSize = block_size( Format );
 

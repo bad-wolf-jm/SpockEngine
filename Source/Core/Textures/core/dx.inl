@@ -314,47 +314,47 @@ namespace numlua::core
         std::copy( &Table[0], &Table[0] + FORMAT_COUNT, this->Translation.begin() );
     }
 
-    inline dx::format const &dx::translate( gli::format Format ) const
+    inline dx::format const &dx::translate( numlua::core::format Format ) const
     {
         GLI_ASSERT( Format >= FORMAT_FIRST && Format <= FORMAT_LAST );
         return Translation[Format - FORMAT_FIRST];
     }
 
-    inline gli::format dx::find( dx::d3dfmt FourCC ) const
+    inline numlua::core::format dx::find( dx::d3dfmt FourCC ) const
     {
-        gli::format FormatResult = gli::FORMAT_UNDEFINED;
+        numlua::core::format FormatResult = numlua::core::FORMAT_UNDEFINED;
         for( int FormatIndex = FORMAT_FIRST; FormatIndex <= FORMAT_LAST; ++FormatIndex )
         {
             if( this->Translation[FormatIndex - FORMAT_FIRST].D3DFormat != FourCC )
                 continue;
 
-            FormatResult = static_cast<gli::format>( FormatIndex );
+            FormatResult = static_cast<numlua::core::format>( FormatIndex );
             break;
         }
         return FormatResult;
     }
 
-    inline gli::format dx::find( dx::d3dfmt FourCC, dx::dxgiFormat Format ) const
+    inline numlua::core::format dx::find( dx::d3dfmt FourCC, dx::dxgiFormat Format ) const
     {
         GLI_ASSERT( FourCC == D3DFMT_DX10 || FourCC == D3DFMT_GLI1 );
 
-        gli::format FormatResult = gli::FORMAT_UNDEFINED;
+        numlua::core::format FormatResult = numlua::core::FORMAT_UNDEFINED;
         for( int FormatIndex = FORMAT_FIRST; FormatIndex <= FORMAT_LAST; ++FormatIndex )
         {
-            gli::format               CurrentFormat = static_cast<gli::format>( FormatIndex );
+            numlua::core::format               CurrentFormat = static_cast<numlua::core::format>( FormatIndex );
             detail::formatInfo const &FormatInfo    = detail::get_format_info( CurrentFormat );
 
             dx::format const &DXFormat = this->Translation[FormatIndex - FORMAT_FIRST];
 
             if( FourCC == D3DFMT_GLI1 && ( FormatInfo.Flags & detail::CAP_DDS_GLI_EXT_BIT ) && DXFormat.DXGIFormat.GLI == Format.GLI )
             {
-                FormatResult = static_cast<gli::format>( FormatIndex );
+                FormatResult = static_cast<numlua::core::format>( FormatIndex );
                 break;
             }
 
             if( FourCC == D3DFMT_DX10 && !( FormatInfo.Flags & detail::CAP_DDS_GLI_EXT_BIT ) && DXFormat.DXGIFormat.DDS == Format.DDS )
             {
-                FormatResult = static_cast<gli::format>( FormatIndex );
+                FormatResult = static_cast<numlua::core::format>( FormatIndex );
                 break;
             }
         }

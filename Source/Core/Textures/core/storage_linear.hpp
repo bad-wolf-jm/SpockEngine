@@ -26,8 +26,8 @@ namespace numlua::core
       public:
         typedef extent3d    extent_type;
         typedef size_t      size_type;
-        typedef gli::format format_type;
-        typedef gli::byte   data_type;
+        typedef numlua::core::format format_type;
+        typedef numlua::core::byte   data_type;
 
       public:
         storage_linear();

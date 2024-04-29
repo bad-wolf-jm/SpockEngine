@@ -74,13 +74,13 @@ FetchContent_MakeAvailable(glm)
 include_directories(${glm_SOURCE_DIR})
 set(SE_EXTRA_INCLUDES ${glm_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
-FetchContent_Declare(
-  gli
-  GIT_REPOSITORY https://github.com/g-truc/gli.git
-  GIT_PROGRESS   TRUE  )
-FetchContent_MakeAvailable(gli)
-include_directories(${gli_SOURCE_DIR})
-set(SE_EXTRA_INCLUDES ${gli_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
+# FetchContent_Declare(
+#   gli
+#   GIT_REPOSITORY https://github.com/g-truc/gli.git
+#   GIT_PROGRESS   TRUE  )
+# FetchContent_MakeAvailable(gli)
+# include_directories(${gli_SOURCE_DIR})
+# set(SE_EXTRA_INCLUDES ${gli_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   stb

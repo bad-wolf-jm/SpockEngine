@@ -14,14 +14,14 @@
 
 #include <Core/Textures/gli.hpp>
 
-#include "Core/Vector.h"
+#include "Core/Definitions.h"
 
-#include "ColorFormat.h"
+// #include "ColorFormat.h"
 #include "TextureTypes.h"
 
 namespace fs = std::filesystem;
 
-namespace SE::Core
+namespace numlua::core
 {
 
     /** \struct TextureData
@@ -35,7 +35,7 @@ namespace SE::Core
         /** @brief Texture creation metadata */
 
       public:
-        sTextureCreateInfo mSpec; /**!< Copy of the sCreateInfo structure used ot define the texture. */
+        texture_create_info_t mSpec; /**!< Copy of the sCreateInfo structure used ot define the texture. */
 
         /** @brief Default constructor*/
         TextureData() = default;
@@ -50,7 +50,7 @@ namespace SE::Core
          *
          * @param aCreateInfo Creation structure
          */
-        TextureData( sTextureCreateInfo const &aCreateInfo );
+        TextureData( texture_create_info_t const &aCreateInfo );
 
         /** @brief Construct a texture from a create information structure and initial data
          *
@@ -62,7 +62,7 @@ namespace SE::Core
          * @param aCreateInfo Creation structure
          * @param aImageData  Image pixel data.
          */
-        TextureData( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData );
+        TextureData( texture_create_info_t const &aCreateInfo, image_data_t const &aImageData );
 
         /** @brief Construct a texture from a create information structure and initial data from image file
          *
@@ -77,7 +77,7 @@ namespace SE::Core
          * @param aCreateInfo Creation structure
          * @param aImagePath  Image file.
          */
-        TextureData( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath );
+        TextureData( texture_create_info_t const &aCreateInfo, fs::path const &aImagePath );
 
         TextureData( char const *aKTXData, uint32_t aSize );
 
@@ -91,7 +91,7 @@ namespace SE::Core
 
       protected:
         // Internal texture structure.
-        gli::texture mInternalTexture{};
+        texture mInternalTexture{};
     };
 
     /** \class TextureSampler2D
@@ -128,15 +128,15 @@ namespace SE::Core
          * These constructors perform the same function as the corresponding constructor for the base class, but also internally create
          * a 2D texture.
          */
-        TextureData2D( sTextureCreateInfo const &aCreateInfo );
-        TextureData2D( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData );
-        TextureData2D( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath );
+        TextureData2D( texture_create_info_t const &aCreateInfo );
+        TextureData2D( texture_create_info_t const &aCreateInfo, image_data_t const &aImageData );
+        TextureData2D( texture_create_info_t const &aCreateInfo, fs::path const &aImagePath );
         TextureData2D( char const *aKTXData, uint32_t aSize );
 
-        sImageData GetImageData();
+        image_data_t GetImageData();
 
       protected:
-        gli::texture2d mInternalTexture2d{};
+        texture2d mInternalTexture2d{};
     };
 
     /** \class TextureSampler2D
@@ -147,10 +147,10 @@ namespace SE::Core
      * by which data is retrieved from a texture, with possible type conversions and interpolation.
      *
      */
-    class TextureSampler2D : public gli::sampler2d<float>
+    class TextureSampler2D : public sampler2d<float>
     {
       public:
-        sTextureSamplingInfo mSamplingSpec; //!< Sampling specification
+        texture_sampling_info_t mSamplingSpec; //!< Sampling specification
 
         /** @brief Default constructor. */
         TextureSampler2D() = default;
@@ -164,10 +164,10 @@ namespace SE::Core
          * @param aSamplingInfo Information about how to sample the texture.
          *
          */
-        TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo );
+        TextureSampler2D( TextureData2D const &aTexture, texture_sampling_info_t const &aSamplingInfo );
     };
 
-    using sCubeMapImageData     = std::array<sImageData, 6>;
+    using sCubeMapImageData     = std::array<image_data_t, 6>;
     using sCubeMapImagePathData = std::array<fs::path, 6>;
 
     class TextureDataCubeMap : public TextureData
@@ -181,17 +181,17 @@ namespace SE::Core
         /** @brief Default destructor */
         ~TextureDataCubeMap() = default;
 
-        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo );
-        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData );
-        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aKTXImagePath );
-        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
+        TextureDataCubeMap( texture_create_info_t const &aCreateInfo );
+        TextureDataCubeMap( texture_create_info_t const &aCreateInfo, sCubeMapImageData const &aImageData );
+        TextureDataCubeMap( texture_create_info_t const &aCreateInfo, fs::path const &aKTXImagePath );
+        TextureDataCubeMap( texture_create_info_t const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
         TextureDataCubeMap( vector_t<uint8_t> aKTXData, uint32_t aSize );
         TextureDataCubeMap( std::array<vector_t<uint8_t>, 6> aKTXData, uint32_t aSize );
 
         sCubeMapImageData GetImageData();
 
       protected:
-        gli::texture_cube mInternalTextureCubeMap{};
+        texture_cube mInternalTextureCubeMap{};
     };
 
-} // namespace SE::Core
+} // namespace numlua::core

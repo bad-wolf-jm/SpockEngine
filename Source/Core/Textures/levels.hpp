@@ -15,8 +15,8 @@ namespace numlua::core
     /// #include <gli/texture2d.hpp>
     /// #include <gli/levels.hpp>
     /// ...
-    /// gli::texture2d::extent_type Extent(32, 10);
-    /// gli::texture2d Texture(gli::levels(Extent));
+    /// numlua::core::texture2d::extent_type Extent(32, 10);
+    /// numlua::core::texture2d Texture(numlua::core::levels(Extent));
     /// @endcode
     template <length_t L, typename T, qualifier P>
     T levels( vec<L, T, P> const &Extent );
@@ -28,7 +28,7 @@ namespace numlua::core
         /// #include <gli/texture2d.hpp>
         /// #include <gli/levels.hpp>
         /// ...
-        /// gli::texture2d Texture(32);
+        /// numlua::core::texture2d Texture(32);
         /// @endcode
         size_t levels(size_t Extent);
 
@@ -39,7 +39,7 @@ namespace numlua::core
         /// #include <gli/texture2d.hpp>
         /// #include <gli/levels.hpp>
         /// ...
-        /// gli::texture2d Texture(32);
+        /// numlua::core::texture2d Texture(32);
         /// @endcode
         int levels(int Extent);
     */

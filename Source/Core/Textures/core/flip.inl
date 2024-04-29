@@ -13,7 +13,7 @@ namespace numlua::core
                 size_t OffsetDst = LineSize * y;
                 size_t OffsetSrc = ImageSrc.size() - ( LineSize * ( y + 1 ) );
 
-                memcpy( ImageDst.data<gli::byte>() + OffsetDst, ImageSrc.data<gli::byte>() + OffsetSrc, LineSize );
+                memcpy( ImageDst.data<numlua::core::byte>() + OffsetDst, ImageSrc.data<numlua::core::byte>() + OffsetSrc, LineSize );
             }
         }
 
@@ -183,7 +183,7 @@ namespace numlua::core
     template <>
     inline texture2d flip( texture2d const &Texture )
     {
-        GLI_ASSERT( !gli::is_compressed( Texture.format() ) || gli::is_s3tc_compressed( Texture.format() ) );
+        GLI_ASSERT( !numlua::core::is_compressed( Texture.format() ) || numlua::core::is_s3tc_compressed( Texture.format() ) );
 
         texture2d Flip( Texture.format(), Texture.extent(), Texture.levels() );
 
@@ -204,11 +204,11 @@ namespace numlua::core
     template <>
     inline texture2d_array flip( texture2d_array const &Texture )
     {
-        GLI_ASSERT( !gli::is_compressed( Texture.format() ) || gli::is_s3tc_compressed( Texture.format() ) );
+        GLI_ASSERT( !numlua::core::is_compressed( Texture.format() ) || numlua::core::is_s3tc_compressed( Texture.format() ) );
 
         texture2d_array Flip( Texture.format(), Texture.extent(), Texture.layers(), Texture.levels() );
 
-        if( !gli::is_compressed( Texture.format() ) )
+        if( !numlua::core::is_compressed( Texture.format() ) )
         {
             texture2d_array::size_type const BlockSize = block_size( Texture.format() );
 
@@ -227,11 +227,11 @@ namespace numlua::core
     template <>
     inline texture_cube flip( texture_cube const &Texture )
     {
-        GLI_ASSERT( !gli::is_compressed( Texture.format() ) || gli::is_s3tc_compressed( Texture.format() ) );
+        GLI_ASSERT( !numlua::core::is_compressed( Texture.format() ) || numlua::core::is_s3tc_compressed( Texture.format() ) );
 
         texture_cube Flip( Texture.format(), Texture.extent(), Texture.levels() );
 
-        if( !gli::is_compressed( Texture.format() ) )
+        if( !numlua::core::is_compressed( Texture.format() ) )
         {
             texture_cube::size_type const BlockSize = block_size( Texture.format() );
 
@@ -256,7 +256,7 @@ namespace numlua::core
 
         if( !is_compressed( Texture.format() ) )
         {
-            gli::size_t const BlockSize = block_size( Texture.format() );
+            numlua::core::size_t const BlockSize = block_size( Texture.format() );
 
             for( std::size_t Layer = 0; Layer < Flip.layers(); ++Layer )
                 for( std::size_t Face = 0; Face < Flip.faces(); ++Face )

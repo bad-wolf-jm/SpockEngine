@@ -7,7 +7,7 @@ namespace numlua::core
     }
 
     inline texture3d::texture3d( format_type Format, extent_type const &Extent, swizzles_type const &Swizzles )
-        : texture( TARGET_3D, Format, Extent, 1, 1, gli::levels( Extent ), Swizzles )
+        : texture( TARGET_3D, Format, Extent, 1, 1, numlua::core::levels( Extent ), Swizzles )
     {
     }
 

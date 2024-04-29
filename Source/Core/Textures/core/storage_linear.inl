@@ -16,9 +16,9 @@ namespace numlua::core
         : Layers( Layers )
         , Faces( Faces )
         , Levels( Levels )
-        , BlockSize( gli::block_size( Format ) )
-        , BlockCount( glm::ceilMultiple( Extent, gli::block_extent( Format ) ) / gli::block_extent( Format ) )
-        , BlockExtent( gli::block_extent( Format ) )
+        , BlockSize( numlua::core::block_size( Format ) )
+        , BlockCount( glm::ceilMultiple( Extent, numlua::core::block_extent( Format ) ) / numlua::core::block_extent( Format ) )
+        , BlockExtent( numlua::core::block_extent( Format ) )
         , Extent( Extent )
     {
         GLI_ASSERT( Layers > 0 );
@@ -142,9 +142,9 @@ namespace numlua::core
             for( size_t BlockIndexY = 0, BlockCountY = BlockCount.y; BlockIndexY < BlockCountY; ++BlockIndexY )
             {
                 extent_type const BlockIndex( 0, BlockIndexY, BlockIndexZ );
-                gli::size_t const OffsetSrc =
+                numlua::core::size_t const OffsetSrc =
                     StorageSrc.image_offset( BlockIndexSrc + BlockIndex, StorageSrc.extent( LevelSrc ) ) * StorageSrc.block_size();
-                gli::size_t const OffsetDst =
+                numlua::core::size_t const OffsetDst =
                     this->image_offset( BlockIndexDst + BlockIndex, this->extent( LevelDst ) ) * this->block_size();
                 storage_linear::data_type const *const DataSrc = ImageSrc + OffsetSrc;
                 storage_linear::data_type             *DataDst = ImageDst + OffsetDst;

@@ -4,8 +4,8 @@ namespace numlua::core
 {
     inline texture::texture()
         : Storage( nullptr )
-        , Target( static_cast<gli::target>( TARGET_INVALID ) )
-        , Format( gli::FORMAT_UNDEFINED )
+        , Target( static_cast<numlua::core::target>( TARGET_INVALID ) )
+        , Format( numlua::core::FORMAT_UNDEFINED )
         , BaseLayer( 0 )
         , MaxLayer( 0 )
         , BaseFace( 0 )
@@ -293,7 +293,7 @@ namespace numlua::core
     template <typename gen_type>
     inline void texture::clear( gen_type const &Texel )
     {
-        GLI_ASSERT( !gli::is_compressed( this->format() ) );
+        GLI_ASSERT( !numlua::core::is_compressed( this->format() ) );
         GLI_ASSERT( !this->empty() );
         GLI_ASSERT( block_size( this->format() ) == sizeof( gen_type ) );
 
@@ -307,7 +307,7 @@ namespace numlua::core
     template <typename gen_type>
     inline void texture::clear( size_type Layer, size_type Face, size_type Level, gen_type const &BlockData )
     {
-        GLI_ASSERT( !gli::is_compressed( this->format() ) );
+        GLI_ASSERT( !numlua::core::is_compressed( this->format() ) );
         GLI_ASSERT( !this->empty() );
         GLI_ASSERT( block_size( this->format() ) == sizeof( gen_type ) );
         GLI_ASSERT( Layer >= 0 && Layer < this->layers() && Face >= 0 && Face < this->faces() && Level >= 0 &&
@@ -332,7 +332,7 @@ namespace numlua::core
             for( ; BlockOffset.y < BlockExtent.y; ++BlockOffset.y )
                 for( ; BlockOffset.x < BlockExtent.x; ++BlockOffset.x )
                 {
-                    gli::size_t const Offset =
+                    numlua::core::size_t const Offset =
                         this->Storage->image_offset( BlockOffset, this->extent( Level ) ) * this->Storage->block_size();
                     gen_type *const BlockAddress = reinterpret_cast<gen_type *const>( BaseAddress + Offset );
                     *BlockAddress                = BlockData;
@@ -363,7 +363,7 @@ namespace numlua::core
     }
 
     template <typename gen_type>
-    inline void texture::swizzle( gli::swizzles const &Swizzles )
+    inline void texture::swizzle( numlua::core::swizzles const &Swizzles )
     {
         for( size_type TexelIndex = 0, TexelCount = this->size<gen_type>(); TexelIndex < TexelCount; ++TexelIndex )
         {

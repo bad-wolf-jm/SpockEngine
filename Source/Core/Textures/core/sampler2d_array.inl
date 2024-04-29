@@ -4,7 +4,7 @@
 namespace numlua::core
 {
     template <typename T, qualifier P>
-    inline sampler2d_array<T, P>::sampler2d_array( texture_type const &Texture, gli::wrap Wrap, filter Mip, filter Min,
+    inline sampler2d_array<T, P>::sampler2d_array( texture_type const &Texture, numlua::core::wrap Wrap, filter Mip, filter Min,
                                                    texel_type const &BorderColor )
         : sampler( Wrap, Texture.levels() > 1 ? Mip : FILTER_NEAREST, Min )
         , Texture( Texture )

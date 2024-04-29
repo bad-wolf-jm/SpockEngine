@@ -187,9 +187,9 @@ namespace numlua::core
 
         dx DX;
 
-        gli::format Format( gli::FORMAT_UNDEFINED );
+        numlua::core::format Format( numlua::core::FORMAT_UNDEFINED );
         if( ( Header.Format.flags & ( dx::DDPF_RGB | dx::DDPF_ALPHAPIXELS | dx::DDPF_ALPHA | dx::DDPF_YUV | dx::DDPF_LUMINANCE ) ) &&
-            Format == gli::FORMAT_UNDEFINED && Header.Format.bpp > 0 && Header.Format.bpp < 64 )
+            Format == numlua::core::FORMAT_UNDEFINED && Header.Format.bpp > 0 && Header.Format.bpp < 64 )
         {
             switch( Header.Format.bpp )
             {
@@ -273,7 +273,7 @@ namespace numlua::core
             }
         }
         else if( ( Header.Format.flags & dx::DDPF_FOURCC ) && ( Header.Format.fourCC != dx::D3DFMT_DX10 ) &&
-                 ( Header.Format.fourCC != dx::D3DFMT_GLI1 ) && ( Format == gli::FORMAT_UNDEFINED ) )
+                 ( Header.Format.fourCC != dx::D3DFMT_GLI1 ) && ( Format == numlua::core::FORMAT_UNDEFINED ) )
         {
             dx::d3dfmt const FourCC = detail::remap_four_cc( Header.Format.fourCC );
             Format                  = DX.find( FourCC );
@@ -281,7 +281,7 @@ namespace numlua::core
         else if( Header.Format.fourCC == dx::D3DFMT_DX10 || Header.Format.fourCC == dx::D3DFMT_GLI1 )
             Format = DX.find( Header.Format.fourCC, Header10.Format );
 
-        GLI_ASSERT( Format != gli::FORMAT_UNDEFINED );
+        GLI_ASSERT( Format != numlua::core::FORMAT_UNDEFINED );
 
         size_t const MipMapCount = ( Header.Flags & detail::DDSD_MIPMAPCOUNT ) ? Header.MipMapLevels : 1;
         size_t       FaceCount   = 1;

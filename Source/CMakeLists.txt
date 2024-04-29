@@ -19,6 +19,7 @@ add_library(libnumlua STATIC
     Core/CUDA/Texture/Conversion.cpp
     Core/CUDA/Texture/TextureCubeMap.cu
     Core/CUDA/Texture/TextureTypes.cpp
+    Core/CUDA/Texture/TextureData.cpp
 
     TensorOps/Implementation/KernelLaunchers.cu
     TensorOps/NodeControllers.cpp

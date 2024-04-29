@@ -582,7 +582,7 @@ namespace numlua::core
 
     inline ivec3 block_extent( format Format )
     {
-        return gli::ivec3( detail::get_format_info( Format ).BlockExtent );
+        return numlua::core::ivec3( detail::get_format_info( Format ).BlockExtent );
     }
 
     inline size_t component_count( format Format )
@@ -637,7 +637,7 @@ namespace numlua::core
 
     inline bool is_packed( format Format )
     {
-        gli::uint16 flags = detail::get_format_info( Format ).Flags;
+        numlua::core::uint16 flags = detail::get_format_info( Format ).Flags;
 
         return ( flags & detail::CAP_PACKED8_BIT ) != 0 || ( flags & detail::CAP_PACKED16_BIT ) != 0 ||
                ( flags & detail::CAP_PACKED32_BIT ) != 0;

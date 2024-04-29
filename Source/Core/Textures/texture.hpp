@@ -16,9 +16,9 @@ namespace numlua::core
     {
       public:
         typedef size_t                    size_type;
-        typedef gli::target               target_type;
-        typedef gli::format               format_type;
-        typedef gli::swizzles             swizzles_type;
+        typedef numlua::core::target               target_type;
+        typedef numlua::core::format               format_type;
+        typedef numlua::core::swizzles             swizzles_type;
         typedef storage_linear            storage_type;
         typedef storage_type::data_type   data_type;
         typedef storage_type::extent_type extent_type;
@@ -180,7 +180,7 @@ namespace numlua::core
 
         /// Reorder the component in texture memory.
         template <typename gen_type>
-        void swizzle( gli::swizzles const &Swizzles );
+        void swizzle( numlua::core::swizzles const &Swizzles );
 
         /// Fetch a texel from a texture. The texture format must be uncompressed.
         template <typename gen_type>
@@ -220,7 +220,7 @@ namespace numlua::core
                 : Faces( MaxFace - BaseFace + 1 )
                 , Levels( MaxLevel - BaseLevel + 1 )
             {
-                GLI_ASSERT( static_cast<size_t>( gli::levels( Storage.extent( 0 ) ) ) < this->ImageMemorySize.size() );
+                GLI_ASSERT( static_cast<size_t>( numlua::core::levels( Storage.extent( 0 ) ) ) < this->ImageMemorySize.size() );
 
                 this->BaseAddresses.resize( Layers * this->Faces * this->Levels );
 
