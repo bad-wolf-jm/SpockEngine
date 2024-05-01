@@ -43,20 +43,44 @@ namespace numlua::linalg
 
         // -- Constructors --
 
-        LINALG_FUNCTION matrix() = default;
-        constexpr matrix( matrix<3, 3, T> const &m );
+        LINALG_FUNCTION matrix()
+            : value{ col_type( 1, 0, 0 ), col_type( 0, 1, 0 ), col_type( 0, 0, 1 ) }
+        {
+        }
 
-        constexpr matrix( T scalar );
-        constexpr matrix( T x0, T y0, T z0, T x1, T y1, T z1, T x2, T y2, T z2 );
-        constexpr matrix( col_type const &v0, col_type const &v1, col_type const &v2 );
+        constexpr matrix( matrix<3, 3, T> const &m )
+            : value{ col_type( m[0] ), col_type( m[1] ), col_type( m[2] ) }
+        {
+        }
+
+        constexpr matrix( T scalar )
+            : value{ col_type( s, 0, 0 ), col_type( 0, s, 0 ), col_type( 0, 0, s ) }
+        {
+        }
+
+        constexpr matrix( T x0, T y0, T z0, T x1, T y1, T z1, T x2, T y2, T z2 )
+            : value{ col_type( x0, y0, z0 ), col_type( x1, y1, z1 ), col_type( x2, y2, z2 ) }
+        {
+        }
+
+        constexpr matrix( col_type const &v0, col_type const &v1, col_type const &v2 )
+            : value{ col_type( v0 ), col_type( v1 ), col_type( v2 ) }
+        {
+        }
 
         // -- Conversions --
 
         template <typename X1, typename Y1, typename Z1, typename X2, typename Y2, typename Z2, typename X3, typename Y3, typename Z3>
-        constexpr matrix( X1 x1, Y1 y1, Z1 z1, X2 x2, Y2 y2, Z2 z2, X3 x3, Y3 y3, Z3 z3 );
+        constexpr matrix( X1 x1, Y1 y1, Z1 z1, X2 x2, Y2 y2, Z2 z2, X3 x3, Y3 y3, Z3 z3 )
+            : value{ col_type( x1, y1, z1 ), col_type( x2, y2, z2 ), col_type( x3, y3, z3 ) }
+        {
+        }
 
         template <typename V1, typename V2, typename V3>
-        constexpr matrix( vect<3, V1> const &v1, vect<3, V2> const &v2, vect<3, V3> const &v3 );
+        constexpr matrix( vect<3, V1> const &v1, vect<3, V2> const &v2, vect<3, V3> const &v3 )
+            : value{ col_type( v1 ), col_type( v2 ), col_type( v3 ) }
+        {
+        }
 
         // -- Matrix conversions --
         template <size_t _Rows2, size_t _Columns2, typename U>
@@ -66,7 +90,7 @@ namespace numlua::linalg
 
             for( int i = 0; i < colums; i++ )
                 value[i] = col_type( m[i] );
-                
+
             if( columns < length() )
                 for( int i = columns; i < length; i++ )
                     value[i] = col_type( 0 );

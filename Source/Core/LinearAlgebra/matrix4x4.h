@@ -43,13 +43,31 @@ namespace numlua::linalg
 
         // -- Constructors --
 
-        LINALG_FUNCTION matrix() = default;
-        constexpr matrix( matrix<4, 4, T> const &m );
+        LINALG_FUNCTION matrix()
+            : value{ col_type( 1, 0, 0, 0 ), col_type( 0, 1, 0, 0 ), col_type( 0, 0, 1, 0 ), col_type( 0, 0, 0, 1 ) }
+        {
+        }
 
-        constexpr matrix( T s );
+        constexpr matrix( matrix<4, 4, T> const &m )
+            : value{ col_type( m[0] ), col_type( m[1] ), col_type( m[2] ), col_type( m[3] ) }
+        {
+        }
+
+        constexpr matrix( T s )
+            : value{ col_type( s, 0, 0, 0 ), col_type( 0, s, 0, 0 ), col_type( 0, 0, s, 0 ), col_type( 0, 0, 0, s ) }
+        {
+        }
+
         constexpr matrix( T const &x0, T const &y0, T const &z0, T const &w0, T const &x1, T const &y1, T const &z1, T const &w1,
-                          T const &x2, T const &y2, T const &z2, T const &w2, T const &x3, T const &y3, T const &z3, T const &w3 );
-        constexpr matrix( col_type const &v0, col_type const &v1, col_type const &v2, col_type const &v3 );
+                          T const &x2, T const &y2, T const &z2, T const &w2, T const &x3, T const &y3, T const &z3, T const &w3 )
+            : value{ col_type( x0, y0, z0, w0 ), col_type( x1, y1, z1, w1 ), col_type( x2, y2, z2, w2 ), col_type( x3, y3, z3, w3 ) }
+        {
+        }
+        
+        constexpr matrix( col_type const &v0, col_type const &v1, col_type const &v2, col_type const &v3 )
+            : value{ col_type( v0 ), col_type( v1 ), col_type( v2 ), col_type( v3 ) }
+        {
+        }
 
         // -- Conversions --
 
@@ -57,10 +75,16 @@ namespace numlua::linalg
                   typename Y3, typename Z3, typename W3, typename X4, typename Y4, typename Z4, typename W4>
         constexpr matrix( X1 const &x1, Y1 const &y1, Z1 const &z1, W1 const &w1, X2 const &x2, Y2 const &y2, Z2 const &z2,
                           W2 const &w2, X3 const &x3, Y3 const &y3, Z3 const &z3, W3 const &w3, X4 const &x4, Y4 const &y4,
-                          Z4 const &z4, W4 const &w4 );
+                          Z4 const &z4, W4 const &w4 )
+            : value{ col_type( x0, y0, z0, w0 ), col_type( x1, y1, z1, w1 ), col_type( x2, y2, z2, w2 ), col_type( x3, y3, z3, w3 ) }
+        {
+        }
 
         template <typename V1, typename V2, typename V3, typename V4>
-        constexpr matrix( vect<4, V1> const &v1, vect<4, V2> const &v2, vect<4, V3> const &v3, vect<4, V4> const &v4 );
+        constexpr matrix( vect<4, V1> const &v1, vect<4, V2> const &v2, vect<4, V3> const &v3, vect<4, V4> const &v4 )
+            : value{ col_type( v0 ), col_type( v1 ), col_type( v2 ), col_type( v3 ) }
+        {
+        }
 
         // -- Matrix conversions --
         template <size_t _Rows2, size_t _Columns2, typename U>
@@ -70,7 +94,7 @@ namespace numlua::linalg
 
             for( int i = 0; i < colums; i++ )
                 value[i] = col_type( m[i] );
-                
+
             if( columns < length() )
                 for( int i = columns; i < length; i++ )
                     value[i] = col_type( 0 );
