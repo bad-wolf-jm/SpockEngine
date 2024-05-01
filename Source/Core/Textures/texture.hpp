@@ -16,9 +16,9 @@ namespace numlua::core
     {
       public:
         typedef size_t                    size_type;
-        typedef numlua::core::target               target_type;
-        typedef numlua::core::format               format_type;
-        typedef numlua::core::swizzles             swizzles_type;
+        typedef numlua::core::target      target_type;
+        typedef numlua::core::format      format_type;
+        typedef numlua::core::swizzles    swizzles_type;
         typedef storage_linear            storage_type;
         typedef storage_type::data_type   data_type;
         typedef storage_type::extent_type extent_type;

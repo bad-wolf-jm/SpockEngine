@@ -141,7 +141,7 @@ namespace numlua::core
         for( size_t BlockIndexZ = 0, BlockCountZ = BlockCount.z; BlockIndexZ < BlockCountZ; ++BlockIndexZ )
             for( size_t BlockIndexY = 0, BlockCountY = BlockCount.y; BlockIndexY < BlockCountY; ++BlockIndexY )
             {
-                extent_type const BlockIndex( 0, BlockIndexY, BlockIndexZ );
+                extent_type const          BlockIndex( 0, BlockIndexY, BlockIndexZ );
                 numlua::core::size_t const OffsetSrc =
                     StorageSrc.image_offset( BlockIndexSrc + BlockIndex, StorageSrc.extent( LevelSrc ) ) * StorageSrc.block_size();
                 numlua::core::size_t const OffsetDst =

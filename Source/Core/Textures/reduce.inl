@@ -2,9 +2,9 @@
 #include "./sampler1d_array.hpp"
 #include "./sampler2d.hpp"
 #include "./sampler2d_array.hpp"
-#include "sampler3d.hpp"
 #include "./sampler_cube.hpp"
 #include "./sampler_cube_array.hpp"
+#include "sampler3d.hpp"
 
 namespace numlua::core
 {
@@ -34,9 +34,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler1d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type               TexelIndex( 0 );
-                vec<4, val_type>          Result(
+                sampler1d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0 ), SamplerB.template fetch( TexelIndex, 0 ) ) );
 
                 for( size_type LevelIndex = 0, LevelCount = A.levels(); LevelIndex < LevelCount; ++LevelIndex )
@@ -65,9 +66,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler1d_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type                     TexelIndex( 0 );
-                vec<4, val_type>                Result(
+                sampler1d_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0 ) ) );
 
                 for( size_type LayerIndex = 0, LayerCount = A.layers(); LayerIndex < LayerCount; ++LayerIndex )
@@ -97,9 +99,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler2d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type               TexelIndex( 0 );
-                vec<4, val_type>          Result(
+                sampler2d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0 ), SamplerB.template fetch( TexelIndex, 0 ) ) );
 
                 for( size_type LevelIndex = 0, LevelCount = A.levels(); LevelIndex < LevelCount; ++LevelIndex )
@@ -129,9 +132,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler2d_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type                     TexelIndex( 0 );
-                vec<4, val_type>                Result(
+                sampler2d_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0 ) ) );
 
                 for( size_type LayerIndex = 0, LayerCount = A.layers(); LayerIndex < LayerCount; ++LayerIndex )
@@ -163,9 +167,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler3d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type               TexelIndex( 0 );
-                vec<4, val_type>          Result(
+                sampler3d<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0 ), SamplerB.template fetch( TexelIndex, 0 ) ) );
 
                 for( size_type LevelIndex = 0, LevelCount = A.levels(); LevelIndex < LevelCount; ++LevelIndex )
@@ -196,9 +201,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler_cube<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type                  TexelIndex( 0 );
-                vec<4, val_type>             Result(
+                sampler_cube<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0 ) ) );
 
                 for( size_type FaceIndex = 0, FaceCount = A.faces(); FaceIndex < FaceCount; ++FaceIndex )
@@ -230,9 +236,10 @@ namespace numlua::core
             {
                 GLI_ASSERT( are_compatible( A, B ) );
 
-                sampler_cube_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ), SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
-                extent_type                        TexelIndex( 0 );
-                vec<4, val_type>                   Result(
+                sampler_cube_array<val_type> const SamplerA( A, numlua::core::WRAP_CLAMP_TO_EDGE ),
+                    SamplerB( B, numlua::core::WRAP_CLAMP_TO_EDGE );
+                extent_type      TexelIndex( 0 );
+                vec<4, val_type> Result(
                     TexelFunc( SamplerA.template fetch( TexelIndex, 0, 0, 0 ), SamplerB.template fetch( TexelIndex, 0, 0, 0 ) ) );
 
                 for( size_type LayerIndex = 0, LayerCount = A.layers(); LayerIndex < LayerCount; ++LayerIndex )

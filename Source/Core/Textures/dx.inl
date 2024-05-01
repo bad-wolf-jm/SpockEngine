@@ -341,7 +341,7 @@ namespace numlua::core
         numlua::core::format FormatResult = numlua::core::FORMAT_UNDEFINED;
         for( int FormatIndex = FORMAT_FIRST; FormatIndex <= FORMAT_LAST; ++FormatIndex )
         {
-            numlua::core::format               CurrentFormat = static_cast<numlua::core::format>( FormatIndex );
+            numlua::core::format      CurrentFormat = static_cast<numlua::core::format>( FormatIndex );
             detail::formatInfo const &FormatInfo    = detail::get_format_info( CurrentFormat );
 
             dx::format const &DXFormat = this->Translation[FormatIndex - FORMAT_FIRST];

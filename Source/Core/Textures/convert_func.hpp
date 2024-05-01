@@ -1,5 +1,7 @@
 #pragma once
 
+#include "./bc.hpp"
+#include "./s3tc.hpp"
 #include "./texture1d.hpp"
 #include "./texture1d_array.hpp"
 #include "./texture2d.hpp"
@@ -8,8 +10,6 @@
 #include "./texture_cube.hpp"
 #include "./texture_cube_array.hpp"
 #include "./type.hpp"
-#include "./bc.hpp"
-#include "./s3tc.hpp"
 #include <glm/gtc/color_space.hpp>
 #include <glm/gtc/packing.hpp>
 #include <limits>

@@ -24,8 +24,8 @@ namespace numlua::core
     class storage_linear
     {
       public:
-        typedef extent3d    extent_type;
-        typedef size_t      size_type;
+        typedef extent3d             extent_type;
+        typedef size_t               size_type;
         typedef numlua::core::format format_type;
         typedef numlua::core::byte   data_type;
 

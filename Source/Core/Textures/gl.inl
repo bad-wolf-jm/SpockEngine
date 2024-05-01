@@ -332,7 +332,8 @@ namespace numlua::core
         return FormatGL;
     }
 
-    inline numlua::core::format gl::find( gl::internal_format InternalFormat, gl::external_format ExternalFormat, gl::type_format Type )
+    inline numlua::core::format gl::find( gl::internal_format InternalFormat, gl::external_format ExternalFormat,
+                                          gl::type_format Type )
     {
         for( int FormatIndex = FORMAT_FIRST; FormatIndex <= FORMAT_LAST; ++FormatIndex )
         {
@@ -358,6 +359,7 @@ namespace numlua::core
             ( ( FormatDesc.Properties & detail::FORMAT_PROPERTY_BGRA_FORMAT_BIT ) && !has_swizzle( this->Profile ) ) ||
             ( FormatDesc.Properties & detail::FORMAT_PROPERTY_BGRA_TYPE_BIT );
 
-        return detail::translate( IsExternalBGRA ? numlua::core::swizzles( Swizzles.b, Swizzles.g, Swizzles.r, Swizzles.a ) : Swizzles );
+        return detail::translate( IsExternalBGRA ? numlua::core::swizzles( Swizzles.b, Swizzles.g, Swizzles.r, Swizzles.a )
+                                                 : Swizzles );
     }
 } // namespace numlua::core
