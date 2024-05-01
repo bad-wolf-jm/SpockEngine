@@ -11,7 +11,7 @@
 
 namespace numlua::linalg
 {
-    template <typename T, qualifier Q>
+    template <typename T>
     struct matrix<2, 4, T>
     {
         typedef vect<4, T>      col_type;
@@ -67,7 +67,7 @@ namespace numlua::linalg
 
             for( int i = 0; i < colums; i++ )
                 value[i] = col_type( m[i] );
-                
+
             if( columns < length() )
                 for( int i = columns; i < length; i++ )
                     value[i] = col_type( 0 );

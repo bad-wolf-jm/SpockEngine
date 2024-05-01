@@ -10,7 +10,7 @@
 
 namespace numlua::linalg
 {
-    template <typename T, qualifier Q>
+    template <typename T>
     struct matrix<4, 4, T>
     {
         typedef vect<4, T>      col_type;
