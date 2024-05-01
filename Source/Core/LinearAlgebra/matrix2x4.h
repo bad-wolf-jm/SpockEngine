@@ -60,18 +60,30 @@ namespace numlua::linalg
         constexpr matrix( vect<4, U> const &v1, vect<4, V> const &v2 );
 
         // -- Matrix conversions --
+        template <size_t _Rows2, size_t _Columns2, typename U>
+        constexpr matrix( matrix<_Rows2, _Columns2, U> const &m )
+        {
+            int colums = std::min( length(), m.length() );
 
-        template <typename U>
-        constexpr matrix( matrix<2, 4, U> const &m );
+            for( int i = 0; i < colums; i++ )
+                value[i] = col_type( m[i] );
+                
+            if( columns < length() )
+                for( int i = columns; i < length; i++ )
+                    value[i] = col_type( 0 );
+        }
 
-        constexpr matrix( matrix<2, 2, T> const &x );
-        constexpr matrix( matrix<3, 3, T> const &x );
-        constexpr matrix( matrix<4, 4, T> const &x );
-        constexpr matrix( matrix<2, 3, T> const &x );
-        constexpr matrix( matrix<3, 2, T> const &x );
-        constexpr matrix( matrix<3, 4, T> const &x );
-        constexpr matrix( matrix<4, 2, T> const &x );
-        constexpr matrix( matrix<4, 3, T> const &x );
+        // template <typename U>
+        // constexpr matrix( matrix<2, 4, U> const &m );
+
+        // constexpr matrix( matrix<2, 2, T> const &x );
+        // constexpr matrix( matrix<3, 3, T> const &x );
+        // constexpr matrix( matrix<4, 4, T> const &x );
+        // constexpr matrix( matrix<2, 3, T> const &x );
+        // constexpr matrix( matrix<3, 2, T> const &x );
+        // constexpr matrix( matrix<3, 4, T> const &x );
+        // constexpr matrix( matrix<4, 2, T> const &x );
+        // constexpr matrix( matrix<4, 3, T> const &x );
 
         // -- Unary arithmetic operators --
 

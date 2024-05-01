@@ -78,52 +78,64 @@ namespace numlua::linalg
         constexpr matrix( vect<2, V1> const &v1, vect<2, V2> const &v2, vect<2, V3> const &v3 );
 
         // -- Matrix conversions --
-
-        template <typename U>
-        constexpr matrix( matrix<3, 2, U> const &m )
-            : value{ col_type( m[0] ), col_type( m[1] ) }
+        template <size_t _Rows2, size_t _Columns2, typename U>
+        constexpr matrix( matrix<_Rows2, _Columns2, U> const &m )
         {
+            int colums = std::min( length(), m.length() );
+
+            for( int i = 0; i < colums; i++ )
+                value[i] = col_type( m[i] );
+                
+            if( columns < length() )
+                for( int i = columns; i < length; i++ )
+                    value[i] = col_type( 0 );
         }
 
-        constexpr matrix( matrix<3, 3, T> const &x )
-            : value{ col_type( m[0] ), col_type( m[1] ) }
-        {
-        }
+        // template <typename U>
+        // constexpr matrix( matrix<3, 2, U> const &m )
+        //     : value{ col_type( m[0] ), col_type( m[1] ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<2, 2, T> const &x )
-            : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
-        {
-        }
+        // constexpr matrix( matrix<3, 3, T> const &x )
+        //     : value{ col_type( m[0] ), col_type( m[1] ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<4, 4, T> const &x )
-            : value{ col_type( m[0] ), col_type( m[1] ) }
-        {
-        }
+        // constexpr matrix( matrix<2, 2, T> const &x )
+        //     : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<2, 3, T> const &x )
-            : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
-        {
-        }
+        // constexpr matrix( matrix<4, 4, T> const &x )
+        //     : value{ col_type( m[0] ), col_type( m[1] ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<2, 4, T> const &x )
-            : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
-        {
-        }
+        // constexpr matrix( matrix<2, 3, T> const &x )
+        //     : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<3, 4, T> const &x )
-            : value{ col_type( m[0] ), col_type( m[1] ) }
-        {
-        }
+        // constexpr matrix( matrix<2, 4, T> const &x )
+        //     : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<4, 2, T> const &x )
-            : value{ col_type( m[0] ), col_type( m[1] ) }
-        {
-        }
+        // constexpr matrix( matrix<3, 4, T> const &x )
+        //     : value{ col_type( m[0] ), col_type( m[1] ) }
+        // {
+        // }
 
-        constexpr matrix( matrix<4, 3, T> const &x )
-            : value{ col_type( m[0] ), col_type( m[1] ) }
-        {
-        }
+        // constexpr matrix( matrix<4, 2, T> const &x )
+        //     : value{ col_type( m[0] ), col_type( m[1] ) }
+        // {
+        // }
+
+        // constexpr matrix( matrix<4, 3, T> const &x )
+        //     : value{ col_type( m[0] ), col_type( m[1] ) }
+        // {
+        // }
 
         // -- Unary arithmetic operators --
 

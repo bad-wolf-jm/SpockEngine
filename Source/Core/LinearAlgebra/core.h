@@ -14,6 +14,11 @@ namespace numlua::linalg
     };
 
     template <size_t _Rows, size_t _Columns, typename _Ty>
+    struct matrix_algebra
+    {
+    };
+
+    template <size_t _Rows, size_t _Columns, typename _Ty>
     struct matrix
     {
     };
