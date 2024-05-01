@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "texture.hpp"
+#include "../texture.hpp"
 
 namespace numlua::core
 {

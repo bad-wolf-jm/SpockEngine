@@ -1,5 +1,5 @@
 #include "file.hpp"
-#include "load_ktx.hpp"
+#include "./load_ktx.hpp"
 #include <cstdio>
 #include <glm/gtc/round.hpp>
 

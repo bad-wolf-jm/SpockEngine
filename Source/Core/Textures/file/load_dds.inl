@@ -1,4 +1,4 @@
-#include "./dx.hpp"
+#include "../dx.hpp"
 #include "file.hpp"
 #include <cassert>
 #include <cstdio>
