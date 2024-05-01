@@ -1,10 +1,10 @@
-#include "../sampler1d.hpp"
-#include "../sampler1d_array.hpp"
-#include "../sampler2d.hpp"
-#include "../sampler2d_array.hpp"
-#include "../sampler3d.hpp"
-#include "../sampler_cube.hpp"
-#include "../sampler_cube_array.hpp"
+#include "./sampler1d.hpp"
+#include "./sampler1d_array.hpp"
+#include "./sampler2d.hpp"
+#include "./sampler2d_array.hpp"
+#include "./sampler3d.hpp"
+#include "./sampler_cube.hpp"
+#include "./sampler_cube_array.hpp"
 
 namespace numlua::core
 {

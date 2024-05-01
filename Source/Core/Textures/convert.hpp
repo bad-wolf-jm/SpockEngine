@@ -22,4 +22,4 @@ namespace numlua::core
     texture_type convert( texture_type const &Texture, format Format );
 } // namespace numlua::core
 
-#include "./core/convert.inl"
+#include "./convert.inl"

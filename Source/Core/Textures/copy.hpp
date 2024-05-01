@@ -44,4 +44,4 @@ namespace numlua::core
                      size_t LayerCount );
 } // namespace numlua::core
 
-#include "./core/copy.inl"
+#include "./copy.inl"

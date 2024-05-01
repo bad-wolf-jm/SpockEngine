@@ -370,4 +370,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/gl.inl"
+#include "./gl.inl"

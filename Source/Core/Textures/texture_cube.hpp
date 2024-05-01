@@ -52,4 +52,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/texture_cube.inl"
+#include "./texture_cube.inl"

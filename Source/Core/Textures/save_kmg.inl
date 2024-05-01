@@ -1,4 +1,4 @@
-#include "../load_kmg.hpp"
+#include "./load_kmg.hpp"
 #include "file.hpp"
 #include "filter.hpp"
 #include <cstdio>

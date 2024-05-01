@@ -489,4 +489,4 @@ namespace numlua::core
     bool is_dds_ext( target Target, format Format );
 } // namespace numlua::core
 
-#include "./core/dx.inl"
+#include "./dx.inl"

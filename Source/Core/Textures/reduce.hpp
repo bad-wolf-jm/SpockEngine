@@ -100,4 +100,4 @@ namespace numlua::core
                      typename reduce_func<vec_type>::type ReduceFunc );
 } // namespace numlua::core
 
-#include "./core/reduce.inl"
+#include "./reduce.inl"

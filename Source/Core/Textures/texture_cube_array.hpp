@@ -53,4 +53,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/texture_cube_array.inl"
+#include "./texture_cube_array.inl"

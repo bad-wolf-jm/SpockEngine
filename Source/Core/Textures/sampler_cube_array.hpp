@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "core/convert_func.hpp"
-#include "core/mipmaps_compute.hpp"
+#include "convert_func.hpp"
+#include "mipmaps_compute.hpp"
 #include "sampler.hpp"
 #include "texture_cube_array.hpp"
 
@@ -73,4 +73,4 @@ namespace numlua::core
 
 } // namespace numlua::core
 
-#include "./core/sampler_cube_array.inl"
+#include "./sampler_cube_array.inl"

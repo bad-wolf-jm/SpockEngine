@@ -1,4 +1,4 @@
-#include "../load_dds.hpp"
+#include "./load_dds.hpp"
 #include "file.hpp"
 #include <cstdio>
 

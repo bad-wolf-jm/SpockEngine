@@ -69,4 +69,4 @@ namespace numlua::core
                   texture_cube_array::size_type BaseLevel, texture_cube_array::size_type MaxLevel );
 } // namespace numlua::core
 
-#include "./core/view.inl"
+#include "./view.inl"

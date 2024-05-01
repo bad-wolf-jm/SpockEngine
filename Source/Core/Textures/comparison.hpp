@@ -27,4 +27,4 @@ namespace numlua::core
     bool operator!=( texture const &A, texture const &B );
 } // namespace numlua::core
 
-#include "./core/comparison.inl"
+#include "./comparison.inl"

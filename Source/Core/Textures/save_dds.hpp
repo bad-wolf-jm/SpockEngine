@@ -31,4 +31,4 @@ namespace numlua::core
     bool save_dds( texture const &Texture, std::vector<char> &Memory );
 } // namespace numlua::core
 
-#include "./core/save_dds.inl"
+#include "./save_dds.inl"

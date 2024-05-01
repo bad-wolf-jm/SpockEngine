@@ -55,4 +55,4 @@ namespace numlua::core
                        texture_cube_array::size_type MaxLevel );
 } // namespace numlua::core
 
-#include "./core/duplicate.inl"
+#include "./duplicate.inl"

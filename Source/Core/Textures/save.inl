@@ -1,6 +1,6 @@
-#include "../save_dds.hpp"
-#include "../save_kmg.hpp"
-#include "../save_ktx.hpp"
+#include "./save_dds.hpp"
+#include "./save_kmg.hpp"
+#include "./save_ktx.hpp"
 
 namespace numlua::core
 {

@@ -24,4 +24,4 @@ namespace numlua::core
     texture load( char const *Data, std::size_t Size );
 } // namespace numlua::core
 
-#include "./core/load.inl"
+#include "./load.inl"

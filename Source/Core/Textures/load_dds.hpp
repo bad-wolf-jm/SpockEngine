@@ -24,4 +24,4 @@ namespace numlua::core
     texture load_dds( char const *Data, std::size_t Size );
 } // namespace numlua::core
 
-#include "./core/load_dds.inl"
+#include "./load_dds.inl"

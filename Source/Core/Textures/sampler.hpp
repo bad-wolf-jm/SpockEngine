@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "core/filter.hpp"
+#include "filter.hpp"
 
 namespace numlua::core
 {
@@ -49,4 +49,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/sampler.inl"
+#include "./sampler.inl"

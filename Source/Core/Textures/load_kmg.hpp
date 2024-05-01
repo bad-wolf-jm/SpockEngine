@@ -24,4 +24,4 @@ namespace numlua::core
     texture load_kmg( char const *Data, std::size_t Size );
 } // namespace numlua::core
 
-#include "./core/load_kmg.inl"
+#include "./load_kmg.inl"

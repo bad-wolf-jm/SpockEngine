@@ -9,8 +9,8 @@
 #include <string>
 #include <vector>
 
-#include "../format.hpp"
-#include "../type.hpp"
+#include "./format.hpp"
+#include "./type.hpp"
 
 // GLM
 #include <glm/gtc/bitfield.hpp>

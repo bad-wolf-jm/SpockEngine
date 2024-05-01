@@ -48,4 +48,4 @@ namespace numlua::core
     numlua::core::texture make_texture_cube_array( format Format, extent2d const &Extent, size_t Layer );
 } // namespace numlua::core
 
-#include "./core/make_texture.inl"
+#include "./make_texture.inl"

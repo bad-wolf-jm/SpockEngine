@@ -25,4 +25,4 @@ namespace numlua::core
     bool save( texture const &Texture, std::string const &Path );
 } // namespace numlua::core
 
-#include "./core/save.inl"
+#include "./save.inl"

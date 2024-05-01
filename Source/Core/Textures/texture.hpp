@@ -285,4 +285,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/texture.inl"
+#include "./texture.inl"

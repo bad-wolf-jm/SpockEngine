@@ -1,4 +1,4 @@
-#include "../core/convert_func.hpp"
+#include "convert_func.hpp"
 
 namespace numlua::core
 {

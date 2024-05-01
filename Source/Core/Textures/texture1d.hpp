@@ -52,4 +52,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/texture1d.inl"
+#include "./texture1d.inl"

@@ -78,4 +78,4 @@ namespace numlua::core
 #include "dx.hpp"
 #include "gl.hpp"
 
-#include "./core/flip.hpp"
+#include "./flip.hpp"

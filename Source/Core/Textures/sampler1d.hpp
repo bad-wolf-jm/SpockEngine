@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "core/convert_func.hpp"
-#include "core/mipmaps_compute.hpp"
+#include "convert_func.hpp"
+#include "mipmaps_compute.hpp"
 #include "sampler.hpp"
 #include "texture1d.hpp"
 
@@ -71,4 +71,4 @@ namespace numlua::core
     typedef sampler1d<int>          isampler1D;
 } // namespace numlua::core
 
-#include "./core/sampler1d.inl"
+#include "./sampler1d.inl"

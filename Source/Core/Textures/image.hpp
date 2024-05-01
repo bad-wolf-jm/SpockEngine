@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "./core/storage_linear.hpp"
+#include "./storage_linear.hpp"
 
 namespace numlua::core
 {
@@ -105,4 +105,4 @@ namespace numlua::core
     };
 } // namespace numlua::core
 
-#include "./core/image.inl"
+#include "./image.inl"

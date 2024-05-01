@@ -31,4 +31,4 @@ namespace numlua::core
     bool save_ktx( texture const &Texture, std::vector<char> &Memory );
 } // namespace numlua::core
 
-#include "./core/save_ktx.inl"
+#include "./save_ktx.inl"

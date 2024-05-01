@@ -24,4 +24,4 @@ namespace numlua::core
     texture load_ktx( char const *Data, std::size_t Size );
 } // namespace numlua::core
 
-#include "./core/load_ktx.inl"
+#include "./load_ktx.inl"

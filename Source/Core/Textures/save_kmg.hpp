@@ -31,4 +31,4 @@ namespace numlua::core
     bool save_kmg( texture const &Texture, std::vector<char> &Memory );
 } // namespace numlua::core
 
-#include "./core/save_kmg.inl"
+#include "./save_kmg.inl"

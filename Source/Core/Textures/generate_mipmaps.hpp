@@ -58,4 +58,4 @@ namespace numlua::core
                                          texture_cube_array::size_type MaxLevel, filter Minification );
 } // namespace numlua::core
 
-#include "./core/generate_mipmaps.inl"
+#include "./generate_mipmaps.inl"
