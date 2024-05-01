@@ -72,8 +72,8 @@ namespace numlua::core
 #include "reduce.hpp"
 #include "transform.hpp"
 
-#include "load.hpp"
-#include "save.hpp"
+#include "file/load.hpp"
+#include "file/save.hpp"
 
 #include "dx.hpp"
 #include "gl.hpp"
