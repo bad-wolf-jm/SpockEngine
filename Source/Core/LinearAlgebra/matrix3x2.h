@@ -32,17 +32,42 @@ namespace numlua::linalg
             return 3;
         }
 
-        LINALG_FUNCTION col_type       &operator[]( length_type i ) noexcept;
-        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept;
+        LINALG_FUNCTION col_type &operator[]( length_type i ) noexcept
+        {
+            return this->value[i];
+        }
+
+        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept
+        {
+            return this->value[i];
+        }
 
         // -- Constructors --
 
-        LINALG_FUNCTION matrix() = default;
-        constexpr matrix( matrix<3, 2, T> const &m );
+        LINALG_FUNCTION matrix()
+            : value{ col_type( 1, 0, 0 ), col_type( 0, 1, 0 ) }
+        {
+        }
 
-        constexpr matrix( T scalar );
-        constexpr matrix( T x0, T y0, T x1, T y1, T x2, T y2 );
-        constexpr matrix( col_type const &v0, col_type const &v1, col_type const &v2 );
+        constexpr matrix( matrix<3, 2, T> const &m )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
+
+        constexpr matrix( T scalar )
+            : value{ col_type( scalar, 0, 0 ), col_type( 0, scalar, 0 ) }
+        {
+        }
+
+        constexpr matrix( T x0, T y0, T z0, T x1, T y1, T z1 )
+            : value{ col_type( x0, y0, z0 ), col_type( x1, y1, z1 ) }
+        {
+        }
+
+        constexpr matrix( col_type const &v0, col_type const &v1 )
+            : value{ col_type( v0 ), col_type( v1 ) }
+        {
+        }
 
         // -- Conversions --
 
@@ -55,20 +80,54 @@ namespace numlua::linalg
         // -- Matrix conversions --
 
         template <typename U>
-        constexpr matrix( matrix<3, 2, U> const &m );
+        constexpr matrix( matrix<3, 2, U> const &m )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
 
-        constexpr matrix( matrix<2, 2, T> const &x );
-        constexpr matrix( matrix<3, 3, T> const &x );
-        constexpr matrix( matrix<4, 4, T> const &x );
-        constexpr matrix( matrix<2, 3, T> const &x );
-        constexpr matrix( matrix<2, 4, T> const &x );
-        constexpr matrix( matrix<3, 4, T> const &x );
-        constexpr matrix( matrix<4, 2, T> const &x );
-        constexpr matrix( matrix<4, 3, T> const &x );
+        constexpr matrix( matrix<3, 3, T> const &x )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
+
+        constexpr matrix( matrix<2, 2, T> const &x )
+            : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
+        {
+        }
+
+        constexpr matrix( matrix<4, 4, T> const &x )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
+
+        constexpr matrix( matrix<2, 3, T> const &x )
+            : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
+        {
+        }
+
+        constexpr matrix( matrix<2, 4, T> const &x )
+            : value{ col_type( m[0], 0 ), col_type( m[1], 0 ) }
+        {
+        }
+
+        constexpr matrix( matrix<3, 4, T> const &x )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
+
+        constexpr matrix( matrix<4, 2, T> const &x )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
+
+        constexpr matrix( matrix<4, 3, T> const &x )
+            : value{ col_type( m[0] ), col_type( m[1] ) }
+        {
+        }
 
         // -- Unary arithmetic operators --
 
-                template <typename U>
+        template <typename U>
         LINALG_FUNCTION matrix_type<T> &operator=( matrix_type<U> const &m )
         {
             for( int i = 0; i < length(); i++ )
@@ -191,7 +250,7 @@ namespace numlua::linalg
     // template <typename T, qualifier Q>
     // LINALG_FUNCTION bool operator!=( matrix<3, 2, T> const &m1, matrix<3, 2, T> const &m2 );
 
-} // namespace glm
+} // namespace numlua::linalg
 
 // #ifndef GLM_EXTERNAL_TEMPLATE
 // #    include "type_mat3x2.inl"
