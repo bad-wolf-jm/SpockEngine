@@ -12,9 +12,12 @@ namespace numlua::linalg
     template <typename T>
     struct matrix<2, 2, T>
     {
-        typedef vect<2, T>      col_type;
-        typedef vect<2, T>      row_type;
-        typedef matrix<2, 2, T> type;
+        typedef vect<2, T> col_type;
+        typedef vect<2, T> row_type;
+
+        template <typename U>
+        using matrix_type = matrix<2, 2, T>;
+
         typedef matrix<2, 2, T> transpose_type;
         typedef T               value_type;
         typedef size_t          length_type;
@@ -81,7 +84,7 @@ namespace numlua::linalg
         // -- Matrix conversions --
 
         template <typename U>
-        constexpr matrix( matrix<2, 2, U> const &m )
+        constexpr matrix( matrix_type<U> const &m )
             : value{ col_type( m[0] ), col_type( m[1] ) }
         {
         }
@@ -129,7 +132,7 @@ namespace numlua::linalg
         // -- Unary arithmetic operators --
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix_type<T> &operator=( matrix_type<U> const &m )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] = m[i];
@@ -138,7 +141,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator+=( U s )
+        LINALG_FUNCTION matrix_type<T> &operator+=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] += s;
@@ -147,7 +150,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator+=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix_type<T> &operator+=( matrix_type<U> const &m )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] += m[i];
@@ -156,7 +159,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator-=( U s )
+        LINALG_FUNCTION matrix_type<T> &operator-=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] -= s;
@@ -165,7 +168,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator-=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix_type<T> &operator-=( matrix_type<U> const &m )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] -= m[i];
@@ -174,7 +177,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator*=( U s )
+        LINALG_FUNCTION matrix_type<T> &operator*=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] *= s;
@@ -183,13 +186,13 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator*=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix_type<T> &operator*=( matrix_type<U> const &m )
         {
             return ( *this = *this * m );
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator/=( U s )
+        LINALG_FUNCTION matrix_type<T> &operator/=( U s )
         {
             for( int i = 0; i < length(); i++ )
                 this->value[i] /= s;
@@ -198,7 +201,7 @@ namespace numlua::linalg
         }
 
         template <typename U>
-        LINALG_FUNCTION matrix<2, 2, T> &operator/=( matrix<2, 2, U> const &m )
+        LINALG_FUNCTION matrix_type<T> &operator/=( matrix_type<U> const &m )
         {
             return *this *= inverse( m );
         }

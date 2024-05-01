@@ -69,20 +69,68 @@ namespace numlua::linalg
 
         // -- Unary arithmetic operators --
 
+                template <typename U>
+        LINALG_FUNCTION matrix_type<T> &operator=( matrix_type<U> const &m )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] = m[i];
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator=( matrix<3, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator+=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] += s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator+=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator+=( matrix_type<U> const &m )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] += m[i];
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator+=( matrix<3, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator-=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] -= s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator-=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator-=( matrix_type<U> const &m )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] -= m[i];
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator-=( matrix<3, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator*=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] *= s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator*=( U s );
-        template <typename U>
-        LINALG_FUNCTION matrix<3, 4, T> &operator/=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator/=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] /= s;
+
+            return *this;
+        }
     };
 
     // // -- Unary operators --

@@ -72,23 +72,79 @@ namespace numlua::linalg
         // -- Unary arithmetic operators --
 
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator=( matrix<4, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator=( matrix_type<U> const &m )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] = m[i];
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator+=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator+=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] += s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator+=( matrix<4, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator+=( matrix_type<U> const &m )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] += m[i];
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator-=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator-=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] -= s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator-=( matrix<4, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator-=( matrix_type<U> const &m )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] -= m[i];
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator*=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator*=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] *= s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator*=( matrix<4, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator*=( matrix_type<U> const &m )
+        {
+            return ( *this = *this * m );
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator/=( U s );
+        LINALG_FUNCTION matrix_type<T> &operator/=( U s )
+        {
+            for( int i = 0; i < length(); i++ )
+                this->value[i] /= s;
+
+            return *this;
+        }
+
         template <typename U>
-        LINALG_FUNCTION matrix<4, 4, T> &operator/=( matrix<4, 4, U> const &m );
+        LINALG_FUNCTION matrix_type<T> &operator/=( matrix_type<U> const &m )
+        {
+            return *this *= inverse( m );
+        }
     };
 
     // // -- Unary operators --
@@ -166,7 +222,7 @@ namespace numlua::linalg
 
     // template <typename T, qualifier Q>
     // LINALG_FUNCTION bool operator!=( matrix<4, 4, T> const &m1, matrix<4, 4, T> const &m2 );
-} // namespace glm
+} // namespace numlua::linalg
 
 // #ifndef GLM_EXTERNAL_TEMPLATE
 // #    include "type_mat4x4.inl"
