@@ -31,8 +31,15 @@ namespace numlua::linalg
             return 4;
         }
 
-        LINALG_FUNCTION col_type       &operator[]( length_type i ) noexcept;
-        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept;
+        LINALG_FUNCTION col_type &operator[]( length_type i ) noexcept
+        {
+            return this->value[i];
+        }
+
+        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept
+        {
+            return this->value[i];
+        }
 
         // -- Constructors --
 

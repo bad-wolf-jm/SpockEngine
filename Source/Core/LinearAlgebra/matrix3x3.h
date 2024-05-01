@@ -31,8 +31,15 @@ namespace numlua::linalg
             return 3;
         }
 
-        LINALG_FUNCTION col_type       &operator[]( length_type i ) noexcept;
-        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept;
+        LINALG_FUNCTION col_type &operator[]( length_type i ) noexcept
+        {
+            return this->value[i];
+        }
+
+        LINALG_FUNCTION col_type const &operator[]( length_type i ) const noexcept
+        {
+            return this->value[i];
+        }
 
         // -- Constructors --
 
@@ -218,7 +225,7 @@ namespace numlua::linalg
 
     // template <typename T, qualifier Q>
     // LINALG_FUNCTION bool operator!=( matrix<3, 3, T> const &m1, matrix<3, 3, T> const &m2 );
-} // namespace glm
+} // namespace numlua::linalg
 
 // #ifndef GLM_EXTERNAL_TEMPLATE
 // #    include "type_mat3x3.inl"
