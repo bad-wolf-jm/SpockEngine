@@ -102,23 +102,23 @@ namespace numlua::mtops
         {
         case scalar_type_t::FLOAT32:
         {
-            float lMean = std::get<float>( aMu );
-            float lStd  = std::get<float>( aSigma );
+            float _mu  = std::get<float>( aMu );
+            float lStd = std::get<float>( aSigma );
             if( lStd <= 0.0f )
                 std::runtime_error( "Variance parameter should be strictly positive" );
             RandomNumberGenerator lGenerator{};
-            CURAND_ASSERT( curandGenerateNormal( lGenerator.Generator, aArray.DataAs<float>(), aArray.SizeAs<float>(), lMean, lStd ) );
+            CURAND_ASSERT( curandGenerateNormal( lGenerator.Generator, aArray.DataAs<float>(), aArray.SizeAs<float>(), _mu, lStd ) );
         }
         break;
         case scalar_type_t::FLOAT64:
         {
-            double lMean = std::get<double>( aMu );
-            double lStd  = std::get<double>( aSigma );
+            double _mu  = std::get<double>( aMu );
+            double lStd = std::get<double>( aSigma );
             if( lStd <= 0.0f )
                 std::runtime_error( "Variance parameter should be strictly positive" );
             RandomNumberGenerator lGenerator{};
             CURAND_ASSERT(
-                curandGenerateNormalDouble( lGenerator.Generator, aArray.DataAs<double>(), aArray.SizeAs<double>(), lMean, lStd ) );
+                curandGenerateNormalDouble( lGenerator.Generator, aArray.DataAs<double>(), aArray.SizeAs<double>(), _mu, lStd ) );
         }
         break;
         default:
@@ -2005,4 +2005,4 @@ namespace numlua::mtops
                           ( out, aArray0, aElementCount0, aArray1, aElementCount1, blockSizes0, maxBlockSize0 ) );
     }
 
-} // namespace SE::TensorOps
+} // namespace numlua::mtops

@@ -61,9 +61,9 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lOutArray = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOutArray[i] = left.DataAs<_Ty>()[blockIdx.x] + i * aDelta.DataAs<_Ty>()[blockIdx.x];
+        _out[i] = left.DataAs<_Ty>()[blockIdx.x] + i * aDelta.DataAs<_Ty>()[blockIdx.x];
     }
 
     template <typename _Ty>
@@ -74,11 +74,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( left.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray    = left.DeviceBufferAt<_Ty>( layer );
-        _Ty *lConstant = right.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut      = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array    = left.DeviceBufferAt<_Ty>( layer );
+        _Ty *_constant = right.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out      = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lArray[i] + lConstant[i];
+        _out[i] = _array[i] + _constant[i];
     }
 
     template <typename _Ty>
@@ -90,28 +90,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] + lRight[i];
+            _out[i] = _left[0] + _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] + lRight[0];
+            _out[i] = _left[i] + _right[0];
         }
         break;
         default:
@@ -127,9 +127,9 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut   = out.DeviceBufferAt<_Ty>( layer );
-        lOut[i]     = lArray[i] + constant;
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
+        _out[i]     = _array[i] + constant;
     }
 
     template <typename _Ty>
@@ -140,10 +140,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lIn[i] + constants.DataAs<_Ty>()[blockIdx.x];
+        _out[i] = _in[i] + constants.DataAs<_Ty>()[blockIdx.x];
     }
 
     template <typename _Ty>
@@ -154,11 +154,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray    = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lConstant = constant.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut      = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array    = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_constant = constant.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out      = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lArray[i] * lConstant[i];
+        _out[i] = _array[i] * _constant[i];
     }
 
     template <typename _Ty>
@@ -170,28 +170,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] * lRight[i];
+            _out[i] = _left[0] * _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] * lRight[0];
+            _out[i] = _left[i] * _right[0];
         }
         break;
         default:
@@ -207,10 +207,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut   = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lArray[i] * constant;
+        _out[i] = _array[i] * constant;
     }
 
     template <typename _Ty>
@@ -221,10 +221,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lIn[i] * constant.DataAs<_Ty>()[blockIdx.x];
+        _out[i] = _in[i] * constant.DataAs<_Ty>()[blockIdx.x];
     }
 
     template <typename _Ty>
@@ -235,9 +235,9 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut   = out.DeviceBufferAt<_Ty>( layer );
-        lOut[i]     = lArray[i] - constant;
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
+        _out[i]     = _array[i] - constant;
     }
 
     template <typename _Ty>
@@ -248,9 +248,9 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut   = out.DeviceBufferAt<_Ty>( layer );
-        lOut[i]     = constant - lArray[i];
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
+        _out[i]     = constant - _array[i];
     }
 
     template <typename _Ty>
@@ -261,10 +261,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray    = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lConstant = constant.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut      = out.DeviceBufferAt<_Ty>( layer );
-        lOut[i]        = lArray[i] - lConstant[i];
+        _Ty *_array    = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_constant = constant.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out      = out.DeviceBufferAt<_Ty>( layer );
+        _out[i]        = _array[i] - _constant[i];
     }
 
     template <typename _Ty>
@@ -276,28 +276,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] - lRight[i];
+            _out[i] = _left[0] - _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] - lRight[0];
+            _out[i] = _left[i] - _right[0];
         }
         break;
         default:
@@ -313,10 +313,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lIn[i] - constant.DataAs<_Ty>()[blockIdx.x];
+        _out[i] = _in[i] - constant.DataAs<_Ty>()[blockIdx.x];
     }
 
     template <typename _Ty>
@@ -327,10 +327,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = constant.DataAs<_Ty>()[blockIdx.x] - lIn[i];
+        _out[i] = constant.DataAs<_Ty>()[blockIdx.x] - _in[i];
     }
 
     template <typename _Ty>
@@ -341,10 +341,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lArray = array.DeviceBufferAt<_Ty>( layer );
-        auto *lOut   = out.DeviceBufferAt<_Ty>( layer );
+        auto *_array = array.DeviceBufferAt<_Ty>( layer );
+        auto *_out   = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lArray[i] / constant;
+        _out[i] = _array[i] / constant;
     }
 
     template <typename _Ty>
@@ -355,10 +355,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lArray = array.DeviceBufferAt<_Ty>( layer );
-        auto *lOut   = out.DeviceBufferAt<_Ty>( layer );
+        auto *_array = array.DeviceBufferAt<_Ty>( layer );
+        auto *_out   = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = constant / lArray[i];
+        _out[i] = constant / _array[i];
     }
 
     template <typename _Ty>
@@ -369,11 +369,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lArray    = array.DeviceBufferAt<_Ty>( layer );
-        auto *lConstant = constant.DeviceBufferAt<_Ty>( layer );
-        auto *lOut      = out.DeviceBufferAt<_Ty>( layer );
+        auto *_array    = array.DeviceBufferAt<_Ty>( layer );
+        auto *_constant = constant.DeviceBufferAt<_Ty>( layer );
+        auto *_out      = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lArray[i] / lConstant[i];
+        _out[i] = _array[i] / _constant[i];
     }
 
     template <typename _Ty>
@@ -385,28 +385,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] / lRight[i];
+            _out[i] = _left[0] / _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] / lRight[0];
+            _out[i] = _left[i] / _right[0];
         }
         break;
         default:
@@ -422,10 +422,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer );
+        auto *_in  = array.DeviceBufferAt<_Ty>( layer );
+        auto *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lIn[i] / constant.DataAs<_Ty>()[blockIdx.x];
+        _out[i] = _in[i] / constant.DataAs<_Ty>()[blockIdx.x];
     }
 
     template <typename _Ty>
@@ -436,10 +436,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer );
+        auto *_in  = array.DeviceBufferAt<_Ty>( layer );
+        auto *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = constant.DataAs<_Ty>()[blockIdx.x] / lIn[i];
+        _out[i] = constant.DataAs<_Ty>()[blockIdx.x] / _in[i];
     }
 
     CUDA_KERNEL_DEFINITION void And( multi_tensor_t out, multi_tensor_t array, uint8_t constant )
@@ -449,10 +449,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lArray = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_array = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( constant && lArray[i] );
+        _out[i] = ( constant && _array[i] );
     }
 
     CUDA_KERNEL_DEFINITION void And( multi_tensor_t out, multi_tensor_t array, multi_tensor_t constant )
@@ -462,11 +462,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lArray    = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lConstant = constant.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut      = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_array    = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_constant = constant.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out      = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lArray[i] && lConstant[i] );
+        _out[i] = ( _array[i] && _constant[i] );
     }
 
     CUDA_KERNEL_DEFINITION void And( multi_tensor_t out, multi_tensor_t left, multi_tensor_t right, broadcast_hint_t broadcastHint,
@@ -477,28 +477,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            uint8_t *lLeft  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
-            uint8_t *lRight = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+            uint8_t *_left  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
+            uint8_t *_right = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = ( lLeft[0] && lRight[i] );
+            _out[i] = ( _left[0] && _right[i] );
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            uint8_t *lLeft  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
-            uint8_t *lRight = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
+            uint8_t *_left  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
+            uint8_t *_right = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
 
-            lOut[i] = ( lLeft[i] && lRight[0] );
+            _out[i] = ( _left[i] && _right[0] );
         }
         break;
         default:
@@ -513,10 +513,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lIn  = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_in  = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lIn[i] && constant.DataAs<uint8_t>()[blockIdx.x] );
+        _out[i] = ( _in[i] && constant.DataAs<uint8_t>()[blockIdx.x] );
     }
 
     CUDA_KERNEL_DEFINITION void Or( multi_tensor_t out, multi_tensor_t array, uint8_t constant )
@@ -526,10 +526,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lArray = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_array = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( constant || lArray[i] );
+        _out[i] = ( constant || _array[i] );
     }
 
     CUDA_KERNEL_DEFINITION void Or( multi_tensor_t out, multi_tensor_t array, multi_tensor_t constant )
@@ -539,11 +539,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lArray    = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lConstant = constant.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut      = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_array    = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_constant = constant.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out      = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lArray[i] || lConstant[i] );
+        _out[i] = ( _array[i] || _constant[i] );
     }
 
     CUDA_KERNEL_DEFINITION void Or( multi_tensor_t out, multi_tensor_t left, multi_tensor_t right, broadcast_hint_t broadcastHint,
@@ -554,28 +554,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            uint8_t *lLeft  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
-            uint8_t *lRight = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+            uint8_t *_left  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
+            uint8_t *_right = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = ( lLeft[0] || lRight[i] );
+            _out[i] = ( _left[0] || _right[i] );
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            uint8_t *lLeft  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
-            uint8_t *lRight = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
+            uint8_t *_left  = left.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
+            uint8_t *_right = right.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y;
 
-            lOut[i] = ( lLeft[i] || lRight[0] );
+            _out[i] = ( _left[i] || _right[0] );
         }
         break;
         default:
@@ -590,10 +590,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lIn  = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_in  = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lIn[i] || constant.DataAs<uint8_t>()[blockIdx.x] );
+        _out[i] = ( _in[i] || constant.DataAs<uint8_t>()[blockIdx.x] );
     }
 
     CUDA_KERNEL_DEFINITION void Not( multi_tensor_t out, multi_tensor_t array )
@@ -603,10 +603,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lIn  = array.DeviceBufferAt<uint8_t>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_in  = array.DeviceBufferAt<uint8_t>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = !( lIn[i] );
+        _out[i] = !( _in[i] );
     }
 
     template <typename _Ty>
@@ -617,10 +617,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut   = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( constant & lArray[i] );
+        _out[i] = ( constant & _array[i] );
     }
 
     template <typename _Ty>
@@ -633,28 +633,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] & lRight[i];
+            _out[i] = _left[0] & _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] & lRight[0];
+            _out[i] = _left[i] & _right[0];
         }
         break;
         default:
@@ -670,11 +670,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray    = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lConstant = constant.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut      = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array    = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_constant = constant.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out      = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( lArray[i] & lConstant[i] );
+        _out[i] = ( _array[i] & _constant[i] );
     }
 
     template <typename _Ty>
@@ -685,10 +685,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( lIn[i] & constant.DataAs<_Ty>()[blockIdx.x] );
+        _out[i] = ( _in[i] & constant.DataAs<_Ty>()[blockIdx.x] );
     }
 
     template <typename _Ty>
@@ -699,10 +699,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut   = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( constant | lArray[i] );
+        _out[i] = ( constant | _array[i] );
     }
 
     template <typename _Ty>
@@ -713,11 +713,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lArray    = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lConstant = constant.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut      = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array    = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_constant = constant.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out      = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( lArray[i] | lConstant[i] );
+        _out[i] = ( _array[i] | _constant[i] );
     }
 
     template <typename _Ty>
@@ -729,28 +729,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] | lRight[i];
+            _out[i] = _left[0] | _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] | lRight[0];
+            _out[i] = _left[i] | _right[0];
         }
         break;
         default:
@@ -766,10 +766,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( lIn[i] | constant.DataAs<_Ty>()[blockIdx.x] );
+        _out[i] = ( _in[i] | constant.DataAs<_Ty>()[blockIdx.x] );
     }
 
     template <typename _Ty>
@@ -780,10 +780,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lIn  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_in  = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ~( lIn[i] );
+        _out[i] = ~( _in[i] );
     }
 
     template <typename _Ty>
@@ -795,15 +795,15 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lLower = lower.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lUpper = upper.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_lower = lower.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_upper = upper.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lLower[i] < lX[i] ) : ( lLower[i] <= lX[i] );
-        bool lComp1 = strictUpper ? ( lUpper[i] > lX[i] ) : ( lUpper[i] >= lX[i] );
+        bool comp_0 = strictLower ? ( _lower[i] < _x[i] ) : ( _lower[i] <= _x[i] );
+        bool comp_1 = strictUpper ? ( _upper[i] > _x[i] ) : ( _upper[i] >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -815,15 +815,15 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lLower = lower.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lUpper = upper.DataAs<_Ty>();
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_lower = lower.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_upper = upper.DataAs<_Ty>();
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lLower[i] < lX[i] ) : ( lLower[i] <= lX[i] );
-        bool lComp1 = strictUpper ? ( lUpper[layer] > lX[i] ) : ( lUpper[layer] >= lX[i] );
+        bool comp_0 = strictLower ? ( _lower[i] < _x[i] ) : ( _lower[i] <= _x[i] );
+        bool comp_1 = strictUpper ? ( _upper[layer] > _x[i] ) : ( _upper[layer] >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -835,14 +835,14 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lLower = lower.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_lower = lower.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lLower[i] < lX[i] ) : ( lLower[i] <= lX[i] );
-        bool lComp1 = strictUpper ? ( upper > lX[i] ) : ( upper >= lX[i] );
+        bool comp_0 = strictLower ? ( _lower[i] < _x[i] ) : ( _lower[i] <= _x[i] );
+        bool comp_1 = strictUpper ? ( upper > _x[i] ) : ( upper >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -854,15 +854,15 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lLower = lower.DataAs<_Ty>();
-        _Ty     *lUpper = upper.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_lower = lower.DataAs<_Ty>();
+        _Ty     *_upper = upper.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lLower[layer] < lX[i] ) : ( lLower[layer] <= lX[i] );
-        bool lComp1 = strictUpper ? ( lUpper[i] > lX[i] ) : ( lUpper[i] >= lX[i] );
+        bool comp_0 = strictLower ? ( _lower[layer] < _x[i] ) : ( _lower[layer] <= _x[i] );
+        bool comp_1 = strictUpper ? ( _upper[i] > _x[i] ) : ( _upper[i] >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -874,15 +874,15 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lLower = lower.DataAs<_Ty>();
-        _Ty     *lUpper = upper.DataAs<_Ty>();
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_lower = lower.DataAs<_Ty>();
+        _Ty     *_upper = upper.DataAs<_Ty>();
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lLower[layer] < lX[i] ) : ( lLower[layer] <= lX[i] );
-        bool lComp1 = strictUpper ? ( lUpper[layer] > lX[i] ) : ( lUpper[layer] >= lX[i] );
+        bool comp_0 = strictLower ? ( _lower[layer] < _x[i] ) : ( _lower[layer] <= _x[i] );
+        bool comp_1 = strictUpper ? ( _upper[layer] > _x[i] ) : ( _upper[layer] >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -894,14 +894,14 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lLower = lower.DataAs<_Ty>();
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_lower = lower.DataAs<_Ty>();
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lLower[layer] < lX[i] ) : ( lLower[layer] <= lX[i] );
-        bool lComp1 = strictUpper ? ( upper > lX[i] ) : ( upper >= lX[i] );
+        bool comp_0 = strictLower ? ( _lower[layer] < _x[i] ) : ( _lower[layer] <= _x[i] );
+        bool comp_1 = strictUpper ? ( upper > _x[i] ) : ( upper >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -913,14 +913,14 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lUpper = upper.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_upper = upper.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lower < lX[i] ) : ( lower <= lX[i] );
-        bool lComp1 = strictUpper ? ( lUpper[i] > lX[i] ) : ( lUpper[i] >= lX[i] );
+        bool comp_0 = strictLower ? ( lower < _x[i] ) : ( lower <= _x[i] );
+        bool comp_1 = strictUpper ? ( _upper[i] > _x[i] ) : ( _upper[i] >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -932,14 +932,14 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX     = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lUpper = upper.DataAs<_Ty>();
-        uint8_t *lOut   = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x     = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_upper = upper.DataAs<_Ty>();
+        uint8_t *_out   = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lower < lX[i] ) : ( lower <= lX[i] );
-        bool lComp1 = strictUpper ? ( lUpper[layer] > lX[i] ) : ( lUpper[layer] >= lX[i] );
+        bool comp_0 = strictLower ? ( lower < _x[i] ) : ( lower <= _x[i] );
+        bool comp_1 = strictUpper ? ( _upper[layer] > _x[i] ) : ( _upper[layer] >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -951,13 +951,13 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        bool lComp0 = strictLower ? ( lower < lX[i] ) : ( lower <= lX[i] );
-        bool lComp1 = strictUpper ? ( upper > lX[i] ) : ( upper >= lX[i] );
+        bool comp_0 = strictLower ? ( lower < _x[i] ) : ( lower <= _x[i] );
+        bool comp_1 = strictUpper ? ( upper > _x[i] ) : ( upper >= _x[i] );
 
-        lOut[i] = ( lComp0 && lComp1 );
+        _out[i] = ( comp_0 && comp_1 );
     }
 
     template <typename _Ty>
@@ -968,11 +968,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] == lY[i] );
+        _out[i] = ( _x[i] == _l[i] );
     }
 
     template <typename _Ty>
@@ -983,11 +983,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lY   = y.DataAs<_Ty>();
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_l   = y.DataAs<_Ty>();
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] == lY[layer] );
+        _out[i] = ( _x[i] == _l[layer] );
     }
 
     template <typename _Ty>
@@ -998,10 +998,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] == y );
+        _out[i] = ( _x[i] == y );
     }
 
     template <typename _Ty>
@@ -1013,28 +1013,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] == lRight[i];
+            _out[i] = _left[0] == _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] == lRight[0];
+            _out[i] = _left[i] == _right[0];
         }
         break;
         default:
@@ -1050,11 +1050,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DataAs<_Ty>();
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DataAs<_Ty>();
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[layer] == lY[i] );
+        _out[i] = ( _x[layer] == _l[i] );
     }
 
     template <typename _Ty>
@@ -1065,10 +1065,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( x == lY[i] );
+        _out[i] = ( x == _l[i] );
     }
 
     template <typename _Ty>
@@ -1079,11 +1079,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] < lY[i] );
+        _out[i] = ( _x[i] < _l[i] );
     }
 
     template <typename _Ty>
@@ -1096,28 +1096,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] < lRight[i];
+            _out[i] = _left[0] < _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] < lRight[0];
+            _out[i] = _left[i] < _right[0];
         }
         break;
         default:
@@ -1133,11 +1133,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lY   = y.DataAs<_Ty>();
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_l   = y.DataAs<_Ty>();
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] < lY[layer] );
+        _out[i] = ( _x[i] < _l[layer] );
     }
 
     template <typename _Ty>
@@ -1148,10 +1148,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] < y );
+        _out[i] = ( _x[i] < y );
     }
 
     template <typename _Ty>
@@ -1162,11 +1162,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DataAs<_Ty>();
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DataAs<_Ty>();
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[layer] < lY[i] );
+        _out[i] = ( _x[layer] < _l[i] );
     }
 
     template <typename _Ty>
@@ -1177,10 +1177,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( x < lY[i] );
+        _out[i] = ( x < _l[i] );
     }
 
     template <typename _Ty>
@@ -1191,11 +1191,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] <= lY[i] );
+        _out[i] = ( _x[i] <= _l[i] );
     }
 
     template <typename _Ty>
@@ -1208,28 +1208,28 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBroadcastSize = broadcastSizes.DataAs<uint32_t>()[layer];
+        auto broadcast_size = broadcastSizes.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lBroadcastSize ) );
+        RETURN_UNLESS( ( i < broadcast_size ) );
 
-        auto *lOut = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * lBroadcastSize;
+        auto *_out = out.DeviceBufferAt<uint8_t>( layer ) + blockIdx.y * broadcast_size;
 
         switch( broadcastHint )
         {
         case broadcast_hint_t::LEFT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
 
-            lOut[i] = lLeft[0] <= lRight[i];
+            _out[i] = _left[0] <= _right[i];
         }
         break;
         case broadcast_hint_t::RIGHT:
         {
-            _Ty *lLeft  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lBroadcastSize;
-            _Ty *lRight = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
+            _Ty *_left  = left.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * broadcast_size;
+            _Ty *_right = right.DeviceBufferAt<_Ty>( layer ) + blockIdx.y;
 
-            lOut[i] = lLeft[i] <= lRight[0];
+            _out[i] = _left[i] <= _right[0];
         }
         break;
         default:
@@ -1245,11 +1245,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lY   = y.DataAs<_Ty>();
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_l   = y.DataAs<_Ty>();
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] <= lY[layer] );
+        _out[i] = ( _x[i] <= _l[layer] );
     }
 
     template <typename _Ty>
@@ -1260,10 +1260,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[i] <= y );
+        _out[i] = ( _x[i] <= y );
     }
 
     template <typename _Ty>
@@ -1274,11 +1274,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lX   = x.DataAs<_Ty>();
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_x   = x.DataAs<_Ty>();
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( lX[layer] <= lY[i] );
+        _out[i] = ( _x[layer] <= _l[i] );
     }
 
     template <typename _Ty>
@@ -1289,10 +1289,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( out.Shape().InBounds<uint8_t>( layer, i ) );
 
-        _Ty     *lY   = y.DeviceBufferAt<_Ty>( layer );
-        uint8_t *lOut = out.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_l   = y.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_out = out.DeviceBufferAt<uint8_t>( layer );
 
-        lOut[i] = ( x <= lY[i] );
+        _out[i] = ( x <= _l[i] );
     }
 
     template <typename _Ty>
@@ -1304,12 +1304,12 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition    = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfTrue  = valueIfTrue.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lValueIfFalse = valueIfFalse.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lOut          = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition      = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_true  = valueIfTrue.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_value_if_false = valueIfFalse.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_out            = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? lValueIfTrue[i] : lValueIfFalse[i];
+        _out[i] = _consition[i] ? _value_if_true[i] : _value_if_false[i];
     }
 
     template <typename _Ty>
@@ -1321,12 +1321,12 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition    = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfTrue  = valueIfTrue.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lValueIfFalse = valueIfFalse.DataAs<_Ty>();
-        _Ty     *lOut          = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition      = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_true  = valueIfTrue.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_value_if_false = valueIfFalse.DataAs<_Ty>();
+        _Ty     *_out            = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? lValueIfTrue[i] : lValueIfFalse[layer];
+        _out[i] = _consition[i] ? _value_if_true[i] : _value_if_false[layer];
     }
 
     template <typename _Ty>
@@ -1338,11 +1338,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition   = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfTrue = valueIfTrue.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lOut         = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition     = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_true = valueIfTrue.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_out           = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? lValueIfTrue[i] : valueIfFalse;
+        _out[i] = _consition[i] ? _value_if_true[i] : valueIfFalse;
     }
 
     template <typename _Ty>
@@ -1354,12 +1354,12 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition    = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfTrue  = valueIfTrue.DataAs<_Ty>();
-        _Ty     *lValueIfFalse = valueIfFalse.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lOut          = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition      = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_true  = valueIfTrue.DataAs<_Ty>();
+        _Ty     *_value_if_false = valueIfFalse.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_out            = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? lValueIfTrue[layer] : lValueIfFalse[i];
+        _out[i] = _consition[i] ? _value_if_true[layer] : _value_if_false[i];
     }
 
     template <typename _Ty>
@@ -1371,12 +1371,12 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition    = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfTrue  = valueIfTrue.DataAs<_Ty>();
-        _Ty     *lValueIfFalse = valueIfFalse.DataAs<_Ty>();
-        _Ty     *lOut          = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition      = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_true  = valueIfTrue.DataAs<_Ty>();
+        _Ty     *_value_if_false = valueIfFalse.DataAs<_Ty>();
+        _Ty     *_out            = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? lValueIfTrue[layer] : lValueIfFalse[layer];
+        _out[i] = _consition[i] ? _value_if_true[layer] : _value_if_false[layer];
     }
 
     template <typename _Ty>
@@ -1388,11 +1388,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition   = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfTrue = valueIfTrue.DataAs<_Ty>();
-        _Ty     *lOut         = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition     = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_true = valueIfTrue.DataAs<_Ty>();
+        _Ty     *_out           = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? lValueIfTrue[layer] : valueIfFalse;
+        _out[i] = _consition[i] ? _value_if_true[layer] : valueIfFalse;
     }
 
     template <typename _Ty>
@@ -1404,11 +1404,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition    = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfFalse = valueIfFalse.DeviceBufferAt<_Ty>( layer );
-        _Ty     *lOut          = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition      = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_false = valueIfFalse.DeviceBufferAt<_Ty>( layer );
+        _Ty     *_out            = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? valueIfTrue : lValueIfFalse[i];
+        _out[i] = _consition[i] ? valueIfTrue : _value_if_false[i];
     }
 
     template <typename _Ty>
@@ -1420,11 +1420,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition    = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lValueIfFalse = valueIfFalse.DataAs<_Ty>();
-        _Ty     *lOut          = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition      = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_value_if_false = valueIfFalse.DataAs<_Ty>();
+        _Ty     *_out            = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? valueIfTrue : lValueIfFalse[layer];
+        _out[i] = _consition[i] ? valueIfTrue : _value_if_false[layer];
     }
 
     template <typename _Ty>
@@ -1435,10 +1435,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( condition.Shape().InBounds<uint8_t>( layer, i ) );
 
-        uint8_t *lCondition = condition.DeviceBufferAt<uint8_t>( layer );
-        _Ty     *lOut       = out.DeviceBufferAt<_Ty>( layer );
+        uint8_t *_consition = condition.DeviceBufferAt<uint8_t>( layer );
+        _Ty     *_out       = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lCondition[i] ? valueIfTrue : valueIfFalse;
+        _out[i] = _consition[i] ? valueIfTrue : valueIfFalse;
     }
 
     template <typename _Ty>
@@ -1454,10 +1454,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( ( i < N ) && ( array.Shape().InBounds<_Ty>( layer, j ) ) );
 
-        _Ty *lInArray  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOutArray = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
 
-        lOutArray[blockIdx.y * N + i] = lInArray[j];
+        _out[blockIdx.y * N + i] = _array[j];
     }
 
     template <typename _Ty>
@@ -1473,9 +1473,9 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) && out.Shape().InBounds<_Ty>( layer, j ) );
 
-        _Ty *lInArray  = array.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOutArray = out.DeviceBufferAt<_Ty>( layer );
-        lOutArray[j]   = lInArray[i];
+        _Ty *_array = array.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out   = out.DeviceBufferAt<_Ty>( layer );
+        _out[j]     = _array[i];
     }
 
     template <typename _Ty>
@@ -1495,10 +1495,10 @@ namespace numlua::mtops::Kernels
 
         _Ty *lInArrayA = left.DeviceBufferAt<_Ty>( layer );
         _Ty *lInArrayB = right.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOutArray = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out      = out.DeviceBufferAt<_Ty>( layer );
 
         float aDelta = ( lInArrayB[j] - lInArrayA[j] ) / static_cast<float>( N );
-        lOutArray[k] = lInArrayA[j] + i * aDelta;
+        _out[k]      = lInArrayA[j] + i * aDelta;
     }
 
     template <typename _Ty>
@@ -1509,12 +1509,12 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( A.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lA   = A.DeviceBufferAt<_Ty>( layer );
-        _Ty *lB   = B.DeviceBufferAt<_Ty>( layer );
+        _Ty *_A   = A.DeviceBufferAt<_Ty>( layer );
+        _Ty *_B   = B.DeviceBufferAt<_Ty>( layer );
         _Ty *lT   = t.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = ( 1 - lT[i] ) * lA[i] + lT[i] * lB[i];
+        _out[i] = ( 1 - lT[i] ) * _A[i] + lT[i] * _B[i];
     }
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t out, multi_tensor_t x, multi_tensor_t y, memory_buffer_t textures )
@@ -1526,11 +1526,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<float>( layer, i ) );
 
-        auto *lXArray = x.DeviceBufferAt<float>( layer );
-        auto *lYArray = y.DeviceBufferAt<float>( layer );
-        auto *lOut    = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<float>( layer );
+        auto *_y   = y.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = lTex.Fetch<float>( lXArray[i], lYArray[i] );
+        _out[i] = lTex.Fetch<float>( _x[i], _y[i] );
     }
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t out, multi_tensor_t x, memory_buffer_t y, memory_buffer_t textures )
@@ -1542,10 +1542,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<float>( layer, i ) );
 
-        auto *lXArray = x.DeviceBufferAt<float>( layer );
-        auto *lOut    = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = lTex.Fetch<float>( lXArray[i], y.DataAs<float>()[layer] );
+        _out[i] = lTex.Fetch<float>( _x[i], y.DataAs<float>()[layer] );
     }
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t out, multi_tensor_t x, float y, memory_buffer_t textures )
@@ -1557,10 +1557,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<float>( layer, i ) );
 
-        auto *lXArray = x.DeviceBufferAt<float>( layer );
-        auto *lOut    = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = lTex.Fetch<float>( lXArray[i], y );
+        _out[i] = lTex.Fetch<float>( _x[i], y );
     }
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t out, memory_buffer_t x, multi_tensor_t y, memory_buffer_t textures )
@@ -1572,10 +1572,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( y.Shape().InBounds<float>( layer, i ) );
 
-        auto *lYArray = y.DeviceBufferAt<float>( layer );
-        auto *lOut    = out.DeviceBufferAt<float>( layer );
+        auto *_y   = y.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = lTex.Fetch<float>( x.DataAs<float>()[layer], lYArray[i] );
+        _out[i] = lTex.Fetch<float>( x.DataAs<float>()[layer], _y[i] );
     }
 
     CUDA_KERNEL_DEFINITION void Sample2D( multi_tensor_t out, float x, multi_tensor_t y, memory_buffer_t textures )
@@ -1587,23 +1587,23 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( y.Shape().InBounds<float>( layer, i ) );
 
-        auto *lYArray = y.DeviceBufferAt<float>( layer );
-        auto *lOut    = out.DeviceBufferAt<float>( layer );
+        auto *_y   = y.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = lTex.Fetch<float>( x, lYArray[i] );
+        _out[i] = lTex.Fetch<float>( x, _y[i] );
     }
 
     template <typename _Ty, typename _OutTy>
-    CUDA_KERNEL_DEFINITION void ToFixedPoint( multi_tensor_t out, multi_tensor_t array, _Ty aScaling )
+    CUDA_KERNEL_DEFINITION void ToFixedPoint( multi_tensor_t out, multi_tensor_t array, _Ty scaling )
     {
         uint32_t layer = static_cast<uint32_t>( blockIdx.x );
         int32_t  i     = blockIdx.y * Private::ThreadsPerBlock + threadIdx.x;
 
         RETURN_UNLESS( array.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty    *lInBuffer  = array.DeviceBufferAt<_Ty>( layer );
-        _OutTy *lOutBuffer = out.DeviceBufferAt<_OutTy>( layer );
-        lOutBuffer[i]      = static_cast<_OutTy>( lInBuffer[i] * aScaling );
+        _Ty    *_array = array.DeviceBufferAt<_Ty>( layer );
+        _OutTy *_out   = out.DeviceBufferAt<_OutTy>( layer );
+        _out[i]        = static_cast<_OutTy>( _array[i] * scaling );
     }
 
     template <typename _Ty>
@@ -1614,12 +1614,12 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lA   = A.DeviceBufferAt<_Ty>( layer );
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lB   = B.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_A   = A.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_B   = B.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lA[i] * lX[i] + lB[i];
+        _out[i] = _A[i] * _x[i] + _B[i];
     }
 
     template <typename _Ty>
@@ -1630,11 +1630,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lA   = A.DeviceBufferAt<_Ty>( layer );
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_A   = A.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lA[i] * lX[i] + B.DataAs<_Ty>()[layer];
+        _out[i] = _A[i] * _x[i] + B.DataAs<_Ty>()[layer];
     }
 
     template <typename _Ty>
@@ -1645,11 +1645,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lA   = A.DeviceBufferAt<_Ty>( layer );
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_A   = A.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lA[i] * lX[i] + B;
+        _out[i] = _A[i] * _x[i] + B;
     }
 
     template <typename _Ty>
@@ -1660,11 +1660,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lB   = B.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_B   = B.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = A.DataAs<_Ty>()[layer] * lX[i] + lB[i];
+        _out[i] = A.DataAs<_Ty>()[layer] * _x[i] + _B[i];
     }
 
     template <typename _Ty>
@@ -1675,10 +1675,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = A.DataAs<_Ty>()[blockIdx.x] * lX[i] + B.DataAs<_Ty>()[blockIdx.x];
+        _out[i] = A.DataAs<_Ty>()[blockIdx.x] * _x[i] + B.DataAs<_Ty>()[blockIdx.x];
     }
 
     template <typename _Ty>
@@ -1689,10 +1689,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = A.DataAs<_Ty>()[blockIdx.x] * lX[i] + B;
+        _out[i] = A.DataAs<_Ty>()[blockIdx.x] * _x[i] + B;
     }
 
     template <typename _Ty>
@@ -1703,11 +1703,11 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lB   = B.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_B   = B.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = A * lX[i] + lB[i];
+        _out[i] = A * _x[i] + _B[i];
     }
 
     template <typename _Ty>
@@ -1718,10 +1718,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = A * lX[i] + B.DataAs<_Ty>()[layer];
+        _out[i] = A * _x[i] + B.DataAs<_Ty>()[layer];
     }
 
     template <typename _Ty>
@@ -1732,10 +1732,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( X.Shape().InBounds<_Ty>( layer, i ) );
 
-        _Ty *lX   = X.DeviceBufferAt<_Ty>( layer );
-        _Ty *lOut = out.DeviceBufferAt<_Ty>( layer );
+        _Ty *_x   = X.DeviceBufferAt<_Ty>( layer );
+        _Ty *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = A * lX[i] + B;
+        _out[i] = A * _x[i] + B;
     }
 
     CUDA_KERNEL_DEFINITION void Floor( multi_tensor_t out, multi_tensor_t x )
@@ -1745,10 +1745,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<float>( layer, i ) );
 
-        auto *lX   = x.DeviceBufferAt<float>( layer );
-        auto *lOut = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = floor( lX[i] );
+        _out[i] = floor( _x[i] );
     }
 
     CUDA_KERNEL_DEFINITION void Ceil( multi_tensor_t out, multi_tensor_t x )
@@ -1758,10 +1758,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<float>( layer, i ) );
 
-        auto *lX   = x.DeviceBufferAt<float>( layer );
-        auto *lOut = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<float>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = ceil( lX[i] );
+        _out[i] = ceil( _x[i] );
     }
 
     template <typename _Ty>
@@ -1772,10 +1772,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer );
-        auto *lOut = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
-        lOut[i] = static_cast<_Ty>( sqrt( static_cast<float>( lX[i] ) ) );
+        _out[i] = static_cast<_Ty>( sqrt( static_cast<float>( _x[i] ) ) );
     }
 
     template <typename _Ty>
@@ -1786,13 +1786,13 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<_Ty>( layer, i ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer );
-        auto *lOut = out.DeviceBufferAt<float>( layer );
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer );
+        auto *_out = out.DeviceBufferAt<float>( layer );
 
         if constexpr( std::is_integral<_Ty>::value )
-            lOut[i] = lX[i];
+            _out[i] = _x[i];
         else
-            lOut[i] = __int2float_rd( __float2int_rn( lX[i] ) );
+            _out[i] = __int2float_rd( __float2int_rn( _x[i] ) );
     }
 
     template <typename _Ty>
@@ -1803,10 +1803,10 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( x.Shape().InBounds<float>( layer, i ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer );
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer );
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer );
+        auto *_out = out.DeviceBufferAt<_Ty>( layer );
 
-        lOut[i] = lX[i] * ( lX[i] >= 0 ? 1.0f : -1.0f );
+        _out[i] = _x[i] * ( _x[i] >= 0 ? 1.0f : -1.0f );
     }
 
     template <typename _Ty>
@@ -1818,19 +1818,19 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<float>()[layer] );
 
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<uint32_t>( layer ) + i;
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<uint32_t>( layer ) + i;
 
-        uint32_t lCount = 0;
-        for( uint32_t k = 0; k < lElementCount; k++ )
+        uint32_t count = 0;
+        for( uint32_t k = 0; k < _element_count; k++ )
         {
-            if( lX[k] == static_cast<_Ty>( 0 ) )
-                lCount++;
+            if( _x[k] == static_cast<_Ty>( 0 ) )
+                count++;
         }
 
-        *lOut = lCount;
+        *_out = count;
     }
 
     template <typename _Ty>
@@ -1842,19 +1842,19 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<uint32_t>( layer ) + i;
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<uint32_t>( layer ) + i;
 
-        uint32_t lCount = 0;
-        for( uint32_t k = 0; k < lElementCount; k++ )
+        uint32_t count = 0;
+        for( uint32_t k = 0; k < _element_count; k++ )
         {
-            if( lX[k] != static_cast<_Ty>( 0 ) )
-                lCount++;
+            if( _x[k] != static_cast<_Ty>( 0 ) )
+                count++;
         }
 
-        *lOut = lCount;
+        *_out = count;
     }
 
     template <typename _Ty>
@@ -1866,20 +1866,20 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBegin        = begin.DataAs<uint32_t>()[layer];
-        auto lEnd          = end.DataAs<uint32_t>()[layer];
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _begin         = begin.DataAs<uint32_t>()[layer];
+        auto _end           = end.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( lBegin <= lEnd ) && ( lEnd < lElementCount ) );
+        RETURN_UNLESS( ( _begin <= _end ) && ( _end < _element_count ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + i;
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + i;
 
-        _Ty lAccumulator = 0;
-        for( uint32_t k = lBegin; k <= lEnd; k++ )
-            lAccumulator += lX[k];
+        _Ty _accumulator = 0;
+        for( uint32_t k = _begin; k <= _end; k++ )
+            _accumulator += _x[k];
 
-        *lOut = lAccumulator;
+        *_out = _accumulator;
     }
 
     template <typename _Ty>
@@ -1891,17 +1891,17 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lBegin        = begin.DataAs<uint32_t>()[layer];
-        auto lEnd          = end.DataAs<uint32_t>()[layer];
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _begin         = begin.DataAs<uint32_t>()[layer];
+        auto _end           = end.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( lBegin <= lEnd ) && ( lEnd < lElementCount ) );
+        RETURN_UNLESS( ( _begin <= _end ) && ( _end < _element_count ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + i * ( lEnd - lBegin + 1 );
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + i * ( _end - _begin + 1 );
 
-        for( uint32_t k = lBegin; k <= lEnd; k++ )
-            lOut[k - lBegin] = lX[k];
+        for( uint32_t k = _begin; k <= _end; k++ )
+            _out[k - _begin] = _x[k];
     }
 
     template <typename _Ty>
@@ -1913,34 +1913,34 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( count < lElementCount ) );
+        RETURN_UNLESS( ( count < _element_count ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
 
-        for( uint32_t l = 0; l < lElementCount; l++ )
+        for( uint32_t l = 0; l < _element_count; l++ )
         {
-            lOut[l] = lX[l];
+            _out[l] = _x[l];
         }
 
         for( uint32_t k = 0; k < count; k++ )
         {
-            for( uint32_t l = 0; l < lElementCount - k; l++ )
+            for( uint32_t l = 0; l < _element_count - k; l++ )
             {
-                lOut[l] = lOut[l + 1] - lOut[l];
+                _out[l] = _out[l + 1] - _out[l];
             }
         }
 
-        for( uint32_t k = lElementCount - count; k < lElementCount; k++ )
+        for( uint32_t k = _element_count - count; k < _element_count; k++ )
         {
-            lOut[k] = static_cast<_Ty>( 0 );
+            _out[k] = static_cast<_Ty>( 0 );
         }
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void ShiftLeft( multi_tensor_t out, multi_tensor_t x, uint32_t count, _Ty aFillValue,
+    CUDA_KERNEL_DEFINITION void ShiftLeft( multi_tensor_t out, multi_tensor_t x, uint32_t count, _Ty fill_value,
                                            memory_buffer_t elementCount, memory_buffer_t blockSizes )
     {
         uint32_t layer = static_cast<uint32_t>( blockIdx.x );
@@ -1948,22 +1948,22 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( count < lElementCount ) );
+        RETURN_UNLESS( ( count < _element_count ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
 
-        for( uint32_t k = 0; k < lElementCount - count; k++ )
-            lOut[k] = lX[k + count];
+        for( uint32_t k = 0; k < _element_count - count; k++ )
+            _out[k] = _x[k + count];
 
-        for( uint32_t k = lElementCount - count; k < lElementCount; k++ )
-            lOut[k] = aFillValue;
+        for( uint32_t k = _element_count - count; k < _element_count; k++ )
+            _out[k] = fill_value;
     }
 
     template <typename _Ty>
-    CUDA_KERNEL_DEFINITION void ShiftRight( multi_tensor_t out, multi_tensor_t x, uint32_t count, _Ty aFillValue,
+    CUDA_KERNEL_DEFINITION void ShiftRight( multi_tensor_t out, multi_tensor_t x, uint32_t count, _Ty fill_value,
                                             memory_buffer_t elementCount, memory_buffer_t blockSizes )
     {
         uint32_t layer = static_cast<uint32_t>( blockIdx.x );
@@ -1971,18 +1971,18 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( i < blockSizes.DataAs<uint32_t>()[layer] );
 
-        auto lElementCount = elementCount.DataAs<uint32_t>()[layer];
+        auto _element_count = elementCount.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( count < lElementCount ) );
+        RETURN_UNLESS( ( count < _element_count ) );
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + i * lElementCount;
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + i * _element_count;
 
-        for( uint32_t k = count; k < lElementCount; k++ )
-            lOut[k] = lX[k - count];
+        for( uint32_t k = count; k < _element_count; k++ )
+            _out[k] = _x[k - count];
 
         for( uint32_t k = 0; k < count; k++ )
-            lOut[k] = aFillValue;
+            _out[k] = fill_value;
     }
 
     template <typename _Ty>
@@ -1995,23 +1995,23 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( blockIdx.y < blockSizes0.DataAs<uint32_t>()[layer] );
 
-        auto lElementCount0 = elementCount0.DataAs<uint32_t>()[layer];
-        auto lElementCount1 = elementCount1.DataAs<uint32_t>()[layer];
+        auto _element_count_0 = elementCount0.DataAs<uint32_t>()[layer];
+        auto _element_count_1 = elementCount1.DataAs<uint32_t>()[layer];
 
-        RETURN_UNLESS( ( i < lElementCount0 ) );
+        RETURN_UNLESS( ( i < _element_count_0 ) );
 
-        auto *lX   = array0.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lElementCount0;
-        auto *lK   = array1.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lElementCount1;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * lElementCount0;
+        auto *_x   = array0.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * _element_count_0;
+        auto *_K   = array1.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * _element_count_1;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + blockIdx.y * _element_count_0;
 
         _Ty lConvolutionValue = static_cast<_Ty>( 0 );
-        for( uint32_t j = 0; j < lElementCount1; j++ )
+        for( uint32_t j = 0; j < _element_count_1; j++ )
         {
             if( i >= j )
-                lConvolutionValue += ( lX[i - j] * lK[j] );
+                lConvolutionValue += ( _x[i - j] * _K[j] );
         }
 
-        lOut[i] = lConvolutionValue;
+        _out[i] = lConvolutionValue;
     }
 
     template <typename _Ty>
@@ -2023,17 +2023,17 @@ namespace numlua::mtops::Kernels
 
         RETURN_UNLESS( ( i < blockSizes.DataAs<uint32_t>()[layer] ) );
 
-        auto lElementCountX = elementCountX.DataAs<uint32_t>()[layer];
-        auto lElementCountY = elementCountY.DataAs<uint32_t>()[layer];
+        auto _element_count_x = elementCountX.DataAs<uint32_t>()[layer];
+        auto _element_count_y = elementCountY.DataAs<uint32_t>()[layer];
 
-        auto *lX   = x.DeviceBufferAt<_Ty>( layer ) + i * lElementCountX;
-        auto *lY   = y.DeviceBufferAt<_Ty>( layer ) + i * lElementCountY;
-        auto *lOut = out.DeviceBufferAt<_Ty>( layer ) + i * ( lElementCountX + lElementCountY );
+        auto *_x   = x.DeviceBufferAt<_Ty>( layer ) + i * _element_count_x;
+        auto *_l   = y.DeviceBufferAt<_Ty>( layer ) + i * _element_count_y;
+        auto *_out = out.DeviceBufferAt<_Ty>( layer ) + i * ( _element_count_x + _element_count_y );
 
         uint32_t k = 0;
-        for( uint32_t j = 0; j < lElementCountX; j++ )
-            lOut[k++] = lX[j];
-        for( uint32_t j = 0; j < lElementCountY; j++ )
-            lOut[k++] = lY[j];
+        for( uint32_t j = 0; j < _element_count_x; j++ )
+            _out[k++] = _x[j];
+        for( uint32_t j = 0; j < _element_count_y; j++ )
+            _out[k++] = _l[j];
     }
-} // namespace SE::mtops::Kernels
+} // namespace numlua::mtops::Kernels
