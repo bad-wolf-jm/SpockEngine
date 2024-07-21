@@ -87,13 +87,13 @@ namespace numlua::mtops
         /// @brief Access the underlying nodes registry
         numlua::core::entity_registry_t &GetNodesRegistry()
         {
-            return _nodesRegistry;
+            return _nodes_registry;
         };
 
       private:
-        numlua::core::entity_registry_t _nodesRegistry{};     //!< Underlying node database
+        numlua::core::entity_registry_t _nodes_registry{};     //!< Underlying node database
         std::optional<string_t>         _name = std::nullopt; //!< If this is set, the next node will be stored under the given value
-        std::unordered_map<string_t, graph_node_t> _namedNodes = {}; //!< Mapping of node names to OpNodes
+        std::unordered_map<string_t, graph_node_t> _named_nodes = {}; //!< Mapping of node names to OpNodes
     };
 
     /// @brief Create a constant @ref MultiTensor initialized with the given constant
