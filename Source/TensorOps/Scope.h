@@ -58,6 +58,7 @@ namespace numlua::mtops
         /// @return The newly cerated node.
         ///
         graph_node_t CreateNode();
+        graph_node_t CreateNode( scalar_type_t element_type );
 
         /// @brief Retrieve a node by name
         graph_node_t operator[]( string_t const &nodeName );
