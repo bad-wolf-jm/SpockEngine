@@ -28,7 +28,7 @@ namespace numlua::mtops
 
     struct scope_t
     {
-        memory_pool_t mPool{}; //!< Memory pool
+        memory_pool_t memory_pool{}; //!< Memory pool
 
         /// @brief Default constructor
         scope_t() = default;
