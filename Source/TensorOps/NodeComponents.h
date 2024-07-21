@@ -480,7 +480,7 @@ namespace numlua::mtops
     ///
     struct convert_to_fixed_point_t
     {
-        scalar_type_t mOutputType = scalar_type_t::UINT32; //!< Integer type to use to engode the fixed point decimal numbers
+        scalar_type_t output_type = scalar_type_t::UINT32; //!< Integer type to use to engode the fixed point decimal numbers
         graph_node_t  array{};                             //!< Input tensor/
         graph_node_t  mScaling{};                          //!< Scaling factor.
 
