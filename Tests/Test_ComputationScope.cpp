@@ -2385,7 +2385,7 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             MultiTensorValue( scope, initializer, tensor_shape_t( std::vector<std::vector<uint32_t>>{ dim1 }, sizeof( float ) ) );
         auto result0 = Expand( scope, nodeA );
 
-        REQUIRE( result0.Get<type_t>().value == nodeA.Get<type_t>().value );
+        REQUIRE( result0.Get<node_id_t>().element_type == nodeA.Get<node_id_t>().element_type );
     }
 
     SECTION( "Expanding multi-tensors gives the correct dimension" )
@@ -2435,7 +2435,7 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
                                          tensor_shape_t( std::vector<std::vector<uint32_t>>{ dim1, dim2 }, sizeof( float ) ) );
         auto result0 = Collapse( scope, nodeA );
 
-        REQUIRE( result0.Get<type_t>().value == nodeA.Get<type_t>().value );
+        REQUIRE( result0.Get<node_id_t>().element_type == nodeA.Get<node_id_t>().element_type );
     }
 
     SECTION( "Collapsing multi-tensors gives the correct dimension" )
@@ -2485,7 +2485,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto                  result0 = Reshape( scope, nodeA, tensor_shape_t( { oDim1, oDim2, oDim3 }, sizeof( float ) ) );
         scope.Run( result0 );
 
-        REQUIRE( result0.Get<type_t>().value == nodeA.Get<type_t>().value );
+        REQUIRE( result0.Get<node_id_t>().element_type == nodeA.Get<node_id_t>().element_type );
     }
 
     SECTION( "Reshaping multi-tensors gives the correct dimension" )
@@ -2540,7 +2540,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         auto nodeA   = MultiTensorValue( scope, initializer, tensor_shape_t( { dim1, dim2 }, sizeof( float ) ) );
         auto result0 = Flatten( scope, nodeA );
 
-        REQUIRE( result0.Get<type_t>().value == nodeA.Get<type_t>().value );
+        REQUIRE( result0.Get<node_id_t>().element_type == nodeA.Get<node_id_t>().element_type );
     }
 
     SECTION( "Flattening multi-tensors gives the correct dimension" )

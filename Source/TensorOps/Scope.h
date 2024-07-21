@@ -26,16 +26,6 @@ namespace numlua::mtops
 {
     using graph_node_t = numlua::core::entity_t;
 
-    struct graph_node_base_t
-    {
-        bool                               is_allocated  = false;
-        bool                               do_not_expand = false;
-        scalar_type_t                      element_type  = scalar_type_t::FLOAT32;
-        vector_t<ref_t<graph_node_base_t>> operands      = {};
-
-        virtual void run() = 0;
-    };
-
     struct scope_t
     {
         memory_pool_t mPool{}; //!< Memory pool
@@ -91,7 +81,7 @@ namespace numlua::mtops
         };
 
       private:
-        numlua::core::entity_registry_t _nodes_registry{};     //!< Underlying node database
+        numlua::core::entity_registry_t _nodes_registry{};    //!< Underlying node database
         std::optional<string_t>         _name = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<string_t, graph_node_t> _named_nodes = {}; //!< Mapping of node names to OpNodes
     };
@@ -175,7 +165,7 @@ namespace numlua::mtops
 
         if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
-            new_entity.Add<type_t>( type_of( value[0] ) );
+            new_entity.Get<node_id_t>().element_type = type_of( value[0] );
         }
 
         new_entity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
@@ -221,7 +211,7 @@ namespace numlua::mtops
         auto &value_component = new_entity.Add<scalar_node_t>();
         value_component.value = value;
 
-        new_entity.Add<type_t>( type_of( value_component.value ) );
+        new_entity.Get<node_id_t>().element_type = type_of( value_component.value );
 
         return new_entity;
     }

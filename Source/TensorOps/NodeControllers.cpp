@@ -30,7 +30,7 @@ namespace numlua::mtops
         auto &right  = operand_data.right.Get<vector_buffer_t>().value;
         auto &lDelta = operand_data.delta.Get<vector_buffer_t>().value;
 
-        auto element_type = Get<type_t>().value;
+        auto element_type = Get<node_id_t>().element_type;
 
         uint32_t max_subdivisions = 0;
         for( const auto &sub : value.Shape().Shape )
@@ -43,7 +43,7 @@ namespace numlua::mtops
     {
         auto &value = Get<multi_tensor_value_t>().value;
 
-        auto element_type = Get<type_t>().value;
+        auto element_type = Get<node_id_t>().element_type;
 
         if( Has<repeat_operation_t>() )
         {
@@ -74,7 +74,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<binary_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
@@ -129,7 +129,7 @@ namespace numlua::mtops
         {
             auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
             auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
-            auto  element_type       = operand_data.left.Get<type_t>().value;
+            auto  element_type       = operand_data.left.Get<node_id_t>().element_type;
 
             if( Has<broadcast_info_t>() )
                 Op( element_type, value, left_operand_data.value, right_operant_data.value, Get<broadcast_info_t>() );
@@ -140,7 +140,7 @@ namespace numlua::mtops
         {
             auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
             auto &right_operant_data = operand_data.right.Get<vector_buffer_t>();
-            auto  element_type       = operand_data.left.Get<type_t>().value;
+            auto  element_type       = operand_data.left.Get<node_id_t>().element_type;
 
             Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
@@ -148,7 +148,7 @@ namespace numlua::mtops
         {
             auto &left_operand_data  = operand_data.left.Get<vector_buffer_t>();
             auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
-            auto  element_type       = operand_data.right.Get<type_t>().value;
+            auto  element_type       = operand_data.right.Get<node_id_t>().element_type;
 
             Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
@@ -156,7 +156,7 @@ namespace numlua::mtops
         {
             auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
             auto &right_operant_data = operand_data.right.Get<scalar_node_t>();
-            auto  element_type       = operand_data.left.Get<type_t>().value;
+            auto  element_type       = operand_data.left.Get<node_id_t>().element_type;
 
             Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
@@ -164,7 +164,7 @@ namespace numlua::mtops
         {
             auto &left_operand_data  = operand_data.left.Get<scalar_node_t>();
             auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
-            auto  element_type       = operand_data.right.Get<type_t>().value;
+            auto  element_type       = operand_data.right.Get<node_id_t>().element_type;
 
             Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
@@ -387,7 +387,7 @@ namespace numlua::mtops
 
     void sNotOperationController::Run()
     {
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<not_operation_t>();
 
@@ -472,7 +472,7 @@ namespace numlua::mtops
 
     void sBitwiseNotOperationController::Run()
     {
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<bitwise_not_operation_t>();
 
@@ -484,8 +484,8 @@ namespace numlua::mtops
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<in_interval_operation_t>();
 
-        auto &X           = operand_data.x.Get<multi_tensor_value_t>().value;
-        auto  element_type = operand_data.x.Get<type_t>().value;
+        auto &X            = operand_data.x.Get<multi_tensor_value_t>().value;
+        auto  element_type = operand_data.x.Get<node_id_t>().element_type;
 
         if( operand_data.lower.Has<multi_tensor_value_t>() && operand_data.upper.Has<multi_tensor_value_t>() )
         {
@@ -671,7 +671,7 @@ namespace numlua::mtops
         auto &operand_data = Get<where_operation_t>();
 
         auto &lCondition   = operand_data.condition.Get<multi_tensor_value_t>().value;
-        auto  element_type = operand_data.value_if_true.Get<type_t>().value;
+        auto  element_type = operand_data.value_if_true.Get<node_id_t>().element_type;
 
         if( operand_data.value_if_true.Has<multi_tensor_value_t>() && operand_data.value_if_false.Has<multi_tensor_value_t>() )
         {
@@ -751,7 +751,7 @@ namespace numlua::mtops
         auto &right        = operand_data.right.Get<multi_tensor_value_t>().value;
         auto &subdivisions = operand_data.subdivisions.Get<u32_vector_t>();
 
-        auto element_type = Get<type_t>().value;
+        auto element_type = Get<node_id_t>().element_type;
 
         uint32_t max_subdivisions = 0;
         for( const auto &sub : subdivisions.value )
@@ -765,11 +765,11 @@ namespace numlua::mtops
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<mix_operation_t>();
 
-        auto &A = operand_data.A.Get<multi_tensor_value_t>().value;
-        auto &B = operand_data.B.Get<multi_tensor_value_t>().value;
+        auto &A  = operand_data.A.Get<multi_tensor_value_t>().value;
+        auto &B  = operand_data.B.Get<multi_tensor_value_t>().value;
         auto &lT = operand_data.t.Get<multi_tensor_value_t>().value;
 
-        auto element_type = Get<type_t>().value;
+        auto element_type = Get<node_id_t>().element_type;
 
         MixOp( element_type, value, A, B, lT );
     }
@@ -818,35 +818,35 @@ namespace numlua::mtops
 
         if( operand_data.x.Has<multi_tensor_value_t>() && operand_data.y.Has<multi_tensor_value_t>() )
         {
-            auto &X = operand_data.x.Get<multi_tensor_value_t>().value;
+            auto &X  = operand_data.x.Get<multi_tensor_value_t>().value;
             auto &lY = operand_data.y.Get<multi_tensor_value_t>().value;
 
             Sample2DOp( value, X, lY, textures );
         }
         else if( operand_data.x.Has<multi_tensor_value_t>() && operand_data.y.Has<scalar_value_vector_t>() )
         {
-            auto &X = operand_data.x.Get<multi_tensor_value_t>().value;
+            auto &X  = operand_data.x.Get<multi_tensor_value_t>().value;
             auto &lY = operand_data.y.Get<vector_buffer_t>().value;
 
             Sample2DOp( value, X, lY, textures );
         }
         else if( operand_data.x.Has<multi_tensor_value_t>() && operand_data.y.Has<scalar_node_t>() )
         {
-            auto &X = operand_data.x.Get<multi_tensor_value_t>().value;
+            auto &X  = operand_data.x.Get<multi_tensor_value_t>().value;
             auto &lY = operand_data.y.Get<scalar_node_t>().value;
 
             Sample2DOp( value, X, lY, textures );
         }
         else if( operand_data.x.Has<scalar_value_vector_t>() && operand_data.y.Has<multi_tensor_value_t>() )
         {
-            auto &X = operand_data.x.Get<vector_buffer_t>().value;
+            auto &X  = operand_data.x.Get<vector_buffer_t>().value;
             auto &lY = operand_data.y.Get<multi_tensor_value_t>().value;
 
             Sample2DOp( value, X, lY, textures );
         }
         else if( operand_data.x.Has<scalar_node_t>() && operand_data.y.Has<multi_tensor_value_t>() )
         {
-            auto &X = operand_data.x.Get<scalar_node_t>().value;
+            auto &X  = operand_data.x.Get<scalar_node_t>().value;
             auto &lY = operand_data.y.Get<multi_tensor_value_t>().value;
 
             Sample2DOp( value, X, lY, textures );
@@ -861,7 +861,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<convert_to_fixed_point_t>();
-        auto  element_type = operand_data.array.Get<type_t>().value;
+        auto  element_type = operand_data.array.Get<node_id_t>().element_type;
         auto &array        = operand_data.array.Get<multi_tensor_value_t>().value;
         auto &lScaling     = operand_data.mScaling.Get<scalar_node_t>().value;
 
@@ -873,7 +873,7 @@ namespace numlua::mtops
 
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<affine_transform_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         auto &X = operand_data.X.Get<multi_tensor_value_t>();
 
@@ -966,7 +966,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<abs_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         AbsOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
@@ -975,7 +975,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<sqrt_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         SqrtOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
@@ -984,7 +984,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<round_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         RoundOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
@@ -993,7 +993,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<count_true_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         CountTrueOp( value, operand_data.array.Get<multi_tensor_value_t>().value,
                      operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
@@ -1004,7 +1004,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<count_non_zero_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         CountNonZeroOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
                         operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
@@ -1015,7 +1015,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<count_zero_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         CountZeroOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
                      operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
@@ -1026,7 +1026,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<array_sum_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         ArraySummationOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
                           operand_data.begin.Get<vector_buffer_t>().value, operand_data.end.Get<vector_buffer_t>().value,
@@ -1038,7 +1038,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<array_slice_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         ArraySliceOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
                       operand_data.begin.Get<vector_buffer_t>().value, operand_data.end.Get<vector_buffer_t>().value,
@@ -1050,7 +1050,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<diff_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         DiffOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value, operand_data.count,
                 operand_data.element_count.Get<vector_buffer_t>().value, operand_data.block_sizes.Get<vector_buffer_t>().value,
@@ -1061,7 +1061,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<shift_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         ShiftOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value, operand_data.count,
                  operand_data.fill_value.Get<scalar_node_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
@@ -1072,7 +1072,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<conv1d_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         Conv1DOp( element_type, value, operand_data.array0.Get<multi_tensor_value_t>().value,
                   operand_data.element_count0.Get<vector_buffer_t>().value, operand_data.block_sizes0.Get<vector_buffer_t>().value,
@@ -1085,7 +1085,7 @@ namespace numlua::mtops
     {
         auto &value        = Get<multi_tensor_value_t>().value;
         auto &operand_data = Get<hcat_operation_t>();
-        auto  element_type = Get<type_t>().value;
+        auto  element_type = Get<node_id_t>().element_type;
 
         HCatOp( element_type, value, operand_data.array0.Get<multi_tensor_value_t>().value,
                 operand_data.element_count0.Get<vector_buffer_t>().value, operand_data.array1.Get<multi_tensor_value_t>().value,

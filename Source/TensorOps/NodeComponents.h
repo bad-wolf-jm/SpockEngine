@@ -28,6 +28,13 @@ namespace numlua::mtops
 
     using graph_node_t = numlua::core::entity_t;
 
+    struct node_id_t
+    {
+        bool          do_not_expand = false;
+        bool          is_allocated  = false;
+        scalar_type_t element_type  = scalar_type_t::FLOAT32;
+    };
+
     /// @brief sGraphOperationController
     ///
     /// Base class for graph operation controller
@@ -92,25 +99,6 @@ namespace numlua::mtops
         }
     };
 
-    /// @brief sDoNotExpand
-    ///
-    /// Nodes tagged with this structure will not be added to the computation queue when the
-    /// graph is run. Use this tag to avoid reprocessing a node whose values were already computed.
-    ///
-    struct do_not_expand_t
-    {
-        // This structure is intentionally empty.
-    };
-
-    /// @brief sAllocatedTag
-    ///
-    /// Nodes tagged with this structure already have their memory allocated in the pool
-    ///
-    struct allocated_tag_t
-    {
-        // This structure is intentionally empty.
-    };
-
     /// @brief sVectorComponent
     ///
     /// Upload a vector of values to the GPU upon running
@@ -141,20 +129,6 @@ namespace numlua::mtops
     using u32_vector_t          = vector_value_t<uint32_t>;
     using f32_vector_t          = vector_value_t<float>;
     using scalar_value_vector_t = vector_value_t<scalar_value_t>;
-
-    /// @brief sTypeComponent
-    ///
-    /// If added to an entity, indicates the numerical type of the elements in the node's output value.
-    ///
-    struct type_t
-    {
-        scalar_type_t value = scalar_type_t::UNKNOWN; //!< Type information
-
-        type_t() = default;
-        type_t( scalar_type_t a_Value )
-            : value{ a_Value } {};
-        type_t( const type_t & ) = default;
-    };
 
     /// @brief sOperandComponent
     ///
