@@ -73,4 +73,4 @@ namespace numlua::Logging
     void LogLine( string_t const &aLine );
     void SetLogOutputFile( fs::path aFilePath );
 
-} // namespace SE::Logging
+} // namespace numlua::Logging

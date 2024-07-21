@@ -14,12 +14,12 @@
 #    define LOG2( X ) ( (unsigned)( 8 * sizeof( uint64_t ) - __builtin_clzll( ( (uint64_t)X ) ) - 1 ) )
 #endif
 
+#include "Math/Types.h"
 #include <filesystem>
 #include <memory>
 #include <string>
 #include <variant>
 #include <vector>
-#include "Math/Types.h"
 
 namespace numlua::core
 {
@@ -117,4 +117,4 @@ namespace numlua::core
     ///
     scalar_type_t type_of( scalar_value_t aValue );
 
-} // namespace SE::Core
+} // namespace numlua::core

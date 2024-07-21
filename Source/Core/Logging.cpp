@@ -5,7 +5,10 @@ namespace numlua::Logging
 {
     static std::ofstream gLogFile;
 
-    void LogToFile( string_t const &aFilePath ) { gLogFile.open( aFilePath ); }
+    void LogToFile( string_t const &aFilePath )
+    {
+        gLogFile.open( aFilePath );
+    }
 
     void LogLine( string_t const &aLine )
     {
@@ -24,8 +27,13 @@ namespace numlua::Logging
         // sLogMessages.push_back( l_NewMessage );
     }
 
-    vector_t<LogMessage> &GetLogMessages() { return sLogMessages; }
+    vector_t<LogMessage> &GetLogMessages()
+    {
+        return sLogMessages;
+    }
 
-    void SetLogOutputFile( fs::path aFilePath ) {}
+    void SetLogOutputFile( fs::path aFilePath )
+    {
+    }
 
-} // namespace SE::Logging
+} // namespace numlua::Logging
