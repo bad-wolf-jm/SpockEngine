@@ -23,98 +23,96 @@ namespace numlua::mtops
 
     void sARangeOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<arange_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<arange_operation_t>();
 
-        auto &lLeft  = lOperandData.mLeft.Get<vector_buffer_t>().mValue;
-        auto &lRight = lOperandData.mRight.Get<vector_buffer_t>().mValue;
-        auto &lDelta = lOperandData.mDelta.Get<vector_buffer_t>().mValue;
+        auto &lLeft  = operand_data.left.Get<vector_buffer_t>().value;
+        auto &lRight = operand_data.right.Get<vector_buffer_t>().value;
+        auto &lDelta = operand_data.delta.Get<vector_buffer_t>().value;
 
-        auto lElementType = Get<type_t>().mValue;
+        auto element_type = Get<type_t>().value;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lValue.Shape().Shape )
-            lMaxSubdivisions = std::max( lMaxSubdivisions, lSub[0] );
+        for( const auto &sub : value.Shape().Shape )
+            lMaxSubdivisions = std::max( lMaxSubdivisions, sub[0] );
 
-        ARangeOp( lElementType, lValue, lLeft, lRight, lDelta, lMaxSubdivisions );
+        ARangeOp( element_type, value, lLeft, lRight, lDelta, lMaxSubdivisions );
     }
 
     void sArrayOperationController::Run()
     {
-        auto &lValue = Get<multi_tensor_value_t>().mValue;
+        auto &value = Get<multi_tensor_value_t>().value;
 
-        auto lElementType = Get<type_t>().mValue;
+        auto element_type = Get<type_t>().value;
 
         if( Has<repeat_operation_t>() )
         {
-            auto    &lOperandData    = Get<repeat_operation_t>();
-            auto    &lArray          = lOperandData.mArray.Get<multi_tensor_value_t>().mValue;
-            auto    &lRepetitions    = lOperandData.mRepetitions.Get<u32_vector_t>();
-            uint32_t lMaxRepetitions = 0;
-            for( const auto &lSub : lRepetitions.mValue )
-                lMaxRepetitions = std::max( lMaxRepetitions, lSub );
-            RepeatOp( lElementType, lValue, lArray, lOperandData.mRepetitions.Get<vector_buffer_t>().mValue, lMaxRepetitions );
+            auto    &operand_data    = Get<repeat_operation_t>();
+            auto    &array           = operand_data.operand.Get<multi_tensor_value_t>().value;
+            auto    &repetitions     = operand_data.repetitions.Get<u32_vector_t>();
+            uint32_t max_repetitions = 0;
+            for( const auto &sub : repetitions.value )
+                max_repetitions = std::max( max_repetitions, sub );
+            RepeatOp( element_type, value, array, operand_data.repetitions.Get<vector_buffer_t>().value, max_repetitions );
             return;
         }
 
         if( Has<tile_operation_t>() )
         {
-            auto    &lOperandData    = Get<tile_operation_t>();
-            auto    &lArray          = lOperandData.mArray.Get<multi_tensor_value_t>().mValue;
-            auto    &lRepetitions    = lOperandData.mRepetitions.Get<u32_vector_t>();
-            uint32_t lMaxRepetitions = 0;
-            for( const auto &lSub : lRepetitions.mValue )
-                lMaxRepetitions = std::max( lMaxRepetitions, lSub );
-            TileOp( lElementType, lValue, lArray, lOperandData.mRepetitions.Get<vector_buffer_t>().mValue, lMaxRepetitions );
+            auto    &operand_data    = Get<tile_operation_t>();
+            auto    &array           = operand_data.operand.Get<multi_tensor_value_t>().value;
+            auto    &repetitions     = operand_data.repetitions.Get<u32_vector_t>();
+            uint32_t max_repetitions = 0;
+            for( const auto &sub : repetitions.value )
+                max_repetitions = std::max( max_repetitions, sub );
+            TileOp( element_type, value, array, operand_data.repetitions.Get<vector_buffer_t>().value, max_repetitions );
             return;
         }
     }
 
     void sBinaryOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<binary_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<binary_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        if( lOperandData.mLeftOperand.Has<multi_tensor_value_t>() && lOperandData.mRightOperand.Has<multi_tensor_value_t>() )
+        if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<multi_tensor_value_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<multi_tensor_value_t>();
+            auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
+            auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
 
             if( Has<broadcast_info_t>() )
-                Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue, Get<broadcast_info_t>() );
+                Op( element_type, value, left_operand_data.value, right_operant_data.value, Get<broadcast_info_t>() );
             else
-                Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+                Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<multi_tensor_value_t>() &&
-                 lOperandData.mRightOperand.Has<scalar_value_vector_t>() )
+        else if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<scalar_value_vector_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<multi_tensor_value_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<vector_buffer_t>();
+            auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
+            auto &right_operant_data = operand_data.right.Get<vector_buffer_t>();
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<scalar_value_vector_t>() &&
-                 lOperandData.mRightOperand.Has<multi_tensor_value_t>() )
+        else if( operand_data.left.Has<scalar_value_vector_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<vector_buffer_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<multi_tensor_value_t>();
+            auto &left_operand_data  = operand_data.left.Get<vector_buffer_t>();
+            auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<multi_tensor_value_t>() && lOperandData.mRightOperand.Has<scalar_node_t>() )
+        else if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<scalar_node_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<multi_tensor_value_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<scalar_node_t>();
+            auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
+            auto &right_operant_data = operand_data.right.Get<scalar_node_t>();
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<scalar_node_t>() && lOperandData.mRightOperand.Has<multi_tensor_value_t>() )
+        else if( operand_data.left.Has<scalar_node_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<scalar_node_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<multi_tensor_value_t>();
+            auto &left_operand_data  = operand_data.left.Get<scalar_node_t>();
+            auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
         else
         {
@@ -124,54 +122,51 @@ namespace numlua::mtops
 
     void sBinaryBooleanOperationController::Run()
     {
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<binary_operation_t>();
 
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<binary_operation_t>();
-
-        if( lOperandData.mLeftOperand.Has<multi_tensor_value_t>() && lOperandData.mRightOperand.Has<multi_tensor_value_t>() )
+        if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<multi_tensor_value_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<multi_tensor_value_t>();
-            auto  lElementType        = lOperandData.mLeftOperand.Get<type_t>().mValue;
+            auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
+            auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
+            auto  element_type       = operand_data.left.Get<type_t>().value;
 
             if( Has<broadcast_info_t>() )
-                Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue, Get<broadcast_info_t>() );
+                Op( element_type, value, left_operand_data.value, right_operant_data.value, Get<broadcast_info_t>() );
             else
-                Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+                Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<multi_tensor_value_t>() &&
-                 lOperandData.mRightOperand.Has<scalar_value_vector_t>() )
+        else if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<scalar_value_vector_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<multi_tensor_value_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<vector_buffer_t>();
-            auto  lElementType        = lOperandData.mLeftOperand.Get<type_t>().mValue;
+            auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
+            auto &right_operant_data = operand_data.right.Get<vector_buffer_t>();
+            auto  element_type       = operand_data.left.Get<type_t>().value;
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<scalar_value_vector_t>() &&
-                 lOperandData.mRightOperand.Has<multi_tensor_value_t>() )
+        else if( operand_data.left.Has<scalar_value_vector_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<vector_buffer_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<multi_tensor_value_t>();
-            auto  lElementType        = lOperandData.mRightOperand.Get<type_t>().mValue;
+            auto &left_operand_data  = operand_data.left.Get<vector_buffer_t>();
+            auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
+            auto  element_type       = operand_data.right.Get<type_t>().value;
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<multi_tensor_value_t>() && lOperandData.mRightOperand.Has<scalar_node_t>() )
+        else if( operand_data.left.Has<multi_tensor_value_t>() && operand_data.right.Has<scalar_node_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<multi_tensor_value_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<scalar_node_t>();
-            auto  lElementType        = lOperandData.mLeftOperand.Get<type_t>().mValue;
+            auto &left_operand_data  = operand_data.left.Get<multi_tensor_value_t>();
+            auto &right_operant_data = operand_data.right.Get<scalar_node_t>();
+            auto  element_type       = operand_data.left.Get<type_t>().value;
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
-        else if( lOperandData.mLeftOperand.Has<scalar_node_t>() && lOperandData.mRightOperand.Has<multi_tensor_value_t>() )
+        else if( operand_data.left.Has<scalar_node_t>() && operand_data.right.Has<multi_tensor_value_t>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<scalar_node_t>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<multi_tensor_value_t>();
-            auto  lElementType        = lOperandData.mRightOperand.Get<type_t>().mValue;
+            auto &left_operand_data  = operand_data.left.Get<scalar_node_t>();
+            auto &right_operant_data = operand_data.right.Get<multi_tensor_value_t>();
+            auto  element_type       = operand_data.right.Get<type_t>().value;
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
+            Op( element_type, value, left_operand_data.value, right_operant_data.value );
         }
         else
         {
@@ -179,50 +174,56 @@ namespace numlua::mtops
         }
     }
 
-    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      multi_tensor_t &aRight )
     {
         AddOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                      broadcast_info_t &aBroadcast )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
-        AddOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-               aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-               aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+        AddOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.block_sizes.Get<vector_buffer_t>().value,
+               aBroadcast.max_block_size, aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value,
+               aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
-    {
-        AddOp( aTensorElementType, aOut, aIn, aConstant );
-    }
-
-    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn,
+                                      scalar_value_t &aConstant )
     {
         AddOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant,
+                                      multi_tensor_t &aIn )
+    {
+        AddOp( aTensorElementType, aOut, aIn, aConstant );
+    }
+
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      memory_buffer_t &aRight )
     {
         AddOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void sAddOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft,
+                                      multi_tensor_t &aRight )
     {
         AddOp( aTensorElementType, aOut, aRight, aLeft );
     }
 
-    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           multi_tensor_t &aRight )
     {
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                           broadcast_info_t &aBroadcast )
+    void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                    aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                    aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                    aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                    aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sMultiplyOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn,
@@ -249,17 +250,18 @@ namespace numlua::mtops
         MultiplyOp( aTensorElementType, aOut, aRight, aLeft );
     }
 
-    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           multi_tensor_t &aRight )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                           broadcast_info_t &aBroadcast )
+    void sSubtractOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                    aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                    aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                    aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                    aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sSubtractOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn,
@@ -286,112 +288,127 @@ namespace numlua::mtops
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                         multi_tensor_t &aRight )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn,
+                                         scalar_value_t &aConstant )
     {
         DivideOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                         broadcast_info_t &aBroadcast )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                         multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                  aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                  aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                  aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                  aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant,
+                                         multi_tensor_t &aIn )
     {
         DivideOp( aTensorElementType, aOut, aConstant, aIn );
     }
 
-    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                         memory_buffer_t &aRight )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void sDivideOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft,
+                                         multi_tensor_t &aRight )
     {
         DivideOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      multi_tensor_t &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                      broadcast_info_t &aBroadcast )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
-        AndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-               aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-               aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+        AndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.block_sizes.Get<vector_buffer_t>().value,
+               aBroadcast.max_block_size, aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value,
+               aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
-    {
-        AndOp( aTensorElementType, aOut, aLeft, aRight );
-    }
-
-    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      scalar_value_t &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft,
+                                      multi_tensor_t &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                      memory_buffer_t &aRight )
     {
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft,
+                                      multi_tensor_t &aRight )
+    {
+        AndOp( aTensorElementType, aOut, aLeft, aRight );
+    }
+
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                     multi_tensor_t &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                     broadcast_info_t &aBroadcast )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                     multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
-        OrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-              aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-              aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+        OrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.block_sizes.Get<vector_buffer_t>().value,
+              aBroadcast.max_block_size, aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value,
+              aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
-    {
-        OrOp( aTensorElementType, aOut, aLeft, aRight );
-    }
-
-    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                     scalar_value_t &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft,
+                                     multi_tensor_t &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                     memory_buffer_t &aRight )
+    {
+        OrOp( aTensorElementType, aOut, aLeft, aRight );
+    }
+
+    void sOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft,
+                                     multi_tensor_t &aRight )
     {
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
     void sNotOperationController::Run()
     {
-        auto  lElementType = Get<type_t>().mValue;
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<not_operation_t>();
+        auto  element_type = Get<type_t>().value;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<not_operation_t>();
 
-        NotOp( lElementType, lValue, lOperandData.mOperand.Get<multi_tensor_value_t>().mValue );
+        NotOp( element_type, value, operand_data.operand.Get<multi_tensor_value_t>().value );
     }
 
     void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
@@ -404,8 +421,8 @@ namespace numlua::mtops
                                              multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                      aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                      aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                      aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                      aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sBitwiseAndOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
@@ -438,12 +455,12 @@ namespace numlua::mtops
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                            broadcast_info_t &aBroadcast )
+    void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                            multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                     aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                     aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                     aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                     aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sBitwiseOrOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
@@ -472,92 +489,83 @@ namespace numlua::mtops
 
     void sBitwiseNotOperationController::Run()
     {
-        auto  lElementType = Get<type_t>().mValue;
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<bitwise_not_operation_t>();
+        auto  element_type = Get<type_t>().value;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<bitwise_not_operation_t>();
 
-        BitwiseNotOp( lElementType, lValue, lOperandData.mOperand.Get<multi_tensor_value_t>().mValue );
+        BitwiseNotOp( element_type, value, operand_data.operand.Get<multi_tensor_value_t>().value );
     }
 
     void sInIntervalOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<in_interval_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<in_interval_operation_t>();
 
-        auto &lX           = lOperandData.mX.Get<multi_tensor_value_t>().mValue;
-        auto  lElementType = lOperandData.mX.Get<type_t>().mValue;
+        auto &lX           = operand_data.x.Get<multi_tensor_value_t>().value;
+        auto  element_type = operand_data.x.Get<type_t>().value;
 
-        if( lOperandData.mLower.Has<multi_tensor_value_t>() && lOperandData.mUpper.Has<multi_tensor_value_t>() )
+        if( operand_data.lower.Has<multi_tensor_value_t>() && operand_data.upper.Has<multi_tensor_value_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<multi_tensor_value_t>();
-            auto &lUpper = lOperandData.mUpper.Get<multi_tensor_value_t>();
+            auto &lLower = operand_data.lower.Get<multi_tensor_value_t>();
+            auto &lUpper = operand_data.upper.Get<multi_tensor_value_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<multi_tensor_value_t>() && lOperandData.mUpper.Has<scalar_value_vector_t>() )
+        else if( operand_data.lower.Has<multi_tensor_value_t>() && operand_data.upper.Has<scalar_value_vector_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<multi_tensor_value_t>();
-            auto &lUpper = lOperandData.mUpper.Get<vector_buffer_t>();
+            auto &lLower = operand_data.lower.Get<multi_tensor_value_t>();
+            auto &lUpper = operand_data.upper.Get<vector_buffer_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<multi_tensor_value_t>() && lOperandData.mUpper.Has<scalar_node_t>() )
+        else if( operand_data.lower.Has<multi_tensor_value_t>() && operand_data.upper.Has<scalar_node_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<multi_tensor_value_t>();
-            auto &lUpper = lOperandData.mUpper.Get<scalar_node_t>();
+            auto &lLower = operand_data.lower.Get<multi_tensor_value_t>();
+            auto &lUpper = operand_data.upper.Get<scalar_node_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<scalar_value_vector_t>() && lOperandData.mUpper.Has<multi_tensor_value_t>() )
+        else if( operand_data.lower.Has<scalar_value_vector_t>() && operand_data.upper.Has<multi_tensor_value_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<vector_buffer_t>();
-            auto &lUpper = lOperandData.mUpper.Get<multi_tensor_value_t>();
+            auto &lLower = operand_data.lower.Get<vector_buffer_t>();
+            auto &lUpper = operand_data.upper.Get<multi_tensor_value_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<scalar_value_vector_t>() && lOperandData.mUpper.Has<scalar_value_vector_t>() )
+        else if( operand_data.lower.Has<scalar_value_vector_t>() && operand_data.upper.Has<scalar_value_vector_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<vector_buffer_t>();
-            auto &lUpper = lOperandData.mUpper.Get<vector_buffer_t>();
+            auto &lLower = operand_data.lower.Get<vector_buffer_t>();
+            auto &lUpper = operand_data.upper.Get<vector_buffer_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<scalar_value_vector_t>() && lOperandData.mUpper.Has<scalar_node_t>() )
+        else if( operand_data.lower.Has<scalar_value_vector_t>() && operand_data.upper.Has<scalar_node_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<vector_buffer_t>();
-            auto &lUpper = lOperandData.mUpper.Get<scalar_node_t>();
+            auto &lLower = operand_data.lower.Get<vector_buffer_t>();
+            auto &lUpper = operand_data.upper.Get<scalar_node_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<scalar_node_t>() && lOperandData.mUpper.Has<multi_tensor_value_t>() )
+        else if( operand_data.lower.Has<scalar_node_t>() && operand_data.upper.Has<multi_tensor_value_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<scalar_node_t>();
-            auto &lUpper = lOperandData.mUpper.Get<multi_tensor_value_t>();
+            auto &lLower = operand_data.lower.Get<scalar_node_t>();
+            auto &lUpper = operand_data.upper.Get<multi_tensor_value_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<scalar_node_t>() && lOperandData.mUpper.Has<scalar_value_vector_t>() )
+        else if( operand_data.lower.Has<scalar_node_t>() && operand_data.upper.Has<scalar_value_vector_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<scalar_node_t>();
-            auto &lUpper = lOperandData.mUpper.Get<vector_buffer_t>();
+            auto &lLower = operand_data.lower.Get<scalar_node_t>();
+            auto &lUpper = operand_data.upper.Get<vector_buffer_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
-        else if( lOperandData.mLower.Has<scalar_node_t>() && lOperandData.mUpper.Has<scalar_node_t>() )
+        else if( operand_data.lower.Has<scalar_node_t>() && operand_data.upper.Has<scalar_node_t>() )
         {
-            auto &lLower = lOperandData.mLower.Get<scalar_node_t>();
-            auto &lUpper = lOperandData.mUpper.Get<scalar_node_t>();
+            auto &lLower = operand_data.lower.Get<scalar_node_t>();
+            auto &lUpper = operand_data.upper.Get<scalar_node_t>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
-                          lOperandData.mStrictUpper );
+            InIntervalOp( element_type, value, lX, lLower.value, lUpper.value, operand_data.strict_lower, operand_data.strict_upper );
         }
         else
         {
@@ -565,58 +573,66 @@ namespace numlua::mtops
         }
     }
 
-    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                        multi_tensor_t &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                        broadcast_info_t &aBroadcast )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                        multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                 aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                 aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                 aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                 aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                        scalar_value_t &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft,
+                                        multi_tensor_t &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, memory_buffer_t &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                        memory_buffer_t &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft, multi_tensor_t &aRight )
+    void sEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, memory_buffer_t &aLeft,
+                                        multi_tensor_t &aRight )
     {
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           multi_tensor_t &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                                           broadcast_info_t &aBroadcast )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                    aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                    aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                    aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                    aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, scalar_value_t &aRight )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
+                                           scalar_value_t &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft, multi_tensor_t &aRight )
+    void sLessThanOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aLeft,
+                                           multi_tensor_t &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
@@ -643,8 +659,8 @@ namespace numlua::mtops
                                                   multi_tensor_t &aRight, broadcast_info_t &aBroadcast )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
-                           aBroadcast.mBlockSizes.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBlockSize,
-                           aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().mValue, aBroadcast.mMaxBroadcastDimension );
+                           aBroadcast.block_sizes.Get<vector_buffer_t>().value, aBroadcast.max_block_size,
+                           aBroadcast.mBroadcastDimension.Get<vector_buffer_t>().value, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sLessThanOrEqualOperationController::Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft,
@@ -673,79 +689,74 @@ namespace numlua::mtops
 
     void sWhereOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<where_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<where_operation_t>();
 
-        auto &lCondition   = lOperandData.mCondition.Get<multi_tensor_value_t>().mValue;
-        auto  lElementType = lOperandData.mValueIfTrue.Get<type_t>().mValue;
+        auto &lCondition   = operand_data.condition.Get<multi_tensor_value_t>().value;
+        auto  element_type = operand_data.value_if_true.Get<type_t>().value;
 
-        if( lOperandData.mValueIfTrue.Has<multi_tensor_value_t>() && lOperandData.mValueIfFalse.Has<multi_tensor_value_t>() )
+        if( operand_data.value_if_true.Has<multi_tensor_value_t>() && operand_data.value_if_false.Has<multi_tensor_value_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<multi_tensor_value_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<multi_tensor_value_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<multi_tensor_value_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<multi_tensor_value_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<multi_tensor_value_t>() &&
-                 lOperandData.mValueIfFalse.Has<scalar_value_vector_t>() )
+        else if( operand_data.value_if_true.Has<multi_tensor_value_t>() && operand_data.value_if_false.Has<scalar_value_vector_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<multi_tensor_value_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<vector_buffer_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<multi_tensor_value_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<vector_buffer_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<multi_tensor_value_t>() && lOperandData.mValueIfFalse.Has<scalar_node_t>() )
+        else if( operand_data.value_if_true.Has<multi_tensor_value_t>() && operand_data.value_if_false.Has<scalar_node_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<multi_tensor_value_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<scalar_node_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<multi_tensor_value_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<scalar_node_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<scalar_value_vector_t>() &&
-                 lOperandData.mValueIfFalse.Has<multi_tensor_value_t>() )
+        else if( operand_data.value_if_true.Has<scalar_value_vector_t>() && operand_data.value_if_false.Has<multi_tensor_value_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<vector_buffer_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<multi_tensor_value_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<vector_buffer_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<multi_tensor_value_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<scalar_value_vector_t>() &&
-                 lOperandData.mValueIfFalse.Has<scalar_value_vector_t>() )
+        else if( operand_data.value_if_true.Has<scalar_value_vector_t>() && operand_data.value_if_false.Has<scalar_value_vector_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<vector_buffer_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<vector_buffer_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<vector_buffer_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<vector_buffer_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<scalar_value_vector_t>() &&
-                 lOperandData.mValueIfFalse.Has<scalar_node_t>() )
+        else if( operand_data.value_if_true.Has<scalar_value_vector_t>() && operand_data.value_if_false.Has<scalar_node_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<vector_buffer_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<scalar_node_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<vector_buffer_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<scalar_node_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<scalar_node_t>() && lOperandData.mValueIfFalse.Has<multi_tensor_value_t>() )
+        else if( operand_data.value_if_true.Has<scalar_node_t>() && operand_data.value_if_false.Has<multi_tensor_value_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<scalar_node_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<multi_tensor_value_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<scalar_node_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<multi_tensor_value_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<scalar_node_t>() &&
-                 lOperandData.mValueIfFalse.Has<scalar_value_vector_t>() )
+        else if( operand_data.value_if_true.Has<scalar_node_t>() && operand_data.value_if_false.Has<scalar_value_vector_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<scalar_node_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<vector_buffer_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<scalar_node_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<vector_buffer_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
-        else if( lOperandData.mValueIfTrue.Has<scalar_node_t>() && lOperandData.mValueIfFalse.Has<scalar_node_t>() )
+        else if( operand_data.value_if_true.Has<scalar_node_t>() && operand_data.value_if_false.Has<scalar_node_t>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<scalar_node_t>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<scalar_node_t>();
+            auto &lValueIfTrue  = operand_data.value_if_true.Get<scalar_node_t>();
+            auto &lValueIfFalse = operand_data.value_if_false.Get<scalar_node_t>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
+            WhereOp( element_type, value, lCondition, lValueIfTrue.value, lValueIfFalse.value );
         }
         else
         {
@@ -755,65 +766,64 @@ namespace numlua::mtops
 
     void sLinearSpaceOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<linear_space_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<linear_space_operation_t>();
 
-        auto &lLeft         = lOperandData.mLeft.Get<multi_tensor_value_t>().mValue;
-        auto &lRight        = lOperandData.mRight.Get<multi_tensor_value_t>().mValue;
-        auto &lSubdivisions = lOperandData.mSubdivisions.Get<u32_vector_t>();
+        auto &lLeft         = operand_data.left.Get<multi_tensor_value_t>().value;
+        auto &lRight        = operand_data.right.Get<multi_tensor_value_t>().value;
+        auto &lSubdivisions = operand_data.subdivisions.Get<u32_vector_t>();
 
-        auto lElementType = Get<type_t>().mValue;
+        auto element_type = Get<type_t>().value;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lSubdivisions.mValue )
-            lMaxSubdivisions = std::max( lMaxSubdivisions, lSub );
+        for( const auto &sub : lSubdivisions.value )
+            lMaxSubdivisions = std::max( lMaxSubdivisions, sub );
 
-        LinearSpaceOp( lElementType, lValue, lLeft, lRight, lOperandData.mSubdivisions.Get<vector_buffer_t>().mValue,
-                       lMaxSubdivisions );
+        LinearSpaceOp( element_type, value, lLeft, lRight, operand_data.subdivisions.Get<vector_buffer_t>().value, lMaxSubdivisions );
     }
 
     void sMixOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<mix_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<mix_operation_t>();
 
-        auto &lA = lOperandData.mA.Get<multi_tensor_value_t>().mValue;
-        auto &lB = lOperandData.mB.Get<multi_tensor_value_t>().mValue;
-        auto &lT = lOperandData.mT.Get<multi_tensor_value_t>().mValue;
+        auto &lA = operand_data.A.Get<multi_tensor_value_t>().value;
+        auto &lB = operand_data.B.Get<multi_tensor_value_t>().value;
+        auto &lT = operand_data.t.Get<multi_tensor_value_t>().value;
 
-        auto lElementType = Get<type_t>().mValue;
+        auto element_type = Get<type_t>().value;
 
-        MixOp( lElementType, lValue, lA, lB, lT );
+        MixOp( element_type, value, lA, lB, lT );
     }
 
     void sMultiTensorRunner::Run()
     {
-        auto &lValue = Get<multi_tensor_value_t>().mValue;
+        auto &value = Get<multi_tensor_value_t>().value;
         if( Has<constant_value_initializer_t>() )
         {
             auto &lInitializer = Get<constant_value_initializer_t>();
-            ConstantFill( type_of( lInitializer.mValue ), lValue, lInitializer.mValue );
+            ConstantFill( type_of( lInitializer.value ), value, lInitializer.value );
         }
         else if( Has<vector_initializer_t>() )
         {
             auto &lInitializer = Get<vector_initializer_t>();
-            DISPATCH_BY_TYPE( type_of( lInitializer.mValue[0] ), ResolveAndUpload, ( lInitializer ) );
-            ConstantFill( type_of( lInitializer.mValue[0] ), lValue, lInitializer.mData );
+            DISPATCH_BY_TYPE( type_of( lInitializer.value[0] ), ResolveAndUpload, ( lInitializer ) );
+            ConstantFill( type_of( lInitializer.value[0] ), value, lInitializer.data );
         }
         else if( Has<data_initializer_t>() )
         {
             auto &lInitializer = Get<data_initializer_t>();
-            DISPATCH_BY_TYPE( type_of( lInitializer.mValue[0] ), ResolveAndUpload, ( lInitializer, lValue ) );
+            DISPATCH_BY_TYPE( type_of( lInitializer.value[0] ), ResolveAndUpload, ( lInitializer, value ) );
         }
         else if( Has<random_uniform_initializer_t>() )
         {
             auto &lInitializer = Get<random_uniform_initializer_t>();
-            RandomUniformFill( lInitializer.mType, lValue );
+            RandomUniformFill( lInitializer.type, value );
         }
         else if( Has<random_normal_initializer_t>() )
         {
             auto &lInitializer = Get<random_normal_initializer_t>();
-            RandomNormalFill( lInitializer.mType, lValue, lInitializer.mMean, lInitializer.mStd );
+            RandomNormalFill( lInitializer.type, value, lInitializer.mu, lInitializer.sigma );
         }
         else
         {
@@ -823,45 +833,45 @@ namespace numlua::mtops
 
     void sSample2DOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<sample2D_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<sample2D_operation_t>();
 
-        auto &lTextures = lOperandData.mTextures.Get<vector_buffer_t>().mValue;
+        auto &lTextures = operand_data.textures.Get<vector_buffer_t>().value;
 
-        if( lOperandData.mX.Has<multi_tensor_value_t>() && lOperandData.mY.Has<multi_tensor_value_t>() )
+        if( operand_data.x.Has<multi_tensor_value_t>() && operand_data.y.Has<multi_tensor_value_t>() )
         {
-            auto &lX = lOperandData.mX.Get<multi_tensor_value_t>().mValue;
-            auto &lY = lOperandData.mY.Get<multi_tensor_value_t>().mValue;
+            auto &lX = operand_data.x.Get<multi_tensor_value_t>().value;
+            auto &lY = operand_data.y.Get<multi_tensor_value_t>().value;
 
-            Sample2DOp( lValue, lX, lY, lTextures );
+            Sample2DOp( value, lX, lY, lTextures );
         }
-        else if( lOperandData.mX.Has<multi_tensor_value_t>() && lOperandData.mY.Has<scalar_value_vector_t>() )
+        else if( operand_data.x.Has<multi_tensor_value_t>() && operand_data.y.Has<scalar_value_vector_t>() )
         {
-            auto &lX = lOperandData.mX.Get<multi_tensor_value_t>().mValue;
-            auto &lY = lOperandData.mY.Get<vector_buffer_t>().mValue;
+            auto &lX = operand_data.x.Get<multi_tensor_value_t>().value;
+            auto &lY = operand_data.y.Get<vector_buffer_t>().value;
 
-            Sample2DOp( lValue, lX, lY, lTextures );
+            Sample2DOp( value, lX, lY, lTextures );
         }
-        else if( lOperandData.mX.Has<multi_tensor_value_t>() && lOperandData.mY.Has<scalar_node_t>() )
+        else if( operand_data.x.Has<multi_tensor_value_t>() && operand_data.y.Has<scalar_node_t>() )
         {
-            auto &lX = lOperandData.mX.Get<multi_tensor_value_t>().mValue;
-            auto &lY = lOperandData.mY.Get<scalar_node_t>().mValue;
+            auto &lX = operand_data.x.Get<multi_tensor_value_t>().value;
+            auto &lY = operand_data.y.Get<scalar_node_t>().value;
 
-            Sample2DOp( lValue, lX, lY, lTextures );
+            Sample2DOp( value, lX, lY, lTextures );
         }
-        else if( lOperandData.mX.Has<scalar_value_vector_t>() && lOperandData.mY.Has<multi_tensor_value_t>() )
+        else if( operand_data.x.Has<scalar_value_vector_t>() && operand_data.y.Has<multi_tensor_value_t>() )
         {
-            auto &lX = lOperandData.mX.Get<vector_buffer_t>().mValue;
-            auto &lY = lOperandData.mY.Get<multi_tensor_value_t>().mValue;
+            auto &lX = operand_data.x.Get<vector_buffer_t>().value;
+            auto &lY = operand_data.y.Get<multi_tensor_value_t>().value;
 
-            Sample2DOp( lValue, lX, lY, lTextures );
+            Sample2DOp( value, lX, lY, lTextures );
         }
-        else if( lOperandData.mX.Has<scalar_node_t>() && lOperandData.mY.Has<multi_tensor_value_t>() )
+        else if( operand_data.x.Has<scalar_node_t>() && operand_data.y.Has<multi_tensor_value_t>() )
         {
-            auto &lX = lOperandData.mX.Get<scalar_node_t>().mValue;
-            auto &lY = lOperandData.mY.Get<multi_tensor_value_t>().mValue;
+            auto &lX = operand_data.x.Get<scalar_node_t>().value;
+            auto &lY = operand_data.y.Get<multi_tensor_value_t>().value;
 
-            Sample2DOp( lValue, lX, lY, lTextures );
+            Sample2DOp( value, lX, lY, lTextures );
         }
         else
         {
@@ -871,86 +881,86 @@ namespace numlua::mtops
 
     void sToFixedPointOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<convert_to_fixed_point_t>();
-        auto  lElementType = lOperandData.mArray.Get<type_t>().mValue;
-        auto &lArray       = lOperandData.mArray.Get<multi_tensor_value_t>().mValue;
-        auto &lScaling     = lOperandData.mScaling.Get<scalar_node_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<convert_to_fixed_point_t>();
+        auto  element_type = operand_data.array.Get<type_t>().value;
+        auto &array        = operand_data.array.Get<multi_tensor_value_t>().value;
+        auto &lScaling     = operand_data.mScaling.Get<scalar_node_t>().value;
 
-        ToFixedPointOp( lElementType, lValue, lOperandData.mOutputType, lArray, lScaling );
+        ToFixedPointOp( element_type, value, operand_data.mOutputType, array, lScaling );
     }
 
     void sAffineNodeController::Run()
     {
 
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<affine_transform_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<affine_transform_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        auto &lX = lOperandData.mX.Get<multi_tensor_value_t>();
+        auto &lX = operand_data.X.Get<multi_tensor_value_t>();
 
-        if( lOperandData.mA.Has<multi_tensor_value_t>() && lOperandData.mB.Has<multi_tensor_value_t>() )
+        if( operand_data.A.Has<multi_tensor_value_t>() && operand_data.B.Has<multi_tensor_value_t>() )
         {
-            auto &lA = lOperandData.mA.Get<multi_tensor_value_t>();
-            auto &lB = lOperandData.mB.Get<multi_tensor_value_t>();
+            auto &lA = operand_data.A.Get<multi_tensor_value_t>();
+            auto &lB = operand_data.B.Get<multi_tensor_value_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<multi_tensor_value_t>() && lOperandData.mB.Has<scalar_value_vector_t>() )
+        else if( operand_data.A.Has<multi_tensor_value_t>() && operand_data.B.Has<scalar_value_vector_t>() )
         {
-            auto &lA = lOperandData.mA.Get<multi_tensor_value_t>();
-            auto &lB = lOperandData.mB.Get<vector_buffer_t>();
+            auto &lA = operand_data.A.Get<multi_tensor_value_t>();
+            auto &lB = operand_data.B.Get<vector_buffer_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<multi_tensor_value_t>() && lOperandData.mB.Has<scalar_node_t>() )
+        else if( operand_data.A.Has<multi_tensor_value_t>() && operand_data.B.Has<scalar_node_t>() )
         {
-            auto &lA = lOperandData.mA.Get<multi_tensor_value_t>();
-            auto &lB = lOperandData.mB.Get<scalar_node_t>();
+            auto &lA = operand_data.A.Get<multi_tensor_value_t>();
+            auto &lB = operand_data.B.Get<scalar_node_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<scalar_value_vector_t>() && lOperandData.mB.Has<multi_tensor_value_t>() )
+        else if( operand_data.A.Has<scalar_value_vector_t>() && operand_data.B.Has<multi_tensor_value_t>() )
         {
-            auto &lA = lOperandData.mA.Get<vector_buffer_t>();
-            auto &lB = lOperandData.mB.Get<multi_tensor_value_t>();
+            auto &lA = operand_data.A.Get<vector_buffer_t>();
+            auto &lB = operand_data.B.Get<multi_tensor_value_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<scalar_value_vector_t>() && lOperandData.mB.Has<scalar_value_vector_t>() )
+        else if( operand_data.A.Has<scalar_value_vector_t>() && operand_data.B.Has<scalar_value_vector_t>() )
         {
-            auto &lA = lOperandData.mA.Get<vector_buffer_t>();
-            auto &lB = lOperandData.mB.Get<vector_buffer_t>();
+            auto &lA = operand_data.A.Get<vector_buffer_t>();
+            auto &lB = operand_data.B.Get<vector_buffer_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<scalar_value_vector_t>() && lOperandData.mB.Has<scalar_node_t>() )
+        else if( operand_data.A.Has<scalar_value_vector_t>() && operand_data.B.Has<scalar_node_t>() )
         {
-            auto &lA = lOperandData.mA.Get<vector_buffer_t>();
-            auto &lB = lOperandData.mB.Get<scalar_node_t>();
+            auto &lA = operand_data.A.Get<vector_buffer_t>();
+            auto &lB = operand_data.B.Get<scalar_node_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<scalar_node_t>() && lOperandData.mB.Has<multi_tensor_value_t>() )
+        else if( operand_data.A.Has<scalar_node_t>() && operand_data.B.Has<multi_tensor_value_t>() )
         {
-            auto &lA = lOperandData.mA.Get<scalar_node_t>();
-            auto &lB = lOperandData.mB.Get<multi_tensor_value_t>();
+            auto &lA = operand_data.A.Get<scalar_node_t>();
+            auto &lB = operand_data.B.Get<multi_tensor_value_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<scalar_node_t>() && lOperandData.mB.Has<scalar_value_vector_t>() )
+        else if( operand_data.A.Has<scalar_node_t>() && operand_data.B.Has<scalar_value_vector_t>() )
         {
-            auto &lA = lOperandData.mA.Get<scalar_node_t>();
-            auto &lB = lOperandData.mB.Get<vector_buffer_t>();
+            auto &lA = operand_data.A.Get<scalar_node_t>();
+            auto &lB = operand_data.B.Get<vector_buffer_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
-        else if( lOperandData.mA.Has<scalar_node_t>() && lOperandData.mB.Has<scalar_node_t>() )
+        else if( operand_data.A.Has<scalar_node_t>() && operand_data.B.Has<scalar_node_t>() )
         {
-            auto &lA = lOperandData.mA.Get<scalar_node_t>();
-            auto &lB = lOperandData.mB.Get<scalar_node_t>();
+            auto &lA = operand_data.A.Get<scalar_node_t>();
+            auto &lB = operand_data.B.Get<scalar_node_t>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
+            AffineTransformOp( element_type, value, lA.value, lX.value, lB.value );
         }
         else
         {
@@ -960,152 +970,148 @@ namespace numlua::mtops
 
     void sFloorOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<floor_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<floor_operation_t>();
 
-        FloorOp( lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue );
+        FloorOp( value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
 
     void sCeilOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<ceiling_operation_t>();
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<ceiling_operation_t>();
 
-        CeilOp( lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue );
+        CeilOp( value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
 
     void sAbsOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<abs_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<abs_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        AbsOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue );
+        AbsOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
 
     void sSqrtOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<sqrt_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<sqrt_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        SqrtOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue );
+        SqrtOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
 
     void sRoundOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<round_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<round_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        RoundOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue );
+        RoundOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value );
     }
 
     void sCountTrueOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<count_true_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<count_true_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        CountTrueOp( lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue,
-                     lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue,
-                     lOperandData.mElementCount.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        CountTrueOp( value, operand_data.array.Get<multi_tensor_value_t>().value,
+                     operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
+                     operand_data.max_block_size );
     }
 
     void sCountNonZeroOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<count_non_zero_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<count_non_zero_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        CountNonZeroOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue,
-                        lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue,
-                        lOperandData.mElementCount.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        CountNonZeroOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
+                        operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
+                        operand_data.max_block_size );
     }
 
     void sCountZeroOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<count_zero_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<count_zero_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        CountZeroOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue,
-                     lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue,
-                     lOperandData.mElementCount.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        CountZeroOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
+                     operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
+                     operand_data.max_block_size );
     }
 
     void sArraySummationOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<array_sum_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<array_sum_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        ArraySummationOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue,
-                          lOperandData.mBegin.Get<vector_buffer_t>().mValue,
-                          lOperandData.mEnd.Get<vector_buffer_t>().mValue,
-                          lOperandData.mElementCount.Get<vector_buffer_t>().mValue,
-                          lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        ArraySummationOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
+                          operand_data.begin.Get<vector_buffer_t>().value, operand_data.end.Get<vector_buffer_t>().value,
+                          operand_data.element_count.Get<vector_buffer_t>().value,
+                          operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.max_block_size );
     }
 
     void sArraySliceOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<array_slice_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<array_slice_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        ArraySliceOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue,
-                      lOperandData.mBegin.Get<vector_buffer_t>().mValue, lOperandData.mEnd.Get<vector_buffer_t>().mValue,
-                      lOperandData.mElementCount.Get<vector_buffer_t>().mValue,
-                      lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        ArraySliceOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value,
+                      operand_data.begin.Get<vector_buffer_t>().value, operand_data.end.Get<vector_buffer_t>().value,
+                      operand_data.element_count.Get<vector_buffer_t>().value, operand_data.block_sizes.Get<vector_buffer_t>().value,
+                      operand_data.max_block_size );
     }
 
     void sDiffOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<diff_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<diff_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        DiffOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue, lOperandData.mCount,
-                lOperandData.mElementCount.Get<vector_buffer_t>().mValue,
-                lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        DiffOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value, operand_data.count,
+                operand_data.element_count.Get<vector_buffer_t>().value, operand_data.block_sizes.Get<vector_buffer_t>().value,
+                operand_data.max_block_size );
     }
 
     void sShiftOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<shift_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<shift_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        ShiftOp( lElementType, lValue, lOperandData.mArray.Get<multi_tensor_value_t>().mValue, lOperandData.mCount,
-                 lOperandData.mFillValue.Get<scalar_node_t>().mValue,
-                 lOperandData.mElementCount.Get<vector_buffer_t>().mValue,
-                 lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        ShiftOp( element_type, value, operand_data.array.Get<multi_tensor_value_t>().value, operand_data.count,
+                 operand_data.fill_value.Get<scalar_node_t>().value, operand_data.element_count.Get<vector_buffer_t>().value,
+                 operand_data.block_sizes.Get<vector_buffer_t>().value, operand_data.max_block_size );
     }
 
     void sConv1DOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<conv1d_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<conv1d_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        Conv1DOp( lElementType, lValue, lOperandData.mArray0.Get<multi_tensor_value_t>().mValue,
-                  lOperandData.mElementCount0.Get<vector_buffer_t>().mValue,
-                  lOperandData.mBlockSizes0.Get<vector_buffer_t>().mValue, lOperandData.mMaxElementCount0,
-                  lOperandData.mMaxBlockSize0, lOperandData.mArray1.Get<multi_tensor_value_t>().mValue,
-                  lOperandData.mElementCount1.Get<vector_buffer_t>().mValue,
-                  lOperandData.mBlockSizes1.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize1 );
+        Conv1DOp( element_type, value, operand_data.array0.Get<multi_tensor_value_t>().value,
+                  operand_data.element_count0.Get<vector_buffer_t>().value, operand_data.block_sizes0.Get<vector_buffer_t>().value,
+                  operand_data.max_element_count0, operand_data.max_block_size0, operand_data.array1.Get<multi_tensor_value_t>().value,
+                  operand_data.element_count1.Get<vector_buffer_t>().value, operand_data.block_sizes1.Get<vector_buffer_t>().value,
+                  operand_data.max_block_size1 );
     }
 
     void sHCatOperationController::Run()
     {
-        auto &lValue       = Get<multi_tensor_value_t>().mValue;
-        auto &lOperandData = Get<hcat_operation_t>();
-        auto  lElementType = Get<type_t>().mValue;
+        auto &value        = Get<multi_tensor_value_t>().value;
+        auto &operand_data = Get<hcat_operation_t>();
+        auto  element_type = Get<type_t>().value;
 
-        HCatOp( lElementType, lValue, lOperandData.mArray0.Get<multi_tensor_value_t>().mValue,
-                lOperandData.mElementCount0.Get<vector_buffer_t>().mValue,
-                lOperandData.mArray1.Get<multi_tensor_value_t>().mValue,
-                lOperandData.mElementCount1.Get<vector_buffer_t>().mValue,
-                lOperandData.mBlockSizes.Get<vector_buffer_t>().mValue, lOperandData.mMaxBlockSize );
+        HCatOp( element_type, value, operand_data.array0.Get<multi_tensor_value_t>().value,
+                operand_data.element_count0.Get<vector_buffer_t>().value, operand_data.array1.Get<multi_tensor_value_t>().value,
+                operand_data.element_count1.Get<vector_buffer_t>().value, operand_data.block_sizes.Get<vector_buffer_t>().value,
+                operand_data.max_block_size );
     }
-} // namespace SE::TensorOps
+} // namespace numlua::mtops

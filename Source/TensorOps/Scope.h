@@ -26,6 +26,16 @@ namespace numlua::mtops
 {
     using graph_node_t = numlua::core::entity_t;
 
+    struct graph_node_base_t
+    {
+        bool                               is_allocated  = false;
+        bool                               do_not_expand = false;
+        scalar_type_t                      element_type  = scalar_type_t::FLOAT32;
+        vector_t<ref_t<graph_node_base_t>> operands      = {};
+
+        virtual void run() = 0;
+    };
+
     struct scope_t
     {
         memory_pool_t mPool{}; //!< Memory pool
@@ -82,7 +92,7 @@ namespace numlua::mtops
 
       private:
         numlua::core::entity_registry_t _nodesRegistry{};     //!< Underlying node database
-        std::optional<string_t>     _name = std::nullopt; //!< If this is set, the next node will be stored under the given value
+        std::optional<string_t>         _name = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<string_t, graph_node_t> _namedNodes = {}; //!< Mapping of node names to OpNodes
     };
 
@@ -155,22 +165,22 @@ namespace numlua::mtops
     template <typename _Ty>
     graph_node_t VectorValue( scope_t &scope, vector_t<_Ty> const &value )
     {
-        auto newEntity = scope.CreateNode();
+        auto new_entity = scope.CreateNode();
 
-        auto &valueComponent  = newEntity.Add<vector_value_t<_Ty>>();
-        valueComponent.mValue = value;
+        auto &value_component = new_entity.Add<vector_value_t<_Ty>>();
+        value_component.value = value;
 
-        auto &buffer = newEntity.Add<vector_buffer_t>();
-        buffer.mSize = value.size() * sizeof( _Ty );
+        auto &buffer = new_entity.Add<vector_buffer_t>();
+        buffer.size  = value.size() * sizeof( _Ty );
 
         if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
-            newEntity.Add<type_t>( type_of( value[0] ) );
+            new_entity.Add<type_t>( type_of( value[0] ) );
         }
 
-        newEntity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
+        new_entity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
 
-        return newEntity;
+        return new_entity;
     }
 
     /// @brief Create a constant @ref MemoryBuffer of ScalarValues initialized with the given vector
@@ -206,14 +216,14 @@ namespace numlua::mtops
     template <typename _Ty>
     graph_node_t ConstantScalarValue( scope_t &scope, _Ty const &value )
     {
-        auto newEntity = scope.CreateNode();
+        auto new_entity = scope.CreateNode();
 
-        auto &valueComponent  = newEntity.Add<scalar_node_t>();
-        valueComponent.mValue = value;
+        auto &value_component = new_entity.Add<scalar_node_t>();
+        value_component.value = value;
 
-        newEntity.Add<type_t>( type_of( valueComponent.mValue ) );
+        new_entity.Add<type_t>( type_of( value_component.value ) );
 
-        return newEntity;
+        return new_entity;
     }
 
     /// @brief Adds the outputs of two nodes
@@ -838,4 +848,4 @@ namespace numlua::mtops
     ///
     graph_node_t HCat( scope_t &scope, graph_node_t const &array0, graph_node_t const &array1 );
 
-} // namespace SE::TensorOps
+} // namespace numlua::mtops

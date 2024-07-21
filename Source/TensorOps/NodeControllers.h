@@ -29,13 +29,13 @@ namespace numlua::mtops
     template <typename T>
     static inline void ResolveAndUpload( data_initializer_t const &aComponent, multi_tensor_t const &aOut )
     {
-        aOut.Upload( Private::Resolve<T>( aComponent.mValue ) );
+        aOut.Upload( Private::Resolve<T>( aComponent.value ) );
     }
 
     template <typename T>
     static inline void ResolveAndUpload( vector_initializer_t const &aComponent )
     {
-        aComponent.mData.Upload( Private::Resolve<T>( aComponent.mValue ) );
+        aComponent.data.Upload( Private::Resolve<T>( aComponent.value ) );
     }
 
     template <typename T>
@@ -55,8 +55,8 @@ namespace numlua::mtops
     {
         void Run()
         {
-            auto &lData  = Get<vector_buffer_t>().mValue;
-            auto &lValue = Get<vector_value_t<_Ty>>().mValue;
+            auto &lData  = Get<vector_buffer_t>().value;
+            auto &lValue = Get<vector_value_t<_Ty>>().value;
             if constexpr( std::is_same<_Ty, scalar_value_t>::value )
             {
                 DISPATCH_BY_TYPE( type_of( lValue[0] ), ResolveAndUpload, ( lData, lValue ) );

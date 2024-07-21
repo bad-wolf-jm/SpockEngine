@@ -101,14 +101,14 @@ namespace numlua::mtops
 
             if( ( *element ).Has<multi_tensor_value_t>() )
             {
-                ( *element ).Get<multi_tensor_value_t>().mValue =
-                    multi_tensor_t( mPool, ( *element ).Get<multi_tensor_value_t>().mShape );
+                ( *element ).Get<multi_tensor_value_t>().value =
+                    multi_tensor_t( mPool, ( *element ).Get<multi_tensor_value_t>().shape );
                 ( *element ).Add<allocated_tag_t>();
             }
 
             if( ( *element ).Has<vector_buffer_t>() )
             {
-                ( *element ).Get<vector_buffer_t>().mValue = mPool.Allocate( ( *element ).Get<vector_buffer_t>().mSize );
+                ( *element ).Get<vector_buffer_t>().value = mPool.Allocate( ( *element ).Get<vector_buffer_t>().size );
                 ( *element ).Add<allocated_tag_t>();
             }
         }
@@ -119,13 +119,13 @@ namespace numlua::mtops
                 continue;
 
             auto &component = ( *element ).Get<graph_operation_t>();
-            if( !component.mControllerInstance )
+            if( !component.controller_instance )
             {
-                component.mControllerInstance = component.mInstantiateController();
-                component.mControllerInstance->Initialize( *element );
+                component.controller_instance = component.mInstantiateController();
+                component.controller_instance->Initialize( *element );
             }
 
-            component.mControllerInstance->Run();
+            component.controller_instance->Run();
         }
         SyncDevice();
     }
@@ -142,7 +142,7 @@ namespace numlua::mtops
     graph_node_t MultiTensorValue( scope_t &scope, constant_value_initializer_t const &initializer, tensor_shape_t const &shape )
     {
         auto new_entity = CreateMultiTensor( scope, shape );
-        new_entity.Add<type_t>( type_of( initializer.mValue ) );
+        new_entity.Add<type_t>( type_of( initializer.value ) );
         new_entity.Add<constant_value_initializer_t>( initializer );
 
         return new_entity;
@@ -151,16 +151,16 @@ namespace numlua::mtops
     graph_node_t MultiTensorValue( scope_t &scope, vector_initializer_t const &initializer, tensor_shape_t const &shape )
     {
         auto new_entity = CreateMultiTensor( scope, shape );
-        new_entity.Add<type_t>( type_of( initializer.mValue[0] ) );
+        new_entity.Add<type_t>( type_of( initializer.value[0] ) );
         auto &lInitializerComponent = new_entity.Add<vector_initializer_t>( initializer );
-        lInitializerComponent.mData = scope.mPool.Allocate( initializer.mValue.size() * size_of( type_of( initializer.mValue[0] ) ) );
+        lInitializerComponent.data  = scope.mPool.Allocate( initializer.value.size() * size_of( type_of( initializer.value[0] ) ) );
         return new_entity;
     }
 
     graph_node_t MultiTensorValue( scope_t &scope, data_initializer_t const &initializer, tensor_shape_t const &shape )
     {
         auto new_entity = CreateMultiTensor( scope, shape );
-        new_entity.Add<type_t>( type_of( initializer.mValue[0] ) );
+        new_entity.Add<type_t>( type_of( initializer.value[0] ) );
         auto &lInitializerComponent = new_entity.Add<data_initializer_t>( initializer );
         return new_entity;
     }
@@ -168,7 +168,7 @@ namespace numlua::mtops
     graph_node_t MultiTensorValue( scope_t &scope, random_uniform_initializer_t const &initializer, tensor_shape_t const &shape )
     {
         auto new_entity = CreateMultiTensor( scope, shape );
-        new_entity.Add<type_t>( initializer.mType );
+        new_entity.Add<type_t>( initializer.type );
         new_entity.Add<random_uniform_initializer_t>( initializer );
         return new_entity;
     }
@@ -176,14 +176,14 @@ namespace numlua::mtops
     graph_node_t MultiTensorValue( scope_t &scope, random_normal_initializer_t const &initializer, tensor_shape_t const &shape )
     {
         auto new_entity = CreateMultiTensor( scope, shape );
-        new_entity.Add<type_t>( initializer.mType );
+        new_entity.Add<type_t>( initializer.type );
         new_entity.Add<random_normal_initializer_t>( initializer );
         return new_entity;
     }
 
     static inline bool SameType( graph_node_t const &left, graph_node_t const &right )
     {
-        return ( left.Get<type_t>().mValue == right.Get<type_t>().mValue );
+        return ( left.Get<type_t>().value == right.Get<type_t>().value );
     }
 
     static inline bool SameShape( graph_node_t const &left, graph_node_t const &right )
@@ -194,7 +194,7 @@ namespace numlua::mtops
     template <typename T>
     static inline bool SameLength( graph_node_t left, graph_node_t const &right )
     {
-        return ( left.Get<vector_value_t<T>>().mValue.size() == right.Get<vector_value_t<T>>().mValue.size() );
+        return ( left.Get<vector_value_t<T>>().value.size() == right.Get<vector_value_t<T>>().value.size() );
     }
 
     graph_node_t BinaryOperation( scope_t &scope, scalar_type_t type, graph_node_t const &left, graph_node_t const &right )
@@ -207,12 +207,12 @@ namespace numlua::mtops
         auto  new_entity   = scope.CreateNode();
         auto &operand_data = new_entity.Add<binary_operation_t>( binary_operation_t{ left, right } );
 
-        if( operand_data.mLeftOperand.Has<multi_tensor_value_t>() )
+        if( operand_data.left.Has<multi_tensor_value_t>() )
         {
-            if( operand_data.mRightOperand.Has<multi_tensor_value_t>() )
+            if( operand_data.right.Has<multi_tensor_value_t>() )
             {
-                auto leftShape  = operand_data.mLeftOperand.Get<multi_tensor_value_t>().Shape();
-                auto rightShape = operand_data.mRightOperand.Get<multi_tensor_value_t>().Shape();
+                auto leftShape  = operand_data.left.Get<multi_tensor_value_t>().Shape();
+                auto rightShape = operand_data.right.Get<multi_tensor_value_t>().Shape();
 
                 if( leftShape != rightShape )
                 {
@@ -225,10 +225,10 @@ namespace numlua::mtops
                         auto &broadcastInfo = new_entity.Add<broadcast_info_t>();
                         rightShape.Flatten( 0 );
                         broadcastInfo.mBroadcastHint = broadcast_hint_t::LEFT;
-                        broadcastInfo.mMaxBlockSize  = rightShape.MaxDimensions[0];
-                        broadcastInfo.mBlockSizes    = VectorValue( scope, rightShape.GetDimension( 0 ) );
+                        broadcastInfo.max_block_size = rightShape.MaxDimensions[0];
+                        broadcastInfo.block_sizes    = VectorValue( scope, rightShape.GetDimension( 0 ) );
 
-                        auto broadcastShape                  = operand_data.mRightOperand.Get<multi_tensor_value_t>().Shape();
+                        auto broadcastShape                  = operand_data.right.Get<multi_tensor_value_t>().Shape();
                         broadcastInfo.mBroadcastDimension    = VectorValue( scope, broadcastShape.GetDimension( -1 ) );
                         broadcastInfo.mMaxBroadcastDimension = broadcastShape.MaxDimensions[broadcastShape.Rank - 1];
 
@@ -243,10 +243,10 @@ namespace numlua::mtops
                         auto &broadcastInfo = new_entity.Add<broadcast_info_t>();
                         rightShape.Flatten( 0 );
                         broadcastInfo.mBroadcastHint = broadcast_hint_t::RIGHT;
-                        broadcastInfo.mMaxBlockSize  = rightShape.MaxDimensions[0];
-                        broadcastInfo.mBlockSizes    = VectorValue( scope, rightShape.GetDimension( 0 ) );
+                        broadcastInfo.max_block_size = rightShape.MaxDimensions[0];
+                        broadcastInfo.block_sizes    = VectorValue( scope, rightShape.GetDimension( 0 ) );
 
-                        auto broadcastShape                  = operand_data.mLeftOperand.Get<multi_tensor_value_t>().Shape();
+                        auto broadcastShape                  = operand_data.left.Get<multi_tensor_value_t>().Shape();
                         broadcastInfo.mBroadcastDimension    = VectorValue( scope, broadcastShape.GetDimension( -1 ) );
                         broadcastInfo.mMaxBroadcastDimension = broadcastShape.MaxDimensions[broadcastShape.Rank - 1];
 
@@ -259,29 +259,29 @@ namespace numlua::mtops
                 }
                 else
                 {
-                    auto shape = operand_data.mLeftOperand.Get<multi_tensor_value_t>().Shape().Shape;
+                    auto shape = operand_data.left.Get<multi_tensor_value_t>().Shape().Shape;
                     new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( type ) ) );
                 }
             }
             else
             {
-                auto shape = operand_data.mLeftOperand.Get<multi_tensor_value_t>().Shape().Shape;
+                auto shape = operand_data.left.Get<multi_tensor_value_t>().Shape().Shape;
                 new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( type ) ) );
             }
         }
         else
         {
-            if( !( operand_data.mRightOperand.Has<multi_tensor_value_t>() ) )
+            if( !( operand_data.right.Has<multi_tensor_value_t>() ) )
             {
                 throw std::runtime_error( "RHS should have a tensor" );
             }
 
-            auto shape = operand_data.mRightOperand.Get<multi_tensor_value_t>().Shape().Shape;
+            auto shape = operand_data.right.Get<multi_tensor_value_t>().Shape().Shape;
             new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( type ) ) );
         }
 
         if( new_entity.Has<broadcast_info_t>() )
-            new_entity.Add<operand_t>( vector_t<graph_node_t>{ left, right, new_entity.Get<broadcast_info_t>().mBlockSizes,
+            new_entity.Add<operand_t>( vector_t<graph_node_t>{ left, right, new_entity.Get<broadcast_info_t>().block_sizes,
                                                                new_entity.Get<broadcast_info_t>().mBroadcastDimension } );
         else
             new_entity.Add<operand_t>( vector_t<graph_node_t>{ left, right } );
@@ -293,7 +293,7 @@ namespace numlua::mtops
 
     graph_node_t BinaryOperation( scope_t &scope, graph_node_t const &left, graph_node_t const &right )
     {
-        return BinaryOperation( scope, left.Get<type_t>().mValue, left, right );
+        return BinaryOperation( scope, left.Get<type_t>().value, left, right );
     }
 
     graph_node_t Add( scope_t &scope, graph_node_t const &left, graph_node_t const &right )
@@ -332,7 +332,7 @@ namespace numlua::mtops
     {
         assert( ( left.Has<type_t>() ) && ( right.Has<type_t>() ) );
         assert( SameType( left, right ) );
-        assert( left.Get<type_t>().mValue == scalar_type_t::UINT8 );
+        assert( left.Get<type_t>().value == scalar_type_t::UINT8 );
 
         auto new_entity = BinaryOperation( scope, left, right );
         new_entity.Add<graph_operation_t>().Bind<sAndOperationController>();
@@ -344,7 +344,7 @@ namespace numlua::mtops
     {
         assert( ( left.Has<type_t>() ) && ( right.Has<type_t>() ) );
         assert( SameType( left, right ) );
-        assert( left.Get<type_t>().mValue == scalar_type_t::UINT8 );
+        assert( left.Get<type_t>().value == scalar_type_t::UINT8 );
 
         auto new_entity = BinaryOperation( scope, left, right );
         new_entity.Add<graph_operation_t>().Bind<sOrOperationController>();
@@ -355,14 +355,14 @@ namespace numlua::mtops
     graph_node_t Not( scope_t &scope, graph_node_t const &operand )
     {
         assert( ( operand.Has<type_t>() ) );
-        assert( operand.Get<type_t>().mValue == scalar_type_t::UINT8 );
+        assert( operand.Get<type_t>().value == scalar_type_t::UINT8 );
 
         auto  new_entity   = scope.CreateNode();
         auto &operand_data = new_entity.Add<not_operation_t>( not_operation_t{ operand } );
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ operand } );
         new_entity.Add<type_t>( operand.Get<type_t>() );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.mOperand.Get<multi_tensor_value_t>().Shape() );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.operand.Get<multi_tensor_value_t>().Shape() );
         new_entity.Add<graph_operation_t>().Bind<sNotOperationController>();
 
         return new_entity;
@@ -372,7 +372,7 @@ namespace numlua::mtops
     {
         assert( ( left.Has<type_t>() ) && ( right.Has<type_t>() ) );
         assert( SameType( left, right ) );
-        assert( ( left.Get<type_t>().mValue >= scalar_type_t::UINT8 ) && ( left.Get<type_t>().mValue <= scalar_type_t::INT64 ) );
+        assert( ( left.Get<type_t>().value >= scalar_type_t::UINT8 ) && ( left.Get<type_t>().value <= scalar_type_t::INT64 ) );
 
         auto new_entity = BinaryOperation( scope, left, right );
         new_entity.Add<graph_operation_t>().Bind<sBitwiseAndOperationController>();
@@ -384,7 +384,7 @@ namespace numlua::mtops
     {
         assert( ( left.Has<type_t>() ) && ( right.Has<type_t>() ) );
         assert( SameType( left, right ) );
-        assert( ( left.Get<type_t>().mValue >= scalar_type_t::UINT8 ) && ( left.Get<type_t>().mValue <= scalar_type_t::INT64 ) );
+        assert( ( left.Get<type_t>().value >= scalar_type_t::UINT8 ) && ( left.Get<type_t>().value <= scalar_type_t::INT64 ) );
 
         auto new_entity = BinaryOperation( scope, left, right );
         new_entity.Add<graph_operation_t>().Bind<sBitwiseOrOperationController>();
@@ -395,14 +395,14 @@ namespace numlua::mtops
     graph_node_t BitwiseNot( scope_t &scope, graph_node_t const &operand )
     {
         assert( ( operand.Has<type_t>() ) );
-        assert( ( operand.Get<type_t>().mValue >= scalar_type_t::UINT8 ) && ( operand.Get<type_t>().mValue <= scalar_type_t::INT64 ) );
+        assert( ( operand.Get<type_t>().value >= scalar_type_t::UINT8 ) && ( operand.Get<type_t>().value <= scalar_type_t::INT64 ) );
 
         auto  new_entity   = scope.CreateNode();
         auto &operand_data = new_entity.Add<bitwise_not_operation_t>( bitwise_not_operation_t{ operand } );
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ operand } );
         new_entity.Add<type_t>( operand.Get<type_t>() );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.mOperand.Get<multi_tensor_value_t>().Shape() );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.operand.Get<multi_tensor_value_t>().Shape() );
         new_entity.Add<graph_operation_t>().Bind<sBitwiseNotOperationController>();
 
         return new_entity;
@@ -483,7 +483,7 @@ namespace numlua::mtops
         assert( ( condition.Has<type_t>() ) && ( valueIfTrue.Has<type_t>() ) && ( valueIfFalse.Has<type_t>() ) );
         assert( ( valueIfTrue.HasAny<multi_tensor_value_t, scalar_value_vector_t, scalar_node_t>() ) );
         assert( ( valueIfFalse.HasAny<multi_tensor_value_t, scalar_value_vector_t, scalar_node_t>() ) );
-        assert( ( condition.Get<type_t>().mValue == scalar_type_t::UINT8 ) );
+        assert( ( condition.Get<type_t>().value == scalar_type_t::UINT8 ) );
         assert( SameType( valueIfTrue, valueIfFalse ) );
 
         auto new_entity = scope.CreateNode();
@@ -492,7 +492,7 @@ namespace numlua::mtops
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ condition, valueIfTrue, valueIfFalse } );
 
         auto shape = condition.Get<multi_tensor_value_t>().Shape().Shape;
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( valueIfTrue.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( valueIfTrue.Get<type_t>().value ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sWhereOperationController>();
 
@@ -510,7 +510,7 @@ namespace numlua::mtops
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ A, B, T } );
         new_entity.Add<type_t>( A.Get<type_t>() );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.mA.Get<multi_tensor_value_t>().Shape() );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.A.Get<multi_tensor_value_t>().Shape() );
         new_entity.Add<graph_operation_t>().Bind<sMixOperationController>();
 
         return new_entity;
@@ -527,7 +527,7 @@ namespace numlua::mtops
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, scaling } );
 
-        auto &shape = operand_data.mArray.Get<multi_tensor_value_t>().Shape().Shape;
+        auto &shape = operand_data.array.Get<multi_tensor_value_t>().Shape().Shape;
         new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( outputType ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sToFixedPointOperationController>();
@@ -546,9 +546,9 @@ namespace numlua::mtops
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, repetitions } );
         new_entity.Add<type_t>( array.Get<type_t>() );
 
-        auto &input_shape = operand_data.mArray.Get<multi_tensor_value_t>().Shape();
+        auto &input_shape = operand_data.operand.Get<multi_tensor_value_t>().Shape();
 
-        auto                         repetitionsValue = repetitions.Get<u32_vector_t>().mValue;
+        auto                         repetitionsValue = repetitions.Get<u32_vector_t>().value;
         vector_t<vector_t<uint32_t>> output_shape( input_shape.CountLayers() );
         for( uint32_t i = 0; i < input_shape.CountLayers(); i++ )
         {
@@ -560,7 +560,7 @@ namespace numlua::mtops
             output_shape[i][output_shape[i].size() - 1] = repetitionsValue[i];
         }
 
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( array.Get<type_t>().value ) ) );
         new_entity.Add<graph_operation_t>().Bind<sArrayOperationController>();
 
         return new_entity;
@@ -576,9 +576,9 @@ namespace numlua::mtops
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, repetitions } );
         new_entity.Add<type_t>( array.Get<type_t>() );
-        auto &input_shape = operand_data.mArray.Get<multi_tensor_value_t>().Shape();
+        auto &input_shape = operand_data.operand.Get<multi_tensor_value_t>().Shape();
 
-        auto                         repetitionsValue = repetitions.Get<u32_vector_t>().mValue;
+        auto                         repetitionsValue = repetitions.Get<u32_vector_t>().value;
         vector_t<vector_t<uint32_t>> output_shape( input_shape.CountLayers() );
         for( uint32_t i = 0; i < input_shape.CountLayers(); i++ )
         {
@@ -593,7 +593,7 @@ namespace numlua::mtops
             }
         }
 
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( array.Get<type_t>().value ) ) );
         new_entity.Add<graph_operation_t>().Bind<sArrayOperationController>();
 
         return new_entity;
@@ -609,7 +609,7 @@ namespace numlua::mtops
         assert( SameLength<scalar_value_t>( left, right ) );
         assert( SameLength<scalar_value_t>( left, delta ) );
 
-        assert( ( left.Get<type_t>().mValue == scalar_type_t::FLOAT32 ) || ( left.Get<type_t>().mValue == scalar_type_t::FLOAT64 ) );
+        assert( ( left.Get<type_t>().value == scalar_type_t::FLOAT32 ) || ( left.Get<type_t>().value == scalar_type_t::FLOAT64 ) );
 
         auto  new_entity   = scope.CreateNode();
         auto &operand_data = new_entity.Add<arange_operation_t>( arange_operation_t{ left, right, delta } );
@@ -617,18 +617,18 @@ namespace numlua::mtops
         new_entity.Add<type_t>( left.Get<type_t>() );
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ left, right, delta } );
 
-        vector_t<vector_t<uint32_t>> output_shape( left.Get<scalar_value_vector_t>().mValue.size() );
-        auto                         leftValues  = left.Get<scalar_value_vector_t>().mValue;
-        auto                         rightValues = right.Get<scalar_value_vector_t>().mValue;
-        auto                         deltaValues = delta.Get<scalar_value_vector_t>().mValue;
+        vector_t<vector_t<uint32_t>> output_shape( left.Get<scalar_value_vector_t>().value.size() );
+        auto                         leftValues  = left.Get<scalar_value_vector_t>().value;
+        auto                         rightValues = right.Get<scalar_value_vector_t>().value;
+        auto                         deltaValues = delta.Get<scalar_value_vector_t>().value;
 
-        for( uint32_t i = 0; i < left.Get<scalar_value_vector_t>().mValue.size(); i++ )
+        for( uint32_t i = 0; i < left.Get<scalar_value_vector_t>().value.size(); i++ )
         {
             output_shape[i] = { static_cast<uint32_t>( std::ceil(
                 ( std::get<float>( rightValues[i] ) - std::get<float>( leftValues[i] ) ) / std::get<float>( deltaValues[i] ) ) ) };
         }
 
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( left.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( left.Get<type_t>().value ) ) );
         new_entity.Add<graph_operation_t>().Bind<sARangeOperationController>();
 
         return new_entity;
@@ -640,9 +640,9 @@ namespace numlua::mtops
 
         assert( SameShape( left, right ) );
 
-        assert( left.Get<multi_tensor_value_t>().Shape().CountLayers() == subdivisions.Get<u32_vector_t>().mValue.size() );
+        assert( left.Get<multi_tensor_value_t>().Shape().CountLayers() == subdivisions.Get<u32_vector_t>().value.size() );
         assert( SameType( left, right ) );
-        assert( ( left.Get<type_t>().mValue == scalar_type_t::FLOAT32 ) || ( left.Get<type_t>().mValue == scalar_type_t::FLOAT64 ) );
+        assert( ( left.Get<type_t>().value == scalar_type_t::FLOAT32 ) || ( left.Get<type_t>().value == scalar_type_t::FLOAT64 ) );
 
         auto  new_entity   = scope.CreateNode();
         auto &operand_data = new_entity.Add<linear_space_operation_t>( linear_space_operation_t{ left, right, subdivisions } );
@@ -650,7 +650,7 @@ namespace numlua::mtops
         new_entity.Add<type_t>( left.Get<type_t>() );
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ left, right, subdivisions } );
 
-        auto                         subdivisionsValue = subdivisions.Get<u32_vector_t>().mValue;
+        auto                         subdivisionsValue = subdivisions.Get<u32_vector_t>().value;
         vector_t<vector_t<uint32_t>> output_shape( left.Get<multi_tensor_value_t>().Shape().Shape.size() );
 
         for( uint32_t i = 0; i < left.Get<multi_tensor_value_t>().Shape().Shape.size(); i++ )
@@ -659,7 +659,7 @@ namespace numlua::mtops
             output_shape[i].push_back( subdivisionsValue[i] );
         }
 
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( left.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( left.Get<type_t>().value ) ) );
         new_entity.Add<graph_operation_t>().Bind<sLinearSpaceOperationController>();
 
         return new_entity;
@@ -678,22 +678,22 @@ namespace numlua::mtops
 
         if( x.Has<multi_tensor_value_t>() )
             assert( x.Get<multi_tensor_value_t>().Shape().CountLayers() ==
-                    textures.Get<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
+                    textures.Get<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>().value.size() );
 
         if( y.Has<multi_tensor_value_t>() )
             assert( y.Get<multi_tensor_value_t>().Shape().CountLayers() ==
-                    textures.Get<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>().mValue.size() );
+                    textures.Get<vector_value_t<cuda::texture_sampler2d_t::DeviceData>>().value.size() );
 
         assert( SameType( x, y ) );
 
-        assert( x.Get<type_t>().mValue == scalar_type_t::FLOAT32 );
+        assert( x.Get<type_t>().value == scalar_type_t::FLOAT32 );
 
         auto  new_entity   = scope.CreateNode();
         auto &operand_data = new_entity.Add<sample2D_operation_t>( sample2D_operation_t{ x, y, textures } );
 
         new_entity.Add<type_t>( x.Get<type_t>() );
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ x, y, textures } );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.mX.Get<multi_tensor_value_t>().Shape() );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.x.Get<multi_tensor_value_t>().Shape() );
         new_entity.Add<graph_operation_t>().Bind<sSample2DOperationController>();
 
         return new_entity;
@@ -713,7 +713,7 @@ namespace numlua::mtops
         new_entity.Add<type_t>( x.Get<type_t>() );
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ A, x, B } );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.mX.Get<multi_tensor_value_t>().Shape() );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, operand_data.X.Get<multi_tensor_value_t>().Shape() );
         new_entity.Add<graph_operation_t>().Bind<sAffineNodeController>();
 
         return new_entity;
@@ -740,7 +740,7 @@ namespace numlua::mtops
 
         new_entity.Add<type_t>( array.Get<type_t>() );
         new_entity.Add<multi_tensor_value_t>(
-            scope.mPool, array.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(),
+            scope.mPool, array.Get<multi_tensor_value_t>().value.GetMemoryBuffer(),
             tensor_shape_t( vector_t<vector_t<uint32_t>>{ lOutputDimension }, static_cast<size_t>( input_shape.ElementSize ) ) );
 
         return new_entity;
@@ -766,7 +766,7 @@ namespace numlua::mtops
         }
 
         new_entity.Add<type_t>( array.Get<type_t>() );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(),
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().value.GetMemoryBuffer(),
                                               tensor_shape_t( output_shape, static_cast<size_t>( input_shape.ElementSize ) ) );
 
         return new_entity;
@@ -794,7 +794,7 @@ namespace numlua::mtops
 
         new_entity.Add<type_t>( array.Get<type_t>() );
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ array } );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(), newShape );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().value.GetMemoryBuffer(), newShape );
 
         return new_entity;
     }
@@ -823,7 +823,7 @@ namespace numlua::mtops
             new_entity.Add<type_t>( array.Get<type_t>() );
 
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ array } );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(), newLayout );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().value.GetMemoryBuffer(), newLayout );
 
         return new_entity;
     }
@@ -838,7 +838,7 @@ namespace numlua::mtops
         input_shape.Flatten( 0 );
         new_entity.Add<type_t>( array.Get<type_t>() );
         new_entity.Add<operand_t>( vector_t<graph_node_t>{ array } );
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().mValue.GetMemoryBuffer(), input_shape );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, array.Get<multi_tensor_value_t>().value.GetMemoryBuffer(), input_shape );
 
         return new_entity;
     }
@@ -852,8 +852,8 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( array.Get<type_t>() );
-        auto &operand_data  = new_entity.Add<array_slice_operation_t>();
-        operand_data.mArray = array;
+        auto &operand_data = new_entity.Add<array_slice_operation_t>();
+        operand_data.array = array;
 
         auto input_shape = array.Get<multi_tensor_value_t>().Shape();
 
@@ -863,25 +863,25 @@ namespace numlua::mtops
         vector_t<uint32_t> beginValue;
         if( begin.Has<vector_value_t<uint32_t>>() )
         {
-            beginValue          = begin.Get<vector_value_t<uint32_t>>().mValue;
-            operand_data.mBegin = begin;
+            beginValue         = begin.Get<vector_value_t<uint32_t>>().value;
+            operand_data.begin = begin;
         }
         else
         {
-            beginValue = vector_t<uint32_t>( input_shape.CountLayers(), std::get<uint32_t>( begin.Get<scalar_node_t>().mValue ) );
-            operand_data.mBegin = VectorValue( scope, beginValue );
+            beginValue = vector_t<uint32_t>( input_shape.CountLayers(), std::get<uint32_t>( begin.Get<scalar_node_t>().value ) );
+            operand_data.begin = VectorValue( scope, beginValue );
         }
 
         vector_t<uint32_t> endValue;
         if( end.Has<vector_value_t<uint32_t>>() )
         {
-            endValue          = end.Get<vector_value_t<uint32_t>>().mValue;
-            operand_data.mEnd = end;
+            endValue         = end.Get<vector_value_t<uint32_t>>().value;
+            operand_data.end = end;
         }
         else
         {
-            endValue          = vector_t<uint32_t>( input_shape.CountLayers(), std::get<uint32_t>( end.Get<scalar_node_t>().mValue ) );
-            operand_data.mEnd = VectorValue( scope, endValue );
+            endValue         = vector_t<uint32_t>( input_shape.CountLayers(), std::get<uint32_t>( end.Get<scalar_node_t>().value ) );
+            operand_data.end = VectorValue( scope, endValue );
         }
 
         vector_t<vector_t<uint32_t>> output_shape( input_shape.CountLayers() );
@@ -897,14 +897,14 @@ namespace numlua::mtops
         }
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.mBegin, operand_data.mEnd, operand_data.mBlockSizes,
-                                                           operand_data.mElementCount } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.begin, operand_data.end, operand_data.block_sizes,
+                                                           operand_data.element_count } );
 
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape, size_of( array.Get<type_t>().value ) ) );
         new_entity.Add<graph_operation_t>().Bind<sArraySliceOperationController>();
 
         return new_entity;
@@ -932,43 +932,43 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( array.Get<type_t>() );
-        auto &operand_data  = new_entity.Add<array_sum_operation_t>();
-        operand_data.mArray = array;
+        auto &operand_data = new_entity.Add<array_sum_operation_t>();
+        operand_data.array = array;
 
         auto input_shape = array.Get<multi_tensor_value_t>().Shape();
 
         if( begin.Has<vector_value_t<uint32_t>>() )
         {
-            operand_data.mBegin = begin;
+            operand_data.begin = begin;
         }
         else
         {
-            vector_t<uint32_t> beginValue( input_shape.CountLayers(), std::get<uint32_t>( begin.Get<scalar_node_t>().mValue ) );
-            operand_data.mBegin = VectorValue( scope, beginValue );
+            vector_t<uint32_t> beginValue( input_shape.CountLayers(), std::get<uint32_t>( begin.Get<scalar_node_t>().value ) );
+            operand_data.begin = VectorValue( scope, beginValue );
         }
 
         if( end.Has<vector_value_t<uint32_t>>() )
         {
-            operand_data.mEnd = end;
+            operand_data.end = end;
         }
         else
         {
-            vector_t<uint32_t> endValue( input_shape.CountLayers(), std::get<uint32_t>( end.Get<scalar_node_t>().mValue ) );
-            operand_data.mEnd = VectorValue( scope, endValue );
+            vector_t<uint32_t> endValue( input_shape.CountLayers(), std::get<uint32_t>( end.Get<scalar_node_t>().value ) );
+            operand_data.end = VectorValue( scope, endValue );
         }
 
         auto output_shape = input_shape;
         output_shape.Trim( -1 );
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.mBegin, operand_data.mEnd, operand_data.mBlockSizes,
-                                                           operand_data.mElementCount } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.begin, operand_data.end, operand_data.block_sizes,
+                                                           operand_data.element_count } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool,
-                                              tensor_shape_t( output_shape.Shape, size_of( array.Get<type_t>().mValue ) ) );
+                                              tensor_shape_t( output_shape.Shape, size_of( array.Get<type_t>().value ) ) );
         new_entity.Add<graph_operation_t>().Bind<sArraySummationOperationController>();
 
         return new_entity;
@@ -981,19 +981,19 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( type_t{ scalar_type_t::UINT32 } );
-        auto &operand_data  = new_entity.Add<count_true_operation_t>();
-        operand_data.mArray = array;
+        auto &operand_data = new_entity.Add<count_true_operation_t>();
+        operand_data.array = array;
 
         auto input_shape  = array.Get<multi_tensor_value_t>().Shape();
         auto output_shape = input_shape;
         output_shape.Trim( -1 );
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.mBlockSizes, operand_data.mElementCount } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.block_sizes, operand_data.element_count } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape.Shape, size_of( scalar_type_t::UINT32 ) ) );
         new_entity.Add<graph_operation_t>().Bind<sCountTrueOperationController>();
 
@@ -1007,8 +1007,8 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( type_t{ scalar_type_t::UINT32 } );
-        auto &operand_data  = new_entity.Add<count_zero_operation_t>();
-        operand_data.mArray = array;
+        auto &operand_data = new_entity.Add<count_zero_operation_t>();
+        operand_data.array = array;
 
         auto input_shape = array.Get<multi_tensor_value_t>().Shape();
 
@@ -1016,11 +1016,11 @@ namespace numlua::mtops
         output_shape.Trim( -1 );
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.mBlockSizes, operand_data.mElementCount } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.block_sizes, operand_data.element_count } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape.Shape, size_of( scalar_type_t::UINT32 ) ) );
         new_entity.Add<graph_operation_t>().Bind<sCountZeroOperationController>();
 
@@ -1034,8 +1034,8 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( type_t{ scalar_type_t::UINT32 } );
-        auto &operand_data  = new_entity.Add<count_non_zero_operation_t>();
-        operand_data.mArray = array;
+        auto &operand_data = new_entity.Add<count_non_zero_operation_t>();
+        operand_data.array = array;
 
         auto input_shape = array.Get<multi_tensor_value_t>().Shape();
 
@@ -1043,11 +1043,11 @@ namespace numlua::mtops
         output_shape.Trim( -1 );
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.mBlockSizes, operand_data.mElementCount } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.block_sizes, operand_data.element_count } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( output_shape.Shape, size_of( scalar_type_t::UINT32 ) ) );
         new_entity.Add<graph_operation_t>().Bind<sCountNonZeroOperationController>();
 
@@ -1061,19 +1061,19 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( array.Get<type_t>() );
-        auto &operand_data  = new_entity.Add<diff_operation_t>();
-        operand_data.mArray = array;
-        operand_data.mCount = count;
+        auto &operand_data = new_entity.Add<diff_operation_t>();
+        operand_data.array = array;
+        operand_data.count = count;
 
         auto input_shape  = array.Get<multi_tensor_value_t>().Shape();
         auto output_shape = array.Get<multi_tensor_value_t>().Shape();
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.mBlockSizes, operand_data.mElementCount } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ array, operand_data.block_sizes, operand_data.element_count } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, output_shape );
         new_entity.Add<graph_operation_t>().Bind<sDiffOperationController>();
 
@@ -1090,20 +1090,20 @@ namespace numlua::mtops
 
         new_entity.Add<type_t>( array.Get<type_t>() );
         auto &operand_data      = new_entity.Add<shift_operation_t>();
-        operand_data.mArray     = array;
-        operand_data.mCount     = count;
-        operand_data.mFillValue = fillValue;
+        operand_data.array      = array;
+        operand_data.count      = count;
+        operand_data.fill_value = fillValue;
 
         auto input_shape  = array.Get<multi_tensor_value_t>().Shape();
         auto output_shape = array.Get<multi_tensor_value_t>().Shape();
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize = input_shape.MaxDimensions[0];
-        operand_data.mBlockSizes   = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size = input_shape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count  = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
         new_entity.Add<operand_t>(
-            vector_t<graph_node_t>{ array, operand_data.mFillValue, operand_data.mBlockSizes, operand_data.mElementCount } );
+            vector_t<graph_node_t>{ array, operand_data.fill_value, operand_data.block_sizes, operand_data.element_count } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, output_shape );
         new_entity.Add<graph_operation_t>().Bind<sShiftOperationController>();
 
@@ -1113,7 +1113,7 @@ namespace numlua::mtops
     graph_node_t Floor( scope_t &scope, graph_node_t const &array )
     {
         assert( ( array.HasAll<type_t, multi_tensor_value_t>() ) );
-        assert( ( array.Get<type_t>().mValue == scalar_type_t::FLOAT32 ) );
+        assert( ( array.Get<type_t>().value == scalar_type_t::FLOAT32 ) );
 
         auto new_entity = scope.CreateNode();
 
@@ -1122,7 +1122,7 @@ namespace numlua::mtops
         new_entity.Add<floor_operation_t>( floor_operation_t{ array } );
 
         auto shape = array.Get<multi_tensor_value_t>().Shape().Shape;
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().value ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sFloorOperationController>();
 
@@ -1132,7 +1132,7 @@ namespace numlua::mtops
     graph_node_t Ceil( scope_t &scope, graph_node_t const &array )
     {
         assert( ( array.HasAll<type_t, multi_tensor_value_t>() ) );
-        assert( ( array.Get<type_t>().mValue == scalar_type_t::FLOAT32 ) );
+        assert( ( array.Get<type_t>().value == scalar_type_t::FLOAT32 ) );
 
         auto new_entity = scope.CreateNode();
 
@@ -1141,7 +1141,7 @@ namespace numlua::mtops
         new_entity.Add<ceiling_operation_t>( ceiling_operation_t{ array } );
 
         auto shape = array.Get<multi_tensor_value_t>().Shape().Shape;
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().value ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sCeilOperationController>();
 
@@ -1151,8 +1151,8 @@ namespace numlua::mtops
     graph_node_t Abs( scope_t &scope, graph_node_t const &array )
     {
         assert( ( array.HasAll<type_t, multi_tensor_value_t>() ) );
-        assert( ( array.Get<type_t>().mValue == scalar_type_t::FLOAT32 ) ||
-                ( ( array.Get<type_t>().mValue >= scalar_type_t::INT8 ) && ( array.Get<type_t>().mValue <= scalar_type_t::INT64 ) ) );
+        assert( ( array.Get<type_t>().value == scalar_type_t::FLOAT32 ) ||
+                ( ( array.Get<type_t>().value >= scalar_type_t::INT8 ) && ( array.Get<type_t>().value <= scalar_type_t::INT64 ) ) );
 
         auto new_entity = scope.CreateNode();
 
@@ -1161,7 +1161,7 @@ namespace numlua::mtops
         new_entity.Add<abs_operation_t>( abs_operation_t{ array } );
 
         auto shape = array.Get<multi_tensor_value_t>().Shape().Shape;
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().value ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sAbsOperationController>();
 
@@ -1179,7 +1179,7 @@ namespace numlua::mtops
         new_entity.Add<sqrt_operation_t>( sqrt_operation_t{ array } );
 
         auto shape = array.Get<multi_tensor_value_t>().Shape().Shape;
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().value ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sSqrtOperationController>();
 
@@ -1197,7 +1197,7 @@ namespace numlua::mtops
         new_entity.Add<round_operation_t>( round_operation_t{ array } );
 
         auto shape = array.Get<multi_tensor_value_t>().Shape().Shape;
-        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().mValue ) ) );
+        new_entity.Add<multi_tensor_value_t>( scope.mPool, tensor_shape_t( shape, size_of( array.Get<type_t>().value ) ) );
 
         new_entity.Add<graph_operation_t>().Bind<sRoundOperationController>();
 
@@ -1212,29 +1212,29 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( array0.Get<type_t>() );
-        auto &operand_data   = new_entity.Add<conv1d_operation_t>();
-        operand_data.mArray0 = array0;
-        operand_data.mArray1 = array1;
+        auto &operand_data  = new_entity.Add<conv1d_operation_t>();
+        operand_data.array0 = array0;
+        operand_data.array1 = array1;
 
         auto input_shape  = array0.Get<multi_tensor_value_t>().Shape();
         auto output_shape = array0.Get<multi_tensor_value_t>().Shape();
 
         input_shape.Flatten( -1 );
-        operand_data.mMaxBlockSize0    = input_shape.MaxDimensions[0];
-        operand_data.mMaxElementCount0 = input_shape.MaxDimensions[input_shape.Rank - 1];
-        operand_data.mBlockSizes0      = VectorValue( scope, input_shape.GetDimension( 0 ) );
-        operand_data.mElementCount0    = VectorValue( scope, input_shape.GetDimension( -1 ) );
+        operand_data.max_block_size0    = input_shape.MaxDimensions[0];
+        operand_data.max_element_count0 = input_shape.MaxDimensions[input_shape.Rank - 1];
+        operand_data.block_sizes0       = VectorValue( scope, input_shape.GetDimension( 0 ) );
+        operand_data.element_count0     = VectorValue( scope, input_shape.GetDimension( -1 ) );
 
         auto kernelShape = array1.Get<multi_tensor_value_t>().Shape();
 
         kernelShape.Flatten( -1 );
-        operand_data.mMaxBlockSize1 = kernelShape.MaxDimensions[0];
-        operand_data.mBlockSizes1   = VectorValue( scope, kernelShape.GetDimension( 0 ) );
-        operand_data.mElementCount1 = VectorValue( scope, kernelShape.GetDimension( -1 ) );
+        operand_data.max_block_size1 = kernelShape.MaxDimensions[0];
+        operand_data.block_sizes1    = VectorValue( scope, kernelShape.GetDimension( 0 ) );
+        operand_data.element_count1  = VectorValue( scope, kernelShape.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ operand_data.mArray0, operand_data.mBlockSizes0,
-                                                           operand_data.mElementCount0, operand_data.mArray1,
-                                                           operand_data.mBlockSizes1, operand_data.mElementCount1 } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ operand_data.array0, operand_data.block_sizes0, operand_data.element_count0,
+                                                           operand_data.array1, operand_data.block_sizes1,
+                                                           operand_data.element_count1 } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, output_shape );
         new_entity.Add<graph_operation_t>().Bind<sConv1DOperationController>();
 
@@ -1249,9 +1249,9 @@ namespace numlua::mtops
         auto new_entity = scope.CreateNode();
 
         new_entity.Add<type_t>( array0.Get<type_t>() );
-        auto &operand_data   = new_entity.Add<hcat_operation_t>();
-        operand_data.mArray0 = array0;
-        operand_data.mArray1 = array1;
+        auto &operand_data  = new_entity.Add<hcat_operation_t>();
+        operand_data.array0 = array0;
+        operand_data.array1 = array1;
 
         auto inputShape0 = array0.Get<multi_tensor_value_t>().Shape();
         auto inputShape1 = array1.Get<multi_tensor_value_t>().Shape();
@@ -1268,13 +1268,13 @@ namespace numlua::mtops
 
         auto blockShape = array0.Get<multi_tensor_value_t>().Shape();
         blockShape.Flatten( -1 );
-        operand_data.mMaxBlockSize  = blockShape.MaxDimensions[0];
-        operand_data.mBlockSizes    = VectorValue( scope, blockShape.GetDimension( 0 ) );
-        operand_data.mElementCount0 = VectorValue( scope, inputShape0.GetDimension( -1 ) );
-        operand_data.mElementCount1 = VectorValue( scope, inputShape1.GetDimension( -1 ) );
+        operand_data.max_block_size = blockShape.MaxDimensions[0];
+        operand_data.block_sizes    = VectorValue( scope, blockShape.GetDimension( 0 ) );
+        operand_data.element_count0 = VectorValue( scope, inputShape0.GetDimension( -1 ) );
+        operand_data.element_count1 = VectorValue( scope, inputShape1.GetDimension( -1 ) );
 
-        new_entity.Add<operand_t>( vector_t<graph_node_t>{ operand_data.mArray0, operand_data.mArray1, operand_data.mBlockSizes,
-                                                           operand_data.mElementCount0, operand_data.mElementCount1 } );
+        new_entity.Add<operand_t>( vector_t<graph_node_t>{ operand_data.array0, operand_data.array1, operand_data.block_sizes,
+                                                           operand_data.element_count0, operand_data.element_count1 } );
         new_entity.Add<multi_tensor_value_t>( scope.mPool, output_shape );
         new_entity.Add<graph_operation_t>().Bind<sHCatOperationController>();
 

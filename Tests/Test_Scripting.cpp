@@ -518,13 +518,13 @@ TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
 
 //     auto lEntity1 = scriptingEngine.Get<entity_t>( "entity1" );
 //     REQUIRE( lEntity1.Has<tag_t>() );
-//     REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME" );
+//     REQUIRE( lEntity1.Get<tag_t>().value == "NAME" );
 
 //     auto lEntity2 = scriptingEngine.Get<entity_t>( "entity2" );
 //     REQUIRE( lEntity0.Has<relationship_compoment_t>() );
 //     REQUIRE( lEntity2.Has<relationship_compoment_t>() );
 //     REQUIRE( lEntity2.Has<tag_t>() );
-//     REQUIRE( lEntity2.Get<tag_t>().mValue == "NAME_0" );
+//     REQUIRE( lEntity2.Get<tag_t>().value == "NAME_0" );
 
 //     REQUIRE( lEntity2.Get<relationship_compoment_t>().mParent == lEntity0 );
 //     REQUIRE( lEntity0.Get<relationship_compoment_t>().mChildren.size() == 1 );
@@ -548,7 +548,7 @@ TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
 //     REQUIRE( lEntity1.IsValid() );
 //     REQUIRE( lEntity1.Has<relationship_compoment_t>() );
 //     REQUIRE( lEntity1.Has<tag_t>() );
-//     REQUIRE( lEntity1.Get<tag_t>().mValue == "NAME_0" );
+//     REQUIRE( lEntity1.Get<tag_t>().value == "NAME_0" );
 // }
 
 // TEST_CASE( "LUA Destroy entity", "[CORE_SCRIPTING]" )
@@ -1221,7 +1221,7 @@ TEST_CASE( "LUA sConstantValueInitializerComponent", "[CORE_SCRIPTING]" )
 )" );
 
     auto &lCudaTextureSampler = scriptingEngine.GetRef<constant_value_initializer_t>( "value" );
-    REQUIRE( std::get<float>( lCudaTextureSampler.mValue ) == 1.234f );
+    REQUIRE( std::get<float>( lCudaTextureSampler.value ) == 1.234f );
 }
 
 TEST_CASE( "LUA sVectorInitializerComponent", "[CORE_SCRIPTING]" )
@@ -1236,13 +1236,13 @@ TEST_CASE( "LUA sVectorInitializerComponent", "[CORE_SCRIPTING]" )
 )" );
 
     auto &lValues = scriptingEngine.GetRef<vector_initializer_t>( "value" );
-    REQUIRE( lValues.mValue.size() == 6 );
-    REQUIRE( std::get<float>( lValues.mValue[0] ) == 1.234f );
-    REQUIRE( std::get<float>( lValues.mValue[1] ) == 2.345f );
-    REQUIRE( std::get<float>( lValues.mValue[2] ) == 3.456f );
-    REQUIRE( std::get<float>( lValues.mValue[3] ) == 1.234f );
-    REQUIRE( std::get<float>( lValues.mValue[4] ) == 2.345f );
-    REQUIRE( std::get<float>( lValues.mValue[5] ) == 3.456f );
+    REQUIRE( lValues.value.size() == 6 );
+    REQUIRE( std::get<float>( lValues.value[0] ) == 1.234f );
+    REQUIRE( std::get<float>( lValues.value[1] ) == 2.345f );
+    REQUIRE( std::get<float>( lValues.value[2] ) == 3.456f );
+    REQUIRE( std::get<float>( lValues.value[3] ) == 1.234f );
+    REQUIRE( std::get<float>( lValues.value[4] ) == 2.345f );
+    REQUIRE( std::get<float>( lValues.value[5] ) == 3.456f );
 }
 
 TEST_CASE( "LUA sDataInitializerComponent", "[CORE_SCRIPTING]" )
@@ -1257,13 +1257,13 @@ TEST_CASE( "LUA sDataInitializerComponent", "[CORE_SCRIPTING]" )
 )" );
 
     auto &lValues = scriptingEngine.GetRef<data_initializer_t>( "value" );
-    REQUIRE( lValues.mValue.size() == 6 );
-    REQUIRE( std::get<float>( lValues.mValue[0] ) == 1.234f );
-    REQUIRE( std::get<float>( lValues.mValue[1] ) == 2.345f );
-    REQUIRE( std::get<float>( lValues.mValue[2] ) == 3.456f );
-    REQUIRE( std::get<float>( lValues.mValue[3] ) == 1.234f );
-    REQUIRE( std::get<float>( lValues.mValue[4] ) == 2.345f );
-    REQUIRE( std::get<float>( lValues.mValue[5] ) == 3.456f );
+    REQUIRE( lValues.value.size() == 6 );
+    REQUIRE( std::get<float>( lValues.value[0] ) == 1.234f );
+    REQUIRE( std::get<float>( lValues.value[1] ) == 2.345f );
+    REQUIRE( std::get<float>( lValues.value[2] ) == 3.456f );
+    REQUIRE( std::get<float>( lValues.value[3] ) == 1.234f );
+    REQUIRE( std::get<float>( lValues.value[4] ) == 2.345f );
+    REQUIRE( std::get<float>( lValues.value[5] ) == 3.456f );
 }
 
 TEST_CASE( "LUA MultiTensorValue initialized with constant", "[CORE_SCRIPTING]" )
@@ -1278,7 +1278,7 @@ mt       = Cuda.Ops.MultiTensorValue(scope, constant, shape)
 scope:run(mt)
 )" );
 
-    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<multi_tensor_value_t>().mValue.FetchFlattened<float>();
+    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<multi_tensor_value_t>().value.FetchFlattened<float>();
     auto lExpected      = std::vector<float>( lTensorValues0.size(), 1.234f );
 
     REQUIRE( lTensorValues0 == lExpected );
@@ -1299,7 +1299,7 @@ mt       = Cuda.Ops.MultiTensorValue(scope, constant, shape)
 scope:run(mt)
 )" );
 
-    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<multi_tensor_value_t>().mValue;
+    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<multi_tensor_value_t>().value;
 
     {
         auto lLayer1   = lTensorValues0.FetchBufferAt<float>( 0 );
@@ -1341,7 +1341,7 @@ mt       = Cuda.Ops.MultiTensorValue(scope, constant, shape)
 scope:run(mt)
 )" );
 
-    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<multi_tensor_value_t>().mValue;
+    auto lTensorValues0 = scriptingEngine.Get<graph_node_t>( "mt" ).Get<multi_tensor_value_t>().value;
 
     {
         auto lValues = lTensorValues0.FetchBufferAt<float>( 0 );
