@@ -26,6 +26,7 @@ namespace numlua::mtops
 {
     using graph_node_t = numlua::core::entity_t;
 
+
     struct scope_t
     {
         memory_pool_t memory_pool{}; //!< Memory pool
@@ -166,7 +167,7 @@ namespace numlua::mtops
 
         if constexpr( std::is_same_v<_Ty, scalar_value_t> )
         {
-            new_entity.Get<node_id_t>().element_type = type_of( value[0] );
+            new_entity.Get<node_id_t>().element_type = core::type_of( value[0] );
         }
 
         new_entity.Add<graph_operation_t>().Bind<VectorRunner<_Ty>>();
@@ -212,7 +213,7 @@ namespace numlua::mtops
         auto &value_component = new_entity.Add<scalar_node_t>();
         value_component.value = value;
 
-        new_entity.Get<node_id_t>().element_type = type_of( value_component.value );
+        new_entity.Get<node_id_t>().element_type = core::type_of( value_component.value );
 
         return new_entity;
     }

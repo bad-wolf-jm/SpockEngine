@@ -27,9 +27,9 @@ namespace numlua::mtops
     };
 
     template <typename T>
-    static inline void ResolveAndUpload( data_initializer_t const &aComponent, multi_tensor_t const &aOut )
+    static inline void ResolveAndUpload( data_initializer_t const &component, multi_tensor_t const &aOut )
     {
-        aOut.Upload( Private::Resolve<T>( aComponent.value ) );
+        aOut.Upload( Private::Resolve<T>( component.value ) );
     }
 
     template <typename T>
@@ -55,15 +55,15 @@ namespace numlua::mtops
     {
         void Run()
         {
-            auto &lData  = Get<vector_buffer_t>().value;
-            auto &lValue = Get<vector_value_t<_Ty>>().value;
+            auto &data  = Get<vector_buffer_t>().value;
+            auto &value = Get<vector_value_t<_Ty>>().value;
             if constexpr( std::is_same<_Ty, scalar_value_t>::value )
             {
-                DISPATCH_BY_TYPE( type_of( lValue[0] ), ResolveAndUpload, ( lData, lValue ) );
+                DISPATCH_BY_TYPE( core::type_of( value[0] ), ResolveAndUpload, ( data, value ) );
             }
             else
             {
-                lData.Upload( lValue );
+                data.Upload( value );
             }
         }
     };
@@ -79,7 +79,7 @@ namespace numlua::mtops
 
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight ) = 0;
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                         broadcast_info_t &aBroadcast )                                                        = 0;
+                         broadcast_info_t &aBroadcast )                                                                          = 0;
 
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant ) = 0;
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn ) = 0;
@@ -98,7 +98,7 @@ namespace numlua::mtops
 
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight ) = 0;
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aLeft, multi_tensor_t &aRight,
-                         broadcast_info_t &aBroadcast )                                                        = 0;
+                         broadcast_info_t &aBroadcast )                                                                          = 0;
 
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, multi_tensor_t &aIn, scalar_value_t &aConstant ) = 0;
         virtual void Op( scalar_type_t aTensorElementType, multi_tensor_t &aOut, scalar_value_t &aConstant, multi_tensor_t &aIn ) = 0;
@@ -531,4 +531,4 @@ namespace numlua::mtops
         void Run();
     };
 
-} // namespace SE::TensorOps
+} // namespace numlua::mtops

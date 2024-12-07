@@ -35,6 +35,11 @@ namespace numlua::mtops
         scalar_type_t element_type  = scalar_type_t::FLOAT32;
     };
 
+    inline scalar_type_t &type_of( graph_node_t node )
+    {
+        return node.Get<node_id_t>().element_type;
+    }
+
     /// @brief sGraphOperationController
     ///
     /// Base class for graph operation controller
@@ -47,31 +52,32 @@ namespace numlua::mtops
         template <typename T>
         T &Get()
         {
-            return mEntity.Get<T>();
+            return _node.Get<T>();
         }
 
         template <typename T>
         bool Has()
         {
-            return mEntity.Has<T>();
+            return _node.Has<T>();
         }
 
         graph_node_t GetControlledEntity()
         {
-            return mEntity;
+            return _node;
         };
 
       public:
         virtual void Initialize( graph_node_t aEntity )
         {
-            mEntity = aEntity;
+            _node = aEntity;
         }
+
         virtual void Run()
         {
         }
 
-      private:
-        graph_node_t mEntity;
+      protected:
+        graph_node_t _node;
     };
 
     /// @brief sGraphOperationComponent
