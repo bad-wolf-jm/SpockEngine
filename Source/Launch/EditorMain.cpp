@@ -284,7 +284,7 @@ int main( int argc, char **argv )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         // auto lApplicationAssembly =
-        //     fs::path( "D:\\Personal\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
+        //     fs::path( "C:\\GitLab\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
         // if( fs::exists( lApplicationAssembly ) )
         //     DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
