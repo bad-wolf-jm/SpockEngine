@@ -175,19 +175,19 @@ namespace SE::Editor
     {
         Init();
 
-        static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
+        // static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
 
-        if( lApplicationType )
-        {
-            // mApplicationInstance    = lApplicationType.Instantiate();
-            // auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
-            // mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
+        // if( lApplicationType )
+        // {
+        //     // mApplicationInstance    = lApplicationType.Instantiate();
+        //     // auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
+        //     // mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
 
-            mEditorWindow.mApplicationInstance = nullptr;//mApplicationInstance;
-        }
-        else
-        {
-            SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
-        }
+        //     mEditorWindow.mApplicationInstance = nullptr;//mApplicationInstance;
+        // }
+        // else
+        // {
+        //     SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
+        // }
     }
 } // namespace SE::Editor

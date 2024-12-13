@@ -89,13 +89,13 @@ FetchContent_MakeAvailable(argparse)
 include_directories(${argparse_SOURCE_DIR}/include)
 set(SE_EXTRA_INCLUDES ${argparse_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
-FetchContent_Declare(
-  lua
-  GIT_REPOSITORY https://github.com/marovira/lua
-  GIT_TAG        master )
-FetchContent_MakeAvailable(lua)
-include_directories(${lua_SOURCE_DIR}/src)
-set(SE_EXTRA_INCLUDES ${lua_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+# FetchContent_Declare(
+#   lua
+#   GIT_REPOSITORY https://github.com/marovira/lua
+#   GIT_TAG        master )
+# FetchContent_MakeAvailable(lua)
+# include_directories(${lua_SOURCE_DIR}/src)
+# set(SE_EXTRA_INCLUDES ${lua_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   sol2
@@ -185,4 +185,4 @@ include_directories(Shaders/Source)
 add_subdirectory(ThirdParty)
 add_subdirectory(Shaders)
 add_subdirectory(Source)
-add_subdirectory(Programs/TestMaterialSystem)
+# add_subdirectory(Programs/TestMaterialSystem)

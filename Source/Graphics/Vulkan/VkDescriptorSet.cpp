@@ -10,7 +10,7 @@ namespace SE::Graphics
 
     VkDescriptorSetObject::VkDescriptorSetObject( ref_t<IGraphicContext> aGraphicContext, IDescriptorSetLayout *aLayout,
                                                   uint32_t aDescriptorCount )
-        : IDescriptorSet{ aGraphicContext, aLayout, aDescriptorCount }
+        : IDescriptorSet{ aGraphicContext, false, aDescriptorCount }
     {
         mDescriptorSetObject = SE::Core::New<sVkDescriptorSetObject>(
             Cast<VkGraphicContext>( mGraphicContext ),

@@ -419,6 +419,7 @@ namespace SE::Graphics
 
         const vector_t<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
+                                                                     VK_KHR_MAINTENANCE_3_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,

@@ -258,10 +258,10 @@ namespace SE::Editor
             //     l_RendererCreateInfo.LineWidth = l_ParticleShaderConfiguration.LineWidth;
             // }
             // ImGui::Separator();
-            if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sUIComponent>() ) )
-            {
-                ElementToEdit.Add<sUIComponent>();
-            }
+            // if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sUIComponent>() ) )
+            // {
+            //     ElementToEdit.Add<sUIComponent>();
+            // }
             ImGui::EndPopup();
         }
 
@@ -275,15 +275,15 @@ namespace SE::Editor
                 ElementToEdit.TryRemove<sRayTracingTargetComponent>();
         }
 
-        if( ImGui::CollapsingHeader( "Script", lFlags ) )
-        {
-            ElementToEdit.IfExists<sActorComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
-        }
+        // if( ImGui::CollapsingHeader( "Script", lFlags ) )
+        // {
+        //     ElementToEdit.IfExists<sActorComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
+        // }
 
-        if( ImGui::CollapsingHeader( "HUD", lFlags ) )
-        {
-            ElementToEdit.IfExists<sUIComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
-        }
+        // if( ImGui::CollapsingHeader( "HUD", lFlags ) )
+        // {
+        //     ElementToEdit.IfExists<sUIComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
+        // }
 
         if( ImGui::CollapsingHeader( "Transform", lFlags ) )
         {

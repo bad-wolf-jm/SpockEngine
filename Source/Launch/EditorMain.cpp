@@ -259,40 +259,40 @@ int main( int argc, char **argv )
 
     SE::Graphics::OptixDeviceContextObject::Initialize();
 
-    // Retrieve the Mono runtime
-    fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
-    const char *lPath     = std::getenv( "MONO_PATH" );
-    if( lPath && fs::exists( lPath ) )
-    {
-        lMonoPath = lPath;
-        if( auto lMonoPathOverride = lProgramArguments->present<string_t>( "--mono_runtime" ) )
-            if( fs ::exists( lMonoPathOverride.value() ) )
-                lMonoPath = lMonoPathOverride.value();
-    }
+    // // Retrieve the Mono runtime
+    // fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
+    // const char *lPath     = std::getenv( "MONO_PATH" );
+    // if( lPath && fs::exists( lPath ) )
+    // {
+    //     lMonoPath = lPath;
+    //     if( auto lMonoPathOverride = lProgramArguments->present<string_t>( "--mono_runtime" ) )
+    //         if( fs ::exists( lMonoPathOverride.value() ) )
+    //             lMonoPath = lMonoPathOverride.value();
+    // }
 
-    // Retrieve the Mono core assembly path
-    fs::path lCoreScriptingPath = "D:/Personal/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
-    if( auto lCoreScriptingPathOverride = lProgramArguments->present<string_t>( "--script_core" ) )
-        if( fs ::exists( lCoreScriptingPathOverride.value() ) )
-            lCoreScriptingPath = lCoreScriptingPathOverride.value();
+    // // Retrieve the Mono core assembly path
+    // fs::path lCoreScriptingPath = "D:/Personal/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
+    // if( auto lCoreScriptingPathOverride = lProgramArguments->present<string_t>( "--script_core" ) )
+    //     if( fs ::exists( lCoreScriptingPathOverride.value() ) )
+    //         lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
-    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    // DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    auto     lApplicationName              = lProgramArguments->get<string_t>( "--application" );
+     auto     lApplicationName              = lProgramArguments->get<string_t>( "--application" );
     fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
-        auto lApplicationAssembly =
-            fs::path( "D:\\Personal\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
-        if( fs::exists( lApplicationAssembly ) )
-            DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
+        // auto lApplicationAssembly =
+        //     fs::path( "D:\\Personal\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
+        // if( fs::exists( lApplicationAssembly ) )
+        //     DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigurationPath ) )
             SE::Logging::Info( "Application configuration file '{}' does not exist", lApplicationConfigurationPath.string() );
     }
 
-    DotNetRuntime::ReloadAssemblies();
+    //DotNetRuntime::ReloadAssemblies();
 
     SE::Editor::BaseEditorApplication lEditorApplication;
 
@@ -327,7 +327,7 @@ int main( int argc, char **argv )
 
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    DotNetRuntime::Shutdown();
+    // DotNetRuntime::Shutdown();
     SE::Core::Engine::Shutdown();
 
     return 0;

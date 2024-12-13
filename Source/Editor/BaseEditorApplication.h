@@ -35,15 +35,15 @@ namespace SE::Editor
     class BaseEditorApplication
     {
       public:
-        EditorWindow mEditorWindow;
-        ref_t<Engine>  mEngineLoop             = nullptr;
-        fs::path     ConfigurationRoot       = "";
-        fs::path     ConfigurationFile       = "";
-        fs::path     SensorConfigurationFile = "";
-        string_t  ApplicationName         = "Sensor Model Editor";
-        string_t  ImGuiIniFile            = "imgui_config.ini";
-        math::ivec2  WindowSize              = { 1920, 1080 };
-        math::ivec2  WindowPosition          = { 100, 100 };
+        EditorWindow  mEditorWindow;
+        ref_t<Engine> mEngineLoop             = nullptr;
+        fs::path      ConfigurationRoot       = "";
+        fs::path      ConfigurationFile       = "";
+        fs::path      SensorConfigurationFile = "";
+        string_t      ApplicationName         = "Sensor Model Editor";
+        string_t      ImGuiIniFile            = "imgui_config.ini";
+        math::ivec2   WindowSize              = { 1920, 1080 };
+        math::ivec2   WindowPosition          = { 100, 100 };
 
       public:
         BaseEditorApplication() = default;
@@ -65,9 +65,9 @@ namespace SE::Editor
         uint32_t mNewViewportWidth         = 1;
         bool     mShouldRebuildNewViewport = true;
 
-        uint32_t   mViewportHeight        = 1;
-        uint32_t   mViewportWidth         = 1;
-        bool       mShouldRebuildViewport = true;
+        uint32_t     mViewportHeight        = 1;
+        uint32_t     mViewportWidth         = 1;
+        bool         mShouldRebuildViewport = true;
         ref_t<Scene> mWorld                 = nullptr;
         ref_t<Scene> mTestWorld             = nullptr;
 
@@ -77,13 +77,13 @@ namespace SE::Editor
         // ref_t<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
         ref_t<ISampler2D> mOffscreenRenderTargetTexture = nullptr;
-        ImageHandle     mOffscreenRenderTargetDisplayHandle{};
+        ImageHandle       mOffscreenRenderTargetDisplayHandle{};
 
         ref_t<ISampler2D> mDeferredRenderTargetTexture = nullptr;
-        ImageHandle     mDeferredRenderTargetDisplayHandle{};
+        ImageHandle       mDeferredRenderTargetDisplayHandle{};
 
         ref_t<ISampler2D> mNewRenderTargetTexture = nullptr;
-        ImageHandle     mNewRenderTargetDisplayHandle{};
+        ImageHandle       mNewRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
 
