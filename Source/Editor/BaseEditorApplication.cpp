@@ -19,7 +19,7 @@
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
-#include "DotNet/Runtime.h"
+//#include "DotNet/Runtime.h"
 
 #include "Scene/Importer/ObjImporter.h"
 

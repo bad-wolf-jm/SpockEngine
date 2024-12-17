@@ -25,7 +25,7 @@
 #include "Editor/BaseEditorApplication.h"
 #include "Shader/Compiler.h"
 
-#include "DotNet/Runtime.h"
+//#include "DotNet/Runtime.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;

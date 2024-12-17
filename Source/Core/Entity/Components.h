@@ -17,7 +17,7 @@
 #include "Core/String.h"
 #include "Core/Vector.h"
 
-#include "DotNet/Runtime.h"
+//#include "DotNet/Runtime.h"
 #include "Entity.h"
 
 #ifdef LITTLEENDIAN

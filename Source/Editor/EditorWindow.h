@@ -79,7 +79,7 @@ namespace SE::Editor
         Entity ActiveSensor{};
 
         PropertyPanelID     CurrentPropertyPanel = PropertyPanelID::NONE;
-        ref_t<DotNetInstance> mApplicationInstance = nullptr;
+        //ref_t<DotNetInstance> mApplicationInstance = nullptr;
 
       public:
         float HeaderHeight       = 31.0f;
