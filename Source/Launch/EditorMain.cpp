@@ -25,7 +25,7 @@
 #include "Editor/BaseEditorApplication.h"
 #include "Shader/Compiler.h"
 
-//#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;
@@ -278,7 +278,7 @@ int main( int argc, char **argv )
 
     // DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-     auto     lApplicationName              = lProgramArguments->get<string_t>( "--application" );
+    auto     lApplicationName              = lProgramArguments->get<string_t>( "--application" );
     fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
     {
@@ -292,7 +292,7 @@ int main( int argc, char **argv )
             SE::Logging::Info( "Application configuration file '{}' does not exist", lApplicationConfigurationPath.string() );
     }
 
-    //DotNetRuntime::ReloadAssemblies();
+    // DotNetRuntime::ReloadAssemblies();
 
     SE::Editor::BaseEditorApplication lEditorApplication;
 
